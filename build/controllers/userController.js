@@ -8,15 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../entities/User");
-const authController = {
-    Hello: (_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const users = yield User_1.User.find();
-        console.log(users);
-        return res.json({
-            users,
+const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
+const userController = {
+    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Get all users successfully',
+            users: yield User_1.User.find(),
         });
-    }),
+    })),
 };
-exports.default = authController;
+exports.default = userController;

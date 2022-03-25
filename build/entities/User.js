@@ -18,9 +18,7 @@ __decorate([
     __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({
-        unique: true,
-    }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], User.prototype, "username", void 0);
 __decorate([
@@ -35,13 +33,13 @@ __decorate([
 ], User.prototype, "password", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
-        name: "created_at",
+        name: 'created_at',
     }),
     __metadata("design:type", Date)
 ], User.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
-        name: "updated_at",
+        name: 'updated_at',
     }),
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
