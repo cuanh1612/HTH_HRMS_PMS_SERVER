@@ -83,7 +83,6 @@ const authController = {
                 success: false,
                 message: 'You must login first',
             });
-        console.log(process.env.REFRESH_TOKEN_SECRET);
         //Check decode
         try {
             const decodeUser = (0, jsonwebtoken_1.verify)(refreshToken, process.env.REFRESH_TOKEN_SECRET);
@@ -93,7 +92,7 @@ const authController = {
                     id: decodeUser.userId,
                 },
             });
-            if (!existingUser)
+            if (!existingUser || existingUser.tokenVersion !== decodeUser.tokenVersion)
                 return res.status(401).json({
                     code: 401,
                     success: false,
@@ -114,6 +113,34 @@ const authController = {
                 message: 'You must login first',
             });
         }
+    })),
+    logout: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log('co ne ');
+        const { userId } = req.body;
+        const existingUser = yield User_1.User.findOne({
+            where: {
+                id: userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Logout false',
+            });
+        existingUser.tokenVersion += 1;
+        yield existingUser.save();
+        res.clearCookie(process.env.REFRESH_TOKEN_COOKIE_NAME, {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: true,
+            path: '/api/auth/refresh_token',
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Logout successfully',
+        });
     })),
 };
 exports.default = authController;
