@@ -1,7 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-const User_1 = require("../entities/User");
+const Avatar_1 = require("../entities/Avatar");
+const Department_1 = require("../entities/Department");
+const Designation_1 = require("../entities/Designation");
+const Employee_1 = require("../entities/Employee");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -10,7 +13,7 @@ const connectDB = () => {
         password: process.env.DB_PASSWORD_DEV,
         logging: true,
         synchronize: true,
-        entities: [User_1.User]
+        entities: [Employee_1.Employee, Avatar_1.Avatar, Designation_1.Designation, Department_1.Department]
     })
         .then(() => {
         console.log('Connected DB successfully.');

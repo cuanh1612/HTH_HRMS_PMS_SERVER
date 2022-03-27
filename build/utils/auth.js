@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendRefreshToken = exports.createToken = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
-const createToken = (type, user) => (0, jsonwebtoken_1.sign)(Object.assign({ userId: user.id }, (type === 'refreshToken' ? { tokenVersion: user.tokenVersion } : {})), type === 'accessToken'
+const createToken = (type, user) => (0, jsonwebtoken_1.sign)(Object.assign({ userId: user.id }, (type === 'refreshToken' ? { tokenVersion: user.token_version } : {})), type === 'accessToken'
     ? process.env.ACCESS_TOKEN_SECRET
     : process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: type === 'accessToken' ? '15s' : '60m',

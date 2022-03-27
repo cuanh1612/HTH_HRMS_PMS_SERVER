@@ -1,12 +1,12 @@
-import { User } from '../entities/User';
+import { Employee } from '../entities/Employee';
 import { sign, Secret } from 'jsonwebtoken';
 import { Response } from 'express';
 
-export const createToken = (type: 'accessToken' | 'refreshToken', user: User) =>
+export const createToken = (type: 'accessToken' | 'refreshToken', user: Employee) =>
   sign(
     {
       userId: user.id,
-      ...(type === 'refreshToken' ? { tokenVersion: user.tokenVersion } : {}),
+      ...(type === 'refreshToken' ? { tokenVersion: user.token_version } : {}),
     },
     type === 'accessToken'
       ? (process.env.ACCESS_TOKEN_SECRET as Secret)
@@ -16,7 +16,7 @@ export const createToken = (type: 'accessToken' | 'refreshToken', user: User) =>
     }
   );
 
-export const sendRefreshToken = (res: Response, user: User) => {
+export const sendRefreshToken = (res: Response, user: Employee) => {
   res.cookie(process.env.REFRESH_TOKEN_COOKIE_NAME as string, createToken('refreshToken', user), {
     httpOnly: true,
     sameSite: 'lax',

@@ -8,23 +8,12 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class User extends BaseEntity {
+export class Department extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  username!: string;
-
-  @Column({
-    unique: true,
-  })
-  email!: string;
-
-  @Column()
-  password!: string;
-
-  @Column({ default: 0 })
-  tokenVersion!: number;
+  name!: string;
 
   @CreateDateColumn({
     name: 'created_at',

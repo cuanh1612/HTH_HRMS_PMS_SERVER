@@ -1,50 +1,17 @@
 import argon2 from 'argon2';
 import { Request, Response } from 'express';
-import { User } from '../entities/User';
+import { Employee } from '../entities/Employee';
 import { createToken, sendRefreshToken } from '../utils/auth';
 import handleCatchError from '../utils/catchAsyncError';
 import { Secret, verify } from 'jsonwebtoken';
 import { UserAuthPayload } from '../type/UserAuthPayload';
 
 const authController = {
-  register: handleCatchError(async (req: Request, res: Response) => {
-    const { username, email, password } = req.body;
-
-    const existingUser = await User.findOne({
-      where: {
-        email,
-      },
-    });
-
-    if (existingUser)
-      return res.status(400).json({
-        code: 400,
-        success: false,
-        message: 'Duplicated email',
-      });
-
-    const hashedPassword = await argon2.hash(password);
-
-    const newUser = User.create({
-      email,
-      password: hashedPassword,
-      username,
-    });
-
-    const createdUser = await newUser.save();
-
-    return res.status(200).json({
-      code: 200,
-      success: true,
-      message: 'User registration successfully',
-      user: createdUser,
-    });
-  }),
 
   login: handleCatchError(async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
-    const existingUser = await User.findOne({
+    const existingUser = await Employee.findOne({
       where: {
         email,
       },
@@ -97,13 +64,13 @@ const authController = {
 
       console.log(decodeUser);
 
-      const existingUser = await User.findOne({
+      const existingUser = await Employee.findOne({
         where: {
           id: decodeUser.userId,
         },
       });
 
-      if (!existingUser || existingUser.tokenVersion !== decodeUser.tokenVersion)
+      if (!existingUser || existingUser.token_version !== decodeUser.tokenVersion)
         return res.status(401).json({
           code: 401,
           success: false,
@@ -132,7 +99,7 @@ const authController = {
 
     const { userId } = req.body;
 
-    const existingUser = await User.findOne({
+    const existingUser = await Employee.findOne({
       where: {
         id: userId,
       },
@@ -145,7 +112,7 @@ const authController = {
         message: 'Logout false',
       });
 
-    existingUser.tokenVersion += 1;
+    existingUser.token_version += 1;
 
     await existingUser.save();
 

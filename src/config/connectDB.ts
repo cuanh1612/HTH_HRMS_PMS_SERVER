@@ -1,5 +1,8 @@
 import { createConnection } from 'typeorm';
-import { User } from '../entities/User';
+import { Avatar } from '../entities/Avatar';
+import { Department } from '../entities/Department';
+import { Designation } from '../entities/Designation';
+import { Employee } from '../entities/Employee';
 
 const connectDB = () => {
   createConnection({
@@ -9,7 +12,7 @@ const connectDB = () => {
     password: process.env.DB_PASSWORD_DEV,
     logging: true,
     synchronize: true,
-    entities: [User]
+    entities: [Employee, Avatar, Designation, Department]
   })
     .then(() => {
       console.log('Connected DB successfully.');

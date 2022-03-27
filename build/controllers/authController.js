@@ -13,41 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
-const User_1 = require("../entities/User");
+const Employee_1 = require("../entities/Employee");
 const auth_1 = require("../utils/auth");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const authController = {
-    register: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { username, email, password } = req.body;
-        const existingUser = yield User_1.User.findOne({
-            where: {
-                email,
-            },
-        });
-        if (existingUser)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Duplicated email',
-            });
-        const hashedPassword = yield argon2_1.default.hash(password);
-        const newUser = User_1.User.create({
-            email,
-            password: hashedPassword,
-            username,
-        });
-        const createdUser = yield newUser.save();
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'User registration successfully',
-            user: createdUser,
-        });
-    })),
     login: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
-        const existingUser = yield User_1.User.findOne({
+        const existingUser = yield Employee_1.Employee.findOne({
             where: {
                 email,
             },
@@ -87,12 +60,12 @@ const authController = {
         try {
             const decodeUser = (0, jsonwebtoken_1.verify)(refreshToken, process.env.REFRESH_TOKEN_SECRET);
             console.log(decodeUser);
-            const existingUser = yield User_1.User.findOne({
+            const existingUser = yield Employee_1.Employee.findOne({
                 where: {
                     id: decodeUser.userId,
                 },
             });
-            if (!existingUser || existingUser.tokenVersion !== decodeUser.tokenVersion)
+            if (!existingUser || existingUser.token_version !== decodeUser.tokenVersion)
                 return res.status(401).json({
                     code: 401,
                     success: false,
@@ -117,7 +90,7 @@ const authController = {
     logout: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('co ne ');
         const { userId } = req.body;
-        const existingUser = yield User_1.User.findOne({
+        const existingUser = yield Employee_1.Employee.findOne({
             where: {
                 id: userId,
             },
@@ -128,7 +101,7 @@ const authController = {
                 success: false,
                 message: 'Logout false',
             });
-        existingUser.tokenVersion += 1;
+        existingUser.token_version += 1;
         yield existingUser.save();
         res.clearCookie(process.env.REFRESH_TOKEN_COOKIE_NAME, {
             httpOnly: true,
