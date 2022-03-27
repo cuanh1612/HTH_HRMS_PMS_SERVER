@@ -1,16 +1,16 @@
-import express from 'express';
-import employeeController from '../controllers/employeeController';
+import express from 'express'
+import employeeController from '../controllers/employeeController'
 
-const userRouter = express.Router();
+const userRouter = express.Router()
 
-userRouter.post('/', employeeController.create);
+userRouter.post('/', employeeController.create)
 
-userRouter.put('/role', employeeController.changeRole);
-userRouter.put('/:employeeId', employeeController.update);
+userRouter.put('/role', employeeController.changeRole)
+userRouter.put('/:employeeId', employeeController.update)
 
-userRouter.get('/', employeeController.getAll);
-userRouter.get('/:employeeId', employeeController.getDetail);
+userRouter.get('/', employeeController.getAll)
+userRouter.get('/:employeeId', employeeController.getDetail)
 
-userRouter.delete('/:employeeId', employeeController.delete);
+userRouter.delete('/:employeeId', employeeController.delete)
 
-export default userRouter;
+export default userRouter

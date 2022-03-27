@@ -1,12 +1,12 @@
-import express from 'express';
-import authController from '../controllers/authController';
+import express from 'express'
+import authController from '../controllers/authController'
 
-const authRouter = express.Router();
+const authRouter = express.Router()
 
-authRouter.post('/login', authController.login);
+authRouter.post('/login', authController.login)
 
-authRouter.get('/refresh_token', authController.refreshToken);
+authRouter.get('/refresh_token', authController.refreshToken)
 
-authRouter.post('/logout', authController.logout);
+authRouter.post('/logout', authController.logout)
 
-export default authRouter;
+export default authRouter

@@ -1,30 +1,30 @@
 import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+} from 'typeorm'
 
 @Entity()
 export class Avatar extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id!: number;
+	@PrimaryGeneratedColumn()
+	id!: number
 
-  @Column()
-  public_id: string;
+	@Column()
+	public_id: string
 
-  @Column()
-  url: string;
+	@Column()
+	url: string
 
-  @CreateDateColumn({
-    name: 'created_at',
-  })
-  createdAt: Date;
+	@CreateDateColumn({
+		name: 'created_at',
+	})
+	createdAt: Date
 
-  @UpdateDateColumn({
-    name: 'updated_at',
-  })
-  updatedAt: Date;
+	@UpdateDateColumn({
+		name: 'updated_at',
+	})
+	updatedAt: Date
 }
