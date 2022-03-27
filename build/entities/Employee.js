@@ -43,11 +43,11 @@ __decorate([
     __metadata("design:type", String)
 ], Employee.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Employee.prototype, "country", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Employee.prototype, "mobile", void 0);
 __decorate([
@@ -59,11 +59,11 @@ __decorate([
     __metadata("design:type", String)
 ], Employee.prototype, "joining_date", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'date' }),
+    (0, typeorm_1.Column)({ type: 'date', nullable: true }),
     __metadata("design:type", String)
 ], Employee.prototype, "date_of_birth", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Employee.prototype, "address", void 0);
 __decorate([
@@ -79,12 +79,12 @@ __decorate([
     __metadata("design:type", Number)
 ], Employee.prototype, "hourly_rate", void 0);
 __decorate([
-    (0, typeorm_1.Column)('text', { array: true }),
+    (0, typeorm_1.Column)('text', { array: true, default: [] }),
     __metadata("design:type", Array)
 ], Employee.prototype, "skills", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => Avatar_1.Avatar, {
-        cascade: true,
+        cascade: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Avatar_1.Avatar)

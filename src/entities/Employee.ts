@@ -35,10 +35,10 @@ export class Employee extends BaseEntity {
   @Column()
   password!: string;
 
-  @Column()
+  @Column({ nullable: true })
   country: string;
 
-  @Column()
+  @Column({ nullable: true })
   mobile: string;
 
   @Column({ type: 'enum', enum: enumGender })
@@ -47,10 +47,10 @@ export class Employee extends BaseEntity {
   @Column({ type: 'date' })
   joining_date!: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   date_of_birth: string;
 
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
   @Column()
@@ -62,11 +62,11 @@ export class Employee extends BaseEntity {
   @Column()
   hourly_rate!: number;
 
-  @Column('text', { array: true })
+  @Column('text', { array: true, default: [] })
   skills: string[];
 
   @OneToOne(() => Avatar, {
-    cascade: true,
+    cascade: true
   })
   @JoinColumn()
   avatar: Avatar;
@@ -79,7 +79,7 @@ export class Employee extends BaseEntity {
   @JoinColumn()
   department: Department;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   token_version: number;
 
   @CreateDateColumn({
