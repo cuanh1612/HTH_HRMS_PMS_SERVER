@@ -30,13 +30,13 @@ export class Employee extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({unique: true})
   employeeId!: string;
 
   @Column()
   name!: string;
 
-  @Column()
+  @Column({unique: true})
   email!: string;
 
   @Column()

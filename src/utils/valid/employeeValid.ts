@@ -1,7 +1,8 @@
-import { Employee, enumRole } from '../../entities/Employee';
+import { enumRole } from '../../entities/Employee';
+import { createOrUpdatetEmployeePayload } from '../../type/EmployeePayload';
 
 export const employeeValid = {
-  create: ({
+  createOrUpdate: ({
     employeeId,
     name,
     email,
@@ -11,23 +12,33 @@ export const employeeValid = {
     can_receive_email,
     hourly_rate,
     role,
-  }: Employee) => {
+    department,
+    designation
+  }: createOrUpdatetEmployeePayload, type: "create" | "update") => {
     let messageError = '';
     if (
       !employeeId ||
       !name ||
       !email ||
-      !password ||
       !joining_date ||
       !can_login ||
       !can_receive_email ||
-      !hourly_rate
+      !hourly_rate ||
+      !department ||
+      !designation
     ) {
       messageError = 'Pleas enter full field';
       return messageError;
     }
 
-    if (role !== enumRole.ADMIN && role !== enumRole.EMPLOYEE && role !== enumRole.MANAGER) {
+    if(type === "create"){
+      if(!password) {
+        messageError = 'Pleas enter password';
+        return messageError;
+      }
+    }
+
+    if (role && role !== enumRole.ADMIN && role !== enumRole.EMPLOYEE && role !== enumRole.MANAGER) {
       messageError = 'Role not valid';
       return messageError;
     }
@@ -40,6 +51,25 @@ export const employeeValid = {
 
     return messageError;
   },
+
+  changeRole: (employeeId: string, role: string) => {
+    let messageError = '';
+
+    if (
+      !employeeId ||
+      !role
+    ) {
+      messageError = 'Pleas enter full field';
+      return messageError;
+    }
+
+    if (role !== enumRole.ADMIN && role !== enumRole.EMPLOYEE && role !== enumRole.MANAGER) {
+      messageError = 'Role not valid';
+      return messageError;
+    }
+
+    return messageError;
+  }
 };
 
 //Check valid email function

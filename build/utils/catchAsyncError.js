@@ -13,22 +13,22 @@ const handleCatchError = (func) => {
             //Define error
             //Handle castError
             // const nameError = error.name;
-            // if (nameError === 'CastError') {
-            //   message = `Resource not found.`;
-            //   statusCode = 400;
-            // }
+            if (error.code === '22P02') {
+                message = `Resource not found.`;
+                statusCode = 400;
+            }
             // //Handling Mongoose validation Error
             // if (nameError === 'ValidationError') {
             //   const messageError = Object.values(error.errors).map((value) => value.message)[0];
             //   message = messageError;
             //   statusCode = 400;
             // }
-            // //Hand Mongoose duplicate key errors
-            // if (error.code === 11000) {
-            //   const messageError = `Duplicate ${Object.keys(error.keyValue)} entered`;
-            //   statusCode = 400;
-            //   message = messageError;
-            // }
+            //Hand duplicate key errors
+            if (error.code === '23505') {
+                const fieldDuplicate = error.detail.split(`"`)[1];
+                statusCode = 400;
+                message = `${fieldDuplicate} already exist`;
+            }
             // //Handling wrong JWT error
             // if (nameError === 'JsonWebTokenError') {
             //   const messageError = `JSON Web Token is invalid. Try Again!!!`;

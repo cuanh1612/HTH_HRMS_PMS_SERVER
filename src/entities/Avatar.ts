@@ -13,10 +13,10 @@ export class Avatar extends BaseEntity {
   id!: number;
 
   @Column()
-  public_id: String;
+  public_id: string;
 
   @Column()
-  url: String;
+  url: string;
 
   @CreateDateColumn({
     name: 'created_at',
