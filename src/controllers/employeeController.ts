@@ -8,7 +8,6 @@ const employeeController = {
   create: handleCatchError(async (req: Request, res: Response) => {
     const dataNewEmployee: Employee = req.body;
     console.log(dataNewEmployee);
-    
 
     //Check valid
     const messageValid = employeeValid.create(dataNewEmployee);
@@ -18,6 +17,20 @@ const employeeController = {
         code: 400,
         success: false,
         message: messageValid,
+      });
+
+    //Check existing email
+    const existingEmployee = await Employee.findOne({
+      where: {
+        email: dataNewEmployee.email,
+      },
+    });
+
+    if (existingEmployee)
+      return res.status(400).json({
+        code: 400,
+        success: false,
+        message: 'Email already exists in the system',
       });
 
     const hashPassword = await argon2.hash(dataNewEmployee.password);

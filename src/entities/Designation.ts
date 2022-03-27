@@ -2,9 +2,10 @@ import {
     BaseEntity,
     Column,
     CreateDateColumn,
-    Entity, PrimaryGeneratedColumn,
+    Entity, OneToMany, PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
+import { Employee } from './Employee';
 
 @Entity()
 export class Designation extends BaseEntity {
@@ -13,6 +14,9 @@ export class Designation extends BaseEntity {
 
   @Column()
   name!: string;
+
+  @OneToMany(() => Employee, (Employee) => Employee.department)
+  employees: Employee[];
 
   @CreateDateColumn({
     name: 'created_at',

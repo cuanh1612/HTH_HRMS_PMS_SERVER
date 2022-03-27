@@ -3,9 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Employee } from './Employee';
 
 @Entity()
 export class Department extends BaseEntity {
@@ -14,6 +17,10 @@ export class Department extends BaseEntity {
 
   @Column()
   name!: string;
+
+  @OneToMany(() => Employee, (Employee) => Employee.department)
+  @JoinColumn()
+  employees: Employee[];
 
   @CreateDateColumn({
     name: 'created_at',

@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -71,11 +72,11 @@ export class Employee extends BaseEntity {
   @JoinColumn()
   avatar: Avatar;
 
-  @OneToOne(() => Designation)
+  @ManyToOne(() => Designation, designation => designation.employees)
   @JoinColumn()
-  designnation: Designation;
+  designation: Designation;
 
-  @OneToOne(() => Department)
+  @ManyToOne(() => Department, department => department.employees)
   @JoinColumn()
   department: Department;
 
