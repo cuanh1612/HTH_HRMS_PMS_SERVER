@@ -19,6 +19,12 @@ export enum enumGender {
   OTHER = 'Others',
 }
 
+export enum enumRole {
+  ADMIN = 'Admin',
+  EMPLOYEE = 'Employee',
+  MANAGER = 'Manager',
+}
+
 @Entity()
 export class Employee extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -66,17 +72,20 @@ export class Employee extends BaseEntity {
   @Column('text', { array: true, default: [] })
   skills: string[];
 
+  @Column({ type: 'enum', enum: enumRole, default: enumRole.EMPLOYEE })
+  role: string;
+
   @OneToOne(() => Avatar, {
-    cascade: true
+    cascade: true,
   })
   @JoinColumn()
   avatar: Avatar;
 
-  @ManyToOne(() => Designation, designation => designation.employees)
+  @ManyToOne(() => Designation, (designation) => designation.employees)
   @JoinColumn()
   designation: Designation;
 
-  @ManyToOne(() => Department, department => department.employees)
+  @ManyToOne(() => Department, (department) => department.employees)
   @JoinColumn()
   department: Department;
 

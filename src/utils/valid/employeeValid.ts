@@ -1,4 +1,4 @@
-import { Employee } from '../../entities/Employee';
+import { Employee, enumRole } from '../../entities/Employee';
 
 export const employeeValid = {
   create: ({
@@ -10,6 +10,7 @@ export const employeeValid = {
     can_login,
     can_receive_email,
     hourly_rate,
+    role,
   }: Employee) => {
     let messageError = '';
     if (
@@ -23,6 +24,11 @@ export const employeeValid = {
       !hourly_rate
     ) {
       messageError = 'Pleas enter full field';
+      return messageError;
+    }
+
+    if (role !== enumRole.ADMIN && role !== enumRole.EMPLOYEE && role !== enumRole.MANAGER) {
+      messageError = 'Role not valid';
       return messageError;
     }
 

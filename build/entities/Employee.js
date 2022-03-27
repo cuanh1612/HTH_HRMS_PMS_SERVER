@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Employee = exports.enumGender = void 0;
+exports.Employee = exports.enumRole = exports.enumGender = void 0;
 const typeorm_1 = require("typeorm");
 const Avatar_1 = require("./Avatar");
 const Department_1 = require("./Department");
@@ -20,6 +20,12 @@ var enumGender;
     enumGender["FEMAILE"] = "Female";
     enumGender["OTHER"] = "Others";
 })(enumGender = exports.enumGender || (exports.enumGender = {}));
+var enumRole;
+(function (enumRole) {
+    enumRole["ADMIN"] = "Admin";
+    enumRole["EMPLOYEE"] = "Employee";
+    enumRole["MANAGER"] = "Manager";
+})(enumRole = exports.enumRole || (exports.enumRole = {}));
 let Employee = class Employee extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -83,19 +89,23 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "skills", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'enum', enum: enumRole, default: enumRole.EMPLOYEE }),
+    __metadata("design:type", String)
+], Employee.prototype, "role", void 0);
+__decorate([
     (0, typeorm_1.OneToOne)(() => Avatar_1.Avatar, {
-        cascade: true
+        cascade: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Avatar_1.Avatar)
 ], Employee.prototype, "avatar", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Designation_1.Designation, designation => designation.employees),
+    (0, typeorm_1.ManyToOne)(() => Designation_1.Designation, (designation) => designation.employees),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Designation_1.Designation)
 ], Employee.prototype, "designation", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Department_1.Department, department => department.employees),
+    (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.employees),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Department_1.Department)
 ], Employee.prototype, "department", void 0);
