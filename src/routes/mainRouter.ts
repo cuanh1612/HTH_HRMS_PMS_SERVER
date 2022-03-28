@@ -5,7 +5,7 @@ import leaveRouter from './leaveRouter';
 import leaveTypeRouter from './leaveTypeRouter';
 
 const mainRouter = (app: core.Express) => {
-  app.use('/api/auth', authRouter);
+	app.use('/api/auth', authRouter)
 
   app.use('/api/employees', employeeRouter);
 
@@ -14,4 +14,4 @@ const mainRouter = (app: core.Express) => {
   app.use('/api/leave_types', leaveTypeRouter);
 };
 
-export default mainRouter;
+export default mainRouter

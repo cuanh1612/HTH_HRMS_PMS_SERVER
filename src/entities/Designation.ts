@@ -1,30 +1,32 @@
 import {
-    BaseEntity,
-    Column,
-    CreateDateColumn,
-    Entity, OneToMany, PrimaryGeneratedColumn,
-    UpdateDateColumn
-} from 'typeorm';
-import { Employee } from './Employee';
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	OneToMany,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+} from 'typeorm'
+import { Employee } from './Employee'
 
 @Entity()
 export class Designation extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id!: number;
+	@PrimaryGeneratedColumn()
+	id!: number
 
-  @Column()
-  name!: string;
+	@Column()
+	name!: string
 
-  @OneToMany(() => Employee, (Employee) => Employee.department)
-  employees: Employee[];
+	@OneToMany(() => Employee, (Employee) => Employee.department)
+	employees: Employee[]
 
-  @CreateDateColumn({
-    name: 'created_at',
-  })
-  createdAt: Date;
+	@CreateDateColumn({
+		name: 'created_at',
+	})
+	createdAt: Date
 
-  @UpdateDateColumn({
-    name: 'updated_at',
-  })
-  updatedAt: Date;
+	@UpdateDateColumn({
+		name: 'updated_at',
+	})
+	updatedAt: Date
 }

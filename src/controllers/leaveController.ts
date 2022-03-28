@@ -1,147 +1,184 @@
-import { Request, Response } from 'express';
-import { Employee } from '../entities/Employee';
-import { Leave } from '../entities/Leave';
-import { LeaveType } from '../entities/LeaveType';
-import { createOrUpdatetLeavePayload } from '../type/LeavePayload';
-import handleCatchError from '../utils/catchAsyncError';
-import { leaveValid } from '../utils/valid/leaveValid';
+import { Request, Response } from 'express'
+import { Employee } from '../entities/Employee'
+import { Leave } from '../entities/Leave'
+import { LeaveType } from '../entities/LeaveType'
+import { createOrUpdatetLeavePayload } from '../type/LeavePayload'
+import handleCatchError from '../utils/catchAsyncError'
+import { leaveValid } from '../utils/valid/leaveValid'
 
 const leaveController = {
-  getAll: handleCatchError(async (_: Request, res: Response) => {
-    const leaves = await Leave.find();
-    return res.status(200).json({
-      code: 200,
-      success: true,
-      leaves,
-      message: 'Get all leaves successfully',
-    });
-  }),
+	getAll: handleCatchError(async (_: Request, res: Response) => {
+		const leaves = await Leave.find()
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			leaves,
+			message: 'Get all leaves successfully',
+		})
+	}),
 
-  create: handleCatchError(async (req: Request, res: Response) => {
-    const dataNewLeave: createOrUpdatetLeavePayload = req.body;
+	create: handleCatchError(async (req: Request, res: Response) => {
+		const dataNewLeave: createOrUpdatetLeavePayload = req.body
 
-    //Check valid
-    const messageValid = leaveValid.createOrUpdate(dataNewLeave);
+		//Check valid
+		const messageValid = leaveValid.createOrUpdate(dataNewLeave)
 
-    if (messageValid)
-      return res.status(400).json({
-        code: 400,
-        success: false,
-        message: messageValid,
-      });
+		if (messageValid)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: messageValid,
+			})
 
-    //Check exist employee
-    const existingEmployee = await Employee.findOne({
-      where: {
-        id: dataNewLeave.employee,
-      },
-    });
+		//Check exist employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: dataNewLeave.employee,
+			},
+		})
 
-    if (!existingEmployee)
-      return res.status(400).json({
-        code: 400,
-        success: false,
-        message: 'Employee does not exist in the system',
-      });
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Employee does not exist in the system',
+			})
 
-    //Check exist leave type
-    const existingLeaveType = await LeaveType.findOne({
-      where: {
-        id: dataNewLeave.leave_type,
-      },
-    });
+		//Check exist leave type
+		const existingLeaveType = await LeaveType.findOne({
+			where: {
+				id: dataNewLeave.leave_type,
+			},
+		})
 
-    if (!existingLeaveType)
-      return res.status(400).json({
-        code: 400,
-        success: false,
-        message: 'Leave type does not exist in the system',
-      });
+		if (!existingLeaveType)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Leave type does not exist in the system',
+			})
 
-    //Check duration date leave
-    if (Array.isArray(dataNewLeave.date)) {
-      for (let index = 0; index < dataNewLeave.date.length; index++) {
-        const date = dataNewLeave.date[index];
-        //Create new leave
-        await Leave.create({
-          ...dataNewLeave,
-          date,
-        }).save();
-      }
-    } else {
-      //Create new leave
-      await Leave.create(dataNewLeave).save();
-    }
+		//Check duration date leave
+		if (Array.isArray(dataNewLeave.date)) {
+			for (let index = 0; index < dataNewLeave.date.length; index++) {
+				const date = dataNewLeave.date[index]
 
-    return res.status(200).json({
-      code: 200,
-      success: true,
-      message: 'Created leave successfully',
-    });
-  }),
+				//Check existing leave date and remove
+				const existingLeaveDate = await Leave.createQueryBuilder('leave')
+					.where('leave.employeeId = :id', {
+						id: dataNewLeave.employee,
+					})
+					.andWhere('leave.date = :date', {
+						date,
+					})
+					.getOne()
 
-  delete: handleCatchError(async (req: Request, res: Response) => {
-    const { leaveId } = req.params;
+				// Leave already applied for the selected date will update
+				if (existingLeaveDate) {
+					Leave.update(existingLeaveDate.id, {
+						...dataNewLeave,
+						date,
+					})
+				} else {
+					//Create new leave
+					await Leave.create({
+						...dataNewLeave,
+						date,
+					}).save()
+				}
+			}
+		} else {
+			//Check existing leave date and remove
+			const existingLeaveDate = await Leave.createQueryBuilder('leave')
+				.where('leave.employeeId = :id', {
+					id: dataNewLeave.employee,
+				})
+				.andWhere('leave.date = :date', {
+					date: dataNewLeave.date,
+				})
+				.getOne()
 
-    //Check existing leave
-    const existingLeave = await Leave.findOne({
-      where: {
-        id: Number(leaveId),
-      },
-    });
+			// Leave already applied for the selected date will update
+			if (existingLeaveDate) {
+				Leave.update(existingLeaveDate.id, {
+					...dataNewLeave,
+				})
+			} else {
+				//Create new leave
+				await Leave.create(dataNewLeave).save()
+			}
+		}
 
-    if (!existingLeave)
-      return res.status(400).json({
-        code: 400,
-        success: false,
-        message: 'Leave does not exist in the system',
-      });
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Created leave successfully',
+		})
+	}),
 
-    //Delete employee
-    await existingLeave.remove();
+	delete: handleCatchError(async (req: Request, res: Response) => {
+		const { leaveId } = req.params
 
-    return res.status(200).json({
-      code: 200,
-      success: true,
-      message: 'Delete leave successfully',
-    });
-  }),
+		//Check existing leave
+		const existingLeave = await Leave.findOne({
+			where: {
+				id: Number(leaveId),
+			},
+		})
 
-  deleteMany: handleCatchError(async (req: Request, res: Response) => {
-    const { leaves } = req.body;
-    if(leaves) return res.status(400).json({
-        code: 400,
-        success: false,
-        message: 'Please select many leaves to delete',
-    })
+		if (!existingLeave)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Leave does not exist in the system',
+			})
 
-    for (let index = 0; index < leaves.length; index++) {
-      const leaveId = leaves[index];
+		//Delete employee
+		await existingLeave.remove()
 
-      //Check existing leave
-      const existingLeave = await Leave.findOne({
-        where: {
-          id: Number(leaveId),
-        },
-      });
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete leave successfully',
+		})
+	}),
 
-      if (!existingLeave)
-        return res.status(400).json({
-          code: 400,
-          success: false,
-          message: 'Leave does not exist in the system',
-        });
+	deleteMany: handleCatchError(async (req: Request, res: Response) => {
+		const { leaves } = req.body
+		if (leaves)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many leaves to delete',
+			})
 
-      //Delete employee
-      await existingLeave.remove();
-    }
+		for (let index = 0; index < leaves.length; index++) {
+			const leaveId = leaves[index]
 
-    return res.status(200).json({
-      code: 200,
-      success: true,
-      message: 'Delete leaves successfully',
-    });
-  }),
-};
+			//Check existing leave
+			const existingLeave = await Leave.findOne({
+				where: {
+					id: Number(leaveId),
+				},
+			})
 
-export default leaveController;
+			if (!existingLeave)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Leave does not exist in the system',
+				})
+
+			//Delete employee
+			await existingLeave.remove()
+		}
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete leaves successfully',
+		})
+	}),
+}
+
+export default leaveController

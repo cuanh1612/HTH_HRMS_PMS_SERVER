@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.employeeValid = void 0;
 const Employee_1 = require("../../entities/Employee");
 exports.employeeValid = {
-    createOrUpdate: ({ employeeId, name, email, password, joining_date, can_login, can_receive_email, hourly_rate, role, department, designation }, type) => {
+    createOrUpdate: ({ employeeId, name, email, password, joining_date, can_login, can_receive_email, hourly_rate, role, department, designation, }, type) => {
         let messageError = '';
         if (!employeeId ||
             !name ||
@@ -17,13 +17,16 @@ exports.employeeValid = {
             messageError = 'Pleas enter full field';
             return messageError;
         }
-        if (type === "create") {
+        if (type === 'create') {
             if (!password) {
                 messageError = 'Pleas enter password';
                 return messageError;
             }
         }
-        if (role && role !== Employee_1.enumRole.ADMIN && role !== Employee_1.enumRole.EMPLOYEE && role !== Employee_1.enumRole.MANAGER) {
+        if (role &&
+            role !== Employee_1.enumRole.ADMIN &&
+            role !== Employee_1.enumRole.EMPLOYEE &&
+            role !== Employee_1.enumRole.MANAGER) {
             messageError = 'Role not valid';
             return messageError;
         }
@@ -36,8 +39,7 @@ exports.employeeValid = {
     },
     changeRole: (employeeId, role) => {
         let messageError = '';
-        if (!employeeId ||
-            !role) {
+        if (!employeeId || !role) {
             messageError = 'Pleas enter full field';
             return messageError;
         }
@@ -46,7 +48,7 @@ exports.employeeValid = {
             return messageError;
         }
         return messageError;
-    }
+    },
 };
 //Check valid email function
 function validateEmail(email) {

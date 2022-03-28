@@ -65,13 +65,43 @@ const leaveController = {
         if (Array.isArray(dataNewLeave.date)) {
             for (let index = 0; index < dataNewLeave.date.length; index++) {
                 const date = dataNewLeave.date[index];
-                //Create new leave
-                yield Leave_1.Leave.create(Object.assign(Object.assign({}, dataNewLeave), { date })).save();
+                //Check existing leave date and remove
+                const existingLeaveDate = yield Leave_1.Leave.createQueryBuilder('leave')
+                    .where('leave.employeeId = :id', {
+                    id: dataNewLeave.employee,
+                })
+                    .andWhere('leave.date = :date', {
+                    date,
+                })
+                    .getOne();
+                // Leave already applied for the selected date will update
+                if (existingLeaveDate) {
+                    Leave_1.Leave.update(existingLeaveDate.id, Object.assign(Object.assign({}, dataNewLeave), { date }));
+                }
+                else {
+                    //Create new leave
+                    yield Leave_1.Leave.create(Object.assign(Object.assign({}, dataNewLeave), { date })).save();
+                }
             }
         }
         else {
-            //Create new leave
-            yield Leave_1.Leave.create(dataNewLeave).save();
+            //Check existing leave date and remove
+            const existingLeaveDate = yield Leave_1.Leave.createQueryBuilder('leave')
+                .where('leave.employeeId = :id', {
+                id: dataNewLeave.employee,
+            })
+                .andWhere('leave.date = :date', {
+                date: dataNewLeave.date,
+            })
+                .getOne();
+            // Leave already applied for the selected date will update
+            if (existingLeaveDate) {
+                Leave_1.Leave.update(existingLeaveDate.id, Object.assign({}, dataNewLeave));
+            }
+            else {
+                //Create new leave
+                yield Leave_1.Leave.create(dataNewLeave).save();
+            }
         }
         return res.status(200).json({
             code: 200,

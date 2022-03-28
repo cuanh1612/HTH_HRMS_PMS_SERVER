@@ -32,7 +32,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.leaves, {
         onDelete: 'CASCADE',
-        nullable: false
+        nullable: false,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Employee_1.Employee)
@@ -54,6 +54,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", LeaveType_1.LeaveType)
 ], Leave.prototype, "leave_type", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Leave.prototype, "reason", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

@@ -24,4 +24,4 @@ const connectDB = () => {
     });
 };
 
-export default connectDB;
+export default connectDB
