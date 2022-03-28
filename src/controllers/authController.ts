@@ -5,6 +5,9 @@ import { createToken, sendRefreshToken } from '../utils/auth'
 import handleCatchError from '../utils/catchAsyncError'
 import { Secret, verify } from 'jsonwebtoken'
 import { UserAuthPayload } from '../type/UserAuthPayload'
+import { OAuth2Client } from 'google-auth-library'
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 const authController = {
 	login: handleCatchError(async (req: Request, res: Response) => {
@@ -40,6 +43,42 @@ const authController = {
 			success: true,
 			message: 'Logged in successfully',
 			user: existingUser,
+			accessToken: createToken('accessToken', existingUser),
+		})
+	}),
+
+	googleLogin: handleCatchError(async (req: Request, res: Response) => {
+		const { token } = req.body
+
+		//verify email token
+		const user = await client.verifyIdToken({
+			idToken: token,
+		})
+
+		//Get email
+		const userEmail = user.getAttributes().payload?.email
+
+		//Check existing user
+		const existingUser = await Employee.findOne({
+			where: {
+				email: userEmail,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Email does not exist in the system',
+			})
+
+		//Save cookie refresh token
+		sendRefreshToken(res, existingUser)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Logged in successfully',
 			accessToken: createToken('accessToken', existingUser),
 		})
 	}),
