@@ -265,6 +265,43 @@ const employeeController = {
       message: 'Delete employee successfully',
     });
   }),
+
+  deleteMany: handleCatchError(async (req: Request, res: Response) => {
+    const { employees } = req.body;
+    if (employees)
+      return res.status(400).json({
+        code: 400,
+        success: false,
+        message: 'Please select many employees to delete',
+      });
+
+    for (let index = 0; index < employees.length; index++) {
+      const employeeId = employees[index];
+
+      //Check existing employee
+      const existingEmployee = await Employee.findOne({
+        where: {
+          id: Number(employeeId),
+        },
+      });
+
+      if (!existingEmployee)
+        return res.status(400).json({
+          code: 400,
+          success: false,
+          message: 'Employee does not exist in the system',
+        });
+
+      //Delete employee
+      await existingEmployee.remove();
+    }
+
+    return res.status(200).json({
+      code: 200,
+      success: true,
+      message: 'Delete employee successfully',
+    });
+  }),
 };
 
 export default employeeController;

@@ -1,0 +1,136 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const Employee_1 = require("../entities/Employee");
+const Leave_1 = require("../entities/Leave");
+const LeaveType_1 = require("../entities/LeaveType");
+const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
+const leaveValid_1 = require("../utils/valid/leaveValid");
+const leaveController = {
+    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const leaves = yield Leave_1.Leave.find();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            leaves,
+            message: 'Get all leaves successfully',
+        });
+    })),
+    create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const dataNewLeave = req.body;
+        //Check valid
+        const messageValid = leaveValid_1.leaveValid.createOrUpdate(dataNewLeave);
+        if (messageValid)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: messageValid,
+            });
+        //Check exist employee
+        const existingEmployee = yield Employee_1.Employee.findOne({
+            where: {
+                id: dataNewLeave.employee,
+            },
+        });
+        if (!existingEmployee)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Employee does not exist in the system',
+            });
+        //Check exist leave type
+        const existingLeaveType = yield LeaveType_1.LeaveType.findOne({
+            where: {
+                id: dataNewLeave.leave_type,
+            },
+        });
+        if (!existingLeaveType)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Leave type does not exist in the system',
+            });
+        //Check duration date leave
+        if (Array.isArray(dataNewLeave.date)) {
+            for (let index = 0; index < dataNewLeave.date.length; index++) {
+                const date = dataNewLeave.date[index];
+                //Create new leave
+                yield Leave_1.Leave.create(Object.assign(Object.assign({}, dataNewLeave), { date })).save();
+            }
+        }
+        else {
+            //Create new leave
+            yield Leave_1.Leave.create(dataNewLeave).save();
+        }
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Created leave successfully',
+        });
+    })),
+    delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { leaveId } = req.params;
+        //Check existing leave
+        const existingLeave = yield Leave_1.Leave.findOne({
+            where: {
+                id: Number(leaveId),
+            },
+        });
+        if (!existingLeave)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Leave does not exist in the system',
+            });
+        //Delete employee
+        yield existingLeave.remove();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Delete leave successfully',
+        });
+    })),
+    deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { leaves } = req.body;
+        if (leaves)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please select many leaves to delete',
+            });
+        for (let index = 0; index < leaves.length; index++) {
+            const leaveId = leaves[index];
+            //Check existing leave
+            const existingLeave = yield Leave_1.Leave.findOne({
+                where: {
+                    id: Number(leaveId),
+                },
+            });
+            if (!existingLeave)
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Leave does not exist in the system',
+                });
+            //Delete employee
+            yield existingLeave.remove();
+        }
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Delete leaves successfully',
+        });
+    })),
+};
+exports.default = leaveController;

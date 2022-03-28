@@ -4,6 +4,7 @@ import employeeController from '../controllers/employeeController';
 const userRouter = express.Router();
 
 userRouter.post('/', employeeController.create);
+userRouter.post('/delete_may', employeeController.deleteMany);
 
 userRouter.put('/role', employeeController.changeRole);
 userRouter.put('/:employeeId', employeeController.update);

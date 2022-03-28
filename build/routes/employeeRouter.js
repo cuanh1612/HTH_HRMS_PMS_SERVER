@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const employeeController_1 = __importDefault(require("../controllers/employeeController"));
 const userRouter = express_1.default.Router();
 userRouter.post('/', employeeController_1.default.create);
+userRouter.post('/delete_may', employeeController_1.default.deleteMany);
 userRouter.put('/role', employeeController_1.default.changeRole);
 userRouter.put('/:employeeId', employeeController_1.default.update);
 userRouter.get('/', employeeController_1.default.getAll);

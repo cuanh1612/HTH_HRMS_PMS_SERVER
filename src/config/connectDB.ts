@@ -3,6 +3,8 @@ import { Avatar } from '../entities/Avatar';
 import { Department } from '../entities/Department';
 import { Designation } from '../entities/Designation';
 import { Employee } from '../entities/Employee';
+import { Leave } from '../entities/Leave';
+import { LeaveType } from '../entities/LeaveType';
 
 const connectDB = () => {
   createConnection({
@@ -12,7 +14,7 @@ const connectDB = () => {
     password: process.env.DB_PASSWORD_DEV,
     logging: true,
     synchronize: true,
-    entities: [Employee, Avatar, Designation, Department]
+    entities: [Employee, Avatar, Designation, Department, Leave, LeaveType],
   })
     .then(() => {
       console.log('Connected DB successfully.');

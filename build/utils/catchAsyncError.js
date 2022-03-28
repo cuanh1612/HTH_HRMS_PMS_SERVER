@@ -12,7 +12,6 @@ const handleCatchError = (func) => {
             let message = 'Something went wrong';
             //Define error
             //Handle castError
-            // const nameError = error.name;
             if (error.code === '22P02') {
                 message = `Resource not found.`;
                 statusCode = 400;
@@ -28,6 +27,16 @@ const handleCatchError = (func) => {
                 const fieldDuplicate = error.detail.split(`"`)[1];
                 statusCode = 400;
                 message = `${fieldDuplicate} already exist`;
+            }
+            //Hand delete but have reference to other table
+            if (error.code === '23503') {
+                statusCode = 400;
+                message = `Please delete all ${error.table} before action delete function`;
+            }
+            //Hand delete but have reference to other table
+            if (error.code === '23502') {
+                statusCode = 400;
+                message = `Please enter full field`;
             }
             // //Handling wrong JWT error
             // if (nameError === 'JsonWebTokenError') {
