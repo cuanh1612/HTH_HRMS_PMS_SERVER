@@ -108,7 +108,7 @@ const employeeController = {
             code: 200,
             success: true,
             employee: createdEmployee,
-            message: 'Created new employee successfully',
+            message: 'Created new Employee successfully',
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

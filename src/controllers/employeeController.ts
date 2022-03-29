@@ -117,7 +117,7 @@ const employeeController = {
 			code: 200,
 			success: true,
 			employee: createdEmployee,
-			message: 'Created new employee successfully',
+			message: 'Created new Employee successfully',
 		})
 	}),
 
@@ -199,6 +199,7 @@ const employeeController = {
 			success: true,
 			message: 'Updated employee successfully',
 		})
+		
 	}),
 
 	changeRole: handleCatchError(async (req: Request, res: Response) => {

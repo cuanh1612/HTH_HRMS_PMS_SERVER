@@ -30,7 +30,7 @@ export const employeeValid = {
 			!department ||
 			!designation
 		) {
-			messageError = 'Pleas enter full field'
+			messageError = 'Please enter full field'
 			return messageError
 		}
 
