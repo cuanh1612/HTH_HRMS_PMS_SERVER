@@ -8,12 +8,12 @@ const Employee_1 = require("../entities/Employee");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
-        database: 'HTH_HRMS_PMS',
+        database: 'hth_hrms_pms',
         username: process.env.DB_USERNAME_DEV,
         password: process.env.DB_PASSWORD_DEV,
         logging: true,
         synchronize: true,
-        entities: [Employee_1.Employee, Avatar_1.Avatar, Designation_1.Designation, Department_1.Department]
+        entities: [Employee_1.Employee, Avatar_1.Avatar, Designation_1.Designation, Department_1.Department],
     })
         .then(() => {
         console.log('Connected DB successfully.');

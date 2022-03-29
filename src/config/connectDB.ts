@@ -7,7 +7,7 @@ import { Employee } from '../entities/Employee'
 const connectDB = () => {
 	createConnection({
 		type: 'postgres',
-		database: 'HTH_HRMS_PMS',
+		database: 'hth_hrms_pms',
 		username: process.env.DB_USERNAME_DEV,
 		password: process.env.DB_PASSWORD_DEV,
 		logging: true,
