@@ -5,6 +5,8 @@ const Avatar_1 = require("../entities/Avatar");
 const Department_1 = require("../entities/Department");
 const Designation_1 = require("../entities/Designation");
 const Employee_1 = require("../entities/Employee");
+const Leave_1 = require("../entities/Leave");
+const LeaveType_1 = require("../entities/LeaveType");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -13,7 +15,11 @@ const connectDB = () => {
         password: process.env.DB_PASSWORD_DEV,
         logging: true,
         synchronize: true,
+<<<<<<< HEAD
         entities: [Employee_1.Employee, Avatar_1.Avatar, Designation_1.Designation, Department_1.Department],
+=======
+        entities: [Employee_1.Employee, Avatar_1.Avatar, Designation_1.Designation, Department_1.Department, Leave_1.Leave, LeaveType_1.LeaveType],
+>>>>>>> dc3d2c5313e92b7209af2d6f386bd97a91fd9913
     })
         .then(() => {
         console.log('Connected DB successfully.');

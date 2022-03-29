@@ -7,12 +7,12 @@ const handleCatchError = (func: (req: Request, res: Response, next: NextFunction
 		})
 
 		asynFunc.catch((error) => {
-			console.log(error)
+			console.log(error);
+			
 			let statusCode = 500
 			let message = 'Something went wrong'
 			//Define error
 			//Handle castError
-			// const nameError = error.name;
 
 			if (error.code === '22P02') {
 				message = `Resource not found.`
@@ -33,19 +33,31 @@ const handleCatchError = (func: (req: Request, res: Response, next: NextFunction
 				message = `${fieldDuplicate} already exist`
 			}
 
-			// //Handling wrong JWT error
-			// if (nameError === 'JsonWebTokenError') {
-			//   const messageError = `JSON Web Token is invalid. Try Again!!!`;
-			//   statusCode = 400;
-			//   message = messageError;
-			// }
+			//Hand delete but have reference to other table
+			if (error.code === '23503') {
+				statusCode = 400
+				message = `Please delete all ${error.table} before action delete function`
+			}
 
-			// //Handling Expored JWT error
-			// if (nameError === 'TokenExpiredError') {
-			//   const messageError = `JSON Web Token is invalid. Try Again!!!`;
-			//   statusCode = 400;
-			//   message = messageError;
-			// }
+			//Hand delete but have reference to other table
+			if (error.code === '23502') {
+				statusCode = 400
+				message = `Please enter full field`
+			}
+
+			//Handling wrong JWT error
+			if (error.name === 'JsonWebTokenError') {
+			  const messageError = `JSON Web Token is invalid. Try Again!!!`;
+			  statusCode = 400;
+			  message = messageError;
+			}
+
+			//Handling Expored JWT error
+			if (error.name === 'TokenExpiredError') {
+			  const messageError = `JSON Web Token is invalid. Try Again!!!`;
+			  statusCode = 400;
+			  message = messageError;
+			}
 
 			//Res error
 			return res.status(statusCode).json({

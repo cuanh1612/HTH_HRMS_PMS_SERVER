@@ -5,6 +5,9 @@ import { createToken, sendRefreshToken } from '../utils/auth'
 import handleCatchError from '../utils/catchAsyncError'
 import { Secret, verify } from 'jsonwebtoken'
 import { UserAuthPayload } from '../type/UserAuthPayload'
+import { OAuth2Client } from 'google-auth-library'
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 const authController = {
 	login: handleCatchError(async (req: Request, res: Response) => {
@@ -40,6 +43,42 @@ const authController = {
 			success: true,
 			message: 'Logged in successfully',
 			user: existingUser,
+			accessToken: createToken('accessToken', existingUser),
+		})
+	}),
+
+	googleLogin: handleCatchError(async (req: Request, res: Response) => {
+		const { token } = req.body
+
+		//verify email token
+		const user = await client.verifyIdToken({
+			idToken: token,
+		})
+
+		//Get email
+		const userEmail = user.getAttributes().payload?.email
+
+		//Check existing user
+		const existingUser = await Employee.findOne({
+			where: {
+				email: userEmail,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Email does not exist in the system',
+			})
+
+		//Save cookie refresh token
+		sendRefreshToken(res, existingUser)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Logged in successfully',
 			accessToken: createToken('accessToken', existingUser),
 		})
 	}),
@@ -119,13 +158,47 @@ const authController = {
 			httpOnly: true,
 			sameSite: 'lax',
 			secure: true,
-			path: '/api/auth/refresh_token',
+			path: '/',
 		})
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
 			message: 'Logout successfully',
+		})
+	}),
+
+	currentUser: handleCatchError(async (req: Request, res: Response) => {
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Employee does not exist in the system',
+			})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			user: existingUser,
+			message: 'Get current user successfully',
 		})
 	}),
 }

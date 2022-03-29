@@ -5,6 +5,7 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
@@ -12,6 +13,7 @@ import {
 import { Avatar } from './Avatar'
 import { Department } from './Department'
 import { Designation } from './Designation'
+import { Leave } from './Leave'
 
 export enum enumGender {
 	MALE = 'Male',
@@ -39,7 +41,7 @@ export class Employee extends BaseEntity {
 	@Column({ unique: true })
 	email!: string
 
-	@Column()
+	@Column({select: false})
 	password!: string
 
 	@Column({ nullable: true })
@@ -88,6 +90,9 @@ export class Employee extends BaseEntity {
 	@ManyToOne(() => Department, (department) => department.employees)
 	@JoinColumn()
 	department: Department
+
+	@OneToMany(() => Leave, (leave) => leave.employee)
+	leaves: Leave[]
 
 	@Column({ default: 0 })
 	token_version: number
