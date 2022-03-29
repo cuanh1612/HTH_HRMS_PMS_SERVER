@@ -9,5 +9,6 @@ const authRouter = express_1.default.Router();
 authRouter.post('/login', authController_1.default.login);
 authRouter.post('/login-google', authController_1.default.googleLogin);
 authRouter.get('/refresh_token', authController_1.default.refreshToken);
+authRouter.get('/me', authController_1.default.currentUser);
 authRouter.post('/logout', authController_1.default.logout);
 exports.default = authRouter;

@@ -1,19 +1,19 @@
 import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Avatar } from './Avatar';
-import { Department } from './Department';
-import { Designation } from './Designation';
-import { Leave } from './Leave';
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+	OneToOne,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+} from 'typeorm'
+import { Avatar } from './Avatar'
+import { Department } from './Department'
+import { Designation } from './Designation'
+import { Leave } from './Leave'
 
 export enum enumGender {
 	MALE = 'Male',
@@ -32,16 +32,16 @@ export class Employee extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id!: number
 
-  @Column({ unique: true })
-  employeeId!: string;
+	@Column({ unique: true })
+	employeeId!: string
 
 	@Column()
 	name!: string
 
-  @Column({ unique: true })
-  email!: string;
+	@Column({ unique: true })
+	email!: string
 
-	@Column()
+	@Column({select: false})
 	password!: string
 
 	@Column({ nullable: true })
@@ -91,11 +91,11 @@ export class Employee extends BaseEntity {
 	@JoinColumn()
 	department: Department
 
-  @OneToMany(() => Leave, (leave) => leave.employee)
-  leaves: Leave[];
+	@OneToMany(() => Leave, (leave) => leave.employee)
+	leaves: Leave[]
 
-  @Column({ default: 0 })
-  token_version: number;
+	@Column({ default: 0 })
+	token_version: number
 
 	@CreateDateColumn({
 		name: 'created_at',

@@ -6,6 +6,8 @@ export const createToken = (type: 'accessToken' | 'refreshToken', user: Employee
 	sign(
 		{
 			userId: user.id,
+			role: user.role,
+			email: user.email,
 			...(type === 'refreshToken' ? { tokenVersion: user.token_version } : {}),
 		},
 		type === 'accessToken'
@@ -21,6 +23,6 @@ export const sendRefreshToken = (res: Response, user: Employee) => {
 		httpOnly: true,
 		sameSite: 'lax',
 		secure: true,
-		path: '/api/auth/refresh_token',
+		path: '/',
 	})
 }
