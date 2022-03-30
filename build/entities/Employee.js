@@ -63,11 +63,11 @@ __decorate([
 ], Employee.prototype, "gender", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'date' }),
-    __metadata("design:type", String)
+    __metadata("design:type", Date)
 ], Employee.prototype, "joining_date", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'date', nullable: true }),
-    __metadata("design:type", String)
+    __metadata("design:type", Date)
 ], Employee.prototype, "date_of_birth", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),

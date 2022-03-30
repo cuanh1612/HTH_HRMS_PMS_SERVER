@@ -9,8 +9,6 @@ export const employeeValid = {
 			email,
 			password,
 			joining_date,
-			can_login,
-			can_receive_email,
 			hourly_rate,
 			role,
 			department,
@@ -24,13 +22,15 @@ export const employeeValid = {
 			!name ||
 			!email ||
 			!joining_date ||
-			!can_login ||
-			!can_receive_email ||
 			!hourly_rate ||
 			!department ||
 			!designation
 		) {
+<<<<<<< HEAD
 			messageError = 'Please enter full field'
+=======
+			messageError = 'Pleas 1enter full field'
+>>>>>>> 9e383d93a74d30935cfcd5b50917b0c425a88726
 			return messageError
 		}
 

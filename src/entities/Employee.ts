@@ -54,10 +54,10 @@ export class Employee extends BaseEntity {
 	gender: string
 
 	@Column({ type: 'date' })
-	joining_date!: string
+	joining_date!: Date
 
 	@Column({ type: 'date', nullable: true })
-	date_of_birth: string
+	date_of_birth: Date
 
 	@Column({ nullable: true })
 	address: string
