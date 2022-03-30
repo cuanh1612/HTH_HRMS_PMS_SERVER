@@ -3,18 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.employeeValid = void 0;
 const Employee_1 = require("../../entities/Employee");
 exports.employeeValid = {
-    createOrUpdate: ({ employeeId, name, email, password, joining_date, can_login, can_receive_email, hourly_rate, role, department, designation, }, type) => {
+    createOrUpdate: ({ employeeId, name, email, password, joining_date, hourly_rate, role, department, designation, }, type) => {
         let messageError = '';
         if (!employeeId ||
             !name ||
             !email ||
             !joining_date ||
-            !can_login ||
-            !can_receive_email ||
             !hourly_rate ||
             !department ||
             !designation) {
-            messageError = 'Pleas enter full field';
+            messageError = 'Pleas 1enter full field';
             return messageError;
         }
         if (type === 'create') {
