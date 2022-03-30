@@ -14,7 +14,7 @@ exports.employeeValid = {
             !hourly_rate ||
             !department ||
             !designation) {
-            messageError = 'Pleas enter full field';
+            messageError = 'Please enter full field';
             return messageError;
         }
         if (type === 'create') {

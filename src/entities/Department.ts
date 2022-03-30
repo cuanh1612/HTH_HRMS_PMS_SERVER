@@ -15,9 +15,6 @@ export class Department extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id!: number
 
-	@Column({ unique: true })
-	departmentId!: string
-
 	@Column()
 	name!: string
 

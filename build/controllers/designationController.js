@@ -12,94 +12,94 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Department_1 = require("../entities/Department");
+const Designation_1 = require("../entities/Designation");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
-const departmentController = {
-    //Create new department
+const designationController = {
+    //Create new designation
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const dataNewDepartment = req.body;
-        const createdDepartment = yield Department_1.Department.create(dataNewDepartment).save();
+        const dataNewdesignation = req.body;
+        const createddesignation = yield Designation_1.Designation.create(dataNewdesignation).save();
         return res.status(200).json({
             code: 200,
             success: true,
-            department: createdDepartment,
-            message: 'Created new Department successfully'
+            designation: createddesignation,
+            message: 'Created new designation successfully'
         });
     })),
-    //update department
+    //update designation
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const dataUpdateDepartment = req.body;
-        const existingDepartment = yield Department_1.Department.findOne({
+        const dataUpdatedesignation = req.body;
+        const existingdesignation = yield Designation_1.Designation.findOne({
             where: {
                 id: Number(id),
             },
         });
-        //check existed Department
-        if (!existingDepartment)
+        //check existed designation
+        if (!existingdesignation)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Department does not exist in the system',
+                message: 'designation does not exist in the system',
             });
-        yield Department_1.Department.update(existingDepartment.id, Object.assign({}, dataUpdateDepartment));
+        yield Designation_1.Designation.update(existingdesignation.id, Object.assign({}, dataUpdatedesignation));
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Update Department successfully'
+            message: 'Update designation successfully'
         });
     })),
-    //Get all department
+    //Get all designation
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const departments = yield Department_1.Department.find();
+        const designations = yield Designation_1.Designation.find();
         return res.status(200).json({
             code: 200,
             success: true,
-            departments: departments,
-            message: 'Get all department successfully',
+            designations: designations,
+            message: 'Get all designation successfully',
         });
     })),
-    //Get detail department
+    //Get detail designation
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingDepartment = yield Department_1.Department.findOne({
+        const existingdesignation = yield Designation_1.Designation.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!existingDepartment)
+        if (!existingdesignation)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Department does not exist in the system',
+                message: 'designation does not exist in the system',
             });
         return res.status(200).json({
             code: 200,
             success: true,
-            departments: existingDepartment,
-            message: 'Get detail of Department successfully',
+            designations: existingdesignation,
+            message: 'Get detail of designation successfully',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingDepartment = yield Department_1.Department.findOne({
+        const existingdesignation = yield Designation_1.Designation.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!existingDepartment)
+        if (!existingdesignation)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Department does not exist in the system',
+                message: 'designation does not exist in the system',
             });
-        //Delete Department
-        yield existingDepartment.remove();
+        //Delete designation
+        yield existingdesignation.remove();
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete Department successfully',
+            message: 'Delete designation successfully',
         });
     })),
 };
-exports.default = departmentController;
+exports.default = designationController;

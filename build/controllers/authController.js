@@ -17,6 +17,8 @@ const Employee_1 = require("../entities/Employee");
 const auth_1 = require("../utils/auth");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const jsonwebtoken_1 = require("jsonwebtoken");
+const google_auth_library_1 = require("google-auth-library");
+const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const authController = {
     login: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
@@ -45,6 +47,36 @@ const authController = {
             success: true,
             message: 'Logged in successfully',
             user: existingUser,
+            accessToken: (0, auth_1.createToken)('accessToken', existingUser),
+        });
+    })),
+    googleLogin: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        const { token } = req.body;
+        //verify email token
+        const user = yield client.verifyIdToken({
+            idToken: token,
+        });
+        //Get email
+        const userEmail = (_a = user.getAttributes().payload) === null || _a === void 0 ? void 0 : _a.email;
+        //Check existing user
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                email: userEmail,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Email does not exist in the system',
+            });
+        //Save cookie refresh token
+        (0, auth_1.sendRefreshToken)(res, existingUser);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Logged in successfully',
             accessToken: (0, auth_1.createToken)('accessToken', existingUser),
         });
     })),
@@ -107,12 +139,41 @@ const authController = {
             httpOnly: true,
             sameSite: 'lax',
             secure: true,
-            path: '/api/auth/refresh_token',
+            path: '/',
         });
         return res.status(200).json({
             code: 200,
             success: true,
             message: 'Logout successfully',
+        });
+    })),
+    currentUser: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _b;
+        const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Employee does not exist in the system',
+            });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            user: existingUser,
+            message: 'Get current user successfully',
         });
     })),
 };

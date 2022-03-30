@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const Avatar_1 = require("./Avatar");
 const Department_1 = require("./Department");
 const Designation_1 = require("./Designation");
+const Leave_1 = require("./Leave");
 var enumGender;
 (function (enumGender) {
     enumGender["MALE"] = "Male";
@@ -45,7 +46,7 @@ __decorate([
     __metadata("design:type", String)
 ], Employee.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ select: false }),
     __metadata("design:type", String)
 ], Employee.prototype, "password", void 0);
 __decorate([
@@ -100,15 +101,23 @@ __decorate([
     __metadata("design:type", Avatar_1.Avatar)
 ], Employee.prototype, "avatar", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Designation_1.Designation, (designation) => designation.employees),
+    (0, typeorm_1.ManyToOne)(() => Designation_1.Designation, (designation) => designation.employees, {
+        onDelete: "SET NULL"
+    }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Designation_1.Designation)
 ], Employee.prototype, "designation", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.employees),
+    (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.employees, {
+        onDelete: "SET NULL"
+    }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Department_1.Department)
 ], Employee.prototype, "department", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Leave_1.Leave, (leave) => leave.employee),
+    __metadata("design:type", Array)
+], Employee.prototype, "leaves", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)
