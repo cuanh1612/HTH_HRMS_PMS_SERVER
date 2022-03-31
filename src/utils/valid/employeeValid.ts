@@ -26,11 +26,7 @@ export const employeeValid = {
 			!department ||
 			!designation
 		) {
-<<<<<<< HEAD
 			messageError = 'Please enter full field'
-=======
-			messageError = 'Pleas 1enter full field'
->>>>>>> 9e383d93a74d30935cfcd5b50917b0c425a88726
 			return messageError
 		}
 

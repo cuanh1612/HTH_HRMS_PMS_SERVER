@@ -45,7 +45,7 @@ const employeeController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            employees: existingEmployee,
+            employee: existingEmployee,
             message: 'Get detail employee successfully',
         });
     })),

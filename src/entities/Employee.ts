@@ -84,13 +84,15 @@ export class Employee extends BaseEntity {
 	avatar: Avatar
 
 	@ManyToOne(() => Designation, (designation) => designation.employees,{
-		onDelete: "SET NULL"
+		onDelete: "SET NULL",
+		eager: true
 	})
 	@JoinColumn()
 	designation: Designation
 
 	@ManyToOne(() => Department, (department) => department.employees,{
-		onDelete: "SET NULL"
+		onDelete: "SET NULL",
+		eager: true
 	})
 	@JoinColumn()
 	department: Department

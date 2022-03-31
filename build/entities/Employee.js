@@ -102,14 +102,16 @@ __decorate([
 ], Employee.prototype, "avatar", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Designation_1.Designation, (designation) => designation.employees, {
-        onDelete: "SET NULL"
+        onDelete: "SET NULL",
+        eager: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Designation_1.Designation)
 ], Employee.prototype, "designation", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.employees, {
-        onDelete: "SET NULL"
+        onDelete: "SET NULL",
+        eager: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Department_1.Department)
