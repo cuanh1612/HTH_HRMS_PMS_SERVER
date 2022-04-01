@@ -26,6 +26,13 @@ const authController = {
 				message: 'Incorrect email or password',
 			})
 
+		if (!existingUser.can_login)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: "You can't login to the system",
+			})
+
 		const isPasswordValid = await argon2.verify(existingUser.password, password)
 
 		if (!isPasswordValid)
@@ -70,6 +77,13 @@ const authController = {
 				code: 400,
 				success: false,
 				message: 'Email does not exist in the system',
+			})
+
+		if (!existingUser.can_login)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: "You can't login to the system",
 			})
 
 		//Save cookie refresh token

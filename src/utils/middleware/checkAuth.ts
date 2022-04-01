@@ -1,5 +1,6 @@
 import { Response, Request, NextFunction } from 'express'
 import { verify, Secret } from 'jsonwebtoken'
+import { UserAuthPayload } from '../../type/UserAuthPayload'
 
 export const checkAuth = (roles: string[] | null) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
@@ -9,6 +10,8 @@ export const checkAuth = (roles: string[] | null) => {
 			//auth Header here is "Bearer accessToken"
 			const authHeader = req.header('Authorization')
 			const accessToken = authHeader && authHeader.split(' ')[1]
+			console.log(accessToken);
+			
 
 			if (!accessToken)
 				return res.status(401).json({
@@ -18,8 +21,21 @@ export const checkAuth = (roles: string[] | null) => {
 				})
 
 			//Decode user
-			const decodeUser = verify(accessToken, process.env.ACCESS_TOKEN_SECRET as Secret)
-			console.log(decodeUser)
+			const decodeUser: UserAuthPayload = verify(
+				accessToken,
+				process.env.ACCESS_TOKEN_SECRET as Secret
+			) as UserAuthPayload
+
+			//Check role
+			if (decodeUser) {
+				if (roles && Array.isArray(roles) && roles.includes(decodeUser.role)) {
+					return res.status(401).json({
+						code: 401,
+						success: false,
+						message: 'No permission to perform this function',
+					})
+				}
+			}
 
 			return next()
 		} catch (error) {

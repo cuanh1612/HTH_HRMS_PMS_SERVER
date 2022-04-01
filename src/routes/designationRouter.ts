@@ -1,16 +1,17 @@
 import express from 'express'
 import designationController from '../controllers/designationController'
+import { checkAuth } from '../utils/middleware/checkAuth'
 
 const designationRouter = express.Router()
 
-designationRouter.post('/', designationController.create)
+designationRouter.post('/', checkAuth(['Admin']), designationController.create)
 
 
-designationRouter.put('/:id', designationController.update)
+designationRouter.put('/:id', checkAuth(['Admin']), designationController.update)
 
 designationRouter.get('/', designationController.getAll)
 designationRouter.get('/:id', designationController.getDetail)
 
-designationRouter.delete('/:id', designationController.delete)
+designationRouter.delete('/:id', checkAuth(['Admin']), designationController.delete)
 
 export default designationRouter

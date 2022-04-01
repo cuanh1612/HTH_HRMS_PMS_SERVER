@@ -17,6 +17,7 @@ var enumStatus;
 (function (enumStatus) {
     enumStatus["APPROVED"] = "Approved";
     enumStatus["PENDING"] = "Pending";
+    enumStatus["REJECTED"] = "Rejected";
 })(enumStatus = exports.enumStatus || (exports.enumStatus = {}));
 var enumDuration;
 (function (enumDuration) {

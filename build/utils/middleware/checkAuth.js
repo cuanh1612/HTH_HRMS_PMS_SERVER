@@ -18,6 +18,7 @@ const checkAuth = (roles) => {
             //auth Header here is "Bearer accessToken"
             const authHeader = req.header('Authorization');
             const accessToken = authHeader && authHeader.split(' ')[1];
+            console.log(accessToken);
             if (!accessToken)
                 return res.status(401).json({
                     code: 401,
@@ -26,7 +27,16 @@ const checkAuth = (roles) => {
                 });
             //Decode user
             const decodeUser = (0, jsonwebtoken_1.verify)(accessToken, process.env.ACCESS_TOKEN_SECRET);
-            console.log(decodeUser);
+            //Check role
+            if (decodeUser) {
+                if (roles && Array.isArray(roles) && roles.includes(decodeUser.role)) {
+                    return res.status(401).json({
+                        code: 401,
+                        success: false,
+                        message: 'No permission to perform this function',
+                    });
+                }
+            }
             return next();
         }
         catch (error) {
