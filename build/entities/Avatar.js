@@ -20,6 +20,10 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
+], Avatar.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], Avatar.prototype, "public_id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),

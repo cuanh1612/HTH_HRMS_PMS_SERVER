@@ -10,8 +10,7 @@ export const checkAuth = (roles: string[] | null) => {
 			//auth Header here is "Bearer accessToken"
 			const authHeader = req.header('Authorization')
 			const accessToken = authHeader && authHeader.split(' ')[1]
-			console.log(accessToken);
-			
+			console.log(accessToken)
 
 			if (!accessToken)
 				return res.status(401).json({
@@ -28,7 +27,12 @@ export const checkAuth = (roles: string[] | null) => {
 
 			//Check role
 			if (decodeUser) {
-				if (roles && Array.isArray(roles) && roles.includes(decodeUser.role)) {
+				if (
+					roles &&
+					Array.isArray(roles) &&
+					roles.length > 0 &&
+					!roles.includes(decodeUser.role)
+				) {
 					return res.status(401).json({
 						code: 401,
 						success: false,

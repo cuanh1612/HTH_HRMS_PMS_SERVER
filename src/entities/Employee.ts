@@ -41,7 +41,7 @@ export class Employee extends BaseEntity {
 	@Column({ unique: true })
 	email!: string
 
-	@Column({select: false})
+	@Column({ select: false })
 	password!: string
 
 	@Column({ nullable: true })
@@ -79,20 +79,21 @@ export class Employee extends BaseEntity {
 
 	@OneToOne(() => Avatar, {
 		cascade: true,
+		eager: true,
 	})
 	@JoinColumn()
 	avatar: Avatar
 
-	@ManyToOne(() => Designation, (designation) => designation.employees,{
-		onDelete: "SET NULL",
-		eager: true
+	@ManyToOne(() => Designation, (designation) => designation.employees, {
+		onDelete: 'SET NULL',
+		eager: true,
 	})
 	@JoinColumn()
 	designation: Designation
 
-	@ManyToOne(() => Department, (department) => department.employees,{
-		onDelete: "SET NULL",
-		eager: true
+	@ManyToOne(() => Department, (department) => department.employees, {
+		onDelete: 'SET NULL',
+		eager: true,
 	})
 	@JoinColumn()
 	department: Department

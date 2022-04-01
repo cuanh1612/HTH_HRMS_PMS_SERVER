@@ -29,7 +29,10 @@ const checkAuth = (roles) => {
             const decodeUser = (0, jsonwebtoken_1.verify)(accessToken, process.env.ACCESS_TOKEN_SECRET);
             //Check role
             if (decodeUser) {
-                if (roles && Array.isArray(roles) && roles.includes(decodeUser.role)) {
+                if (roles &&
+                    Array.isArray(roles) &&
+                    roles.length > 0 &&
+                    !roles.includes(decodeUser.role)) {
                     return res.status(401).json({
                         code: 401,
                         success: false,

@@ -1,5 +1,6 @@
 import argon2 from 'argon2'
 import { Request, Response } from 'express'
+import { Avatar } from '../entities/Avatar'
 import { Department } from '../entities/Department'
 import { Designation } from '../entities/Designation'
 import { Employee } from '../entities/Employee'
@@ -181,14 +182,32 @@ const employeeController = {
 				})
 		}
 
+		//Check exist and update avatar
+		const { avatar, ...dataUpdateEmployeeBase } = dataUpdateEmployee
+		if (avatar) {
+			if (existingEmployee.avatar) {
+				const existingAvatar = await Avatar.findOne({
+					where: {
+						id: existingEmployee.avatar.id,
+					},
+				})
+
+				if (existingAvatar) {
+					await Avatar.update(existingAvatar.id, {
+						...avatar,
+					})
+				}
+			}
+		}
+
 		//Update employee
 		await Employee.update(
 			{
 				id: existingEmployee.id,
 			},
 			{
-				...dataUpdateEmployee,
-				...(dataUpdateEmployee.password
+				...dataUpdateEmployeeBase,
+				...(dataUpdateEmployeeBase.password
 					? { password: await argon2.hash(dataUpdateEmployee.password) }
 					: {}),
 			}
@@ -199,7 +218,6 @@ const employeeController = {
 			success: true,
 			message: 'Updated employee successfully',
 		})
-		
 	}),
 
 	changeRole: handleCatchError(async (req: Request, res: Response) => {
@@ -260,49 +278,49 @@ const employeeController = {
 		//Delete employee
 		await existingEmployee.remove()
 
-    return res.status(200).json({
-      code: 200,
-      success: true,
-      message: 'Delete employee successfully',
-    });
-  }),
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete employee successfully',
+		})
+	}),
 
-  deleteMany: handleCatchError(async (req: Request, res: Response) => {
-    const { employees } = req.body;
-    if (employees)
-      return res.status(400).json({
-        code: 400,
-        success: false,
-        message: 'Please select many employees to delete',
-      });
+	deleteMany: handleCatchError(async (req: Request, res: Response) => {
+		const { employees } = req.body
+		if (employees)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
 
-    for (let index = 0; index < employees.length; index++) {
-      const employeeId = employees[index];
+		for (let index = 0; index < employees.length; index++) {
+			const employeeId = employees[index]
 
-      //Check existing employee
-      const existingEmployee = await Employee.findOne({
-        where: {
-          id: Number(employeeId),
-        },
-      });
+			//Check existing employee
+			const existingEmployee = await Employee.findOne({
+				where: {
+					id: Number(employeeId),
+				},
+			})
 
-      if (!existingEmployee)
-        return res.status(400).json({
-          code: 400,
-          success: false,
-          message: 'Employee does not exist in the system',
-        });
+			if (!existingEmployee)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Employee does not exist in the system',
+				})
 
-      //Delete employee
-      await existingEmployee.remove();
-    }
+			//Delete employee
+			await existingEmployee.remove()
+		}
 
-    return res.status(200).json({
-      code: 200,
-      success: true,
-      message: 'Delete employee successfully',
-    });
-  }),
-};
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete employee successfully',
+		})
+	}),
+}
 
 export default employeeController
