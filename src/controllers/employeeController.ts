@@ -210,6 +210,11 @@ const employeeController = {
 				...(dataUpdateEmployeeBase.password
 					? { password: await argon2.hash(dataUpdateEmployee.password) }
 					: {}),
+				...(existingEmployee.avatar
+					? {}
+					: {
+							avatar,
+					  }),
 			}
 		)
 
