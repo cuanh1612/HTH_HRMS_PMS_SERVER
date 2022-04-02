@@ -176,6 +176,7 @@ const employeeController = {
         }
         //Check exist and update avatar
         const { avatar } = dataUpdateEmployee, dataUpdateEmployeeBase = __rest(dataUpdateEmployee, ["avatar"]);
+        let newAvatar = null;
         if (avatar) {
             if (existingEmployee.avatar) {
                 const existingAvatar = yield Avatar_1.Avatar.findOne({
@@ -187,12 +188,19 @@ const employeeController = {
                     yield Avatar_1.Avatar.update(existingAvatar.id, Object.assign({}, avatar));
                 }
             }
+            else {
+                newAvatar = yield Avatar_1.Avatar.create(Object.assign({}, avatar)).save();
+            }
         }
         //Update employee
         yield Employee_1.Employee.update({
             id: existingEmployee.id,
-        }, Object.assign(Object.assign({}, dataUpdateEmployeeBase), (dataUpdateEmployeeBase.password
+        }, Object.assign(Object.assign(Object.assign({}, dataUpdateEmployeeBase), (dataUpdateEmployeeBase.password
             ? { password: yield argon2_1.default.hash(dataUpdateEmployee.password) }
+            : {})), (newAvatar
+            ? {
+                avatar: newAvatar,
+            }
             : {})));
         return res.status(200).json({
             code: 200,

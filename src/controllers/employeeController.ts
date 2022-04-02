@@ -184,6 +184,8 @@ const employeeController = {
 
 		//Check exist and update avatar
 		const { avatar, ...dataUpdateEmployeeBase } = dataUpdateEmployee
+		let newAvatar: Avatar | null = null
+
 		if (avatar) {
 			if (existingEmployee.avatar) {
 				const existingAvatar = await Avatar.findOne({
@@ -197,6 +199,10 @@ const employeeController = {
 						...avatar,
 					})
 				}
+			} else {
+				newAvatar = await Avatar.create({
+					...avatar,
+				}).save()
 			}
 		}
 
@@ -210,11 +216,11 @@ const employeeController = {
 				...(dataUpdateEmployeeBase.password
 					? { password: await argon2.hash(dataUpdateEmployee.password) }
 					: {}),
-				...(existingEmployee.avatar
-					? {}
-					: {
-							avatar,
-					  }),
+				...(newAvatar
+					? {
+							avatar: newAvatar,
+					  }
+					: {}),
 			}
 		)
 
