@@ -27,6 +27,27 @@ const leaveController = {
             message: 'Get all leaves successfully',
         });
     })),
+    getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { leaveId } = req.params;
+        //Check existing leave
+        const existingLeave = yield Leave_1.Leave.findOne({
+            where: {
+                id: Number(leaveId),
+            },
+        });
+        if (!existingLeave)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Leave does not exist in the system',
+            });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            leave: existingLeave,
+            message: 'Get all leaves successfully',
+        });
+    })),
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewLeave = req.body;
         //Check valid
@@ -62,9 +83,9 @@ const leaveController = {
                 message: 'Leave type does not exist in the system',
             });
         //Check duration date leave
-        if (Array.isArray(dataNewLeave.date)) {
-            for (let index = 0; index < dataNewLeave.date.length; index++) {
-                const date = dataNewLeave.date[index];
+        if (dataNewLeave.dates && Array.isArray(dataNewLeave.dates)) {
+            for (let index = 0; index < dataNewLeave.dates.length; index++) {
+                const date = dataNewLeave.dates[index];
                 //Check existing leave date and remove
                 const existingLeaveDate = yield Leave_1.Leave.createQueryBuilder('leave')
                     .where('leave.employeeId = :id', {
@@ -107,6 +128,86 @@ const leaveController = {
             code: 200,
             success: true,
             message: 'Created leave successfully',
+        });
+    })),
+    update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const dataUpdateLeave = req.body;
+        const { leaveId } = req.params;
+        //Check valid
+        const messageValid = leaveValid_1.leaveValid.createOrUpdate(dataUpdateLeave);
+        if (messageValid)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: messageValid,
+            });
+        //Check existing leave
+        const leaveUpdate = yield Leave_1.Leave.findOne({
+            where: {
+                id: Number(leaveId),
+            },
+        });
+        if (!leaveUpdate)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Leave does not exist in the system',
+            });
+        //Check leave accepted or rejected`
+        if (leaveUpdate.duration !== 'Pending')
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'This leave has been processed and cannot be updated',
+            });
+        //Check exist employee
+        const existingEmployee = yield Employee_1.Employee.findOne({
+            where: {
+                id: leaveUpdate.employee.id,
+            },
+        });
+        if (!existingEmployee)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Employee does not exist in the system',
+            });
+        //Check exist leave type
+        const existingLeaveType = yield LeaveType_1.LeaveType.findOne({
+            where: {
+                id: dataUpdateLeave.leave_type,
+            },
+        });
+        if (!existingLeaveType)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Leave type does not exist in the system',
+            });
+        //Check existing leave date and remove
+        const existingLeaveDate = yield Leave_1.Leave.createQueryBuilder('leave')
+            .where('leave.employeeId = :id', {
+            id: leaveUpdate.employee.id,
+        })
+            .andWhere('leave.date = :date', {
+            date: dataUpdateLeave.date,
+        })
+            .getOne();
+        // Leave already applied for the selected date will delete
+        if (existingLeaveDate && existingLeaveDate.date !== leaveUpdate.date) {
+            yield existingLeaveDate.remove();
+        }
+        //Update leave
+        yield Leave_1.Leave.update(Number(leaveId), {
+            date: dataUpdateLeave.date,
+            reason: dataUpdateLeave.reason,
+            duration: dataUpdateLeave.duration,
+            leave_type: dataUpdateLeave.leave_type,
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Updated leave successfully',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -19,7 +19,7 @@ __decorate([
     __metadata("design:type", Number)
 ], LeaveType.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], LeaveType.prototype, "name", void 0);
 __decorate([

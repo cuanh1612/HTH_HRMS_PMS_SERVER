@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.leaveValid = void 0;
 const Leave_1 = require("../../entities/Leave");
 exports.leaveValid = {
-    createOrUpdate: ({ status, duration, employee, leave_type }) => {
+    createOrUpdate: ({ status, duration, employee, leave_type, dates, date }) => {
         let messageError = '';
-        if (!employee || !leave_type) {
+        if (!employee || !leave_type || (!dates && !date)) {
             messageError = 'Pleas enter full field';
             return messageError;
         }

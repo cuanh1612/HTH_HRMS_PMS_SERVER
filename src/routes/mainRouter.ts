@@ -4,6 +4,7 @@ import employeeRouter from './employeeRouter'
 import departmentRouter from './departmentRouter'
 import designationRouter from './designationRouter'
 import leaveTypeRouter from './leaveTypeRouter'
+import leaveRouter from './leaveRouter'
 
 
 const mainRouter = (app: core.Express) => {
@@ -16,6 +17,8 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/designations', designationRouter)
 
 	app.use('/api/leave-types', leaveTypeRouter)
+
+	app.use('/api/leaves', leaveRouter)
 }
 
 export default mainRouter
