@@ -1,12 +1,12 @@
 import {
-    BaseEntity,
-    Column,
-    CreateDateColumn,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
 } from 'typeorm'
 import { Employee } from './Employee'
 import { LeaveType } from './LeaveType'
@@ -30,6 +30,7 @@ export class Leave extends BaseEntity {
 	@ManyToOne(() => Employee, (employee) => employee.leaves, {
 		onDelete: 'CASCADE',
 		nullable: false,
+		eager: true
 	})
 	@JoinColumn()
 	employee!: Employee
@@ -41,9 +42,9 @@ export class Leave extends BaseEntity {
 	duration!: string
 
 	@Column({ type: 'date' })
-	date!: string
+	date!: Date
 
-	@ManyToOne(() => LeaveType, (leaveType) => leaveType.leaves, { nullable: false })
+	@ManyToOne(() => LeaveType, (leaveType) => leaveType.leaves, { nullable: false, eager: true })
 	@JoinColumn()
 	leave_type!: LeaveType
 

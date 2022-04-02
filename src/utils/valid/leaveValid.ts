@@ -2,10 +2,10 @@ import { enumDuration, enumStatus } from '../../entities/Leave';
 import { createOrUpdatetLeavePayload } from '../../type/LeavePayload';
 
 export const leaveValid = {
-  createOrUpdate: ({ status, duration, employee, leave_type }: createOrUpdatetLeavePayload) => {
+  createOrUpdate: ({ status, duration, employee, leave_type, dates, date }: createOrUpdatetLeavePayload) => {
     let messageError = '';
 
-    if (!employee || !leave_type) {
+    if (!employee || !leave_type || (!dates && !date)) {
       messageError = 'Pleas enter full field';
       return messageError;
     }
