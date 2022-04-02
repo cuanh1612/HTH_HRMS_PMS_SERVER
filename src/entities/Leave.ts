@@ -14,6 +14,7 @@ import { LeaveType } from './LeaveType'
 export enum enumStatus {
 	APPROVED = 'Approved',
 	PENDING = 'Pending',
+	REJECTED = 'Rejected',
 }
 
 export enum enumDuration {

@@ -63,11 +63,11 @@ __decorate([
 ], Employee.prototype, "gender", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'date' }),
-    __metadata("design:type", String)
+    __metadata("design:type", Date)
 ], Employee.prototype, "joining_date", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'date', nullable: true }),
-    __metadata("design:type", String)
+    __metadata("design:type", Date)
 ], Employee.prototype, "date_of_birth", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
@@ -96,17 +96,24 @@ __decorate([
 __decorate([
     (0, typeorm_1.OneToOne)(() => Avatar_1.Avatar, {
         cascade: true,
+        eager: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Avatar_1.Avatar)
 ], Employee.prototype, "avatar", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Designation_1.Designation, (designation) => designation.employees),
+    (0, typeorm_1.ManyToOne)(() => Designation_1.Designation, (designation) => designation.employees, {
+        onDelete: 'SET NULL',
+        eager: true,
+    }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Designation_1.Designation)
 ], Employee.prototype, "designation", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.employees),
+    (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.employees, {
+        onDelete: 'SET NULL',
+        eager: true,
+    }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Department_1.Department)
 ], Employee.prototype, "department", void 0);

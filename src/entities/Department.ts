@@ -32,3 +32,4 @@ export class Department extends BaseEntity {
 	})
 	updatedAt: Date
 }
+

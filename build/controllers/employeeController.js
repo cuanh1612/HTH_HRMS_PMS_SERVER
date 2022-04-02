@@ -8,11 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
+const Avatar_1 = require("../entities/Avatar");
 const Department_1 = require("../entities/Department");
 const Designation_1 = require("../entities/Designation");
 const Employee_1 = require("../entities/Employee");
@@ -45,7 +57,7 @@ const employeeController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            employees: existingEmployee,
+            employee: existingEmployee,
             message: 'Get detail employee successfully',
         });
     })),
@@ -108,7 +120,7 @@ const employeeController = {
             code: 200,
             success: true,
             employee: createdEmployee,
-            message: 'Created new employee successfully',
+            message: 'Created new Employee successfully',
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -162,10 +174,24 @@ const employeeController = {
                     message: 'Designation does not exist in the system',
                 });
         }
+        //Check exist and update avatar
+        const { avatar } = dataUpdateEmployee, dataUpdateEmployeeBase = __rest(dataUpdateEmployee, ["avatar"]);
+        if (avatar) {
+            if (existingEmployee.avatar) {
+                const existingAvatar = yield Avatar_1.Avatar.findOne({
+                    where: {
+                        id: existingEmployee.avatar.id,
+                    },
+                });
+                if (existingAvatar) {
+                    yield Avatar_1.Avatar.update(existingAvatar.id, Object.assign({}, avatar));
+                }
+            }
+        }
         //Update employee
         yield Employee_1.Employee.update({
             id: existingEmployee.id,
-        }, Object.assign(Object.assign({}, dataUpdateEmployee), (dataUpdateEmployee.password
+        }, Object.assign(Object.assign({}, dataUpdateEmployeeBase), (dataUpdateEmployeeBase.password
             ? { password: yield argon2_1.default.hash(dataUpdateEmployee.password) }
             : {})));
         return res.status(200).json({
