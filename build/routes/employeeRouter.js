@@ -8,7 +8,7 @@ const employeeController_1 = __importDefault(require("../controllers/employeeCon
 const checkAuth_1 = require("../utils/middleware/checkAuth");
 const userRouter = express_1.default.Router();
 userRouter.post('/', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.create);
-userRouter.post('/delete_may', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.deleteMany);
+userRouter.post('/delete-many', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.deleteMany);
 userRouter.put('/role', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.changeRole);
 userRouter.put('/:employeeId', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.update);
 userRouter.get('/', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getAll);

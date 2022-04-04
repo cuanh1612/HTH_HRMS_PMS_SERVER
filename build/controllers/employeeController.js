@@ -191,9 +191,13 @@ const employeeController = {
         //Update employee
         yield Employee_1.Employee.update({
             id: existingEmployee.id,
-        }, Object.assign(Object.assign({}, dataUpdateEmployeeBase), (dataUpdateEmployeeBase.password
+        }, Object.assign(Object.assign(Object.assign({}, dataUpdateEmployeeBase), (dataUpdateEmployeeBase.password
             ? { password: yield argon2_1.default.hash(dataUpdateEmployee.password) }
-            : {})));
+            : {})), (existingEmployee.avatar
+            ? {}
+            : {
+                avatar,
+            })));
         return res.status(200).json({
             code: 200,
             success: true,
@@ -255,7 +259,7 @@ const employeeController = {
     })),
     deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { employees } = req.body;
-        if (employees)
+        if (!employees)
             return res.status(400).json({
                 code: 400,
                 success: false,

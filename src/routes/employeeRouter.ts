@@ -5,7 +5,7 @@ import { checkAuth } from '../utils/middleware/checkAuth';
 const userRouter = express.Router()
 
 userRouter.post('/', checkAuth(['Admin']), employeeController.create);
-userRouter.post('/delete_may', checkAuth(['Admin']), employeeController.deleteMany);
+userRouter.post('/delete-many', checkAuth(['Admin']), employeeController.deleteMany);
 
 userRouter.put('/role', checkAuth(['Admin']), employeeController.changeRole)
 userRouter.put('/:employeeId', checkAuth(['Admin']), employeeController.update)

@@ -292,7 +292,7 @@ const employeeController = {
 
 	deleteMany: handleCatchError(async (req: Request, res: Response) => {
 		const { employees } = req.body
-		if (employees)
+		if (!employees)
 			return res.status(400).json({
 				code: 400,
 				success: false,

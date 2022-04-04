@@ -15,11 +15,7 @@ const connectDB = () => {
         password: process.env.DB_PASSWORD_DEV,
         logging: true,
         synchronize: true,
-<<<<<<< HEAD
-        entities: [Employee_1.Employee, Avatar_1.Avatar, Designation_1.Designation, Department_1.Department],
-=======
         entities: [Employee_1.Employee, Avatar_1.Avatar, Designation_1.Designation, Department_1.Department, Leave_1.Leave, LeaveType_1.LeaveType],
->>>>>>> dc3d2c5313e92b7209af2d6f386bd97a91fd9913
     })
         .then(() => {
         console.log('Connected DB successfully.');
