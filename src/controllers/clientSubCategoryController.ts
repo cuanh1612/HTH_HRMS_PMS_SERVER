@@ -108,7 +108,7 @@ const clientSubCategoryController = {
 			code: 200,
 			success: true,
 			clientSubCategories,
-			message: 'Get all client categories successfully',
+			message: 'Get all client sub categories successfully',
 		})
 	}),
 

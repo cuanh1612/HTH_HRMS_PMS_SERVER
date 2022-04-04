@@ -100,7 +100,7 @@ const clientSubCategoryController = {
             code: 200,
             success: true,
             clientSubCategories,
-            message: 'Get all client categories successfully',
+            message: 'Get all client sub categories successfully',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
