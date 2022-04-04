@@ -263,7 +263,7 @@ const employeeController = {
     })),
     deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { employees } = req.body;
-        if (employees)
+        if (!employees)
             return res.status(400).json({
                 code: 400,
                 success: false,

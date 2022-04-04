@@ -5,7 +5,9 @@ import departmentRouter from './departmentRouter'
 import designationRouter from './designationRouter'
 import leaveTypeRouter from './leaveTypeRouter'
 import leaveRouter from './leaveRouter'
-
+import clientRouter from './clientRouter'
+import clientCategoryRouter from './clientCategoryRouter'
+import clientSubCategoryRouter from './clientSubCategoryRouter'
 
 const mainRouter = (app: core.Express) => {
 	app.use('/api/auth', authRouter)
@@ -19,6 +21,12 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/leave-types', leaveTypeRouter)
 
 	app.use('/api/leaves', leaveRouter)
+
+	app.use('/api/clients', clientRouter)
+
+	app.use('/api/client-categories', clientCategoryRouter)
+
+	app.use('/api/client-sub-categories', clientSubCategoryRouter)
 }
 
 export default mainRouter
