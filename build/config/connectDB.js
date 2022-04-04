@@ -13,7 +13,7 @@ const LeaveType_1 = require("../entities/LeaveType");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
-        database: 'hth_hrms_pms',
+        database: 'HTH_HRMS_PMS',
         username: process.env.DB_USERNAME_DEV,
         password: process.env.DB_PASSWORD_DEV,
         logging: true,

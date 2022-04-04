@@ -197,19 +197,11 @@ const employeeController = {
             id: existingEmployee.id,
         }, Object.assign(Object.assign(Object.assign({}, dataUpdateEmployeeBase), (dataUpdateEmployeeBase.password
             ? { password: yield argon2_1.default.hash(dataUpdateEmployee.password) }
-<<<<<<< HEAD
-            : {})), (existingEmployee.avatar
-            ? {}
-            : {
-                avatar,
-            })));
-=======
             : {})), (newAvatar
             ? {
                 avatar: newAvatar,
             }
             : {})));
->>>>>>> 42a1af8692869b53a96be797f4bc000726c65cc6
         return res.status(200).json({
             code: 200,
             success: true,
