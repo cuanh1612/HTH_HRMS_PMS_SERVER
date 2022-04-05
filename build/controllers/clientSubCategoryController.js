@@ -53,6 +53,7 @@ const clientSubCategoryController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const dataUpdateSubCategory = req.body;
+        console.log(dataUpdateSubCategory, id);
         //Check valid
         const messageValid = clientSubCategoryValid_1.clientSubCategoryValid.createOrUpdate(dataUpdateSubCategory);
         if (messageValid)
@@ -73,18 +74,20 @@ const clientSubCategoryController = {
                 success: false,
                 message: 'Client sub category does not exist in the system',
             });
-        //Check exist client category
-        const existingClientCategory = yield Client_Category_1.Client_Category.findOne({
-            where: {
-                id: dataUpdateSubCategory.client_category,
-            },
-        });
-        if (!existingClientCategory)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Client category does not exist in the system',
+        //Check exist client
+        if (dataUpdateSubCategory.client_category) {
+            const existingClientCategory = yield Client_Category_1.Client_Category.findOne({
+                where: {
+                    id: dataUpdateSubCategory.client_category,
+                },
             });
+            if (!existingClientCategory)
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Client category does not exist in the system',
+                });
+        }
         //Update client sub category
         yield Client_Sub_Category_1.Client_Sub_Category.update(existingSubCategory.id, Object.assign({}, dataUpdateSubCategory));
         return res.status(200).json({

@@ -64,6 +64,7 @@ const clientController = {
     })),
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewClient = req.body;
+        console.log('fdg sg dfsh sdfh dfsg sdfg dsh dshsd gd ', dataNewClient);
         //Check valid
         const messageValid = clientValid_1.clientValid.createOrUpdate(dataNewClient, 'create');
         if (messageValid)
@@ -126,7 +127,11 @@ const clientController = {
         }
         const hashPassword = yield argon2_1.default.hash(dataNewClient.password);
         //Create new client
-        const newClient = Client_1.Client.create(Object.assign(Object.assign({}, dataNewClient), { password: hashPassword }));
+        const newClient = Client_1.Client.create(Object.assign(Object.assign({}, dataNewClient), { password: hashPassword, client_category: dataNewClient.client_category
+                ? dataNewClient.client_category
+                : undefined, client_sub_category: dataNewClient.client_sub_category
+                ? dataNewClient.client_sub_category
+                : undefined }));
         const createdClient = yield newClient.save();
         return res.status(200).json({
             code: 200,

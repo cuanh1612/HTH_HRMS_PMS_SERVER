@@ -2,10 +2,10 @@ import { createOrUpdatetClientSubCategoryPayload } from '../../type/ClientSubCat
 
 export const clientSubCategoryValid = {
 	createOrUpdate: (
-		{ name, client_category }: createOrUpdatetClientSubCategoryPayload,
+		{ name }: createOrUpdatetClientSubCategoryPayload,
 	) => {
 		let messageError = ''
-		if (!name || !client_category) {
+		if (!name) {
 			messageError = 'Please enter full field'
 			return messageError
 		}

@@ -47,6 +47,7 @@ const clientController = {
 
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewClient: createOrUpdatetClientPayload = req.body
+		console.log('fdg sg dfsh sdfh dfsg sdfg dsh dshsd gd ', dataNewClient)
 
 		//Check valid
 		const messageValid = clientValid.createOrUpdate(dataNewClient, 'create')
@@ -124,6 +125,12 @@ const clientController = {
 		const newClient = Client.create({
 			...dataNewClient,
 			password: hashPassword,
+			client_category: dataNewClient.client_category
+				? dataNewClient.client_category
+				: undefined,
+			client_sub_category: dataNewClient.client_sub_category
+				? dataNewClient.client_sub_category
+				: undefined,
 		})
 
 		const createdClient = await newClient.save()
@@ -138,7 +145,7 @@ const clientController = {
 
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const dataUpdateClient: createOrUpdatetClientPayload = req.body
-		const { clientId } = req.params
+		const { clientId } = req.params		
 
 		//Check valid
 		const messageValid = clientValid.createOrUpdate(dataUpdateClient, 'update')

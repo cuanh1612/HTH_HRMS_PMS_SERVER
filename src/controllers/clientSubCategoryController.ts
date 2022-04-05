@@ -50,6 +50,7 @@ const clientSubCategoryController = {
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 		const dataUpdateSubCategory: createOrUpdatetClientSubCategoryPayload = req.body
+		console.log(dataUpdateSubCategory, id)
 
 		//Check valid
 		const messageValid = clientSubCategoryValid.createOrUpdate(dataUpdateSubCategory)
@@ -75,19 +76,21 @@ const clientSubCategoryController = {
 				message: 'Client sub category does not exist in the system',
 			})
 
-		//Check exist client category
-		const existingClientCategory = await Client_Category.findOne({
-			where: {
-				id: dataUpdateSubCategory.client_category,
-			},
-		})
-
-		if (!existingClientCategory)
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'Client category does not exist in the system',
+		//Check exist client
+		if (dataUpdateSubCategory.client_category) {
+			const existingClientCategory = await Client_Category.findOne({
+				where: {
+					id: dataUpdateSubCategory.client_category,
+				},
 			})
+
+			if (!existingClientCategory)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Client category does not exist in the system',
+				})
+		}
 
 		//Update client sub category
 		await Client_Sub_Category.update(existingSubCategory.id, {
