@@ -143,6 +143,7 @@ const clientController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataUpdateClient = req.body;
         const { clientId } = req.params;
+        console.log(clientId);
         //Check valid
         const messageValid = clientValid_1.clientValid.createOrUpdate(dataUpdateClient, 'update');
         if (messageValid)
@@ -239,13 +240,17 @@ const clientController = {
         //Update client
         yield Client_1.Client.update({
             id: existingClient.id,
-        }, Object.assign(Object.assign(Object.assign({}, dataUpdateClientBase), (dataUpdateClientBase.password
+        }, Object.assign(Object.assign(Object.assign(Object.assign({}, dataUpdateClientBase), (dataUpdateClientBase.password
             ? { password: yield argon2_1.default.hash(dataUpdateClient.password) }
             : {})), (newAvatar
             ? {
                 avatar: newAvatar,
             }
-            : {})));
+            : {})), { client_category: dataUpdateClient.client_category
+                ? dataUpdateClient.client_category
+                : undefined, client_sub_category: dataUpdateClient.client_sub_category
+                ? dataUpdateClient.client_sub_category
+                : undefined }));
         return res.status(200).json({
             code: 200,
             success: true,

@@ -145,7 +145,8 @@ const clientController = {
 
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const dataUpdateClient: createOrUpdatetClientPayload = req.body
-		const { clientId } = req.params		
+		const { clientId } = req.params
+		console.log(clientId)
 
 		//Check valid
 		const messageValid = clientValid.createOrUpdate(dataUpdateClient, 'update')
@@ -274,6 +275,12 @@ const clientController = {
 							avatar: newAvatar,
 					  }
 					: {}),
+				client_category: dataUpdateClient.client_category
+					? dataUpdateClient.client_category
+					: undefined,
+				client_sub_category: dataUpdateClient.client_sub_category
+					? dataUpdateClient.client_sub_category
+					: undefined,
 			}
 		)
 
