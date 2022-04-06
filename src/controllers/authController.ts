@@ -6,6 +6,7 @@ import handleCatchError from '../utils/catchAsyncError'
 import { Secret, verify } from 'jsonwebtoken'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import { OAuth2Client } from 'google-auth-library'
+import { Client } from '../entities/Client'
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
@@ -13,11 +14,17 @@ const authController = {
 	login: handleCatchError(async (req: Request, res: Response) => {
 		const { email, password } = req.body
 
-		const existingUser = await Employee.findOne({
-			where: {
-				email,
-			},
-		})
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email,
+				},
+			}))
 
 		if (!existingUser)
 			return res.status(400).json({
@@ -66,11 +73,17 @@ const authController = {
 		const userEmail = user.getAttributes().payload?.email
 
 		//Check existing user
-		const existingUser = await Employee.findOne({
-			where: {
-				email: userEmail,
-			},
-		})
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: userEmail,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: userEmail,
+				},
+			}))
 
 		if (!existingUser)
 			return res.status(400).json({
@@ -114,19 +127,23 @@ const authController = {
 				process.env.REFRESH_TOKEN_SECRET as Secret
 			) as UserAuthPayload
 
-			console.log(decodeUser)
-
-			const existingUser = await Employee.findOne({
-				where: {
-					id: decodeUser.userId,
-				},
-			})
+			const existingUser: Employee | Client | null =
+				(await Employee.findOne({
+					where: {
+						email: decodeUser.email,
+					},
+				})) ||
+				(await Client.findOne({
+					where: {
+						email: decodeUser.email,
+					},
+				}))
 
 			if (!existingUser || existingUser.token_version !== decodeUser.tokenVersion)
 				return res.status(401).json({
 					code: 401,
 					success: false,
-					message: 'You must login first',
+					message: 'You must login 1first',
 				})
 
 			sendRefreshToken(res, existingUser)
@@ -147,8 +164,6 @@ const authController = {
 	}),
 
 	logout: handleCatchError(async (req: Request, res: Response) => {
-		console.log('co ne ')
-
 		const { userId } = req.body
 
 		const existingUser = await Employee.findOne({
@@ -195,11 +210,17 @@ const authController = {
 		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
 
 		//Get data user
-		const existingUser = await Employee.findOne({
-			where: {
-				id: decode.userId,
-			},
-		})
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					id: decode.userId,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					id: decode.userId,
+				},
+			}))
 
 		if (!existingUser)
 			return res.status(400).json({

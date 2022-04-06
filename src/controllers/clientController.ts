@@ -47,7 +47,6 @@ const clientController = {
 
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewClient: createOrUpdatetClientPayload = req.body
-		console.log('fdg sg dfsh sdfh dfsg sdfg dsh dshsd gd ', dataNewClient)
 
 		//Check valid
 		const messageValid = clientValid.createOrUpdate(dataNewClient, 'create')
@@ -131,6 +130,7 @@ const clientController = {
 			client_sub_category: dataNewClient.client_sub_category
 				? dataNewClient.client_sub_category
 				: undefined,
+			salutation: dataNewClient.salutation ? dataNewClient.salutation : undefined,
 		})
 
 		const createdClient = await newClient.save()
@@ -281,6 +281,7 @@ const clientController = {
 				client_sub_category: dataUpdateClient.client_sub_category
 					? dataUpdateClient.client_sub_category
 					: undefined,
+				salutation: dataUpdateClient.salutation ? dataUpdateClient.salutation : undefined,
 			}
 		)
 

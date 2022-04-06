@@ -1,8 +1,9 @@
 import { Employee } from '../entities/Employee'
 import { sign, Secret } from 'jsonwebtoken'
 import { Response } from 'express'
+import { Client } from '../entities/Client'
 
-export const createToken = (type: 'accessToken' | 'refreshToken', user: Employee) =>
+export const createToken = (type: 'accessToken' | 'refreshToken', user: Employee | Client) =>
 	sign(
 		{
 			userId: user.id,
@@ -18,7 +19,7 @@ export const createToken = (type: 'accessToken' | 'refreshToken', user: Employee
 		}
 	)
 
-export const sendRefreshToken = (res: Response, user: Employee) => {
+export const sendRefreshToken = (res: Response, user: Employee | Client) => {
 	res.cookie(process.env.REFRESH_TOKEN_COOKIE_NAME as string, createToken('refreshToken', user), {
 		httpOnly: true,
 		sameSite: 'lax',

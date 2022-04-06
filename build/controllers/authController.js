@@ -18,15 +18,21 @@ const auth_1 = require("../utils/auth");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const google_auth_library_1 = require("google-auth-library");
+const Client_1 = require("../entities/Client");
 const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const authController = {
     login: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
-        const existingUser = yield Employee_1.Employee.findOne({
+        const existingUser = (yield Employee_1.Employee.findOne({
             where: {
                 email,
             },
-        });
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email,
+                },
+            }));
         if (!existingUser)
             return res.status(400).json({
                 code: 400,
@@ -66,11 +72,16 @@ const authController = {
         //Get email
         const userEmail = (_a = user.getAttributes().payload) === null || _a === void 0 ? void 0 : _a.email;
         //Check existing user
-        const existingUser = yield Employee_1.Employee.findOne({
+        const existingUser = (yield Employee_1.Employee.findOne({
             where: {
                 email: userEmail,
             },
-        });
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email: userEmail,
+                },
+            }));
         if (!existingUser)
             return res.status(400).json({
                 code: 400,
@@ -103,17 +114,21 @@ const authController = {
         //Check decode
         try {
             const decodeUser = (0, jsonwebtoken_1.verify)(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-            console.log(decodeUser);
-            const existingUser = yield Employee_1.Employee.findOne({
+            const existingUser = (yield Employee_1.Employee.findOne({
                 where: {
-                    id: decodeUser.userId,
+                    email: decodeUser.email,
                 },
-            });
+            })) ||
+                (yield Client_1.Client.findOne({
+                    where: {
+                        email: decodeUser.email,
+                    },
+                }));
             if (!existingUser || existingUser.token_version !== decodeUser.tokenVersion)
                 return res.status(401).json({
                     code: 401,
                     success: false,
-                    message: 'You must login first',
+                    message: 'You must login 1first',
                 });
             (0, auth_1.sendRefreshToken)(res, existingUser);
             return res.status(200).json({
@@ -132,7 +147,6 @@ const authController = {
         }
     })),
     logout: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log('co ne ');
         const { userId } = req.body;
         const existingUser = yield Employee_1.Employee.findOne({
             where: {
@@ -170,11 +184,16 @@ const authController = {
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        const existingUser = (yield Employee_1.Employee.findOne({
             where: {
                 id: decode.userId,
             },
-        });
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    id: decode.userId,
+                },
+            }));
         if (!existingUser)
             return res.status(400).json({
                 code: 400,

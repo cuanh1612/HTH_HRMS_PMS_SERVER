@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Client = exports.enumGender = exports.enumSalutation = void 0;
+exports.Client = exports.enumRole = exports.enumGender = exports.enumSalutation = void 0;
 const typeorm_1 = require("typeorm");
 const Avatar_1 = require("./Avatar");
 const Client_Category_1 = require("./Client_Category");
@@ -29,6 +29,10 @@ var enumGender;
     enumGender["FEMAILE"] = "Female";
     enumGender["OTHER"] = "Others";
 })(enumGender = exports.enumGender || (exports.enumGender = {}));
+var enumRole;
+(function (enumRole) {
+    enumRole["CLIENT"] = "Client";
+})(enumRole = exports.enumRole || (exports.enumRole = {}));
 let Client = class Client extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -48,7 +52,7 @@ __decorate([
     __metadata("design:type", String)
 ], Client.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ select: false }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Client.prototype, "password", void 0);
 __decorate([
@@ -119,6 +123,10 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Client.prototype, "note", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'enum', enum: enumRole, default: enumRole.CLIENT }),
+    __metadata("design:type", String)
+], Client.prototype, "role", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)

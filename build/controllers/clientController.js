@@ -64,7 +64,6 @@ const clientController = {
     })),
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewClient = req.body;
-        console.log('fdg sg dfsh sdfh dfsg sdfg dsh dshsd gd ', dataNewClient);
         //Check valid
         const messageValid = clientValid_1.clientValid.createOrUpdate(dataNewClient, 'create');
         if (messageValid)
@@ -131,7 +130,7 @@ const clientController = {
                 ? dataNewClient.client_category
                 : undefined, client_sub_category: dataNewClient.client_sub_category
                 ? dataNewClient.client_sub_category
-                : undefined }));
+                : undefined, salutation: dataNewClient.salutation ? dataNewClient.salutation : undefined }));
         const createdClient = yield newClient.save();
         return res.status(200).json({
             code: 200,
@@ -250,7 +249,7 @@ const clientController = {
                 ? dataUpdateClient.client_category
                 : undefined, client_sub_category: dataUpdateClient.client_sub_category
                 ? dataUpdateClient.client_sub_category
-                : undefined }));
+                : undefined, salutation: dataUpdateClient.salutation ? dataUpdateClient.salutation : undefined }));
         return res.status(200).json({
             code: 200,
             success: true,

@@ -28,6 +28,10 @@ export enum enumGender {
 	OTHER = 'Others',
 }
 
+export enum enumRole {
+	CLIENT = 'Client',
+}
+
 @Entity()
 export class Client extends BaseEntity {
 	@PrimaryGeneratedColumn()
@@ -42,7 +46,7 @@ export class Client extends BaseEntity {
 	@Column({ unique: true })
 	email!: string
 
-	@Column({ select: false })
+	@Column()
 	password!: string
 
 	@Column({ nullable: true })
@@ -96,6 +100,9 @@ export class Client extends BaseEntity {
 
 	@Column({ nullable: true })
 	note: string
+
+	@Column({ type: 'enum', enum: enumRole, default: enumRole.CLIENT })
+	role: string
 
 	@Column({ default: 0 })
 	token_version: number
