@@ -281,15 +281,10 @@ const leaveController = {
 				},
 			})
 
-			if (!existingLeave)
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Leave does not exist in the system',
-				})
-
-			//Delete employee
-			await existingLeave.remove()
+			if (existingLeave) {
+				//Delete employee
+				await existingLeave.remove()
+			}
 		}
 
 		return res.status(200).json({

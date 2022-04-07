@@ -277,14 +277,10 @@ const employeeController = {
                     id: Number(employeeId),
                 },
             });
-            if (!existingEmployee)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Employee does not exist in the system',
-                });
-            //Delete employee
-            yield existingEmployee.remove();
+            if (existingEmployee) {
+                //Delete employee
+                yield existingEmployee.remove();
+            }
         }
         return res.status(200).json({
             code: 200,

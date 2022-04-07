@@ -12,7 +12,11 @@ const leaveRouter_1 = __importDefault(require("./leaveRouter"));
 const clientRouter_1 = __importDefault(require("./clientRouter"));
 const clientCategoryRouter_1 = __importDefault(require("./clientCategoryRouter"));
 const clientSubCategoryRouter_1 = __importDefault(require("./clientSubCategoryRouter"));
+<<<<<<< HEAD
 const holidayRouter_1 = __importDefault(require("./holidayRouter"));
+=======
+const contractRouter_1 = __importDefault(require("./contractRouter"));
+>>>>>>> a81939a2f718a8296a4e2fd3da573f1347b4c1d3
 const mainRouter = (app) => {
     app.use('/api/auth', authRouter_1.default);
     app.use('/api/employees', employeeRouter_1.default);
@@ -24,5 +28,6 @@ const mainRouter = (app) => {
     app.use('/api/holidays', holidayRouter_1.default);
     app.use('/api/client-categories', clientCategoryRouter_1.default);
     app.use('/api/client-sub-categories', clientSubCategoryRouter_1.default);
+    app.use('/api/contracts', contractRouter_1.default);
 };
 exports.default = mainRouter;

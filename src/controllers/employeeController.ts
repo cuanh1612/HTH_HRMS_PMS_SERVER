@@ -315,15 +315,10 @@ const employeeController = {
 				},
 			})
 
-			if (!existingEmployee)
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Employee does not exist in the system',
-				})
-
-			//Delete employee
-			await existingEmployee.remove()
+			if (existingEmployee) {
+				//Delete employee
+				await existingEmployee.remove()
+			}
 		}
 
 		return res.status(200).json({
