@@ -5,11 +5,14 @@ const Avatar_1 = require("../entities/Avatar");
 const Client_1 = require("../entities/Client");
 const Client_Category_1 = require("../entities/Client_Category");
 const Client_Sub_Category_1 = require("../entities/Client_Sub_Category");
+const CompanyLogo_1 = require("../entities/CompanyLogo");
+const Contract_1 = require("../entities/Contract");
 const Department_1 = require("../entities/Department");
 const Designation_1 = require("../entities/Designation");
 const Employee_1 = require("../entities/Employee");
 const Leave_1 = require("../entities/Leave");
 const LeaveType_1 = require("../entities/LeaveType");
+const Sign_1 = require("../entities/Sign");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -28,6 +31,9 @@ const connectDB = () => {
             Client_1.Client,
             Client_Category_1.Client_Category,
             Client_Sub_Category_1.Client_Sub_Category,
+            Contract_1.Contract,
+            CompanyLogo_1.Company_logo,
+            Sign_1.Sign,
         ],
     })
         .then(() => {

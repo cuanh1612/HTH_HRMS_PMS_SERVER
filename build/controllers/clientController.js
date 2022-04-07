@@ -294,14 +294,10 @@ const clientController = {
                     id: Number(clientId),
                 },
             });
-            if (!existingClient)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Client does not exist in the system',
-                });
-            //Delete client
-            yield existingClient.remove();
+            if (existingClient) {
+                //Delete client
+                yield existingClient.remove();
+            }
         }
         return res.status(200).json({
             code: 200,

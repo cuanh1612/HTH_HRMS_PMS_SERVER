@@ -338,15 +338,10 @@ const clientController = {
 				},
 			})
 
-			if (!existingClient)
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Client does not exist in the system',
-				})
-
-			//Delete client
-			await existingClient.remove()
+			if (existingClient) {
+				//Delete client
+				await existingClient.remove()
+			}
 		}
 
 		return res.status(200).json({

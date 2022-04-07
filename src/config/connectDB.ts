@@ -3,11 +3,14 @@ import { Avatar } from '../entities/Avatar'
 import { Client } from '../entities/Client'
 import { Client_Category } from '../entities/Client_Category'
 import { Client_Sub_Category } from '../entities/Client_Sub_Category'
+import { Company_logo } from '../entities/CompanyLogo'
+import { Contract } from '../entities/Contract'
 import { Department } from '../entities/Department'
 import { Designation } from '../entities/Designation'
 import { Employee } from '../entities/Employee'
 import { Leave } from '../entities/Leave'
 import { LeaveType } from '../entities/LeaveType'
+import { Sign } from '../entities/Sign'
 
 const connectDB = () => {
 	createConnection({
@@ -27,6 +30,9 @@ const connectDB = () => {
 			Client,
 			Client_Category,
 			Client_Sub_Category,
+			Contract,
+			Company_logo,
+			Sign,
 		],
 	})
 		.then(() => {

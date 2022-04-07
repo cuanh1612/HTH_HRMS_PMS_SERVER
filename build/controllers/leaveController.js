@@ -248,14 +248,10 @@ const leaveController = {
                     id: Number(leaveId),
                 },
             });
-            if (!existingLeave)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Leave does not exist in the system',
-                });
-            //Delete employee
-            yield existingLeave.remove();
+            if (existingLeave) {
+                //Delete employee
+                yield existingLeave.remove();
+            }
         }
         return res.status(200).json({
             code: 200,

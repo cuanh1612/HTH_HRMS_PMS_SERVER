@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const Avatar_1 = require("./Avatar");
 const Client_Category_1 = require("./Client_Category");
 const Client_Sub_Category_1 = require("./Client_Sub_Category");
+const Contract_1 = require("./Contract");
 var enumSalutation;
 (function (enumSalutation) {
     enumSalutation["MR"] = "Mr";
@@ -135,7 +136,7 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Client_Category_1.Client_Category, (client_category) => client_category.clients, {
         onDelete: 'SET NULL',
         eager: true,
-        nullable: true
+        nullable: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Client_Category_1.Client_Category)
@@ -144,11 +145,15 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Client_Sub_Category_1.Client_Sub_Category, (client_sub_category) => client_sub_category.clients, {
         onDelete: 'SET NULL',
         eager: true,
-        nullable: true
+        nullable: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Client_Sub_Category_1.Client_Sub_Category)
 ], Client.prototype, "client_sub_category", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Contract_1.Contract, (contract) => contract.client),
+    __metadata("design:type", Array)
+], Client.prototype, "contracts", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

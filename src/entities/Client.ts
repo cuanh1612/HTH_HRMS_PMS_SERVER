@@ -1,17 +1,19 @@
 import {
-    BaseEntity,
-    Column,
-    CreateDateColumn,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    OneToOne,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+	OneToOne,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
 } from 'typeorm'
 import { Avatar } from './Avatar'
 import { Client_Category } from './Client_Category'
 import { Client_Sub_Category } from './Client_Sub_Category'
+import { Contract } from './Contract'
 
 export enum enumSalutation {
 	MR = 'Mr',
@@ -110,7 +112,7 @@ export class Client extends BaseEntity {
 	@ManyToOne(() => Client_Category, (client_category) => client_category.clients, {
 		onDelete: 'SET NULL',
 		eager: true,
-		nullable: true
+		nullable: true,
 	})
 	@JoinColumn()
 	client_category: Client_Category
@@ -118,10 +120,13 @@ export class Client extends BaseEntity {
 	@ManyToOne(() => Client_Sub_Category, (client_sub_category) => client_sub_category.clients, {
 		onDelete: 'SET NULL',
 		eager: true,
-		nullable: true
+		nullable: true,
 	})
 	@JoinColumn()
 	client_sub_category: Client_Sub_Category
+
+	@OneToMany(() => Contract, (contract) => contract.client)
+	contracts: Contract[]
 
 	@CreateDateColumn({
 		name: 'created_at',
