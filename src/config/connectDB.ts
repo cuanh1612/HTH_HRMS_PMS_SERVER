@@ -6,6 +6,7 @@ import { Client_Sub_Category } from '../entities/Client_Sub_Category'
 import { Department } from '../entities/Department'
 import { Designation } from '../entities/Designation'
 import { Employee } from '../entities/Employee'
+import { Holiday } from '../entities/Holiday'
 import { Leave } from '../entities/Leave'
 import { LeaveType } from '../entities/LeaveType'
 
@@ -27,6 +28,7 @@ const connectDB = () => {
 			Client,
 			Client_Category,
 			Client_Sub_Category,
+			Holiday
 		],
 	})
 		.then(() => {

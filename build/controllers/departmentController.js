@@ -18,7 +18,19 @@ const departmentController = {
     //Create new department
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewDepartment = req.body;
+        const { name } = req.body;
         const createdDepartment = yield Department_1.Department.create(dataNewDepartment).save();
+        const existingName = yield Department_1.Department.findOne({
+            where: {
+                name: String(name)
+            }
+        });
+        if (existingName)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Department does not exist in the system',
+            });
         return res.status(200).json({
             code: 200,
             success: true,
@@ -29,14 +41,26 @@ const departmentController = {
     //update department
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
+        const { name } = req.body;
         const dataUpdateDepartment = req.body;
         const existingDepartment = yield Department_1.Department.findOne({
             where: {
                 id: Number(id),
             },
         });
+        const existingName = yield Department_1.Department.findOne({
+            where: {
+                name: String(name)
+            }
+        });
         //check existed Department
         if (!existingDepartment)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Department does not exist in the system',
+            });
+        if (existingName)
             return res.status(400).json({
                 code: 400,
                 success: false,

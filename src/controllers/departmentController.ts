@@ -1,3 +1,4 @@
+
 import { Request, Response } from 'express';
 import { Department } from '../entities/Department';
 import handleCatchError from "../utils/catchAsyncError";
@@ -6,19 +7,36 @@ const departmentController = {
     //Create new department
     create: handleCatchError(async (req: Request, res: Response) => {
         const dataNewDepartment: Department = req.body
+        const {name} = req.body
         const createdDepartment = await Department.create(dataNewDepartment).save()
-
-        return res.status(200).json({
+        
+        const existingName = await Department.findOne({
+            where: {
+                name: String(name)
+            }
+        })
+ 
+        if (existingName)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Department does not exist in the system',
+            })
+        
+        
+         return res.status(200).json({
             code: 200,
             success: true,
             department: createdDepartment,
             message: 'Created new Department successfully'
         })
+      
 
     }),
     //update department
     update: handleCatchError(async (req: Request, res: Response) => {
         const { id } = req.params
+        const { name } = req.body
         const dataUpdateDepartment: Department = req.body
 
         const existingDepartment = await Department.findOne({
@@ -26,8 +44,21 @@ const departmentController = {
                 id: Number(id),
             },
         })
+
+        const existingName = await Department.findOne({
+            where: {
+                name: String(name)
+            }
+        })
+         
         //check existed Department
         if (!existingDepartment)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Department does not exist in the system',
+            })
+        if (existingName)
             return res.status(400).json({
                 code: 400,
                 success: false,

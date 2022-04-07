@@ -8,6 +8,7 @@ import leaveRouter from './leaveRouter'
 import clientRouter from './clientRouter'
 import clientCategoryRouter from './clientCategoryRouter'
 import clientSubCategoryRouter from './clientSubCategoryRouter'
+import holidayRouter from './holidayRouter'
 
 const mainRouter = (app: core.Express) => {
 	app.use('/api/auth', authRouter)
@@ -23,6 +24,8 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/leaves', leaveRouter)
 
 	app.use('/api/clients', clientRouter)
+
+	app.use('/api/holidays', holidayRouter)
 
 	app.use('/api/client-categories', clientCategoryRouter)
 

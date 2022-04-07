@@ -8,6 +8,7 @@ const Client_Sub_Category_1 = require("../entities/Client_Sub_Category");
 const Department_1 = require("../entities/Department");
 const Designation_1 = require("../entities/Designation");
 const Employee_1 = require("../entities/Employee");
+const Holiday_1 = require("../entities/Holiday");
 const Leave_1 = require("../entities/Leave");
 const LeaveType_1 = require("../entities/LeaveType");
 const connectDB = () => {
@@ -28,6 +29,7 @@ const connectDB = () => {
             Client_1.Client,
             Client_Category_1.Client_Category,
             Client_Sub_Category_1.Client_Sub_Category,
+            Holiday_1.Holiday
         ],
     })
         .then(() => {

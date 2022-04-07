@@ -18,7 +18,20 @@ const designationController = {
     //Create new designation
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewdesignation = req.body;
+        const { name } = req.body;
         const createddesignation = yield Designation_1.Designation.create(dataNewdesignation).save();
+        //check if the name of the designation already exists
+        const existingName = yield Designation_1.Designation.findOne({
+            where: {
+                name: String(name)
+            }
+        });
+        if (existingName)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Department does not exist in the system',
+            });
         return res.status(200).json({
             code: 200,
             success: true,
@@ -29,7 +42,20 @@ const designationController = {
     //update designation
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
+        const { name } = req.body;
         const dataUpdatedesignation = req.body;
+        //check if the name of the designation already exists
+        const existingName = yield Designation_1.Designation.findOne({
+            where: {
+                name: String(name)
+            }
+        });
+        if (existingName)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Department does not exist in the system',
+            });
         const existingdesignation = yield Designation_1.Designation.findOne({
             where: {
                 id: Number(id),

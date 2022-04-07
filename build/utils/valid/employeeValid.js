@@ -17,7 +17,7 @@ exports.employeeValid = {
         }
         if (type === 'create') {
             if (!password) {
-                messageError = 'Pleas enter password';
+                messageError = 'Please enter password';
                 return messageError;
             }
         }
