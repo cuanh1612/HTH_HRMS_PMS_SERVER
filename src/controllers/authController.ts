@@ -12,7 +12,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 const authController = {
 	login: handleCatchError(async (req: Request, res: Response) => {
-		const { email, password } = req.body
+		const { email, password } = req.body		
 
 		const existingUser =
 			(await Employee.findOne({

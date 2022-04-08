@@ -1,10 +1,12 @@
 require('dotenv').config()
-import express from 'express'
-import connectDB from './config/connectDB'
-import mainRouter from './routes/mainRouter'
-import 'reflect-metadata'
-import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import express from 'express'
+import { createServer } from 'http'
+import 'reflect-metadata'
+import connectDB from './config/connectDB'
+import createSocketServer from './config/socketIO'
+import mainRouter from './routes/mainRouter'
 
 const PORT = process.env.PORT || 4000
 
@@ -13,11 +15,13 @@ connectDB()
 
 //Creae and setup express app
 const app = express()
+const httpServer = createServer(app)
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(
 	cors({
-		origin: 'http://localhost:3000',
+		origin: process.env.URL_CLIENT,
 		credentials: true,
 	})
 )
@@ -25,6 +29,10 @@ app.use(
 //Routes
 mainRouter(app)
 
-app.listen(PORT, () => {
+//Setting socket server
+createSocketServer(httpServer)
+
+//Server listen PORT
+httpServer.listen(PORT, () => {
 	console.log(`Server listen at http://localhost:${PORT}`)
 })

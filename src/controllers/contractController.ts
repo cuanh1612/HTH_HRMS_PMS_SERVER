@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { Client } from '../entities/Client'
 import { Company_logo } from '../entities/CompanyLogo'
 import { Contract } from '../entities/Contract'
+import { ContractType } from '../entities/ContractType'
 import { createOrUpdatetContractPayload } from '../type/ContractPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { contractValid } from '../utils/valid/contractValid'
@@ -69,6 +70,22 @@ const contractController = {
 				message: 'Client does not exists in the system',
 			})
 
+		//Check exist contract type
+		if (dataNewContract.contract_type) {
+			const existingContractType = await ContractType.findOne({
+				where: {
+					id: dataNewContract.contract_type.id,
+				},
+			})
+
+			if (!existingContractType)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Contract tpee does not exists in the system',
+				})
+		}
+
 		//Create new contract
 		const newContract = await Contract.create({
 			...dataNewContract,
@@ -109,6 +126,22 @@ const contractController = {
 				success: false,
 				message: 'Contract does not exist in the system',
 			})
+
+		//Check exist contract type
+		if (dataUpdateContract.contract_type) {
+			const existingContractType = await ContractType.findOne({
+				where: {
+					id: dataUpdateContract.contract_type.id,
+				},
+			})
+
+			if (!existingContractType)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Contract does not exists in the system',
+				})
+		}
 
 		if (dataUpdateContract.client) {
 			//Check existing client

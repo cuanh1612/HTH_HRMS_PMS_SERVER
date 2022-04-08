@@ -56,11 +56,16 @@ const contractTypeContrller = {
 
         //Check exist name
         if(name !== existingContractType.name){
-            const exisitingName = await ContractType.find({
+			console.log('asdf sdfkl sdjf gion ne');
+			
+            const exisitingName = await ContractType.findOne({
                 where: {
                     name
                 }
             })
+
+			console.log(exisitingName);
+			
 
             if(exisitingName) 	return res.status(400).json({
 				code: 400,

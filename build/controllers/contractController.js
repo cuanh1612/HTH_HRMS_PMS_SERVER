@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Client_1 = require("../entities/Client");
 const CompanyLogo_1 = require("../entities/CompanyLogo");
 const Contract_1 = require("../entities/Contract");
+const ContractType_1 = require("../entities/ContractType");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const contractValid_1 = require("../utils/valid/contractValid");
 const contractController = {
@@ -81,6 +82,20 @@ const contractController = {
                 success: false,
                 message: 'Client does not exists in the system',
             });
+        //Check exist contract type
+        if (dataNewContract.contract_type) {
+            const existingContractType = yield ContractType_1.ContractType.findOne({
+                where: {
+                    id: dataNewContract.contract_type.id,
+                },
+            });
+            if (!existingContractType)
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Contract tpee does not exists in the system',
+                });
+        }
         //Create new contract
         const newContract = yield Contract_1.Contract.create(Object.assign({}, dataNewContract)).save();
         return res.status(200).json({
@@ -113,6 +128,20 @@ const contractController = {
                 success: false,
                 message: 'Contract does not exist in the system',
             });
+        //Check exist contract type
+        if (dataUpdateContract.contract_type) {
+            const existingContractType = yield ContractType_1.ContractType.findOne({
+                where: {
+                    id: dataUpdateContract.contract_type.id,
+                },
+            });
+            if (!existingContractType)
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Contract does not exists in the system',
+                });
+        }
         if (dataUpdateContract.client) {
             //Check existing client
             const existingClient = yield Client_1.Client.findOne({
