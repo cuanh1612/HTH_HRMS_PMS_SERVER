@@ -23,13 +23,13 @@ const holidayController = {
             const existingName = yield Holiday_1.Holiday.findOne({
                 where: {
                     holiday_date: itemHoliday.holiday_date,
-                    occasion: itemHoliday.occasion
-                }
+                    occasion: itemHoliday.occasion,
+                },
             });
             if (!existingName) {
                 yield Holiday_1.Holiday.create({
                     occasion: itemHoliday.occasion,
-                    holiday_date: itemHoliday.holiday_date
+                    holiday_date: itemHoliday.holiday_date,
                 }).save();
             }
             console.log('tjhvg hjkhkhbk');
@@ -37,7 +37,7 @@ const holidayController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Created new holiday successfully',
+            message: 'Created new holidays successfully',
         });
     })),
     //update holiday
@@ -60,7 +60,7 @@ const holidayController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Update holiday successfully'
+            message: 'Update holiday successfully',
         });
     })),
     //Get all holiday
@@ -90,7 +90,7 @@ const holidayController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            holidays: existingholiday,
+            holiday: existingholiday,
             message: 'Get detail of holiday successfully',
         });
     })),
@@ -116,34 +116,30 @@ const holidayController = {
         });
     })),
     deletemany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { holidays } = req.params;
+        const { holidays } = req.body;
         //check array of holidays
         if (!Array.isArray(holidays) || !holidays)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Holiday does not exist in the system'
+                message: 'Holiday does not exist in the system',
             });
         for (let index = 0; index < holidays.length; index++) {
             const itemHoliday = holidays[index];
             const existingholiday = yield Holiday_1.Holiday.findOne({
                 where: {
-                    id: itemHoliday.id
-                }
+                    id: itemHoliday.id,
+                },
             });
-            if (!existingholiday)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Holiday does not exist in the system',
-                });
-            yield existingholiday.remove();
+            if (existingholiday) {
+                yield existingholiday.remove();
+            }
         }
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete holiday successfully',
+            message: 'Delete holidays successfully',
         });
-    }))
+    })),
 };
 exports.default = holidayController;

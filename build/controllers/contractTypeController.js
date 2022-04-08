@@ -12,121 +12,124 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Department_1 = require("../entities/Department");
+const Contract_1 = require("../entities/Contract");
+const ContractType_1 = require("../entities/ContractType");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
-const departmentController = {
-    //Create new department
+const contractTypeContrller = {
+    //Create new contractype
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const dataNewDepartment = req.body;
-        const { name } = dataNewDepartment;
-        //Check existing name
-        const existingName = yield Department_1.Department.findOne({
+        const dataNewContractType = req.body;
+        const { name } = dataNewContractType;
+        //check if the name of the contract type already exists
+        const existingContractType = yield ContractType_1.ContractType.findOne({
             where: {
                 name: String(name),
             },
         });
-        if (existingName)
+        if (existingContractType)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Department already exist in the system',
+                message: 'Contract type already exist in the system',
             });
-        const createdDepartment = yield Department_1.Department.create(dataNewDepartment).save();
+        const createdContractType = yield ContractType_1.ContractType.create(dataNewContractType).save();
         return res.status(200).json({
             code: 200,
             success: true,
-            department: createdDepartment,
-            message: 'Created new Department successfully',
+            contractType: createdContractType,
+            message: 'Created new contract type successfully',
         });
     })),
-    //update department
+    //update contract type
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const dataUpdateDepartment = req.body;
-        const { name } = dataUpdateDepartment;
-        const existingDepartment = yield Department_1.Department.findOne({
+        const dataUpContractType = req.body;
+        console.log(dataUpContractType);
+        const { name } = dataUpContractType;
+        const existingContractType = yield ContractType_1.ContractType.findOne({
             where: {
                 id: Number(id),
             },
         });
-        //check existed Department
-        if (!existingDepartment)
+        //check existed contract type
+        if (!existingContractType)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Department does not exist in the system',
+                message: 'Contract type does not exist in the system',
             });
-        if (name !== existingDepartment.name) {
-            const existingName = yield Department_1.Department.findOne({
+        //Check exist name
+        if (name !== existingContractType.name) {
+            const exisitingName = yield ContractType_1.ContractType.find({
                 where: {
-                    name: String(name),
-                },
+                    name
+                }
             });
-            if (existingName)
+            if (exisitingName)
                 return res.status(400).json({
                     code: 400,
                     success: false,
-                    message: 'Department already exist in the system',
+                    message: 'Contract type already exist in the system',
                 });
         }
-        yield Department_1.Department.update(existingDepartment.id, Object.assign({}, dataUpdateDepartment));
+        yield ContractType_1.ContractType.update(existingContractType.id, Object.assign({}, dataUpContractType));
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Update Department successfully',
+            message: 'Update contract type successfully',
         });
     })),
-    //Get all department
+    //Get all contract types
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const departments = yield Department_1.Department.find();
+        const contractTypes = yield ContractType_1.ContractType.find();
         return res.status(200).json({
             code: 200,
             success: true,
-            departments: departments,
-            message: 'Get all department successfully',
+            contractTypes,
+            message: 'Get all designation successfully',
         });
     })),
-    //Get detail department
+    //Get detail contract type
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingDepartment = yield Department_1.Department.findOne({
+        const existingContractType = yield ContractType_1.ContractType.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!existingDepartment)
+        if (!existingContractType)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Department does not exist in the system',
+                message: 'Contract type does not exist in the system',
             });
         return res.status(200).json({
             code: 200,
             success: true,
-            department: existingDepartment,
-            message: 'Get detail of Department successfully',
+            contractType: existingContractType,
+            message: 'Get detail of contract type successfully',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingDepartment = yield Department_1.Department.findOne({
+        const existingContractType = yield Contract_1.Contract.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!existingDepartment)
+        if (!existingContractType)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Department does not exist in the system',
+                message: 'Contract type does not exist in the system',
             });
-        //Delete Department
-        yield existingDepartment.remove();
+        //Delete contract type
+        yield existingContractType.remove();
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete Department successfully',
+            message: 'Delete contract type successfully',
         });
     })),
 };
-exports.default = departmentController;
+exports.default = contractTypeContrller;

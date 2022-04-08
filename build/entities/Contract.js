@@ -13,6 +13,7 @@ exports.Contract = exports.enumCurrency = void 0;
 const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const CompanyLogo_1 = require("./CompanyLogo");
+const ContractType_1 = require("./ContractType");
 const Sign_1 = require("./Sign");
 var enumCurrency;
 (function (enumCurrency) {
@@ -108,6 +109,15 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Sign_1.Sign)
 ], Contract.prototype, "sign", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => ContractType_1.ContractType, (contractType) => contractType.contracts, {
+        onDelete: 'SET NULL',
+        eager: true,
+        nullable: true,
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", ContractType_1.ContractType)
+], Contract.prototype, "contract_type", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

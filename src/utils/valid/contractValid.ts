@@ -16,16 +16,15 @@ export const contractValid = {
 		}
 
 		if (
-			currency !==
-			(enumCurrency.EUR &&
-				enumCurrency.GBP &&
-				enumCurrency.INR &&
-				enumCurrency.USD &&
-				enumCurrency.VND)
-		){
+			currency !== enumCurrency.EUR &&
+			currency !== enumCurrency.GBP &&
+			currency !== enumCurrency.INR &&
+			currency !== enumCurrency.USD &&
+			currency !== enumCurrency.VND
+		) {
 			messageError = 'Currentcy not valid'
 			return messageError
 		}
-			return messageError
+		return messageError
 	},
 }

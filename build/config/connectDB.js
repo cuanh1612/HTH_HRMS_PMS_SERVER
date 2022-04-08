@@ -6,7 +6,6 @@ const Client_1 = require("../entities/Client");
 const Client_Category_1 = require("../entities/Client_Category");
 const Client_Sub_Category_1 = require("../entities/Client_Sub_Category");
 const CompanyLogo_1 = require("../entities/CompanyLogo");
-const Contract_1 = require("../entities/Contract");
 const Department_1 = require("../entities/Department");
 const Designation_1 = require("../entities/Designation");
 const Employee_1 = require("../entities/Employee");
@@ -14,6 +13,8 @@ const Holiday_1 = require("../entities/Holiday");
 const Leave_1 = require("../entities/Leave");
 const LeaveType_1 = require("../entities/LeaveType");
 const Sign_1 = require("../entities/Sign");
+const Contract_1 = require("../entities/Contract");
+const ContractType_1 = require("../entities/ContractType");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -32,13 +33,11 @@ const connectDB = () => {
             Client_1.Client,
             Client_Category_1.Client_Category,
             Client_Sub_Category_1.Client_Sub_Category,
-<<<<<<< HEAD
-            Holiday_1.Holiday
-=======
+            Holiday_1.Holiday,
             Contract_1.Contract,
             CompanyLogo_1.Company_logo,
             Sign_1.Sign,
->>>>>>> a81939a2f718a8296a4e2fd3da573f1347b4c1d3
+            ContractType_1.ContractType
         ],
     })
         .then(() => {

@@ -4,7 +4,6 @@ import { Client } from '../entities/Client'
 import { Client_Category } from '../entities/Client_Category'
 import { Client_Sub_Category } from '../entities/Client_Sub_Category'
 import { Company_logo } from '../entities/CompanyLogo'
-import { Contract } from '../entities/Contract'
 import { Department } from '../entities/Department'
 import { Designation } from '../entities/Designation'
 import { Employee } from '../entities/Employee'
@@ -12,6 +11,8 @@ import { Holiday } from '../entities/Holiday'
 import { Leave } from '../entities/Leave'
 import { LeaveType } from '../entities/LeaveType'
 import { Sign } from '../entities/Sign'
+import { Contract } from '../entities/Contract'
+import { ContractType } from '../entities/ContractType'
 
 const connectDB = () => {
 	createConnection({
@@ -31,13 +32,11 @@ const connectDB = () => {
 			Client,
 			Client_Category,
 			Client_Sub_Category,
-<<<<<<< HEAD
-			Holiday
-=======
+			Holiday,
 			Contract,
 			Company_logo,
 			Sign,
->>>>>>> a81939a2f718a8296a4e2fd3da573f1347b4c1d3
+			ContractType
 		],
 	})
 		.then(() => {

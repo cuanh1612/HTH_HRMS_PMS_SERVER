@@ -13,6 +13,6 @@ holidayRouter.get('/', holidayController.getAll)
 holidayRouter.get('/:id', holidayController.getDetail)
 
 holidayRouter.delete('/:id', holidayController.delete)
-holidayRouter.delete('/:id', holidayController.deletemany)
+holidayRouter.delete('/delete-many', holidayController.deletemany)
 
 export default holidayRouter

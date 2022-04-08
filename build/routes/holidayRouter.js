@@ -11,5 +11,5 @@ holidayRouter.put('/:id', holidayController_1.default.update);
 holidayRouter.get('/', holidayController_1.default.getAll);
 holidayRouter.get('/:id', holidayController_1.default.getDetail);
 holidayRouter.delete('/:id', holidayController_1.default.delete);
-holidayRouter.delete('/:id', holidayController_1.default.deletemany);
+holidayRouter.delete('/delete-many', holidayController_1.default.deletemany);
 exports.default = holidayRouter;

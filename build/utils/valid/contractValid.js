@@ -9,12 +9,11 @@ exports.contractValid = {
             messageError = 'Please enter full field';
             return messageError;
         }
-        if (currency !==
-            (Contract_1.enumCurrency.EUR &&
-                Contract_1.enumCurrency.GBP &&
-                Contract_1.enumCurrency.INR &&
-                Contract_1.enumCurrency.USD &&
-                Contract_1.enumCurrency.VND)) {
+        if (currency !== Contract_1.enumCurrency.EUR &&
+            currency !== Contract_1.enumCurrency.GBP &&
+            currency !== Contract_1.enumCurrency.INR &&
+            currency !== Contract_1.enumCurrency.USD &&
+            currency !== Contract_1.enumCurrency.VND) {
             messageError = 'Currentcy not valid';
             return messageError;
         }
