@@ -235,6 +235,46 @@ const leaveController = {
 		})
 	}),
 
+	updateStatus: handleCatchError(async (req: Request, res: Response) => {
+		const { leaveId } = req.params
+		const { status } = req.body
+
+		//Check valid
+		const messageValid = leaveValid.updateStatus(status)
+
+		if (messageValid)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: messageValid,
+			})
+
+		//Check existing leave
+		const existingLeave = await Leave.findOne({
+			where: {
+				id: Number(leaveId),
+			},
+		})
+
+		if (!existingLeave)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Leave does not exist in the system',
+			})
+
+		//Update status leave
+		await Leave.update(leaveId, {
+			status,
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Updated leave successfully',
+		})
+	}),
+
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { leaveId } = req.params
 

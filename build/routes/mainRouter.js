@@ -15,6 +15,7 @@ const clientSubCategoryRouter_1 = __importDefault(require("./clientSubCategoryRo
 const holidayRouter_1 = __importDefault(require("./holidayRouter"));
 const contractRouter_1 = __importDefault(require("./contractRouter"));
 const contractTypeRouter_1 = __importDefault(require("./contractTypeRouter"));
+const attendanceRouter_1 = __importDefault(require("./attendanceRouter"));
 const mainRouter = (app) => {
     app.use('/api/auth', authRouter_1.default);
     app.use('/api/employees', employeeRouter_1.default);
@@ -28,5 +29,6 @@ const mainRouter = (app) => {
     app.use('/api/client-sub-categories', clientSubCategoryRouter_1.default);
     app.use('/api/contracts', contractRouter_1.default);
     app.use('/api/contract-types', contractTypeRouter_1.default);
+    app.use('/api/attendances', attendanceRouter_1.default);
 };
 exports.default = mainRouter;

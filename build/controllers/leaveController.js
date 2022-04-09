@@ -210,6 +210,39 @@ const leaveController = {
             message: 'Updated leave successfully',
         });
     })),
+    updateStatus: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { leaveId } = req.params;
+        const { status } = req.body;
+        //Check valid
+        const messageValid = leaveValid_1.leaveValid.updateStatus(status);
+        if (messageValid)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: messageValid,
+            });
+        //Check existing leave
+        const existingLeave = yield Leave_1.Leave.findOne({
+            where: {
+                id: Number(leaveId),
+            },
+        });
+        if (!existingLeave)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Leave does not exist in the system',
+            });
+        //Update status leave
+        yield Leave_1.Leave.update(leaveId, {
+            status,
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Updated leave successfully',
+        });
+    })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { leaveId } = req.params;
         //Check existing leave

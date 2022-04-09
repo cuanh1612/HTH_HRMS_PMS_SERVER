@@ -13,6 +13,7 @@ import { LeaveType } from '../entities/LeaveType'
 import { Sign } from '../entities/Sign'
 import { Contract } from '../entities/Contract'
 import { ContractType } from '../entities/ContractType'
+import { Attendance } from '../entities/attendance'
 
 const connectDB = () => {
 	createConnection({
@@ -36,7 +37,8 @@ const connectDB = () => {
 			Contract,
 			Company_logo,
 			Sign,
-			ContractType
+			ContractType,
+			Attendance
 		],
 	})
 		.then(() => {

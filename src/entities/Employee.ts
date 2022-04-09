@@ -10,6 +10,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
+import { Attendance } from './attendance'
 import { Avatar } from './Avatar'
 import { Department } from './Department'
 import { Designation } from './Designation'
@@ -100,6 +101,9 @@ export class Employee extends BaseEntity {
 
 	@OneToMany(() => Leave, (leave) => leave.employee)
 	leaves: Leave[]
+
+	@OneToMany(() => Attendance, (attendance) => attendance.employee)
+	attendances: Attendance[]
 
 	@Column({ default: 0 })
 	token_version: number
