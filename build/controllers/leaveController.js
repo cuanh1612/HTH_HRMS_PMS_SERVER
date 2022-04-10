@@ -97,11 +97,25 @@ const leaveController = {
                     .getOne();
                 // Leave already applied for the selected date will update
                 if (existingLeaveDate) {
-                    Leave_1.Leave.update(existingLeaveDate.id, Object.assign(Object.assign({}, dataNewLeave), { date }));
+                    Leave_1.Leave.update(existingLeaveDate.id, {
+                        employee: existingEmployee,
+                        leave_type: existingLeaveType,
+                        status: dataNewLeave.status,
+                        reason: dataNewLeave.reason,
+                        duration: dataNewLeave.duration,
+                        date,
+                    });
                 }
                 else {
                     //Create new leave
-                    yield Leave_1.Leave.create(Object.assign(Object.assign({}, dataNewLeave), { date })).save();
+                    yield Leave_1.Leave.create({
+                        employee: existingEmployee,
+                        leave_type: existingLeaveType,
+                        status: dataNewLeave.status,
+                        reason: dataNewLeave.reason,
+                        duration: dataNewLeave.duration,
+                        date,
+                    }).save();
                 }
             }
         }
