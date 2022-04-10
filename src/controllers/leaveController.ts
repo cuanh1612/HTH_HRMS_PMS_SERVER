@@ -101,13 +101,21 @@ const leaveController = {
 				// Leave already applied for the selected date will update
 				if (existingLeaveDate) {
 					Leave.update(existingLeaveDate.id, {
-						...dataNewLeave,
+						employee: existingEmployee,
+						leave_type: existingLeaveType,
+						status: dataNewLeave.status,
+						reason: dataNewLeave.reason,
+						duration: dataNewLeave.duration,
 						date,
 					})
 				} else {
 					//Create new leave
 					await Leave.create({
-						...dataNewLeave,
+						employee: existingEmployee,
+						leave_type: existingLeaveType,
+						status: dataNewLeave.status,
+						reason: dataNewLeave.reason,
+						duration: dataNewLeave.duration,
 						date,
 					}).save()
 				}
