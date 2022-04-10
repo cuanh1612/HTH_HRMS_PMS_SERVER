@@ -315,7 +315,7 @@ const leaveController = {
 
 	deleteMany: handleCatchError(async (req: Request, res: Response) => {
 		const { leaves } = req.body
-		if (leaves)
+		if (!leaves)
 			return res.status(400).json({
 				code: 400,
 				success: false,

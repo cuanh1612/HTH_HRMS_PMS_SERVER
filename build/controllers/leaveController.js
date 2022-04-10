@@ -282,7 +282,7 @@ const leaveController = {
     })),
     deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { leaves } = req.body;
-        if (leaves)
+        if (!leaves)
             return res.status(400).json({
                 code: 400,
                 success: false,
