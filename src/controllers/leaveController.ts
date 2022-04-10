@@ -75,29 +75,30 @@ const leaveController = {
 				id: dataNewLeave.leave_type,
 			},
 		})
-
+		
 		if (!existingLeaveType)
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'Leave type does not exist in the system',
-			})
-
+		return res.status(400).json({
+			code: 400,
+			success: false,
+			message: 'Leave type does not exist in the system',
+		})
+		
+		
 		//Check duration date leave
 		if (dataNewLeave.dates && Array.isArray(dataNewLeave.dates)) {
 			for (let index = 0; index < dataNewLeave.dates.length; index++) {
 				const date = dataNewLeave.dates[index]
-
+				
 				//Check existing leave date and remove
 				const existingLeaveDate = await Leave.createQueryBuilder('leave')
-					.where('leave.employeeId = :id', {
-						id: dataNewLeave.employee,
-					})
-					.andWhere('leave.date = :date', {
-						date,
-					})
-					.getOne()
-
+				.where('leave.employeeId = :id', {
+					id: dataNewLeave.employee,
+				})
+				.andWhere('leave.date = :date', {
+					date,
+				})
+				.getOne()
+				
 				// Leave already applied for the selected date will update
 				if (existingLeaveDate) {
 					Leave.update(existingLeaveDate.id, {
@@ -133,6 +134,8 @@ const leaveController = {
 				await Leave.create(dataNewLeave).save()
 			}
 		}
+
+		console.log(dataNewLeave.dates)
 
 		return res.status(200).json({
 			code: 200,

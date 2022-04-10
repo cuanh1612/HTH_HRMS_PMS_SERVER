@@ -124,6 +124,7 @@ const leaveController = {
                 yield Leave_1.Leave.create(dataNewLeave).save();
             }
         }
+        console.log(dataNewLeave.dates);
         return res.status(200).json({
             code: 200,
             success: true,

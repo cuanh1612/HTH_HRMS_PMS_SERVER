@@ -26,7 +26,7 @@ exports.leaveValid = {
         let messageError = '';
         if (!status)
             messageError = 'Pleas enter full field';
-        if (status !== Leave_1.enumStatus.PENDING)
+        if (status === Leave_1.enumStatus.PENDING)
             messageError = 'Please select status approved or rejected';
         if (status && status !== Leave_1.enumStatus.APPROVED && status !== Leave_1.enumStatus.REJECTED) {
             messageError = 'Status not valid';
