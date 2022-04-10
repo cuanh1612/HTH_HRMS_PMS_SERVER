@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-const attendance_1 = require("../entities/attendance");
+const Attendance_1 = require("../entities/Attendance");
 const Employee_1 = require("../entities/Employee");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const attendanceValid_1 = require("../utils/valid/attendanceValid");
@@ -42,7 +42,7 @@ const attendanceController = {
                     });
                     //Check exist attendance
                     const existingAttendance = yield (0, typeorm_1.getManager)()
-                        .getRepository(attendance_1.Attendance)
+                        .getRepository(Attendance_1.Attendance)
                         .createQueryBuilder('attendance')
                         .where('attendance.employeeId = :id', { id: employeeId })
                         .andWhere('attendance.date = :date', { date })
@@ -50,7 +50,7 @@ const attendanceController = {
                     //Create new attendance
                     existingEmployee &&
                         !existingAttendance &&
-                        (yield attendance_1.Attendance.create(Object.assign(Object.assign({}, dataNewAttendances), { date, employee: existingEmployee })).save());
+                        (yield Attendance_1.Attendance.create(Object.assign(Object.assign({}, dataNewAttendances), { date, employee: existingEmployee })).save());
                 }
             }
         }
@@ -73,7 +73,7 @@ const attendanceController = {
                     });
                     //Check exist attendance
                     const existingAttendance = yield (0, typeorm_1.getManager)()
-                        .getRepository(attendance_1.Attendance)
+                        .getRepository(Attendance_1.Attendance)
                         .createQueryBuilder('attendance')
                         .where('attendance.employeeId = :id', { id: employeeId })
                         .andWhere('attendance.date = :date', { date: dateMark })
@@ -81,7 +81,7 @@ const attendanceController = {
                     //Create new attendance
                     existingEmployee &&
                         !existingAttendance &&
-                        (yield attendance_1.Attendance.create(Object.assign(Object.assign({}, dataNewAttendances), { date: dateMark, employee: existingEmployee })).save());
+                        (yield Attendance_1.Attendance.create(Object.assign(Object.assign({}, dataNewAttendances), { date: dateMark, employee: existingEmployee })).save());
                     //increase datemark 1 day
                     dateMark.setDate(dateMark.getDate() + 1);
                 }
@@ -96,7 +96,7 @@ const attendanceController = {
             });
             //Check exist attendance
             const existingAttendance = yield (0, typeorm_1.getManager)()
-                .getRepository(attendance_1.Attendance)
+                .getRepository(Attendance_1.Attendance)
                 .createQueryBuilder('attendance')
                 .where('attendance.employeeId = :id', { id: employee })
                 .andWhere('attendance.date = :date', { date })
@@ -104,7 +104,7 @@ const attendanceController = {
             //Create new attendance
             existingEmployee &&
                 !existingAttendance &&
-                (yield attendance_1.Attendance.create(Object.assign(Object.assign({}, dataNewAttendances), { date, employee: existingEmployee })).save());
+                (yield Attendance_1.Attendance.create(Object.assign(Object.assign({}, dataNewAttendances), { date, employee: existingEmployee })).save());
         }
         return res.status(200).json({
             code: 200,
@@ -116,7 +116,7 @@ const attendanceController = {
         const { id } = req.params;
         const dataUpAttendances = req.body;
         //Check exist attendance
-        const exisitingAttendance = yield attendance_1.Attendance.findOne({
+        const exisitingAttendance = yield Attendance_1.Attendance.findOne({
             where: {
                 id: Number(id)
             }
@@ -127,7 +127,7 @@ const attendanceController = {
                 success: false,
                 message: 'Attendance does not exist in the system',
             });
-        yield attendance_1.Attendance.update(id, Object.assign({}, dataUpAttendances));
+        yield Attendance_1.Attendance.update(id, Object.assign({}, dataUpAttendances));
         return res.status(200).json({
             code: 200,
             success: true,
@@ -137,7 +137,7 @@ const attendanceController = {
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         //Check existing attendance
-        const existingAttendance = yield attendance_1.Attendance.findOne({
+        const existingAttendance = yield Attendance_1.Attendance.findOne({
             where: {
                 id: Number(id),
             },
@@ -158,7 +158,7 @@ const attendanceController = {
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         //Check existing attendance
-        const existingAttendance = yield attendance_1.Attendance.findOne({
+        const existingAttendance = yield Attendance_1.Attendance.findOne({
             where: {
                 id: Number(id),
             },

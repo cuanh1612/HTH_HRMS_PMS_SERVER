@@ -10,7 +10,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
-import { Attendance } from './attendance'
+import { Attendance } from './Attendance'
 import { Avatar } from './Avatar'
 import { Department } from './Department'
 import { Designation } from './Designation'

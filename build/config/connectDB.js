@@ -15,7 +15,7 @@ const LeaveType_1 = require("../entities/LeaveType");
 const Sign_1 = require("../entities/Sign");
 const Contract_1 = require("../entities/Contract");
 const ContractType_1 = require("../entities/ContractType");
-const attendance_1 = require("../entities/attendance");
+const Attendance_1 = require("../entities/Attendance");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -39,7 +39,7 @@ const connectDB = () => {
             CompanyLogo_1.Company_logo,
             Sign_1.Sign,
             ContractType_1.ContractType,
-            attendance_1.Attendance
+            Attendance_1.Attendance
         ],
     })
         .then(() => {

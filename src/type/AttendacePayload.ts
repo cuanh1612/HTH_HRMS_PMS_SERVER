@@ -1,4 +1,4 @@
-import { Attendance } from '../entities/attendance'
+import { Attendance } from "../entities/Attendance"
 
 export type createOrUpdateAttendacePayload = Attendance & {
 	employees: number[] | string[]

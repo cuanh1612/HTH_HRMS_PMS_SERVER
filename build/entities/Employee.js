@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Employee = exports.enumRole = exports.enumGender = void 0;
 const typeorm_1 = require("typeorm");
-const attendance_1 = require("./attendance");
+const Attendance_1 = require("./Attendance");
 const Avatar_1 = require("./Avatar");
 const Department_1 = require("./Department");
 const Designation_1 = require("./Designation");
@@ -123,7 +123,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "leaves", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => attendance_1.Attendance, (attendance) => attendance.employee),
+    (0, typeorm_1.OneToMany)(() => Attendance_1.Attendance, (attendance) => attendance.employee),
     __metadata("design:type", Array)
 ], Employee.prototype, "attendances", void 0);
 __decorate([
