@@ -87,8 +87,8 @@ const leaveController = {
 		//Check duration date leave
 		if (dataNewLeave.dates && Array.isArray(dataNewLeave.dates)) {
 			for (let index = 0; index < dataNewLeave.dates.length; index++) {
-				const date = dataNewLeave.dates[index]
-				
+				const date = new Date(dataNewLeave.dates[index])
+
 				//Check existing leave date and remove
 				const existingLeaveDate = await Leave.createQueryBuilder('leave')
 				.where('leave.employeeId = :id', {
@@ -122,24 +122,38 @@ const leaveController = {
 				}
 			}
 		} else {
+			const date = new Date(dataNewLeave.date)
+
 			//Check existing leave date and remove
 			const existingLeaveDate = await Leave.createQueryBuilder('leave')
 				.where('leave.employeeId = :id', {
 					id: dataNewLeave.employee,
 				})
 				.andWhere('leave.date = :date', {
-					date: dataNewLeave.date,
+					date,
 				})
 				.getOne()
 
 			// Leave already applied for the selected date will update
 			if (existingLeaveDate) {
 				Leave.update(existingLeaveDate.id, {
-					...dataNewLeave,
+					employee: existingEmployee,
+					leave_type: existingLeaveType,
+					status: dataNewLeave.status,
+					reason: dataNewLeave.reason,
+					duration: dataNewLeave.duration,
+					date,
 				})
 			} else {
 				//Create new leave
-				await Leave.create(dataNewLeave).save()
+				await Leave.create({
+					employee: existingEmployee,
+					leave_type: existingLeaveType,
+					status: dataNewLeave.status,
+					reason: dataNewLeave.reason,
+					duration: dataNewLeave.duration,
+					date,
+				}).save()
 			}
 		}
 
@@ -233,7 +247,7 @@ const leaveController = {
 
 		//Update leave
 		await Leave.update(Number(leaveId), {
-			date: dataUpdateLeave.date,
+			date: new Date(dataUpdateLeave.date),
 			reason: dataUpdateLeave.reason,
 			duration: dataUpdateLeave.duration,
 			leave_type: dataUpdateLeave.leave_type,
