@@ -40,7 +40,7 @@ const conversationReplyController = {
 			})
 
 		//Check user exist in the conversation
-		if (!existingConversation.employees.includes(existingUser))
+		if (!existingConversation.employees.some((employee) => employee.id === existingUser.id))
 			return res.status(400).json({
 				code: 400,
 				success: false,

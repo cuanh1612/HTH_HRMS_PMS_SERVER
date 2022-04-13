@@ -43,15 +43,15 @@ const conversationController = {
                 employees: true,
             },
             where: {
-                employees: [{ id: existingUserOne.id }, { id: existingUserTwo.id }],
+                employees: [{ id: existingUserOne.id }],
             },
         });
+        console.log(conversations);
         let isExistConversation = false;
         for (let index = 0; index < conversations.length; index++) {
             const conversation = conversations[index];
-            if (conversation.employees.length === 2) {
+            if (conversation.employees.some((employee) => employee.id === existingUserTwo.id)) {
                 isExistConversation = true;
-                console.log(index);
                 break;
             }
         }
@@ -89,8 +89,8 @@ const conversationController = {
         //Get all conversations of employee
         const conversations = yield Conversation_1.Conversation.find({
             where: {
-                employees: [{ id: existingUser.id }]
-            }
+                employees: [{ id: existingUser.id }],
+            },
         });
         return res.status(200).json({
             code: 200,
