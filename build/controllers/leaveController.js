@@ -184,7 +184,7 @@ const leaveController = {
                 message: 'Leave does not exist in the system',
             });
         //Check leave accepted or rejected`
-        if (leaveUpdate.duration !== 'Pending')
+        if (leaveUpdate.status !== 'Pending')
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -233,6 +233,7 @@ const leaveController = {
             reason: dataUpdateLeave.reason,
             duration: dataUpdateLeave.duration,
             leave_type: dataUpdateLeave.leave_type,
+            status: dataUpdateLeave.status
         });
         return res.status(200).json({
             code: 200,
