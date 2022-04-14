@@ -1,15 +1,15 @@
 import express from 'express';
-import contractTypeContrller from '../controllers/contractTypeController';
+import contractTypeController from '../controllers/contractTypeController';
 
 const contractTypeRouter = express.Router()
 
-contractTypeRouter.post('/', contractTypeContrller.create)
+contractTypeRouter.post('/', contractTypeController.create)
 
-contractTypeRouter.get('/', contractTypeContrller.getAll)
-contractTypeRouter.get('/:id', contractTypeContrller.getDetail)
+contractTypeRouter.get('/', contractTypeController.getAll)
+contractTypeRouter.get('/:id', contractTypeController.getDetail)
 
-contractTypeRouter.delete('/:id', contractTypeContrller.delete)
+contractTypeRouter.delete('/:id', contractTypeController.delete)
 
-contractTypeRouter.put('/:id', contractTypeContrller.update)
+contractTypeRouter.put('/:id', contractTypeController.update)
 
 export default contractTypeRouter

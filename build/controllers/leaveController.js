@@ -97,7 +97,7 @@ const leaveController = {
                     .getOne();
                 // Leave already applied for the selected date will update
                 if (existingLeaveDate) {
-                    Leave_1.Leave.update(existingLeaveDate.id, {
+                    yield Leave_1.Leave.update(existingLeaveDate.id, {
                         employee: existingEmployee,
                         leave_type: existingLeaveType,
                         status: dataNewLeave.status,
@@ -132,7 +132,7 @@ const leaveController = {
                 .getOne();
             // Leave already applied for the selected date will update
             if (existingLeaveDate) {
-                Leave_1.Leave.update(existingLeaveDate.id, {
+                yield Leave_1.Leave.update(existingLeaveDate.id, {
                     employee: existingEmployee,
                     leave_type: existingLeaveType,
                     status: dataNewLeave.status,

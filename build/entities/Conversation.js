@@ -9,47 +9,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Sign = void 0;
+exports.Conversation = void 0;
 const typeorm_1 = require("typeorm");
-let Sign = class Sign extends typeorm_1.BaseEntity {
+const ConversationReply_1 = require("./ConversationReply");
+const Employee_1 = require("./Employee");
+let Conversation = class Conversation extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Sign.prototype, "id", void 0);
+], Conversation.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Sign.prototype, "first_name", void 0);
+    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { eager: true }),
+    (0, typeorm_1.JoinTable)({ name: 'conversation_employee' }),
+    __metadata("design:type", Array)
+], Conversation.prototype, "employees", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Sign.prototype, "last_name", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Sign.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Sign.prototype, "public_id", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Sign.prototype, "url", void 0);
+    (0, typeorm_1.OneToMany)(() => ConversationReply_1.Conversation_reply, (conversation_reply) => conversation_reply.user),
+    __metadata("design:type", Array)
+], Conversation.prototype, "conversation_replies", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], Sign.prototype, "createdAt", void 0);
+], Conversation.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], Sign.prototype, "updatedAt", void 0);
-Sign = __decorate([
+], Conversation.prototype, "updatedAt", void 0);
+Conversation = __decorate([
     (0, typeorm_1.Entity)()
-], Sign);
-exports.Sign = Sign;
+], Conversation);
+exports.Conversation = Conversation;

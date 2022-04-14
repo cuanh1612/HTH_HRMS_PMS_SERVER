@@ -13,6 +13,8 @@ exports.Employee = exports.enumRole = exports.enumGender = void 0;
 const typeorm_1 = require("typeorm");
 const Attendance_1 = require("./Attendance");
 const Avatar_1 = require("./Avatar");
+const Conversation_1 = require("./Conversation");
+const ConversationReply_1 = require("./ConversationReply");
 const Department_1 = require("./Department");
 const Designation_1 = require("./Designation");
 const Leave_1 = require("./Leave");
@@ -126,6 +128,15 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Attendance_1.Attendance, (attendance) => attendance.employee),
     __metadata("design:type", Array)
 ], Employee.prototype, "attendances", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => ConversationReply_1.Conversation_reply, (conversation_reply) => conversation_reply.user),
+    __metadata("design:type", Array)
+], Employee.prototype, "conversation_replies", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Conversation_1.Conversation),
+    (0, typeorm_1.JoinTable)({ name: 'conversation_employee' }),
+    __metadata("design:type", Array)
+], Employee.prototype, "conversations", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)

@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Contract_1 = require("../entities/Contract");
 const ContractType_1 = require("../entities/ContractType");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
-const contractTypeContrller = {
+const contractTypeController = {
     //Create new contractype
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewContractType = req.body;
@@ -134,4 +134,4 @@ const contractTypeContrller = {
         });
     })),
 };
-exports.default = contractTypeContrller;
+exports.default = contractTypeController;

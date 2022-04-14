@@ -14,6 +14,8 @@ import { Sign } from '../entities/Sign'
 import { Contract } from '../entities/Contract'
 import { ContractType } from '../entities/ContractType'
 import { Attendance } from '../entities/Attendance'
+import { Conversation } from '../entities/Conversation'
+import { Conversation_reply } from '../entities/ConversationReply'
 
 const connectDB = () => {
 	createConnection({
@@ -38,7 +40,9 @@ const connectDB = () => {
 			Company_logo,
 			Sign,
 			ContractType,
-			Attendance
+			Attendance,
+			Conversation,
+			Conversation_reply
 		],
 	})
 		.then(() => {

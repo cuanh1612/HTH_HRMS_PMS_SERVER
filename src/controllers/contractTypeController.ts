@@ -3,7 +3,7 @@ import { Contract } from '../entities/Contract'
 import { ContractType } from '../entities/ContractType'
 import handleCatchError from '../utils/catchAsyncError'
 
-const contractTypeContrller = {
+const contractTypeController = {
 	//Create new contractype
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewContractType: ContractType = req.body
@@ -148,4 +148,4 @@ const contractTypeContrller = {
 	}),
 }
 
-export default contractTypeContrller
+export default contractTypeController

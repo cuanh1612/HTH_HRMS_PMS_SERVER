@@ -101,7 +101,7 @@ const leaveController = {
 				
 				// Leave already applied for the selected date will update
 				if (existingLeaveDate) {
-					Leave.update(existingLeaveDate.id, {
+					await Leave.update(existingLeaveDate.id, {
 						employee: existingEmployee,
 						leave_type: existingLeaveType,
 						status: dataNewLeave.status,
@@ -136,7 +136,7 @@ const leaveController = {
 
 			// Leave already applied for the selected date will update
 			if (existingLeaveDate) {
-				Leave.update(existingLeaveDate.id, {
+				await Leave.update(existingLeaveDate.id, {
 					employee: existingEmployee,
 					leave_type: existingLeaveType,
 					status: dataNewLeave.status,
