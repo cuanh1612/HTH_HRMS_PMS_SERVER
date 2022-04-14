@@ -35,6 +35,6 @@ const mainRouter = (app) => {
     app.use('/api/attendances', attendanceRouter_1.default);
     app.use('/api/signs', signRouter_1.default);
     app.use('/api/conversations', conversationRouter_1.default);
-    app.use('/api/conversationReplies', conversationReplyRouter_1.default);
+    app.use('/api/conversation-replies', conversationReplyRouter_1.default);
 };
 exports.default = mainRouter;

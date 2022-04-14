@@ -7,16 +7,15 @@ const createSocketServer = (httpServer: Server) => {
 
 	const addNewUsre = ({ email, socketId }: userSocket) => {
 		!onlineUsers.some((user) => user.email === email) && onlineUsers.push({ email, socketId })
-        console.log(onlineUsers);
 	}
 
 	const removeUser = (socketId: string) => {
 		onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId)
 	}
 
-	// const getUser = (email: string) => {
-	// 	return onlineUsers.find((user) => user.email === email)
-	// }
+	const getUser = (email: string) => {
+		return onlineUsers.find((user) => user.email === email)
+	}
 
 	const io = new ServerSocket(httpServer, {
 		cors: {
@@ -27,10 +26,6 @@ const createSocketServer = (httpServer: Server) => {
 	})
 
 	io.on('connection', (socket) => {
-		console.log('Someone has connected!')
-        console.log(onlineUsers);
-        
-
 		socket.on('newUser', (email: string) => {
 			addNewUsre({ email, socketId: socket.id })
 		})
@@ -38,6 +33,17 @@ const createSocketServer = (httpServer: Server) => {
 		socket.on('disconnect', () => {
 			removeUser(socket.id)
 		})
+
+		socket.on(
+			'newReply',
+			({ email, conversation }: { email: string; conversation: number }) => {
+				const userReceive = getUser(email)
+
+				if (userReceive) {
+					socket.to(userReceive.socketId).emit('getNewReply', conversation)
+				}
+			}
+		)
 	})
 }
 

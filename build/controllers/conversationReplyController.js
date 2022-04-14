@@ -75,10 +75,14 @@ const conversationReplyController = {
                 message: 'User does not exist in the conversation',
             });
         //Get replies by conversation
-        const replies = yield ConversationReply_1.Conversation_reply.createQueryBuilder('conversation_reply')
-            .where('conversation_reply.conversationId = :conversationId', { conversationId })
-            .orderBy('created_at', 'ASC')
-            .getMany();
+        const replies = yield ConversationReply_1.Conversation_reply.find({
+            where: {
+                conversation: { id: existingConversation.id },
+            },
+            order: {
+                createdAt: 'ASC',
+            },
+        });
         return res.status(200).json({
             code: 200,
             success: true,

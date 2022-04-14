@@ -77,10 +77,14 @@ const conversationReplyController = {
 			})
 
 		//Get replies by conversation
-		const replies = await Conversation_reply.createQueryBuilder('conversation_reply')
-			.where('conversation_reply.conversationId = :conversationId', { conversationId })
-			.orderBy('created_at', 'ASC')
-			.getMany()
+		const replies = await Conversation_reply.find({
+			where: {
+				conversation: { id: existingConversation.id },
+			},
+			order: {
+				createdAt: 'ASC',
+			},
+		})
 
 		return res.status(200).json({
 			code: 200,

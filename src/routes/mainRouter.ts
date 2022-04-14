@@ -47,7 +47,7 @@ const mainRouter = (app: core.Express) => {
 
 	app.use('/api/conversations', conversationRouter)
 
-	app.use('/api/conversationReplies', conversationReplyRouter)
+	app.use('/api/conversation-replies', conversationReplyRouter)
 }
 
 export default mainRouter
