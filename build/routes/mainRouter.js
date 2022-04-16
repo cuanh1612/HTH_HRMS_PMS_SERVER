@@ -14,6 +14,7 @@ const conversationReplyRouter_1 = __importDefault(require("./conversationReplyRo
 const conversationRouter_1 = __importDefault(require("./conversationRouter"));
 const departmentRouter_1 = __importDefault(require("./departmentRouter"));
 const designationRouter_1 = __importDefault(require("./designationRouter"));
+const discussionRouter_1 = __importDefault(require("./discussionRouter"));
 const employeeRouter_1 = __importDefault(require("./employeeRouter"));
 const holidayRouter_1 = __importDefault(require("./holidayRouter"));
 const leaveRouter_1 = __importDefault(require("./leaveRouter"));
@@ -36,5 +37,6 @@ const mainRouter = (app) => {
     app.use('/api/signs', signRouter_1.default);
     app.use('/api/conversations', conversationRouter_1.default);
     app.use('/api/conversation-replies', conversationReplyRouter_1.default);
+    app.use('/api/discussions', discussionRouter_1.default);
 };
 exports.default = mainRouter;

@@ -18,6 +18,8 @@ import { Conversation } from './Conversation'
 import { Conversation_reply } from './ConversationReply'
 import { Department } from './Department'
 import { Designation } from './Designation'
+import { Discussion } from './Discussion'
+import { Event } from './Event'
 import { Leave } from './Leave'
 
 export enum enumGender {
@@ -115,6 +117,13 @@ export class Employee extends BaseEntity {
 	@ManyToMany(() => Conversation)
     @JoinTable({name: 'conversation_employee'})
     conversations: Conversation[];
+
+	@ManyToMany(() => Event)
+    @JoinTable({name: 'event_employee'})
+    events: Event[];
+
+	@OneToMany(() => Discussion, (discussion) => discussion.employee)
+	discussions: Discussion[]
 
 	@Column({ default: 0 })
 	token_version: number

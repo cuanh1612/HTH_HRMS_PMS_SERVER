@@ -20,7 +20,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Conversation.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { eager: true }),
+    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { eager: true, onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinTable)({ name: 'conversation_employee' }),
     __metadata("design:type", Array)
 ], Conversation.prototype, "employees", void 0);

@@ -5,6 +5,7 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
@@ -12,6 +13,7 @@ import {
 import { Client } from './Client'
 import { Company_logo } from './CompanyLogo'
 import { ContractType } from './ContractType'
+import { Discussion } from './Discussion'
 import { Sign } from './Sign'
 
 export enum enumCurrency {
@@ -97,6 +99,9 @@ export class Contract extends BaseEntity {
 	})
 	@JoinColumn()
 	contract_type: ContractType
+
+	@OneToMany(() => Discussion, (discussion) => discussion.employee)
+	discussions: Discussion[]
 
 	@CreateDateColumn({
 		name: 'created_at',

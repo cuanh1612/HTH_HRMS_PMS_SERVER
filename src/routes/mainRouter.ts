@@ -10,6 +10,7 @@ import conversationReplyRouter from './conversationReplyRouter'
 import conversationRouter from './conversationRouter'
 import departmentRouter from './departmentRouter'
 import designationRouter from './designationRouter'
+import discussionRouter from './discussionRouter'
 import employeeRouter from './employeeRouter'
 import holidayRouter from './holidayRouter'
 import leaveRouter from './leaveRouter'
@@ -48,6 +49,8 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/conversations', conversationRouter)
 
 	app.use('/api/conversation-replies', conversationReplyRouter)
+
+	app.use('/api/discussions', discussionRouter)
 }
 
 export default mainRouter

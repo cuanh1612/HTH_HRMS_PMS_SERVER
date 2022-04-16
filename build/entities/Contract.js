@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const CompanyLogo_1 = require("./CompanyLogo");
 const ContractType_1 = require("./ContractType");
+const Discussion_1 = require("./Discussion");
 const Sign_1 = require("./Sign");
 var enumCurrency;
 (function (enumCurrency) {
@@ -118,6 +119,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", ContractType_1.ContractType)
 ], Contract.prototype, "contract_type", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Discussion_1.Discussion, (discussion) => discussion.employee),
+    __metadata("design:type", Array)
+], Contract.prototype, "discussions", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

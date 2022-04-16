@@ -8,4 +8,5 @@ const conversationController_1 = __importDefault(require("../controllers/convers
 const conversationRouter = express_1.default.Router();
 conversationRouter.post('/', conversationController_1.default.create);
 conversationRouter.get('/user/:userId', conversationController_1.default.getByUser);
+conversationRouter.delete('/:conversationId/user/:userId', conversationController_1.default.delete);
 exports.default = conversationRouter;
