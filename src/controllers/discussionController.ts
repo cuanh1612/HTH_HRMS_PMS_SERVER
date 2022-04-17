@@ -100,7 +100,7 @@ const discussionController = {
 				contract: { id: Number(contractId) },
 			},
 			order: {
-				createdAt: 'ASC',
+				createdAt: 'DESC',
 			},
 		})
 
@@ -165,7 +165,12 @@ const discussionController = {
 			})
 
 		//Check author
-		const getMailAuthor = existingDiscussion.client.email || existingDiscussion.employee.email
+		const getMailAuthor = existingDiscussion.client?.email
+			? existingDiscussion.client.email
+			: existingDiscussion.employee?.email
+			? existingDiscussion.employee.email
+			: ''
+
 		if (getMailAuthor === email_author) {
 			//update discussion
 			await Discussion.update(Number(discussionId), {

@@ -94,7 +94,7 @@ const discussionController = {
                 contract: { id: Number(contractId) },
             },
             order: {
-                createdAt: 'ASC',
+                createdAt: 'DESC',
             },
         });
         return res.status(200).json({
@@ -127,6 +127,7 @@ const discussionController = {
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b;
         const { discussionId } = req.params;
         const { email_author, content } = req.body;
         if (!content || !email_author)
@@ -148,7 +149,11 @@ const discussionController = {
                 message: 'Discussion doest not exist in the system',
             });
         //Check author
-        const getMailAuthor = existingDiscussion.client.email || existingDiscussion.employee.email;
+        const getMailAuthor = ((_a = existingDiscussion.client) === null || _a === void 0 ? void 0 : _a.email)
+            ? existingDiscussion.client.email
+            : ((_b = existingDiscussion.employee) === null || _b === void 0 ? void 0 : _b.email)
+                ? existingDiscussion.employee.email
+                : '';
         if (getMailAuthor === email_author) {
             //update discussion
             yield Discussion_1.Discussion.update(Number(discussionId), {
