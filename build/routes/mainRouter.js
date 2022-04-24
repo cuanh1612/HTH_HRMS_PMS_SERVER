@@ -8,6 +8,7 @@ const authRouter_1 = __importDefault(require("./authRouter"));
 const clientCategoryRouter_1 = __importDefault(require("./clientCategoryRouter"));
 const clientRouter_1 = __importDefault(require("./clientRouter"));
 const clientSubCategoryRouter_1 = __importDefault(require("./clientSubCategoryRouter"));
+const contractFileRouter_1 = __importDefault(require("./contractFileRouter"));
 const contractRouter_1 = __importDefault(require("./contractRouter"));
 const contractTypeRouter_1 = __importDefault(require("./contractTypeRouter"));
 const conversationReplyRouter_1 = __importDefault(require("./conversationReplyRouter"));
@@ -38,5 +39,6 @@ const mainRouter = (app) => {
     app.use('/api/conversations', conversationRouter_1.default);
     app.use('/api/conversation-replies', conversationReplyRouter_1.default);
     app.use('/api/discussions', discussionRouter_1.default);
+    app.use('/api/contract-files', contractFileRouter_1.default);
 };
 exports.default = mainRouter;

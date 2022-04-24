@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { Conversation } from '../entities/Conversation'
-import { Conversation_reply } from '../entities/ConversationReply'
+import { Conversation_reply } from '../entities/Conversation_Reply'
 import { Employee } from '../entities/Employee'
 import { createOrUpdateConversationReplyPayload } from '../type/ConversationReplyPayload'
 import handleCatchError from '../utils/catchAsyncError'

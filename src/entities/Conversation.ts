@@ -8,7 +8,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
-import { Conversation_reply } from './ConversationReply'
+import { Conversation_reply } from './Conversation_Reply'
 import { Employee } from './Employee'
 
 @Entity()

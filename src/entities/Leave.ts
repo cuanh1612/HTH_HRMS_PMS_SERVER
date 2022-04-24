@@ -9,7 +9,7 @@ import {
 	UpdateDateColumn,
 } from 'typeorm'
 import { Employee } from './Employee'
-import { LeaveType } from './LeaveType'
+import { Leave_type } from './Leave_Type'
 
 export enum enumStatus {
 	APPROVED = 'Approved',
@@ -30,7 +30,7 @@ export class Leave extends BaseEntity {
 	@ManyToOne(() => Employee, (employee) => employee.leaves, {
 		onDelete: 'CASCADE',
 		nullable: false,
-		eager: true
+		eager: true,
 	})
 	@JoinColumn()
 	employee!: Employee
@@ -44,9 +44,12 @@ export class Leave extends BaseEntity {
 	@Column({ type: 'date' })
 	date!: Date
 
-	@ManyToOne(() => LeaveType, (leaveType) => leaveType.leaves, { nullable: false, eager: true })
+	@ManyToOne(() => Leave_type, (Leave_type) => Leave_type.leaves, {
+		nullable: false,
+		eager: true,
+	})
 	@JoinColumn()
-	leave_type!: LeaveType
+	leave_type!: Leave_type
 
 	@Column()
 	reason!: string

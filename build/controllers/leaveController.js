@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Employee_1 = require("../entities/Employee");
 const Leave_1 = require("../entities/Leave");
-const LeaveType_1 = require("../entities/LeaveType");
+const Leave_Type_1 = require("../entities/Leave_Type");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const leaveValid_1 = require("../utils/valid/leaveValid");
 const leaveController = {
@@ -71,7 +71,7 @@ const leaveController = {
                 message: 'Employee does not exist in the system',
             });
         //Check exist leave type
-        const existingLeaveType = yield LeaveType_1.LeaveType.findOne({
+        const existingLeaveType = yield Leave_Type_1.Leave_type.findOne({
             where: {
                 id: dataNewLeave.leave_type,
             },
@@ -202,7 +202,7 @@ const leaveController = {
                 message: 'Employee does not exist in the system',
             });
         //Check exist leave type
-        const existingLeaveType = yield LeaveType_1.LeaveType.findOne({
+        const existingLeaveType = yield Leave_Type_1.Leave_type.findOne({
             where: {
                 id: dataUpdateLeave.leave_type,
             },

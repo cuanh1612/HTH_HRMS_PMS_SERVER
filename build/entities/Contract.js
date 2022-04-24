@@ -12,8 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Contract = exports.enumCurrency = void 0;
 const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
-const CompanyLogo_1 = require("./CompanyLogo");
-const ContractType_1 = require("./ContractType");
+const Company_Logo_1 = require("./Company_Logo");
+const Contract_File_1 = require("./Contract_File");
+const Contract_Type_1 = require("./Contract_Type");
 const Discussion_1 = require("./Discussion");
 const Sign_1 = require("./Sign");
 var enumCurrency;
@@ -95,12 +96,12 @@ __decorate([
     __metadata("design:type", String)
 ], Contract.prototype, "notes", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => CompanyLogo_1.Company_logo, {
+    (0, typeorm_1.OneToOne)(() => Company_Logo_1.Company_logo, {
         cascade: true,
         eager: true,
     }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", CompanyLogo_1.Company_logo)
+    __metadata("design:type", Company_Logo_1.Company_logo)
 ], Contract.prototype, "company_logo", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => Sign_1.Sign, {
@@ -111,18 +112,23 @@ __decorate([
     __metadata("design:type", Sign_1.Sign)
 ], Contract.prototype, "sign", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => ContractType_1.ContractType, (contractType) => contractType.contracts, {
+    (0, typeorm_1.ManyToOne)(() => Contract_Type_1.Contract_type, (Contract_type) => Contract_type.contracts, {
         onDelete: 'SET NULL',
         eager: true,
         nullable: true,
     }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", ContractType_1.ContractType)
+    __metadata("design:type", Contract_Type_1.Contract_type)
 ], Contract.prototype, "contract_type", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Discussion_1.Discussion, (discussion) => discussion.employee),
     __metadata("design:type", Array)
 ], Contract.prototype, "discussions", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Contract_File_1.Contract_file, (contract_file) => contract_file.contract),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Array)
+], Contract.prototype, "contract_files", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

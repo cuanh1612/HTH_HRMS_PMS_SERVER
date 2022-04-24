@@ -32,6 +32,30 @@ const createSocketServer = (httpServer) => {
                 socket.to(userReceive.socketId).emit('getNewReply', conversation);
             }
         });
+        //join room discussion contract
+        socket.on('joinRoomDiscussionContract', (contractId) => {
+            socket.join('roomDiscussionContract' + contractId);
+        });
+        //leave room discussion contract
+        socket.on('leaveRoomDiscussionContract', (contractId) => {
+            socket.leave('roomDiscussionContract' + contractId);
+        });
+        //emit user join room discussion contract when have new change comment
+        socket.on('newDiscussion', (contractId) => {
+            socket.in('roomDiscussionContract' + contractId).emit('getNewDiscussion');
+        });
+        //join room file contract
+        socket.on('joinRoomFileContract', (contractId) => {
+            socket.join('roomFileContract' + contractId);
+        });
+        //leave room file contract
+        socket.on('leaveRoomFileContract', (contractId) => {
+            socket.leave('roomFileContract' + contractId);
+        });
+        //emit user join room file contract when have new change file
+        socket.on('newFile', (contractId) => {
+            socket.in('roomFileContract' + contractId).emit('getNewFileContract');
+        });
     });
 };
 exports.default = createSocketServer;

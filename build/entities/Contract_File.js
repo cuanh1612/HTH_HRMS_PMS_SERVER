@@ -9,37 +9,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ContractType = void 0;
+exports.Contract_file = void 0;
 const typeorm_1 = require("typeorm");
 const Contract_1 = require("./Contract");
-let ContractType = class ContractType extends typeorm_1.BaseEntity {
+let Contract_file = class Contract_file extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], ContractType.prototype, "id", void 0);
+], Contract_file.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], ContractType.prototype, "name", void 0);
+], Contract_file.prototype, "public_id", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Contract_1.Contract, (contract) => contract.contract_type),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Contract_file.prototype, "url", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Contract_file.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Contract_1.Contract, (contract) => contract.contract_files, {
+        onDelete: 'CASCADE',
+        eager: true,
+        nullable: false
+    }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", Array)
-], ContractType.prototype, "contracts", void 0);
+    __metadata("design:type", Contract_1.Contract)
+], Contract_file.prototype, "contract", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], ContractType.prototype, "createdAt", void 0);
+], Contract_file.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], ContractType.prototype, "updatedAt", void 0);
-ContractType = __decorate([
+], Contract_file.prototype, "updatedAt", void 0);
+Contract_file = __decorate([
     (0, typeorm_1.Entity)()
-], ContractType);
-exports.ContractType = ContractType;
+], Contract_file);
+exports.Contract_file = Contract_file;

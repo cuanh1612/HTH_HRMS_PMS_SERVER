@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { LeaveType } from '../entities/LeaveType';
+import { Leave_type } from '../entities/Leave_Type';
 import handleCatchError from '../utils/catchAsyncError';
 
 const leaveTypeController = {
   getAll: handleCatchError(async (_: Request, res: Response) => {
-    const leaveTypes = await LeaveType.find();
+    const leaveTypes = await Leave_type.find();
     return res.status(200).json({
       code: 200,
       success: true,
@@ -14,10 +14,10 @@ const leaveTypeController = {
   }),
 
   create: handleCatchError(async (req: Request, res: Response) => {
-    const dataNewLeaveType: LeaveType = req.body;
+    const dataNewLeaveType: Leave_type = req.body;
 
     //Create new data new leave type
-    const createLeaveType = LeaveType.create(dataNewLeaveType);
+    const createLeaveType = Leave_type.create(dataNewLeaveType);
     const createdLeaveType = await createLeaveType.save();
 
     return res.status(200).json({

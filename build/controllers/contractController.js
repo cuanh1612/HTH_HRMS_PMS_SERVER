@@ -24,9 +24,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Client_1 = require("../entities/Client");
-const CompanyLogo_1 = require("../entities/CompanyLogo");
+const Company_Logo_1 = require("../entities/Company_Logo");
 const Contract_1 = require("../entities/Contract");
-const ContractType_1 = require("../entities/ContractType");
+const Contract_Type_1 = require("../entities/Contract_Type");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const contractValid_1 = require("../utils/valid/contractValid");
 const contractController = {
@@ -84,7 +84,7 @@ const contractController = {
             });
         //Check exist contract type
         if (dataNewContract.contract_type) {
-            const existingContractType = yield ContractType_1.ContractType.findOne({
+            const existingContractType = yield Contract_Type_1.Contract_type.findOne({
                 where: {
                     id: dataNewContract.contract_type.id,
                 },
@@ -130,7 +130,7 @@ const contractController = {
             });
         //Check exist contract type
         if (dataUpdateContract.contract_type) {
-            const existingContractType = yield ContractType_1.ContractType.findOne({
+            const existingContractType = yield Contract_Type_1.Contract_type.findOne({
                 where: {
                     id: dataUpdateContract.contract_type.id,
                 },
@@ -161,17 +161,17 @@ const contractController = {
         let newCompanyLogo = null;
         if (company_logo) {
             if (existingContract.company_logo) {
-                const existingCompanyLogo = yield CompanyLogo_1.Company_logo.findOne({
+                const existingCompanyLogo = yield Company_Logo_1.Company_logo.findOne({
                     where: {
                         id: existingContract.company_logo.id,
                     },
                 });
                 if (existingCompanyLogo) {
-                    yield CompanyLogo_1.Company_logo.update(existingCompanyLogo.id, Object.assign({}, company_logo));
+                    yield Company_Logo_1.Company_logo.update(existingCompanyLogo.id, Object.assign({}, company_logo));
                 }
             }
             else {
-                newCompanyLogo = yield CompanyLogo_1.Company_logo.create(Object.assign({}, company_logo)).save();
+                newCompanyLogo = yield Company_Logo_1.Company_logo.create(Object.assign({}, company_logo)).save();
             }
         }
         //Update contract

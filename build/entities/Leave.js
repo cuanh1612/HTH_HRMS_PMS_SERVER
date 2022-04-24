@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Leave = exports.enumDuration = exports.enumStatus = void 0;
 const typeorm_1 = require("typeorm");
 const Employee_1 = require("./Employee");
-const LeaveType_1 = require("./LeaveType");
+const Leave_Type_1 = require("./Leave_Type");
 var enumStatus;
 (function (enumStatus) {
     enumStatus["APPROVED"] = "Approved";
@@ -34,7 +34,7 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.leaves, {
         onDelete: 'CASCADE',
         nullable: false,
-        eager: true
+        eager: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Employee_1.Employee)
@@ -52,9 +52,12 @@ __decorate([
     __metadata("design:type", Date)
 ], Leave.prototype, "date", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => LeaveType_1.LeaveType, (leaveType) => leaveType.leaves, { nullable: false, eager: true }),
+    (0, typeorm_1.ManyToOne)(() => Leave_Type_1.Leave_type, (Leave_type) => Leave_type.leaves, {
+        nullable: false,
+        eager: true,
+    }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", LeaveType_1.LeaveType)
+    __metadata("design:type", Leave_Type_1.Leave_type)
 ], Leave.prototype, "leave_type", void 0);
 __decorate([
     (0, typeorm_1.Column)(),

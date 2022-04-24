@@ -4,6 +4,7 @@ import authRouter from './authRouter'
 import clientCategoryRouter from './clientCategoryRouter'
 import clientRouter from './clientRouter'
 import clientSubCategoryRouter from './clientSubCategoryRouter'
+import contractFileRouter from './contractFileRouter'
 import contractRouter from './contractRouter'
 import contractTypeRouter from './contractTypeRouter'
 import conversationReplyRouter from './conversationReplyRouter'
@@ -51,6 +52,8 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/conversation-replies', conversationReplyRouter)
 
 	app.use('/api/discussions', discussionRouter)
+
+	app.use('/api/contract-files', contractFileRouter)
 }
 
 export default mainRouter
