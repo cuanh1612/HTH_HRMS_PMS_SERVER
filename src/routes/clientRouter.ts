@@ -1,16 +1,17 @@
 import express from 'express';
 import clientController from '../controllers/clientController';
+import { checkAuth } from '../utils/middleware/checkAuth';
 
 const clientRouter = express.Router()
 
-clientRouter.post('/', clientController.create);
-clientRouter.post('/delete_may', clientController.deleteMany);
+clientRouter.post('/', checkAuth(['Admin']), clientController.create);
+clientRouter.post('/delete_may', checkAuth(['Admin']), clientController.deleteMany);
 
-clientRouter.put('/:clientId', clientController.update)
+clientRouter.put('/:clientId', checkAuth(['Admin']), clientController.update)
 
-clientRouter.get('/', clientController.getAll)
-clientRouter.get('/:clientId', clientController.getDetail)
+clientRouter.get('/', checkAuth(['Admin']), clientController.getAll)
+clientRouter.get('/:clientId', checkAuth([]), clientController.getDetail)
 
-clientRouter.delete('/:clientId', clientController.delete)
+clientRouter.delete('/:clientId', checkAuth(['Admin']), clientController.delete)
 
 export default clientRouter

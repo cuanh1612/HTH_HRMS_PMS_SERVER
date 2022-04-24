@@ -1,14 +1,15 @@
 import express from 'express'
 import discussionController from '../controllers/discussionController'
+import { checkAuth } from '../utils/middleware/checkAuth'
 
 const discussionRouter = express.Router()
 
-discussionRouter.post('/', discussionController.create)
+discussionRouter.post('/', checkAuth([]), discussionController.create)
 
-discussionRouter.get('/contract/:contractId', discussionController.getByContract)
+discussionRouter.get('/contract/:contractId', checkAuth([]), discussionController.getByContract)
 
-discussionRouter.delete('/:discussionId', discussionController.delele)
+discussionRouter.delete('/:discussionId', checkAuth([]), discussionController.delele)
 
-discussionRouter.put('/:discussionId', discussionController.update)
+discussionRouter.put('/:discussionId',checkAuth([]), discussionController.update)
 
 export default discussionRouter

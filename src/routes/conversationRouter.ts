@@ -1,12 +1,17 @@
 import express from 'express'
 import conversationController from '../controllers/conversationController'
+import { checkAuth } from '../utils/middleware/checkAuth'
 
 const conversationRouter = express.Router()
 
-conversationRouter.post('/', conversationController.create)
+conversationRouter.post('/', checkAuth([]), conversationController.create)
 
-conversationRouter.get('/user/:userId', conversationController.getByUser)
+conversationRouter.get('/user/:userId', checkAuth([]), conversationController.getByUser)
 
-conversationRouter.delete('/:conversationId/user/:userId', conversationController.delete)
+conversationRouter.delete(
+	'/:conversationId/user/:userId',
+	checkAuth([]),
+	conversationController.delete
+)
 
 export default conversationRouter

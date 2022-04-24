@@ -1,10 +1,11 @@
 import express from 'express'
 import conversationReplyController from '../controllers/conversationReplyController'
+import { checkAuth } from '../utils/middleware/checkAuth'
 
 const conversationReplyRouter = express.Router()
 
-conversationReplyRouter.post('/', conversationReplyController.create)
+conversationReplyRouter.post('/', checkAuth([]), conversationReplyController.create)
 
-conversationReplyRouter.get('/conversation/:conversationId', conversationReplyController.getByConversation)
+conversationReplyRouter.get('/conversation/:conversationId', checkAuth([]), conversationReplyController.getByConversation)
 
 export default conversationReplyRouter

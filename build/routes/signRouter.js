@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const signController_1 = __importDefault(require("../controllers/signController"));
+const checkAuth_1 = require("../utils/middleware/checkAuth");
 const signRouter = express_1.default.Router();
-signRouter.post('/', signController_1.default.create);
+signRouter.post('/', (0, checkAuth_1.checkAuth)(['Admin']), signController_1.default.create);
 exports.default = signRouter;
