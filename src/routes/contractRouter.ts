@@ -1,16 +1,17 @@
 import express from 'express'
 import contractController from '../controllers/contractController'
+import { checkAuth } from '../utils/middleware/checkAuth'
 
 const contractRouter = express.Router()
 
-contractRouter.post('/', contractController.create)
-contractRouter.post('/delete-many', contractController.deleteMany);
+contractRouter.post('/', checkAuth(['Admin']), contractController.create)
+contractRouter.post('/delete-many', checkAuth(['Admin']), contractController.deleteMany)
 
 contractRouter.get('/', contractController.getAll)
-contractRouter.get('/:contractId', contractController.getDetail)
+contractRouter.get('/:contractId', checkAuth(['Admin', 'Client']), contractController.getDetail)
 
-contractRouter.delete('/:contractId', contractController.delete)
+contractRouter.delete('/:contractId', checkAuth(['Admin']), contractController.delete)
 
-contractRouter.put('/:contractId', contractController.update)
+contractRouter.put('/:contractId', checkAuth(['Admin']), contractController.update)
 
 export default contractRouter

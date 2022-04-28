@@ -4,15 +4,22 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
+import { Attendance } from './Attendance'
 import { Avatar } from './Avatar'
+import { Conversation } from './Conversation'
+import { Conversation_reply } from './Conversation_Reply'
 import { Department } from './Department'
 import { Designation } from './Designation'
+import { Discussion } from './Discussion'
+import { Event } from './Event'
 import { Leave } from './Leave'
 
 export enum enumGender {
@@ -100,6 +107,23 @@ export class Employee extends BaseEntity {
 
 	@OneToMany(() => Leave, (leave) => leave.employee)
 	leaves: Leave[]
+
+	@OneToMany(() => Attendance, (attendance) => attendance.employee)
+	attendances: Attendance[]
+
+	@OneToMany(() => Conversation_reply, (conversation_reply) => conversation_reply.user)
+	conversation_replies: Conversation_reply[]
+
+	@ManyToMany(() => Conversation)
+    @JoinTable({name: 'conversation_employee'})
+    conversations: Conversation[];
+
+	@ManyToMany(() => Event)
+    @JoinTable({name: 'event_employee'})
+    events: Event[];
+
+	@OneToMany(() => Discussion, (discussion) => discussion.employee)
+	discussions: Discussion[]
 
 	@Column({ default: 0 })
 	token_version: number

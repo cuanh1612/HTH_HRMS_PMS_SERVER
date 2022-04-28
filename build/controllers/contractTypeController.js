@@ -13,15 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Contract_1 = require("../entities/Contract");
-const ContractType_1 = require("../entities/ContractType");
+const Contract_Type_1 = require("../entities/Contract_Type");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
-const contractTypeContrller = {
+const contractTypeController = {
     //Create new contractype
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewContractType = req.body;
         const { name } = dataNewContractType;
         //check if the name of the contract type already exists
-        const existingContractType = yield ContractType_1.ContractType.findOne({
+        const existingContractType = yield Contract_Type_1.Contract_type.findOne({
             where: {
                 name: String(name),
             },
@@ -32,7 +32,7 @@ const contractTypeContrller = {
                 success: false,
                 message: 'Contract type already exist in the system',
             });
-        const createdContractType = yield ContractType_1.ContractType.create(dataNewContractType).save();
+        const createdContractType = yield Contract_Type_1.Contract_type.create(dataNewContractType).save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -46,7 +46,7 @@ const contractTypeContrller = {
         const dataUpContractType = req.body;
         console.log(dataUpContractType);
         const { name } = dataUpContractType;
-        const existingContractType = yield ContractType_1.ContractType.findOne({
+        const existingContractType = yield Contract_Type_1.Contract_type.findOne({
             where: {
                 id: Number(id),
             },
@@ -61,7 +61,7 @@ const contractTypeContrller = {
         //Check exist name
         if (name !== existingContractType.name) {
             console.log('asdf sdfkl sdjf gion ne');
-            const exisitingName = yield ContractType_1.ContractType.findOne({
+            const exisitingName = yield Contract_Type_1.Contract_type.findOne({
                 where: {
                     name
                 }
@@ -74,7 +74,7 @@ const contractTypeContrller = {
                     message: 'Contract type already exist in the system',
                 });
         }
-        yield ContractType_1.ContractType.update(existingContractType.id, Object.assign({}, dataUpContractType));
+        yield Contract_Type_1.Contract_type.update(existingContractType.id, Object.assign({}, dataUpContractType));
         return res.status(200).json({
             code: 200,
             success: true,
@@ -83,7 +83,7 @@ const contractTypeContrller = {
     })),
     //Get all contract types
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const contractTypes = yield ContractType_1.ContractType.find();
+        const contractTypes = yield Contract_Type_1.Contract_type.find();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -94,7 +94,7 @@ const contractTypeContrller = {
     //Get detail contract type
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingContractType = yield ContractType_1.ContractType.findOne({
+        const existingContractType = yield Contract_Type_1.Contract_type.findOne({
             where: {
                 id: Number(id),
             },
@@ -134,4 +134,4 @@ const contractTypeContrller = {
         });
     })),
 };
-exports.default = contractTypeContrller;
+exports.default = contractTypeController;

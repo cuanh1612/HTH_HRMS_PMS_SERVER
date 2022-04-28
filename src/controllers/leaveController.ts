@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
 import { Leave } from '../entities/Leave'
-import { LeaveType } from '../entities/LeaveType'
+import { Leave_type } from '../entities/Leave_Type'
 import { createOrUpdatetLeavePayload } from '../type/LeavePayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { leaveValid } from '../utils/valid/leaveValid'
@@ -70,7 +70,7 @@ const leaveController = {
 			})
 
 		//Check exist leave type
-		const existingLeaveType = await LeaveType.findOne({
+		const existingLeaveType = await Leave_type.findOne({
 			where: {
 				id: dataNewLeave.leave_type,
 			},
@@ -86,7 +86,7 @@ const leaveController = {
 		//Check duration date leave
 		if (dataNewLeave.dates && Array.isArray(dataNewLeave.dates)) {
 			for (let index = 0; index < dataNewLeave.dates.length; index++) {
-				const date = dataNewLeave.dates[index]
+				const date = new Date(dataNewLeave.dates[index])
 
 				//Check existing leave date and remove
 				const existingLeaveDate = await Leave.createQueryBuilder('leave')
@@ -100,37 +100,59 @@ const leaveController = {
 
 				// Leave already applied for the selected date will update
 				if (existingLeaveDate) {
-					Leave.update(existingLeaveDate.id, {
-						...dataNewLeave,
+					await Leave.update(existingLeaveDate.id, {
+						employee: existingEmployee,
+						leave_type: existingLeaveType,
+						status: dataNewLeave.status,
+						reason: dataNewLeave.reason,
+						duration: dataNewLeave.duration,
 						date,
 					})
 				} else {
 					//Create new leave
 					await Leave.create({
-						...dataNewLeave,
+						employee: existingEmployee,
+						leave_type: existingLeaveType,
+						status: dataNewLeave.status,
+						reason: dataNewLeave.reason,
+						duration: dataNewLeave.duration,
 						date,
 					}).save()
 				}
 			}
 		} else {
+			const date = new Date(dataNewLeave.date)
+
 			//Check existing leave date and remove
 			const existingLeaveDate = await Leave.createQueryBuilder('leave')
 				.where('leave.employeeId = :id', {
 					id: dataNewLeave.employee,
 				})
 				.andWhere('leave.date = :date', {
-					date: dataNewLeave.date,
+					date,
 				})
 				.getOne()
 
 			// Leave already applied for the selected date will update
 			if (existingLeaveDate) {
-				Leave.update(existingLeaveDate.id, {
-					...dataNewLeave,
+				await Leave.update(existingLeaveDate.id, {
+					employee: existingEmployee,
+					leave_type: existingLeaveType,
+					status: dataNewLeave.status,
+					reason: dataNewLeave.reason,
+					duration: dataNewLeave.duration,
+					date,
 				})
 			} else {
 				//Create new leave
-				await Leave.create(dataNewLeave).save()
+				await Leave.create({
+					employee: existingEmployee,
+					leave_type: existingLeaveType,
+					status: dataNewLeave.status,
+					reason: dataNewLeave.reason,
+					duration: dataNewLeave.duration,
+					date,
+				}).save()
 			}
 		}
 
@@ -192,7 +214,7 @@ const leaveController = {
 			})
 
 		//Check exist leave type
-		const existingLeaveType = await LeaveType.findOne({
+		const existingLeaveType = await Leave_type.findOne({
 			where: {
 				id: dataUpdateLeave.leave_type,
 			},
@@ -222,10 +244,50 @@ const leaveController = {
 
 		//Update leave
 		await Leave.update(Number(leaveId), {
-			date: dataUpdateLeave.date,
+			date: new Date(dataUpdateLeave.date),
 			reason: dataUpdateLeave.reason,
 			duration: dataUpdateLeave.duration,
 			leave_type: dataUpdateLeave.leave_type,
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Updated leave successfully',
+		})
+	}),
+
+	updateStatus: handleCatchError(async (req: Request, res: Response) => {
+		const { leaveId } = req.params
+		const { status } = req.body
+
+		//Check valid
+		const messageValid = leaveValid.updateStatus(status)
+
+		if (messageValid)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: messageValid,
+			})
+
+		//Check existing leave
+		const existingLeave = await Leave.findOne({
+			where: {
+				id: Number(leaveId),
+			},
+		})
+
+		if (!existingLeave)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Leave does not exist in the system',
+			})
+
+		//Update status leave
+		await Leave.update(leaveId, {
+			status,
 		})
 
 		return res.status(200).json({

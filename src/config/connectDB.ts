@@ -3,16 +3,22 @@ import { Avatar } from '../entities/Avatar'
 import { Client } from '../entities/Client'
 import { Client_Category } from '../entities/Client_Category'
 import { Client_Sub_Category } from '../entities/Client_Sub_Category'
-import { Company_logo } from '../entities/CompanyLogo'
+import { Company_logo } from '../entities/Company_Logo'
 import { Department } from '../entities/Department'
 import { Designation } from '../entities/Designation'
 import { Employee } from '../entities/Employee'
 import { Holiday } from '../entities/Holiday'
 import { Leave } from '../entities/Leave'
-import { LeaveType } from '../entities/LeaveType'
+import { Leave_type } from '../entities/Leave_Type'
 import { Sign } from '../entities/Sign'
 import { Contract } from '../entities/Contract'
-import { ContractType } from '../entities/ContractType'
+import { Contract_type } from '../entities/Contract_Type'
+import { Attendance } from '../entities/Attendance'
+import { Conversation } from '../entities/Conversation'
+import { Conversation_reply } from '../entities/Conversation_Reply'
+import { Event } from '../entities/Event'
+import { Discussion } from '../entities/Discussion'
+import { Contract_file } from '../entities/Contract_File'
 
 const connectDB = () => {
 	createConnection({
@@ -28,7 +34,7 @@ const connectDB = () => {
 			Designation,
 			Department,
 			Leave,
-			LeaveType,
+			Leave_type,
 			Client,
 			Client_Category,
 			Client_Sub_Category,
@@ -36,7 +42,13 @@ const connectDB = () => {
 			Contract,
 			Company_logo,
 			Sign,
-			ContractType
+			Contract_type,
+			Attendance,
+			Conversation,
+			Conversation_reply,
+			Event,
+			Discussion,
+			Contract_file,
 		],
 	})
 		.then(() => {

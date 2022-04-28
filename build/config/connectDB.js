@@ -5,16 +5,22 @@ const Avatar_1 = require("../entities/Avatar");
 const Client_1 = require("../entities/Client");
 const Client_Category_1 = require("../entities/Client_Category");
 const Client_Sub_Category_1 = require("../entities/Client_Sub_Category");
-const CompanyLogo_1 = require("../entities/CompanyLogo");
+const Company_Logo_1 = require("../entities/Company_Logo");
 const Department_1 = require("../entities/Department");
 const Designation_1 = require("../entities/Designation");
 const Employee_1 = require("../entities/Employee");
 const Holiday_1 = require("../entities/Holiday");
 const Leave_1 = require("../entities/Leave");
-const LeaveType_1 = require("../entities/LeaveType");
+const Leave_Type_1 = require("../entities/Leave_Type");
 const Sign_1 = require("../entities/Sign");
 const Contract_1 = require("../entities/Contract");
-const ContractType_1 = require("../entities/ContractType");
+const Contract_Type_1 = require("../entities/Contract_Type");
+const Attendance_1 = require("../entities/Attendance");
+const Conversation_1 = require("../entities/Conversation");
+const Conversation_Reply_1 = require("../entities/Conversation_Reply");
+const Event_1 = require("../entities/Event");
+const Discussion_1 = require("../entities/Discussion");
+const Contract_File_1 = require("../entities/Contract_File");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -29,15 +35,21 @@ const connectDB = () => {
             Designation_1.Designation,
             Department_1.Department,
             Leave_1.Leave,
-            LeaveType_1.LeaveType,
+            Leave_Type_1.Leave_type,
             Client_1.Client,
             Client_Category_1.Client_Category,
             Client_Sub_Category_1.Client_Sub_Category,
             Holiday_1.Holiday,
             Contract_1.Contract,
-            CompanyLogo_1.Company_logo,
+            Company_Logo_1.Company_logo,
             Sign_1.Sign,
-            ContractType_1.ContractType
+            Contract_Type_1.Contract_type,
+            Attendance_1.Attendance,
+            Conversation_1.Conversation,
+            Conversation_Reply_1.Conversation_reply,
+            Event_1.Event,
+            Discussion_1.Discussion,
+            Contract_File_1.Contract_file,
         ],
     })
         .then(() => {

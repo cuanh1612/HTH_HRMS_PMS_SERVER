@@ -5,7 +5,7 @@ const jsonwebtoken_1 = require("jsonwebtoken");
 const createToken = (type, user) => (0, jsonwebtoken_1.sign)(Object.assign({ userId: user.id, role: user.role, email: user.email }, (type === 'refreshToken' ? { tokenVersion: user.token_version } : {})), type === 'accessToken'
     ? process.env.ACCESS_TOKEN_SECRET
     : process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: type === 'accessToken' ? '15s' : '60m',
+    expiresIn: type === 'accessToken' ? '5m' : '7h',
 });
 exports.createToken = createToken;
 const sendRefreshToken = (res, user) => {

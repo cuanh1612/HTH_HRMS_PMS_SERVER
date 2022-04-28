@@ -5,13 +5,16 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from 'typeorm'
 import { Client } from './Client'
-import { Company_logo } from './CompanyLogo'
-import { ContractType } from './ContractType'
+import { Company_logo } from './Company_Logo'
+import { Contract_file } from './Contract_File'
+import { Contract_type } from './Contract_Type'
+import { Discussion } from './Discussion'
 import { Sign } from './Sign'
 
 export enum enumCurrency {
@@ -90,13 +93,20 @@ export class Contract extends BaseEntity {
 	@JoinColumn()
 	sign: Sign
 
-	@ManyToOne(() => ContractType, (contractType) => contractType.contracts, {
+	@ManyToOne(() => Contract_type, (Contract_type) => Contract_type.contracts, {
 		onDelete: 'SET NULL',
 		eager: true,
 		nullable: true,
 	})
 	@JoinColumn()
-	contract_type: ContractType
+	contract_type: Contract_type
+
+	@OneToMany(() => Discussion, (discussion) => discussion.employee)
+	discussions: Discussion[]
+
+	@OneToMany(() => Contract_file, (contract_file) => contract_file.contract)
+	@JoinColumn()
+	contract_files: Contract_file[]
 
 	@CreateDateColumn({
 		name: 'created_at',

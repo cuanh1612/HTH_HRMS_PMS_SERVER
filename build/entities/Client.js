@@ -15,6 +15,8 @@ const Avatar_1 = require("./Avatar");
 const Client_Category_1 = require("./Client_Category");
 const Client_Sub_Category_1 = require("./Client_Sub_Category");
 const Contract_1 = require("./Contract");
+const Discussion_1 = require("./Discussion");
+const Event_1 = require("./Event");
 var enumSalutation;
 (function (enumSalutation) {
     enumSalutation["MR"] = "Mr";
@@ -154,6 +156,15 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Contract_1.Contract, (contract) => contract.client),
     __metadata("design:type", Array)
 ], Client.prototype, "contracts", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Event_1.Event),
+    (0, typeorm_1.JoinTable)({ name: 'event_client' }),
+    __metadata("design:type", Array)
+], Client.prototype, "events", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Discussion_1.Discussion, (discussion) => discussion.client),
+    __metadata("design:type", Array)
+], Client.prototype, "discussions", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

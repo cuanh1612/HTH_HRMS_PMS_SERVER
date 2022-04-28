@@ -11,9 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Employee = exports.enumRole = exports.enumGender = void 0;
 const typeorm_1 = require("typeorm");
+const Attendance_1 = require("./Attendance");
 const Avatar_1 = require("./Avatar");
+const Conversation_1 = require("./Conversation");
+const Conversation_Reply_1 = require("./Conversation_Reply");
 const Department_1 = require("./Department");
 const Designation_1 = require("./Designation");
+const Discussion_1 = require("./Discussion");
+const Event_1 = require("./Event");
 const Leave_1 = require("./Leave");
 var enumGender;
 (function (enumGender) {
@@ -121,6 +126,28 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Leave_1.Leave, (leave) => leave.employee),
     __metadata("design:type", Array)
 ], Employee.prototype, "leaves", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Attendance_1.Attendance, (attendance) => attendance.employee),
+    __metadata("design:type", Array)
+], Employee.prototype, "attendances", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Conversation_Reply_1.Conversation_reply, (conversation_reply) => conversation_reply.user),
+    __metadata("design:type", Array)
+], Employee.prototype, "conversation_replies", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Conversation_1.Conversation),
+    (0, typeorm_1.JoinTable)({ name: 'conversation_employee' }),
+    __metadata("design:type", Array)
+], Employee.prototype, "conversations", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Event_1.Event),
+    (0, typeorm_1.JoinTable)({ name: 'event_employee' }),
+    __metadata("design:type", Array)
+], Employee.prototype, "events", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Discussion_1.Discussion, (discussion) => discussion.employee),
+    __metadata("design:type", Array)
+], Employee.prototype, "discussions", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)

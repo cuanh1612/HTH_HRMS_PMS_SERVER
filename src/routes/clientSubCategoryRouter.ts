@@ -1,13 +1,14 @@
 import express from 'express'
 import clientSubCategoryController from '../controllers/clientSubCategoryController'
+import { checkAuth } from '../utils/middleware/checkAuth'
 
 const clientSubCategoryRouter = express.Router()
 
-clientSubCategoryRouter.post('/', clientSubCategoryController.create)
+clientSubCategoryRouter.post('/', checkAuth(['Admin']), clientSubCategoryController.create)
 
-clientSubCategoryRouter.put('/:id', clientSubCategoryController.update)
+clientSubCategoryRouter.put('/:id', checkAuth(['Admin']), clientSubCategoryController.update)
 
-clientSubCategoryRouter.delete('/:id', clientSubCategoryController.delete)
+clientSubCategoryRouter.delete('/:id', checkAuth(['Admin']), clientSubCategoryController.delete)
 
 clientSubCategoryRouter.get('/', clientSubCategoryController.getAll)
 

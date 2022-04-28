@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Employee_1 = require("../entities/Employee");
 const Leave_1 = require("../entities/Leave");
-const LeaveType_1 = require("../entities/LeaveType");
+const Leave_Type_1 = require("../entities/Leave_Type");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const leaveValid_1 = require("../utils/valid/leaveValid");
 const leaveController = {
@@ -71,7 +71,7 @@ const leaveController = {
                 message: 'Employee does not exist in the system',
             });
         //Check exist leave type
-        const existingLeaveType = yield LeaveType_1.LeaveType.findOne({
+        const existingLeaveType = yield Leave_Type_1.Leave_type.findOne({
             where: {
                 id: dataNewLeave.leave_type,
             },
@@ -85,7 +85,7 @@ const leaveController = {
         //Check duration date leave
         if (dataNewLeave.dates && Array.isArray(dataNewLeave.dates)) {
             for (let index = 0; index < dataNewLeave.dates.length; index++) {
-                const date = dataNewLeave.dates[index];
+                const date = new Date(dataNewLeave.dates[index]);
                 //Check existing leave date and remove
                 const existingLeaveDate = yield Leave_1.Leave.createQueryBuilder('leave')
                     .where('leave.employeeId = :id', {
@@ -97,31 +97,60 @@ const leaveController = {
                     .getOne();
                 // Leave already applied for the selected date will update
                 if (existingLeaveDate) {
-                    Leave_1.Leave.update(existingLeaveDate.id, Object.assign(Object.assign({}, dataNewLeave), { date }));
+                    yield Leave_1.Leave.update(existingLeaveDate.id, {
+                        employee: existingEmployee,
+                        leave_type: existingLeaveType,
+                        status: dataNewLeave.status,
+                        reason: dataNewLeave.reason,
+                        duration: dataNewLeave.duration,
+                        date,
+                    });
                 }
                 else {
                     //Create new leave
-                    yield Leave_1.Leave.create(Object.assign(Object.assign({}, dataNewLeave), { date })).save();
+                    yield Leave_1.Leave.create({
+                        employee: existingEmployee,
+                        leave_type: existingLeaveType,
+                        status: dataNewLeave.status,
+                        reason: dataNewLeave.reason,
+                        duration: dataNewLeave.duration,
+                        date,
+                    }).save();
                 }
             }
         }
         else {
+            const date = new Date(dataNewLeave.date);
             //Check existing leave date and remove
             const existingLeaveDate = yield Leave_1.Leave.createQueryBuilder('leave')
                 .where('leave.employeeId = :id', {
                 id: dataNewLeave.employee,
             })
                 .andWhere('leave.date = :date', {
-                date: dataNewLeave.date,
+                date,
             })
                 .getOne();
             // Leave already applied for the selected date will update
             if (existingLeaveDate) {
-                Leave_1.Leave.update(existingLeaveDate.id, Object.assign({}, dataNewLeave));
+                yield Leave_1.Leave.update(existingLeaveDate.id, {
+                    employee: existingEmployee,
+                    leave_type: existingLeaveType,
+                    status: dataNewLeave.status,
+                    reason: dataNewLeave.reason,
+                    duration: dataNewLeave.duration,
+                    date,
+                });
             }
             else {
                 //Create new leave
-                yield Leave_1.Leave.create(dataNewLeave).save();
+                yield Leave_1.Leave.create({
+                    employee: existingEmployee,
+                    leave_type: existingLeaveType,
+                    status: dataNewLeave.status,
+                    reason: dataNewLeave.reason,
+                    duration: dataNewLeave.duration,
+                    date,
+                }).save();
             }
         }
         return res.status(200).json({
@@ -173,7 +202,7 @@ const leaveController = {
                 message: 'Employee does not exist in the system',
             });
         //Check exist leave type
-        const existingLeaveType = yield LeaveType_1.LeaveType.findOne({
+        const existingLeaveType = yield Leave_Type_1.Leave_type.findOne({
             where: {
                 id: dataUpdateLeave.leave_type,
             },
@@ -199,10 +228,43 @@ const leaveController = {
         }
         //Update leave
         yield Leave_1.Leave.update(Number(leaveId), {
-            date: dataUpdateLeave.date,
+            date: new Date(dataUpdateLeave.date),
             reason: dataUpdateLeave.reason,
             duration: dataUpdateLeave.duration,
             leave_type: dataUpdateLeave.leave_type,
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Updated leave successfully',
+        });
+    })),
+    updateStatus: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { leaveId } = req.params;
+        const { status } = req.body;
+        //Check valid
+        const messageValid = leaveValid_1.leaveValid.updateStatus(status);
+        if (messageValid)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: messageValid,
+            });
+        //Check existing leave
+        const existingLeave = yield Leave_1.Leave.findOne({
+            where: {
+                id: Number(leaveId),
+            },
+        });
+        if (!existingLeave)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Leave does not exist in the system',
+            });
+        //Update status leave
+        yield Leave_1.Leave.update(leaveId, {
+            status,
         });
         return res.status(200).json({
             code: 200,

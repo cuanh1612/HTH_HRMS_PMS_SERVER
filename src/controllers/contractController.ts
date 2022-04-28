@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import { Client } from '../entities/Client'
-import { Company_logo } from '../entities/CompanyLogo'
+import { Company_logo } from '../entities/Company_Logo'
 import { Contract } from '../entities/Contract'
-import { ContractType } from '../entities/ContractType'
+import { Contract_type } from '../entities/Contract_Type'
 import { createOrUpdatetContractPayload } from '../type/ContractPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { contractValid } from '../utils/valid/contractValid'
@@ -72,7 +72,7 @@ const contractController = {
 
 		//Check exist contract type
 		if (dataNewContract.contract_type) {
-			const existingContractType = await ContractType.findOne({
+			const existingContractType = await Contract_type.findOne({
 				where: {
 					id: dataNewContract.contract_type.id,
 				},
@@ -129,7 +129,7 @@ const contractController = {
 
 		//Check exist contract type
 		if (dataUpdateContract.contract_type) {
-			const existingContractType = await ContractType.findOne({
+			const existingContractType = await Contract_type.findOne({
 				where: {
 					id: dataUpdateContract.contract_type.id,
 				},

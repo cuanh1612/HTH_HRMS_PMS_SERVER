@@ -13,7 +13,13 @@ export class Sign extends BaseEntity {
 	id!: number
 
 	@Column()
-	name: string
+	first_name: string
+
+	@Column()
+	last_name: string
+
+	@Column()
+	email: string
 
 	@Column()
 	public_id: string

@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const leaveController_1 = __importDefault(require("../controllers/leaveController"));
+const checkAuth_1 = require("../utils/middleware/checkAuth");
 const leaveRouter = express_1.default.Router();
-leaveRouter.post('/', leaveController_1.default.create);
-leaveRouter.post('/delete_many', leaveController_1.default.deleteMany);
+leaveRouter.post('/', (0, checkAuth_1.checkAuth)(['Admin']), leaveController_1.default.create);
+leaveRouter.post('/delete_many', (0, checkAuth_1.checkAuth)(['Admin']), leaveController_1.default.deleteMany);
 leaveRouter.get('/', leaveController_1.default.getAll);
 leaveRouter.get('/:leaveId', leaveController_1.default.getDetail);
-leaveRouter.delete('/:leaveId', leaveController_1.default.delete);
-leaveRouter.put('/:leaveId', leaveController_1.default.update);
+leaveRouter.delete('/:leaveId', (0, checkAuth_1.checkAuth)(['Admin']), leaveController_1.default.delete);
+leaveRouter.put('/:leaveId', (0, checkAuth_1.checkAuth)(['Admin']), leaveController_1.default.update);
 exports.default = leaveRouter;

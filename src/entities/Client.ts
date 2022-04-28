@@ -4,6 +4,8 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	OneToOne,
@@ -14,7 +16,12 @@ import { Avatar } from './Avatar'
 import { Client_Category } from './Client_Category'
 import { Client_Sub_Category } from './Client_Sub_Category'
 import { Contract } from './Contract'
+<<<<<<< HEAD
 import { Project } from './Project'
+=======
+import { Discussion } from './Discussion'
+import { Event } from './Event'
+>>>>>>> 0317f4334bb258c9e3b56b4f98e0f67c62712318
 
 export enum enumSalutation {
 	MR = 'Mr',
@@ -134,6 +141,13 @@ export class Client extends BaseEntity {
 
 	@OneToMany(() => Contract, (contract) => contract.client)
 	contracts: Contract[]
+
+	@ManyToMany(() => Event)
+	@JoinTable({ name: 'event_client' })
+	events: Event[]
+
+	@OneToMany(() => Discussion, (discussion) => discussion.client)
+	discussions: Discussion[]
 
 	@CreateDateColumn({
 		name: 'created_at',

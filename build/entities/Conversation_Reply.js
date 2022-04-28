@@ -9,37 +9,51 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ContractType = void 0;
+exports.Conversation_reply = void 0;
 const typeorm_1 = require("typeorm");
-const Contract_1 = require("./Contract");
-let ContractType = class ContractType extends typeorm_1.BaseEntity {
+const Conversation_1 = require("./Conversation");
+const Employee_1 = require("./Employee");
+let Conversation_reply = class Conversation_reply extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], ContractType.prototype, "id", void 0);
+], Conversation_reply.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
-    __metadata("design:type", String)
-], ContractType.prototype, "name", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => Contract_1.Contract, (contract) => contract.contract_type),
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.conversation_replies, {
+        onDelete: 'CASCADE',
+        eager: true,
+        nullable: true,
+    }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", Array)
-], ContractType.prototype, "contracts", void 0);
+    __metadata("design:type", Employee_1.Employee)
+], Conversation_reply.prototype, "user", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Conversation_1.Conversation, (conversation) => conversation.conversation_replies, {
+        onDelete: 'CASCADE',
+        eager: true,
+        nullable: true,
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Conversation_1.Conversation)
+], Conversation_reply.prototype, "conversation", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Conversation_reply.prototype, "reply", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], ContractType.prototype, "createdAt", void 0);
+], Conversation_reply.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], ContractType.prototype, "updatedAt", void 0);
-ContractType = __decorate([
+], Conversation_reply.prototype, "updatedAt", void 0);
+Conversation_reply = __decorate([
     (0, typeorm_1.Entity)()
-], ContractType);
-exports.ContractType = ContractType;
+], Conversation_reply);
+exports.Conversation_reply = Conversation_reply;

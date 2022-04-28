@@ -1,18 +1,24 @@
 import * as core from 'express-serve-static-core'
+import attendanceRouter from './attendanceRouter'
 import authRouter from './authRouter'
-import employeeRouter from './employeeRouter'
-import departmentRouter from './departmentRouter'
-import designationRouter from './designationRouter'
-import leaveTypeRouter from './leaveTypeRouter'
-import leaveRouter from './leaveRouter'
-import clientRouter from './clientRouter'
 import clientCategoryRouter from './clientCategoryRouter'
+import clientRouter from './clientRouter'
 import clientSubCategoryRouter from './clientSubCategoryRouter'
-import holidayRouter from './holidayRouter'
+import contractFileRouter from './contractFileRouter'
 import contractRouter from './contractRouter'
 import contractTypeRouter from './contractTypeRouter'
 import projectCategoryRouter from './projectCategoryRouter'
 import projectRouter from './projectRouter'
+import conversationReplyRouter from './conversationReplyRouter'
+import conversationRouter from './conversationRouter'
+import departmentRouter from './departmentRouter'
+import designationRouter from './designationRouter'
+import discussionRouter from './discussionRouter'
+import employeeRouter from './employeeRouter'
+import holidayRouter from './holidayRouter'
+import leaveRouter from './leaveRouter'
+import leaveTypeRouter from './leaveTypeRouter'
+import signRouter from './signRouter'
 
 const mainRouter = (app: core.Express) => {
 	app.use('/api/auth', authRouter)
@@ -44,6 +50,17 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/projects', projectRouter)
 
 	
+	app.use('/api/attendances', attendanceRouter)
+
+	app.use('/api/signs', signRouter)
+
+	app.use('/api/conversations', conversationRouter)
+
+	app.use('/api/conversation-replies', conversationReplyRouter)
+
+	app.use('/api/discussions', discussionRouter)
+
+	app.use('/api/contract-files', contractFileRouter)
 }
 
 export default mainRouter
