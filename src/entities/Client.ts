@@ -16,12 +16,9 @@ import { Avatar } from './Avatar'
 import { Client_Category } from './Client_Category'
 import { Client_Sub_Category } from './Client_Sub_Category'
 import { Contract } from './Contract'
-<<<<<<< HEAD
 import { Project } from './Project'
-=======
 import { Discussion } from './Discussion'
 import { Event } from './Event'
->>>>>>> 0317f4334bb258c9e3b56b4f98e0f67c62712318
 
 export enum enumSalutation {
 	MR = 'Mr',

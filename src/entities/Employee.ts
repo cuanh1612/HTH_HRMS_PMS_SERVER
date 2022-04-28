@@ -21,6 +21,7 @@ import { Designation } from './Designation'
 import { Discussion } from './Discussion'
 import { Event } from './Event'
 import { Leave } from './Leave'
+import { Project } from './Project'
 
 export enum enumGender {
 	MALE = 'Male',
@@ -121,6 +122,10 @@ export class Employee extends BaseEntity {
 	@ManyToMany(() => Event)
     @JoinTable({name: 'event_employee'})
     events: Event[];
+
+	@ManyToMany(() => Project)
+    @JoinTable({name: 'project_employee'})
+    projects: Project[];
 
 	@OneToMany(() => Discussion, (discussion) => discussion.employee)
 	discussions: Discussion[]

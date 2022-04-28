@@ -9,43 +9,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Department = void 0;
+exports.Project_Category = void 0;
 const typeorm_1 = require("typeorm");
-const Employee_1 = require("./Employee");
 const Project_1 = require("./Project");
-let Department = class Department extends typeorm_1.BaseEntity {
+let Project_Category = class Project_Category extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Department.prototype, "id", void 0);
+], Project_Category.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Department.prototype, "name", void 0);
+], Project_Category.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Employee_1.Employee, (Employee) => Employee.department),
+    (0, typeorm_1.OneToMany)(() => Project_1.Project, (project) => project.project_category, {
+        onDelete: 'SET NULL'
+    }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)
-], Department.prototype, "employees", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => Project_1.Project, (project) => project.department),
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", Array)
-], Department.prototype, "projects", void 0);
+], Project_Category.prototype, "projects", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], Department.prototype, "createdAt", void 0);
+], Project_Category.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], Department.prototype, "updatedAt", void 0);
-Department = __decorate([
+], Project_Category.prototype, "updatedAt", void 0);
+Project_Category = __decorate([
     (0, typeorm_1.Entity)()
-], Department);
-exports.Department = Department;
+], Project_Category);
+exports.Project_Category = Project_Category;

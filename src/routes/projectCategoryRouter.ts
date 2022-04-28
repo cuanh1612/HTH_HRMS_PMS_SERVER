@@ -1,17 +1,17 @@
 import express from 'express'
 import projectCategoryController from '../controllers/projectCategoryController'
-import { checkAuth } from '../utils/middleware/checkAuth'
+
 
 const projectCategoryRouter = express.Router()
 
-projectCategoryRouter.post('/', checkAuth(['Admin']), projectCategoryController.create)
+projectCategoryRouter.post('/', projectCategoryController.create)
 
 
-projectCategoryRouter.put('/:id', checkAuth(['Admin']), projectCategoryController.update)
+projectCategoryRouter.put('/:id', projectCategoryController.update)
 
 projectCategoryRouter.get('/', projectCategoryController.getAll)
 projectCategoryRouter.get('/:id', projectCategoryController.getDetail)
 
-projectCategoryRouter.delete('/:id', checkAuth(['Admin']), projectCategoryController.delete)
+projectCategoryRouter.delete('/:id', projectCategoryController.delete)
 
 export default projectCategoryRouter

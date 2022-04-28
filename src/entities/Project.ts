@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Client } from "./Client";
 import { Department } from "./Department";
+import { Employee } from "./Employee";
 import { Project_Category } from "./Project_Category";
 
 
@@ -60,7 +61,10 @@ export class Project extends BaseEntity {
     @JoinColumn()
     client: Client
 
-    
+    @ManyToMany(() => Employee, {onDelete: 'CASCADE'})
+	@JoinTable({ name: 'project_employee'})
+	employees: Employee[]
+
 
     @Column({ type: 'enum', enum: enumCurrency, default: enumCurrency.USD })
     currency: string
