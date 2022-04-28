@@ -11,6 +11,8 @@ import clientSubCategoryRouter from './clientSubCategoryRouter'
 import holidayRouter from './holidayRouter'
 import contractRouter from './contractRouter'
 import contractTypeRouter from './contractTypeRouter'
+import projectCategoryRouter from './projectCategoryRouter'
+import projectRouter from './projectRouter'
 
 const mainRouter = (app: core.Express) => {
 	app.use('/api/auth', authRouter)
@@ -36,6 +38,12 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/contracts', contractRouter)
 
 	app.use('/api/contract-types', contractTypeRouter)
+
+	app.use('/api/project-categories', projectCategoryRouter)
+
+	app.use('/api/projects', projectRouter)
+
+	
 }
 
 export default mainRouter

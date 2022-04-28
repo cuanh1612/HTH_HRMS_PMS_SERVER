@@ -14,6 +14,7 @@ import { Avatar } from './Avatar'
 import { Client_Category } from './Client_Category'
 import { Client_Sub_Category } from './Client_Sub_Category'
 import { Contract } from './Contract'
+import { Project } from './Project'
 
 export enum enumSalutation {
 	MR = 'Mr',
@@ -122,6 +123,12 @@ export class Client extends BaseEntity {
 		eager: true,
 		nullable: true,
 	})
+
+	@OneToMany(() => Project, (project) => project.client)
+	@JoinColumn()
+	projects: Project[]
+
+
 	@JoinColumn()
 	client_sub_category: Client_Sub_Category
 
