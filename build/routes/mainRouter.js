@@ -11,6 +11,8 @@ const clientSubCategoryRouter_1 = __importDefault(require("./clientSubCategoryRo
 const contractFileRouter_1 = __importDefault(require("./contractFileRouter"));
 const contractRouter_1 = __importDefault(require("./contractRouter"));
 const contractTypeRouter_1 = __importDefault(require("./contractTypeRouter"));
+const projectCategoryRouter_1 = __importDefault(require("./projectCategoryRouter"));
+const projectRouter_1 = __importDefault(require("./projectRouter"));
 const conversationReplyRouter_1 = __importDefault(require("./conversationReplyRouter"));
 const conversationRouter_1 = __importDefault(require("./conversationRouter"));
 const departmentRouter_1 = __importDefault(require("./departmentRouter"));
@@ -35,6 +37,8 @@ const mainRouter = (app) => {
     app.use('/api/client-sub-categories', clientSubCategoryRouter_1.default);
     app.use('/api/contracts', contractRouter_1.default);
     app.use('/api/contract-types', contractTypeRouter_1.default);
+    app.use('/api/project-categories', projectCategoryRouter_1.default);
+    app.use('/api/projects', projectRouter_1.default);
     app.use('/api/attendances', attendanceRouter_1.default);
     app.use('/api/signs', signRouter_1.default);
     app.use('/api/conversations', conversationRouter_1.default);

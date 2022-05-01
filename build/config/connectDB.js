@@ -21,6 +21,8 @@ const Conversation_Reply_1 = require("../entities/Conversation_Reply");
 const Event_1 = require("../entities/Event");
 const Discussion_1 = require("../entities/Discussion");
 const Contract_File_1 = require("../entities/Contract_File");
+const Project_1 = require("../entities/Project");
+const Project_Category_1 = require("../entities/Project_Category");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -50,6 +52,8 @@ const connectDB = () => {
             Event_1.Event,
             Discussion_1.Discussion,
             Contract_File_1.Contract_file,
+            Project_1.Project,
+            Project_Category_1.Project_Category,
         ],
     })
         .then(() => {

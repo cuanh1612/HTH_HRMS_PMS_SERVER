@@ -7,6 +7,8 @@ import clientSubCategoryRouter from './clientSubCategoryRouter'
 import contractFileRouter from './contractFileRouter'
 import contractRouter from './contractRouter'
 import contractTypeRouter from './contractTypeRouter'
+import projectCategoryRouter from './projectCategoryRouter'
+import projectRouter from './projectRouter'
 import conversationReplyRouter from './conversationReplyRouter'
 import conversationRouter from './conversationRouter'
 import departmentRouter from './departmentRouter'
@@ -44,6 +46,11 @@ const mainRouter = (app: core.Express) => {
 
 	app.use('/api/contract-types', contractTypeRouter)
 
+	app.use('/api/project-categories', projectCategoryRouter)
+
+	app.use('/api/projects', projectRouter)
+
+	
 	app.use('/api/attendances', attendanceRouter)
 
 	app.use('/api/signs', signRouter)

@@ -19,6 +19,8 @@ import { Conversation_reply } from '../entities/Conversation_Reply'
 import { Event } from '../entities/Event'
 import { Discussion } from '../entities/Discussion'
 import { Contract_file } from '../entities/Contract_File'
+import { Project } from '../entities/Project'
+import { Project_Category } from '../entities/Project_Category'
 
 const connectDB = () => {
 	createConnection({
@@ -49,6 +51,9 @@ const connectDB = () => {
 			Event,
 			Discussion,
 			Contract_file,
+			Project,
+			Project_Category,
+			
 		],
 	})
 		.then(() => {

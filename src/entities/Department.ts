@@ -1,3 +1,4 @@
+
 import {
 	BaseEntity,
 	Column,
@@ -9,6 +10,7 @@ import {
 	UpdateDateColumn,
 } from 'typeorm'
 import { Employee } from './Employee'
+import { Project } from './Project'
 
 @Entity()
 export class Department extends BaseEntity {
@@ -21,6 +23,10 @@ export class Department extends BaseEntity {
 	@OneToMany(() => Employee, (Employee) => Employee.department)
 	@JoinColumn()
 	employees: Employee[]
+
+	@OneToMany(() => Project, (project) => project.department)
+	@JoinColumn()
+	projects: Project[]
 
 	@CreateDateColumn({
 		name: 'created_at',

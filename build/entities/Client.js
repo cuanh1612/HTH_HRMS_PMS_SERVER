@@ -15,6 +15,7 @@ const Avatar_1 = require("./Avatar");
 const Client_Category_1 = require("./Client_Category");
 const Client_Sub_Category_1 = require("./Client_Sub_Category");
 const Contract_1 = require("./Contract");
+const Project_1 = require("./Project");
 const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
 var enumSalutation;
@@ -149,6 +150,11 @@ __decorate([
         eager: true,
         nullable: true,
     }),
+    (0, typeorm_1.OneToMany)(() => Project_1.Project, (project) => project.client),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Array)
+], Client.prototype, "projects", void 0);
+__decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Client_Sub_Category_1.Client_Sub_Category)
 ], Client.prototype, "client_sub_category", void 0);
