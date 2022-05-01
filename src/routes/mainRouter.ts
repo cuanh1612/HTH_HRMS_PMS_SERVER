@@ -13,6 +13,7 @@ import departmentRouter from './departmentRouter'
 import designationRouter from './designationRouter'
 import discussionRouter from './discussionRouter'
 import employeeRouter from './employeeRouter'
+import eventRouter from './eventRouter'
 import holidayRouter from './holidayRouter'
 import leaveRouter from './leaveRouter'
 import leaveTypeRouter from './leaveTypeRouter'
@@ -54,6 +55,8 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/discussions', discussionRouter)
 
 	app.use('/api/contract-files', contractFileRouter)
+
+	app.use('/api/events', eventRouter)
 }
 
 export default mainRouter

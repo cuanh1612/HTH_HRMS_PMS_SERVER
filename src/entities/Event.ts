@@ -1,25 +1,13 @@
 import {
-    BaseEntity,
-    Column,
-    CreateDateColumn,
-    Entity, JoinTable,
-    ManyToMany, PrimaryGeneratedColumn,
-    UpdateDateColumn
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity, JoinTable,
+	ManyToMany, PrimaryGeneratedColumn,
+	UpdateDateColumn
 } from 'typeorm'
 import { Client } from './Client'
 import { Employee } from './Employee'
-
-export enum enumGender {
-	MALE = 'Male',
-	FEMAILE = 'Female',
-	OTHER = 'Others',
-}
-
-export enum enumRole {
-	ADMIN = 'Admin',
-	EMPLOYEE = 'Employee',
-	MANAGER = 'Manager',
-}
 
 @Entity()
 export class Event extends BaseEntity {
@@ -41,14 +29,8 @@ export class Event extends BaseEntity {
 	@Column({ type: 'date' })
 	starts_on_date: Date
 
-	@Column()
-	starts_on_time: string
-
 	@Column({ type: 'date' })
-	Ends_on_date: Date
-
-	@Column()
-	Ends_on_time: string
+	ends_on_date: Date
 
 	@ManyToMany(() => Employee, { eager: true, onDelete: 'CASCADE' })
 	@JoinTable({ name: 'event_employee' })

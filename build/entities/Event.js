@@ -9,22 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Event = exports.enumRole = exports.enumGender = void 0;
+exports.Event = void 0;
 const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const Employee_1 = require("./Employee");
-var enumGender;
-(function (enumGender) {
-    enumGender["MALE"] = "Male";
-    enumGender["FEMAILE"] = "Female";
-    enumGender["OTHER"] = "Others";
-})(enumGender = exports.enumGender || (exports.enumGender = {}));
-var enumRole;
-(function (enumRole) {
-    enumRole["ADMIN"] = "Admin";
-    enumRole["EMPLOYEE"] = "Employee";
-    enumRole["MANAGER"] = "Manager";
-})(enumRole = exports.enumRole || (exports.enumRole = {}));
 let Event = class Event extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -52,17 +40,9 @@ __decorate([
     __metadata("design:type", Date)
 ], Event.prototype, "starts_on_date", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Event.prototype, "starts_on_time", void 0);
-__decorate([
     (0, typeorm_1.Column)({ type: 'date' }),
     __metadata("design:type", Date)
-], Event.prototype, "Ends_on_date", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Event.prototype, "Ends_on_time", void 0);
+], Event.prototype, "ends_on_date", void 0);
 __decorate([
     (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { eager: true, onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinTable)({ name: 'event_employee' }),
