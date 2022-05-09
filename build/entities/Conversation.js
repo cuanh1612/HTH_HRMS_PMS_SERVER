@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Conversation = void 0;
 const typeorm_1 = require("typeorm");
-const ConversationReply_1 = require("./ConversationReply");
+const Conversation_Reply_1 = require("./Conversation_Reply");
 const Employee_1 = require("./Employee");
 let Conversation = class Conversation extends typeorm_1.BaseEntity {
 };
@@ -20,12 +20,12 @@ __decorate([
     __metadata("design:type", Number)
 ], Conversation.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { eager: true }),
+    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { eager: true, onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinTable)({ name: 'conversation_employee' }),
     __metadata("design:type", Array)
 ], Conversation.prototype, "employees", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => ConversationReply_1.Conversation_reply, (conversation_reply) => conversation_reply.user),
+    (0, typeorm_1.OneToMany)(() => Conversation_Reply_1.Conversation_reply, (conversation_reply) => conversation_reply.user),
     __metadata("design:type", Array)
 ], Conversation.prototype, "conversation_replies", void 0);
 __decorate([

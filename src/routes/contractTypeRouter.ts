@@ -1,15 +1,16 @@
-import express from 'express';
-import contractTypeController from '../controllers/contractTypeController';
+import express from 'express'
+import contractTypeController from '../controllers/contractTypeController'
+import { checkAuth } from '../utils/middleware/checkAuth'
 
 const contractTypeRouter = express.Router()
 
-contractTypeRouter.post('/', contractTypeController.create)
+contractTypeRouter.post('/', checkAuth(['Admin']), contractTypeController.create)
 
 contractTypeRouter.get('/', contractTypeController.getAll)
 contractTypeRouter.get('/:id', contractTypeController.getDetail)
 
-contractTypeRouter.delete('/:id', contractTypeController.delete)
+contractTypeRouter.delete('/:id', checkAuth(['Admin']), contractTypeController.delete)
 
-contractTypeRouter.put('/:id', contractTypeController.update)
+contractTypeRouter.put('/:id', checkAuth(['Admin']), contractTypeController.update)
 
 export default contractTypeRouter

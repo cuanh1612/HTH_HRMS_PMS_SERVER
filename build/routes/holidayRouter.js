@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const holidayController_1 = __importDefault(require("../controllers/holidayController"));
+const checkAuth_1 = require("../utils/middleware/checkAuth");
 const holidayRouter = express_1.default.Router();
-holidayRouter.post('/', holidayController_1.default.create);
-holidayRouter.put('/:id', holidayController_1.default.update);
+holidayRouter.post('/', (0, checkAuth_1.checkAuth)(['Admin']), holidayController_1.default.create);
+holidayRouter.put('/:id', (0, checkAuth_1.checkAuth)(['Admin']), holidayController_1.default.update);
 holidayRouter.get('/', holidayController_1.default.getAll);
 holidayRouter.get('/:id', holidayController_1.default.getDetail);
-holidayRouter.delete('/:id', holidayController_1.default.delete);
-holidayRouter.delete('/delete-many', holidayController_1.default.deletemany);
+holidayRouter.delete('/:id', (0, checkAuth_1.checkAuth)(['Admin']), holidayController_1.default.delete);
+holidayRouter.delete('/delete-many', (0, checkAuth_1.checkAuth)(['Admin']), holidayController_1.default.deletemany);
 exports.default = holidayRouter;

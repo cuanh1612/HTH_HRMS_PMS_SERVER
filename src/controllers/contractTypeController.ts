@@ -1,16 +1,16 @@
 import { Request, Response } from 'express'
 import { Contract } from '../entities/Contract'
-import { ContractType } from '../entities/ContractType'
+import { Contract_type } from '../entities/Contract_Type'
 import handleCatchError from '../utils/catchAsyncError'
 
 const contractTypeController = {
 	//Create new contractype
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewContractType: ContractType = req.body
+		const dataNewContractType: Contract_type = req.body
 		const { name } = dataNewContractType
 
 		//check if the name of the contract type already exists
-		const existingContractType = await ContractType.findOne({
+		const existingContractType = await Contract_type.findOne({
 			where: {
 				name: String(name),
 			},
@@ -23,7 +23,7 @@ const contractTypeController = {
 				message: 'Contract type already exist in the system',
 			})
 
-		const createdContractType = await ContractType.create(dataNewContractType).save()
+		const createdContractType = await Contract_type.create(dataNewContractType).save()
 
 		return res.status(200).json({
 			code: 200,
@@ -36,12 +36,12 @@ const contractTypeController = {
 	//update contract type
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
-		const dataUpContractType: ContractType = req.body
+		const dataUpContractType: Contract_type = req.body
         console.log(dataUpContractType);
         
 		const { name } = dataUpContractType
 
-		const existingContractType = await ContractType.findOne({
+		const existingContractType = await Contract_type.findOne({
 			where: {
 				id: Number(id),
 			},
@@ -58,7 +58,7 @@ const contractTypeController = {
         if(name !== existingContractType.name){
 			console.log('asdf sdfkl sdjf gion ne');
 			
-            const exisitingName = await ContractType.findOne({
+            const exisitingName = await Contract_type.findOne({
                 where: {
                     name
                 }
@@ -74,7 +74,7 @@ const contractTypeController = {
 			})
         }
 
-		await ContractType.update(existingContractType.id, {
+		await Contract_type.update(existingContractType.id, {
 			...dataUpContractType,
 		})
 
@@ -87,7 +87,7 @@ const contractTypeController = {
 
 	//Get all contract types
 	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const contractTypes = await ContractType.find()
+		const contractTypes = await Contract_type.find()
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -100,7 +100,7 @@ const contractTypeController = {
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingContractType = await ContractType.findOne({
+		const existingContractType = await Contract_type.findOne({
 			where: {
 				id: Number(id),
 			},

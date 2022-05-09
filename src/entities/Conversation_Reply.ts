@@ -9,7 +9,7 @@ import { Conversation } from './Conversation'
 import { Employee } from './Employee'
 
 @Entity()
-export class Conversation_reply extends BaseEntity {
+export class  Conversation_reply extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id!: number
 

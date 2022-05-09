@@ -9,7 +9,7 @@ import {
 import { Leave } from './Leave';
 
 @Entity()
-export class LeaveType extends BaseEntity {
+export class Leave_type extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
 import { Leave } from '../entities/Leave'
-import { LeaveType } from '../entities/LeaveType'
+import { Leave_type } from '../entities/Leave_Type'
 import { createOrUpdatetLeavePayload } from '../type/LeavePayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { leaveValid } from '../utils/valid/leaveValid'
@@ -83,7 +83,7 @@ const leaveController = {
 			})
 
 		//Check exist leave type
-		const existingLeaveType = await LeaveType.findOne({
+		const existingLeaveType = await Leave_type.findOne({
 			where: {
 				id: dataNewLeave.leave_type,
 			},
@@ -230,7 +230,7 @@ const leaveController = {
 			})
 
 		//Check exist leave type
-		const existingLeaveType = await LeaveType.findOne({
+		const existingLeaveType = await Leave_type.findOne({
 			where: {
 				id: dataUpdateLeave.leave_type,
 			},

@@ -11,7 +11,7 @@ import {
 import { Contract } from './Contract'
 
 @Entity()
-export class ContractType extends BaseEntity {
+export class Contract_type extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id!: number
 

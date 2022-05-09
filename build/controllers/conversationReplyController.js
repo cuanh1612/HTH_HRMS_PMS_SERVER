@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Conversation_1 = require("../entities/Conversation");
-const ConversationReply_1 = require("../entities/ConversationReply");
+const Conversation_Reply_1 = require("../entities/Conversation_Reply");
 const Employee_1 = require("../entities/Employee");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const conversationReplyController = {
@@ -52,7 +52,7 @@ const conversationReplyController = {
                 success: false,
                 message: 'User does not exist in the conversation',
             });
-        const createdConversationReply = yield ConversationReply_1.Conversation_reply.create(Object.assign({}, dataNewConversationReply)).save();
+        const createdConversationReply = yield Conversation_Reply_1.Conversation_reply.create(Object.assign({}, dataNewConversationReply)).save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -75,10 +75,14 @@ const conversationReplyController = {
                 message: 'User does not exist in the conversation',
             });
         //Get replies by conversation
-        const replies = yield ConversationReply_1.Conversation_reply.createQueryBuilder('conversation_reply')
-            .where('conversation_reply.conversationId = :conversationId', { conversationId })
-            .orderBy('created_at', 'ASC')
-            .getMany();
+        const replies = yield Conversation_Reply_1.Conversation_reply.find({
+            where: {
+                conversation: { id: existingConversation.id },
+            },
+            order: {
+                createdAt: 'ASC',
+            },
+        });
         return res.status(200).json({
             code: 200,
             success: true,

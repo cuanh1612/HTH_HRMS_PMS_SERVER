@@ -20,6 +20,13 @@ const conversationController = {
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewConversation = req.body;
         const { user_one, user_two } = dataNewConversation;
+        //Check same user
+        if (user_one === user_two)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: "You can't create a conversation with yourself",
+            });
         //check user exists
         const existingUserOne = yield Employee_1.Employee.findOne({
             where: {
@@ -97,6 +104,46 @@ const conversationController = {
             success: true,
             conversations,
             message: 'Get conversations successfully',
+        });
+    })),
+    delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { conversationId, userId } = req.params;
+        //Check exist conversation
+        const existingConversation = yield Conversation_1.Conversation.findOne({
+            where: {
+                id: Number(conversationId),
+            },
+        });
+        if (!existingConversation)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Conversation does not exist in the system',
+            });
+        //Check exist user
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: Number(userId),
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
+        //Check user exist in the conversation
+        if (!existingConversation.employees.some((employee) => employee.id === existingUser.id))
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the conversation',
+            });
+        yield existingConversation.remove();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Delete conversation successfully',
         });
     })),
 };

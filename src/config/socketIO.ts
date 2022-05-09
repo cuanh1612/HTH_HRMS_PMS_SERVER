@@ -7,16 +7,15 @@ const createSocketServer = (httpServer: Server) => {
 
 	const addNewUsre = ({ email, socketId }: userSocket) => {
 		!onlineUsers.some((user) => user.email === email) && onlineUsers.push({ email, socketId })
-        console.log(onlineUsers);
 	}
 
 	const removeUser = (socketId: string) => {
 		onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId)
 	}
 
-	// const getUser = (email: string) => {
-	// 	return onlineUsers.find((user) => user.email === email)
-	// }
+	const getUser = (email: string) => {
+		return onlineUsers.find((user) => user.email === email)
+	}
 
 	const io = new ServerSocket(httpServer, {
 		cors: {
@@ -27,16 +26,53 @@ const createSocketServer = (httpServer: Server) => {
 	})
 
 	io.on('connection', (socket) => {
-		console.log('Someone has connected!')
-        console.log(onlineUsers);
-        
-
 		socket.on('newUser', (email: string) => {
 			addNewUsre({ email, socketId: socket.id })
 		})
 
 		socket.on('disconnect', () => {
 			removeUser(socket.id)
+		})
+
+		socket.on(
+			'newReply',
+			({ email, conversation }: { email: string; conversation: number }) => {
+				const userReceive = getUser(email)
+
+				if (userReceive) {
+					socket.to(userReceive.socketId).emit('getNewReply', conversation)
+				}
+			}
+		)
+
+		//join room discussion contract
+		socket.on('joinRoomDiscussionContract', (contractId: string) => {
+			socket.join('roomDiscussionContract' + contractId)
+		})
+
+		//leave room discussion contract
+		socket.on('leaveRoomDiscussionContract', (contractId: string) => {
+			socket.leave('roomDiscussionContract' + contractId)
+		})
+
+		//emit user join room discussion contract when have new change comment
+		socket.on('newDiscussion', (contractId: string) => {
+			socket.in('roomDiscussionContract' + contractId).emit('getNewDiscussion')
+		})
+
+		//join room file contract
+		socket.on('joinRoomFileContract', (contractId: string) => {
+			socket.join('roomFileContract' + contractId)
+		})
+
+		//leave room file contract
+		socket.on('leaveRoomFileContract', (contractId: string) => {
+			socket.leave('roomFileContract' + contractId)
+		})
+
+		//emit user join room file contract when have new change file
+		socket.on('newFile', (contractId: string) => {
+			socket.in('roomFileContract' + contractId).emit('getNewFileContract')
 		})
 	})
 }
