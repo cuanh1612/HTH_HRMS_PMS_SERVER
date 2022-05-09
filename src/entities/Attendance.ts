@@ -19,10 +19,10 @@ export class Attendance extends BaseEntity {
 	working_from!: string
 
 	@Column()
-	clock_in_time!: string
+	clock_in_time!: Date
 
 	@Column()
-	clock_out_time!: string
+	clock_out_time!: Date
     
 	@Column({ type: 'date' })
 	date!: Date
@@ -34,8 +34,7 @@ export class Attendance extends BaseEntity {
 	half_day: boolean
 
 	@ManyToOne(() => Employee, (employee) => employee.attendances, {
-		onDelete: 'CASCADE',
-		eager: true,
+		onDelete: 'CASCADE'
 	})
 	@JoinColumn()
 	employee: Employee

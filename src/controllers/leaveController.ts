@@ -7,8 +7,21 @@ import handleCatchError from '../utils/catchAsyncError'
 import { leaveValid } from '../utils/valid/leaveValid'
 
 const leaveController = {
-	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const leaves = await Leave.find()
+	getAll: handleCatchError(async (req: Request, res: Response) => {
+		const {date} = req.query
+		let leaves = await Leave.find()
+		
+		if(date) {
+			leaves = leaves.filter(leave => {
+				const leaveDate =  new Date(leave.date)
+				const dateFilter =  new Date(date as string)
+				return leaveDate.getMonth() <= dateFilter.getMonth() &&
+					   leaveDate.getFullYear() <= dateFilter.getFullYear()
+			})
+		}
+
+		console.log(leaves)
+
 		return res.status(200).json({
 			code: 200,
 			success: true,

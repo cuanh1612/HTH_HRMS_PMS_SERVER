@@ -3,6 +3,8 @@ import attendanceController from '../controllers/attendanceController'
 
 const attendanceRouter = express.Router()
 
+attendanceRouter.get('/', attendanceController.getAll)
+
 attendanceRouter.post('/', attendanceController.create)
 
 attendanceRouter.put('/:id', attendanceController.update)

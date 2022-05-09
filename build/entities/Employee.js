@@ -49,7 +49,9 @@ __decorate([
     __metadata("design:type", String)
 ], Employee.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({
+        select: false
+    }),
     __metadata("design:type", String)
 ], Employee.prototype, "password", void 0);
 __decorate([
@@ -125,7 +127,9 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "leaves", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Attendance_1.Attendance, (attendance) => attendance.employee),
+    (0, typeorm_1.OneToMany)(() => Attendance_1.Attendance, (attendance) => attendance.employee, {
+        eager: true
+    }),
     __metadata("design:type", Array)
 ], Employee.prototype, "attendances", void 0);
 __decorate([

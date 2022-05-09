@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getManager } from 'typeorm'
+import { getManager  } from 'typeorm'
 import { Attendance } from '../entities/Attendance'
 import { Employee } from '../entities/Employee'
 import { createOrUpdateAttendacePayload } from '../type/AttendacePayload'
@@ -7,6 +7,36 @@ import handleCatchError from '../utils/catchAsyncError'
 import { attendanceValid } from '../utils/valid/attendanceValid'
 
 const attendanceController = {
+	getAll: handleCatchError(async (req: Request, res: Response) => {
+		const {date} = req.query
+	
+		let data = await Employee.find({
+			select: {
+				id: true,
+				name: true,
+				avatar: {
+					url: true,
+				},
+				attendances: true
+			}
+		})
+
+		if(date) {
+			data.map(employee=> {
+				employee.attendances = employee.attendances.filter(attendance=> {
+					return new Date(attendance.date) <= new Date(date as string)
+				})
+			})
+		}
+
+		return res.json({
+			code: 200,
+			success: true,
+			message: 'Mark attendances successfully',
+			data: data || []
+		})
+	}),
+
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewAttendances: createOrUpdateAttendacePayload = req.body
 		const { mark_attendance_by, dates, employees, month, year, employee, date } =
@@ -130,35 +160,36 @@ const attendanceController = {
 		})
 	}),
 
-    update: handleCatchError(async (req: Request, res: Response) => {
-        const {id} = req.params
-        const dataUpAttendances: Attendance = req.body
+	update: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
+		const dataUpAttendances: Attendance = req.body
 
-        //Check exist attendance
-        const exisitingAttendance = await Attendance.findOne({
-            where: {
-                id: Number(id)
-            }
-        })
+		//Check exist attendance
+		const exisitingAttendance = await Attendance.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
 
-        if(!exisitingAttendance) return res.status(400).json({
-            code: 400,
-			success: false,
-			message: 'Attendance does not exist in the system',
-        })
+		if (!exisitingAttendance)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Attendance does not exist in the system',
+			})
 
-        await Attendance.update(id, {
-            ...dataUpAttendances
-        })
+		await Attendance.update(id, {
+			...dataUpAttendances,
+		})
 
-        return res.status(200).json({
+		return res.status(200).json({
 			code: 200,
 			success: true,
 			message: 'Update attendance successfully',
 		})
-    }),
+	}),
 
-    getDetail: handleCatchError(async (req: Request, res: Response) => {
+	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
 		//Check existing attendance
@@ -183,7 +214,7 @@ const attendanceController = {
 		})
 	}),
 
-    delete: handleCatchError(async (req: Request, res: Response) => {
+	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
 		//Check existing attendance

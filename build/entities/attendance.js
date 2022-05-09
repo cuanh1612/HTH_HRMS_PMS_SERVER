@@ -24,11 +24,11 @@ __decorate([
 ], Attendance.prototype, "working_from", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Date)
 ], Attendance.prototype, "clock_in_time", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Date)
 ], Attendance.prototype, "clock_out_time", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'date' }),
@@ -44,8 +44,7 @@ __decorate([
 ], Attendance.prototype, "half_day", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.attendances, {
-        onDelete: 'CASCADE',
-        eager: true,
+        onDelete: 'CASCADE'
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Employee_1.Employee)
