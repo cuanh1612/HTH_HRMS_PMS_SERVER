@@ -20,7 +20,7 @@ const eventValid_1 = require("../utils/valid/eventValid");
 const eventController = {
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewEvent = req.body;
-        const { clients, employees, repeatEvery, typeRepeat, cycles, isRepeat, starts_on_date, ends_on_date, } = dataNewEvent;
+        const { clientEmails, employeeEmails, repeatEvery, typeRepeat, cycles, isRepeat, starts_on_date, ends_on_date, } = dataNewEvent;
         let eventEmployees = [];
         let eventClients = [];
         //Check valid input create new event
@@ -33,11 +33,11 @@ const eventController = {
                 message: messageValid,
             });
         //Check exist clients
-        for (let index = 0; index < clients.length; index++) {
-            const clientId = clients[index];
+        for (let index = 0; index < clientEmails.length; index++) {
+            const clientEmail = clientEmails[index];
             const existingClient = yield Client_1.Client.findOne({
                 where: {
-                    id: clientId,
+                    email: clientEmail,
                 },
             });
             if (!existingClient)
@@ -49,11 +49,11 @@ const eventController = {
             eventClients.push(existingClient);
         }
         //Check exist employee
-        for (let index = 0; index < employees.length; index++) {
-            const employeeId = employees[index];
+        for (let index = 0; index < employeeEmails.length; index++) {
+            const employeeEmail = employeeEmails[index];
             const existEmployee = yield Employee_1.Employee.findOne({
                 where: {
-                    id: employeeId,
+                    email: employeeEmail,
                 },
             });
             if (!existEmployee)
@@ -163,7 +163,7 @@ const eventController = {
         //get id event
         const { enventId } = req.params;
         const dataUpdateEvent = req.body;
-        const { clients, employees } = dataUpdateEvent;
+        const { clientEmails, employeeEmails } = dataUpdateEvent;
         let eventEmployees = [];
         let eventClients = [];
         //Check existing event
@@ -188,11 +188,11 @@ const eventController = {
                 message: messageValid,
             });
         //Check exist clients
-        for (let index = 0; index < clients.length; index++) {
-            const clientId = clients[index];
+        for (let index = 0; index < clientEmails.length; index++) {
+            const clientsEmail = clientEmails[index];
             const existingClient = yield Client_1.Client.findOne({
                 where: {
-                    id: clientId,
+                    email: clientsEmail,
                 },
             });
             if (!existingClient)
@@ -204,11 +204,11 @@ const eventController = {
             eventClients.push(existingClient);
         }
         //Check exist employee
-        for (let index = 0; index < employees.length; index++) {
-            const employeeId = employees[index];
+        for (let index = 0; index < employeeEmails.length; index++) {
+            const employeeEmail = employeeEmails[index];
             const existEmployee = yield Employee_1.Employee.findOne({
                 where: {
-                    id: employeeId,
+                    email: employeeEmail,
                 },
             });
             if (!existEmployee)

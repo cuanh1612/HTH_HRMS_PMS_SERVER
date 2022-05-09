@@ -10,8 +10,8 @@ const eventController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewEvent: createOrUpdateEventPayload = req.body
 		const {
-			clients,
-			employees,
+			clientEmails,
+			employeeEmails,
 			repeatEvery,
 			typeRepeat,
 			cycles,
@@ -34,12 +34,12 @@ const eventController = {
 			})
 
 		//Check exist clients
-		for (let index = 0; index < clients.length; index++) {
-			const clientId = clients[index]
+		for (let index = 0; index < clientEmails.length; index++) {
+			const clientEmail = clientEmails[index]
 
 			const existingClient = await Client.findOne({
 				where: {
-					id: clientId,
+					email: clientEmail,
 				},
 			})
 
@@ -54,12 +54,12 @@ const eventController = {
 		}
 
 		//Check exist employee
-		for (let index = 0; index < employees.length; index++) {
-			const employeeId = employees[index]
+		for (let index = 0; index < employeeEmails.length; index++) {
+			const employeeEmail = employeeEmails[index]
 
 			const existEmployee = await Employee.findOne({
 				where: {
-					id: employeeId,
+					email: employeeEmail,
 				},
 			})
 
@@ -201,7 +201,7 @@ const eventController = {
 		const { enventId } = req.params
 
 		const dataUpdateEvent: createOrUpdateEventPayload = req.body
-		const { clients, employees } = dataUpdateEvent
+		const { clientEmails, employeeEmails } = dataUpdateEvent
 		let eventEmployees: Employee[] = []
 		let eventClients: Client[] = []
 
@@ -231,12 +231,12 @@ const eventController = {
 			})
 
 		//Check exist clients
-		for (let index = 0; index < clients.length; index++) {
-			const clientId = clients[index]
+		for (let index = 0; index < clientEmails.length; index++) {
+			const clientsEmail = clientEmails[index]
 
 			const existingClient = await Client.findOne({
 				where: {
-					id: clientId,
+					email: clientsEmail,
 				},
 			})
 
@@ -251,12 +251,12 @@ const eventController = {
 		}
 
 		//Check exist employee
-		for (let index = 0; index < employees.length; index++) {
-			const employeeId = employees[index]
+		for (let index = 0; index < employeeEmails.length; index++) {
+			const employeeEmail = employeeEmails[index]
 
 			const existEmployee = await Employee.findOne({
 				where: {
-					id: employeeId,
+					email: employeeEmail,
 				},
 			})
 
