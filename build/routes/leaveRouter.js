@@ -13,4 +13,5 @@ leaveRouter.get('/', leaveController_1.default.getAll);
 leaveRouter.get('/:leaveId', leaveController_1.default.getDetail);
 leaveRouter.delete('/:leaveId', (0, checkAuth_1.checkAuth)(['Admin']), leaveController_1.default.delete);
 leaveRouter.put('/:leaveId', (0, checkAuth_1.checkAuth)(['Admin']), leaveController_1.default.update);
+leaveRouter.put('/status/:leaveId', leaveController_1.default.updateStatus);
 exports.default = leaveRouter;

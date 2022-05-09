@@ -18,6 +18,32 @@ const Employee_1 = require("../entities/Employee");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const attendanceValid_1 = require("../utils/valid/attendanceValid");
 const attendanceController = {
+    getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { date } = req.query;
+        let data = yield Employee_1.Employee.find({
+            select: {
+                id: true,
+                name: true,
+                avatar: {
+                    url: true,
+                },
+                attendances: true
+            }
+        });
+        if (date) {
+            data.map(employee => {
+                employee.attendances = employee.attendances.filter(attendance => {
+                    return new Date(attendance.date) <= new Date(date);
+                });
+            });
+        }
+        return res.json({
+            code: 200,
+            success: true,
+            message: 'Mark attendances successfully',
+            data: data || []
+        });
+    })),
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewAttendances = req.body;
         const { mark_attendance_by, dates, employees, month, year, employee, date } = dataNewAttendances;
@@ -118,8 +144,8 @@ const attendanceController = {
         //Check exist attendance
         const exisitingAttendance = yield Attendance_1.Attendance.findOne({
             where: {
-                id: Number(id)
-            }
+                id: Number(id),
+            },
         });
         if (!exisitingAttendance)
             return res.status(400).json({

@@ -4,7 +4,9 @@ import { checkAuth } from '../utils/middleware/checkAuth'
 
 const attendanceRouter = express.Router()
 
-attendanceRouter.post('/', checkAuth(['Admin']), attendanceController.create)
+attendanceRouter.get('/', attendanceController.getAll)
+
+attendanceRouter.post('/',  checkAuth(['Admin']), attendanceController.create)
 
 attendanceRouter.put('/:id', checkAuth(['Admin']), attendanceController.update)
 

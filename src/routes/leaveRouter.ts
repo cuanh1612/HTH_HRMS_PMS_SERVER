@@ -14,4 +14,7 @@ leaveRouter.delete('/:leaveId', checkAuth(['Admin']), leaveController.delete)
 
 leaveRouter.put('/:leaveId', checkAuth(['Admin']), leaveController.update)
 
+leaveRouter.put('/status/:leaveId', leaveController.updateStatus)
+
+
 export default leaveRouter

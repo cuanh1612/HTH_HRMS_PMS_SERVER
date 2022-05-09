@@ -18,8 +18,18 @@ const Leave_Type_1 = require("../entities/Leave_Type");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const leaveValid_1 = require("../utils/valid/leaveValid");
 const leaveController = {
-    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const leaves = yield Leave_1.Leave.find();
+    getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { date } = req.query;
+        let leaves = yield Leave_1.Leave.find();
+        if (date) {
+            leaves = leaves.filter(leave => {
+                const leaveDate = new Date(leave.date);
+                const dateFilter = new Date(date);
+                return leaveDate.getMonth() <= dateFilter.getMonth() &&
+                    leaveDate.getFullYear() <= dateFilter.getFullYear();
+            });
+        }
+        console.log(leaves);
         return res.status(200).json({
             code: 200,
             success: true,
@@ -153,6 +163,7 @@ const leaveController = {
                 }).save();
             }
         }
+        console.log(dataNewLeave.dates);
         return res.status(200).json({
             code: 200,
             success: true,
@@ -183,7 +194,7 @@ const leaveController = {
                 message: 'Leave does not exist in the system',
             });
         //Check leave accepted or rejected`
-        if (leaveUpdate.duration !== 'Pending')
+        if (leaveUpdate.status !== 'Pending')
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -232,6 +243,7 @@ const leaveController = {
             reason: dataUpdateLeave.reason,
             duration: dataUpdateLeave.duration,
             leave_type: dataUpdateLeave.leave_type,
+            status: dataUpdateLeave.status
         });
         return res.status(200).json({
             code: 200,
@@ -296,7 +308,7 @@ const leaveController = {
     })),
     deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { leaves } = req.body;
-        if (leaves)
+        if (!leaves)
             return res.status(400).json({
                 code: 400,
                 success: false,

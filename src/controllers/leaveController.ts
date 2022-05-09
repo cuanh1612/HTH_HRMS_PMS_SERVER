@@ -7,8 +7,21 @@ import handleCatchError from '../utils/catchAsyncError'
 import { leaveValid } from '../utils/valid/leaveValid'
 
 const leaveController = {
-	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const leaves = await Leave.find()
+	getAll: handleCatchError(async (req: Request, res: Response) => {
+		const {date} = req.query
+		let leaves = await Leave.find()
+		
+		if(date) {
+			leaves = leaves.filter(leave => {
+				const leaveDate =  new Date(leave.date)
+				const dateFilter =  new Date(date as string)
+				return leaveDate.getMonth() <= dateFilter.getMonth() &&
+					   leaveDate.getFullYear() <= dateFilter.getFullYear()
+			})
+		}
+
+		console.log(leaves)
+
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -75,14 +88,15 @@ const leaveController = {
 				id: dataNewLeave.leave_type,
 			},
 		})
-
+		
 		if (!existingLeaveType)
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'Leave type does not exist in the system',
-			})
-
+		return res.status(400).json({
+			code: 400,
+			success: false,
+			message: 'Leave type does not exist in the system',
+		})
+		
+		
 		//Check duration date leave
 		if (dataNewLeave.dates && Array.isArray(dataNewLeave.dates)) {
 			for (let index = 0; index < dataNewLeave.dates.length; index++) {
@@ -90,14 +104,14 @@ const leaveController = {
 
 				//Check existing leave date and remove
 				const existingLeaveDate = await Leave.createQueryBuilder('leave')
-					.where('leave.employeeId = :id', {
-						id: dataNewLeave.employee,
-					})
-					.andWhere('leave.date = :date', {
-						date,
-					})
-					.getOne()
-
+				.where('leave.employeeId = :id', {
+					id: dataNewLeave.employee,
+				})
+				.andWhere('leave.date = :date', {
+					date,
+				})
+				.getOne()
+				
 				// Leave already applied for the selected date will update
 				if (existingLeaveDate) {
 					await Leave.update(existingLeaveDate.id, {
@@ -156,6 +170,8 @@ const leaveController = {
 			}
 		}
 
+		console.log(dataNewLeave.dates)
+
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -192,7 +208,7 @@ const leaveController = {
 			})
 
 		//Check leave accepted or rejected`
-		if (leaveUpdate.duration !== 'Pending')
+		if (leaveUpdate.status !== 'Pending')
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -248,6 +264,7 @@ const leaveController = {
 			reason: dataUpdateLeave.reason,
 			duration: dataUpdateLeave.duration,
 			leave_type: dataUpdateLeave.leave_type,
+			status: dataUpdateLeave.status
 		})
 
 		return res.status(200).json({
@@ -326,7 +343,7 @@ const leaveController = {
 
 	deleteMany: handleCatchError(async (req: Request, res: Response) => {
 		const { leaves } = req.body
-		if (leaves)
+		if (!leaves)
 			return res.status(400).json({
 				code: 400,
 				success: false,

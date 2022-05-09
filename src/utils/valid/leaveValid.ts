@@ -40,7 +40,7 @@ export const leaveValid = {
 
 		if (!status) messageError = 'Pleas enter full field'
 
-		if (status !== enumStatus.PENDING)
+		if (status === enumStatus.PENDING)
 			messageError = 'Please select status approved or rejected'
 
 		if (status && status !== enumStatus.APPROVED && status !== enumStatus.REJECTED) {

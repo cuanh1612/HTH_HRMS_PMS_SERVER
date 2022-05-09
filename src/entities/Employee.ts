@@ -49,7 +49,9 @@ export class Employee extends BaseEntity {
 	@Column({ unique: true })
 	email!: string
 
-	@Column()
+	@Column({
+		select: false
+	})
 	password!: string
 
 	@Column({ nullable: true })
@@ -109,7 +111,9 @@ export class Employee extends BaseEntity {
 	@OneToMany(() => Leave, (leave) => leave.employee)
 	leaves: Leave[]
 
-	@OneToMany(() => Attendance, (attendance) => attendance.employee)
+	@OneToMany(() => Attendance, (attendance) => attendance.employee, {
+		eager: true
+	})
 	attendances: Attendance[]
 
 	@OneToMany(() => Conversation_reply, (conversation_reply) => conversation_reply.user)
