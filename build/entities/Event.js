@@ -44,6 +44,14 @@ __decorate([
     __metadata("design:type", Date)
 ], Event.prototype, "ends_on_date", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: "time" }),
+    __metadata("design:type", String)
+], Event.prototype, "starts_on_time", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "time" }),
+    __metadata("design:type", String)
+], Event.prototype, "ends_on_time", void 0);
+__decorate([
     (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { eager: true, onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinTable)({ name: 'event_employee' }),
     __metadata("design:type", Array)

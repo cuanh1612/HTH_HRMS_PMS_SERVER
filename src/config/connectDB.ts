@@ -25,7 +25,7 @@ import { Project_Category } from '../entities/Project_Category'
 const connectDB = () => {
 	createConnection({
 		type: 'postgres',
-		database: 'hth_hrms_pms',
+		database: 'HTH_HRMS_PMS',
 		username: process.env.DB_USERNAME_DEV,
 		password: process.env.DB_PASSWORD_DEV,
 		logging: true,

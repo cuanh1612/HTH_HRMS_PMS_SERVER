@@ -271,11 +271,18 @@ const eventController = {
 		}
 
 		//Update event
-		await Event.update(Number(enventId), {
-			...dataUpdateEvent,
-			employees: eventEmployees,
-			clients: eventClients,
-		})
+		existingEvent.clients = eventClients
+		;(existingEvent.name = dataUpdateEvent.name),
+			(existingEvent.where = dataUpdateEvent.where),
+			(existingEvent.color = dataUpdateEvent.color),
+			(existingEvent.description = dataUpdateEvent.description),
+			(existingEvent.starts_on_date = dataUpdateEvent.starts_on_date),
+			(existingEvent.starts_on_time = dataUpdateEvent.starts_on_time),
+			(existingEvent.ends_on_date = dataUpdateEvent.ends_on_date),
+			(existingEvent.ends_on_time = dataUpdateEvent.ends_on_time),
+			(existingEvent.employees = eventEmployees),
+			(existingEvent.clients = eventClients),
+			await existingEvent.save()
 
 		return res.status(200).json({
 			code: 200,
