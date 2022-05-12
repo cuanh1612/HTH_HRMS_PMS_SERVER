@@ -6,7 +6,7 @@ const attendanceRouter = express.Router()
 
 attendanceRouter.get('/', attendanceController.getAll)
 
-attendanceRouter.post('/',  checkAuth(['Admin']), attendanceController.create)
+attendanceRouter.post('/',  checkAuth(['Admin']), attendanceController.insertOne)
 
 attendanceRouter.put('/:id', checkAuth(['Admin']), attendanceController.update)
 

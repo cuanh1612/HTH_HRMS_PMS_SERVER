@@ -16,4 +16,11 @@ exports.attendanceValid = {
         }
         return messageError;
     },
+    insertOne: ({ clock_in_time, clock_out_time, date, employee }) => {
+        if (!clock_in_time || !clock_out_time || !date || !employee) {
+            const messageError = 'Pleas enter full field';
+            return messageError;
+        }
+        return '';
+    }
 };

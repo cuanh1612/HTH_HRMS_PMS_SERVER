@@ -18,13 +18,13 @@ export class Attendance extends BaseEntity {
 	@Column()
 	working_from!: string
 
-	@Column()
-	clock_in_time!: Date
+	@Column('time')
+	clock_in_time!: string
 
-	@Column()
-	clock_out_time!: Date
+	@Column('time')
+	clock_out_time!: string
     
-	@Column({ type: 'date' })
+	@Column('date')
 	date!: Date
 
 	@Column('boolean', { default: false })

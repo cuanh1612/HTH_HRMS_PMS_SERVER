@@ -37,6 +37,63 @@ const attendanceController = {
 		})
 	}),
 
+	insertOne: handleCatchError(async (req: Request, res: Response) => {
+		const {employee, date } : Attendance = req.body
+		
+		const messageValid = attendanceValid.insertOne(req.body)
+		if(messageValid) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: messageValid,
+			})
+		}
+
+		const user = await Employee.findOne({
+			select: {
+				attendances: true
+			},
+			where: {
+				id: Number(employee)
+			}
+		})
+
+		if(!user) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User not exist',
+			})
+		}
+
+		const attendanceExist = user?.attendances.find(attendance=> {
+		
+			return new Date(attendance.date).toLocaleDateString() == new Date(new Date(date).setHours(0,0,0,0)).toLocaleDateString()
+		})
+
+		if (attendanceExist) {
+			console.log('fdsdfsdf')
+			 await Attendance.update(attendanceExist.id, {
+				...req.body,
+				employee: user,
+				date: new Date(date)
+			})
+		
+		} else {
+			await Attendance.insert({
+				...req.body,
+				employee: user,
+				date: new Date(date)
+			})
+		}
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Check attendance successfully',
+		})
+	}),
+
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewAttendances: createOrUpdateAttendacePayload = req.body
 		const { mark_attendance_by, dates, employees, month, year, employee, date } =
