@@ -32,6 +32,12 @@ export class Event extends BaseEntity {
 	@Column({ type: 'date' })
 	ends_on_date: Date
 
+	@Column({type: "time"})
+	starts_on_time: String
+
+	@Column({type: "time"})
+	ends_on_time: String
+
 	@ManyToMany(() => Employee, { eager: true, onDelete: 'CASCADE' })
 	@JoinTable({ name: 'event_employee' })
 	employees: Employee[]
