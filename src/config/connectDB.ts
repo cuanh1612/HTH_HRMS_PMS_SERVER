@@ -26,11 +26,15 @@ import { Project_file } from '../entities/Project_File'
 const connectDB = () => {
 	createConnection({
 		type: 'postgres',
-		database: 'hth_hrms_pms',
-		username: process.env.DB_USERNAME_DEV,
-		password: process.env.DB_PASSWORD_DEV,
+		host: process.env.DB_HOST,
+		database:  process.env.DB_DATABASE,
+		username: process.env.DB_USER,
+		password: process.env.DB_PASSWORD,
 		logging: true,
 		synchronize: true,
+		ssl: {
+			rejectUnauthorized: false
+		},
 		entities: [
 			Employee,
 			Avatar,
