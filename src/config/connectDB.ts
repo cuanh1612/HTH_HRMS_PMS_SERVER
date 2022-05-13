@@ -30,8 +30,8 @@ const connectDB = () => {
 		database:  process.env.DB_DATABASE,
 		username: process.env.DB_USER,
 		password: process.env.DB_PASSWORD,
-		logging: true,
-		synchronize: true,
+		logging: false,
+		synchronize: false,
 		ssl: {
 			rejectUnauthorized: false
 		},
