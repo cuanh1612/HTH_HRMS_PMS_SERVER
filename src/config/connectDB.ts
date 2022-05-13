@@ -24,6 +24,7 @@ import { Project_Category } from '../entities/Project_Category'
 import { Project_file } from '../entities/Project_File'
 
 const connectDB = () => {
+	console.log(process.env.DB_HOST)
 	createConnection({
 		type: 'postgres',
 		host: process.env.DB_HOST,
