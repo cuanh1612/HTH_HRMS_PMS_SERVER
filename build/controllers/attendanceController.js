@@ -27,13 +27,16 @@ const attendanceController = {
                 avatar: {
                     url: true,
                 },
-                attendances: true
-            }
+                attendances: true,
+            },
         });
         if (date) {
-            data.map(employee => {
-                employee.attendances = employee.attendances.filter(attendance => {
-                    return new Date(attendance.date) <= new Date(date);
+            data.map((employee) => {
+                employee.attendances = employee.attendances.filter((attendance) => {
+                    return (new Date(attendance.date).getMonth() ==
+                        new Date(date).getMonth() &&
+                        new Date(attendance.date).getFullYear() ==
+                            new Date(date).getFullYear());
                 });
             });
         }
@@ -41,7 +44,48 @@ const attendanceController = {
             code: 200,
             success: true,
             message: 'Mark attendances successfully',
-            data: data || []
+            data: data || [],
+        });
+    })),
+    insertOne: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employee, date } = req.body;
+        const messageValid = attendanceValid_1.attendanceValid.insertOne(req.body);
+        if (messageValid) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: messageValid,
+            });
+        }
+        const user = yield Employee_1.Employee.findOne({
+            select: {
+                attendances: true,
+            },
+            where: {
+                id: Number(employee),
+            },
+        });
+        if (!user) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User not exist',
+            });
+        }
+        const attendanceExist = user === null || user === void 0 ? void 0 : user.attendances.find((attendance) => {
+            return (new Date(attendance.date).toLocaleDateString() ==
+                new Date(new Date(date).setHours(0, 0, 0, 0)).toLocaleDateString());
+        });
+        if (attendanceExist) {
+            yield Attendance_1.Attendance.update(attendanceExist.id, Object.assign(Object.assign({}, req.body), { employee: user, date: new Date(date) }));
+        }
+        else {
+            yield Attendance_1.Attendance.insert(Object.assign(Object.assign({}, req.body), { employee: user, date: new Date(date) }));
+        }
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Check attendance successfully',
         });
     })),
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

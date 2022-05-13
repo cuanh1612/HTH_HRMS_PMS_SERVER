@@ -20,8 +20,6 @@ const leaveController = {
 			})
 		}
 
-		console.log(leaves)
-
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -169,8 +167,6 @@ const leaveController = {
 				}).save()
 			}
 		}
-
-		console.log(dataNewLeave.dates)
 
 		return res.status(200).json({
 			code: 200,

@@ -23,15 +23,15 @@ __decorate([
     __metadata("design:type", String)
 ], Attendance.prototype, "working_from", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Date)
+    (0, typeorm_1.Column)('time'),
+    __metadata("design:type", String)
 ], Attendance.prototype, "clock_in_time", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Date)
+    (0, typeorm_1.Column)('time'),
+    __metadata("design:type", String)
 ], Attendance.prototype, "clock_out_time", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'date' }),
+    (0, typeorm_1.Column)('date'),
     __metadata("design:type", Date)
 ], Attendance.prototype, "date", void 0);
 __decorate([

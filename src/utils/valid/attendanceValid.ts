@@ -1,3 +1,4 @@
+import { Attendance } from '../../entities/Attendance'
 import { createOrUpdateAttendacePayload } from '../../type/AttendacePayload'
 
 export const attendanceValid = {
@@ -28,4 +29,14 @@ export const attendanceValid = {
 
 		return messageError
 	},
+
+	insertOne: ({clock_in_time, clock_out_time, date, employee}: Attendance) => {
+		if(!clock_in_time || !clock_out_time || !date || !employee) {
+			const messageError = 'Pleas enter full field'
+			return messageError
+		}
+		return ''
+	}
 }
+
+

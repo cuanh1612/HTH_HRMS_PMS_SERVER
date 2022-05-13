@@ -25,13 +25,18 @@ const Project_1 = require("../entities/Project");
 const Project_Category_1 = require("../entities/Project_Category");
 const Project_File_1 = require("../entities/Project_File");
 const connectDB = () => {
+    console.log(process.env.DB_HOST);
     (0, typeorm_1.createConnection)({
         type: 'postgres',
-        database: 'HTH_HRMS_PMS',
-        username: process.env.DB_USERNAME_DEV,
-        password: process.env.DB_PASSWORD_DEV,
-        logging: true,
-        synchronize: true,
+        host: process.env.DB_HOST,
+        database: process.env.DB_DATABASE,
+        username: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        logging: false,
+        synchronize: false,
+        ssl: {
+            rejectUnauthorized: false
+        },
         entities: [
             Employee_1.Employee,
             Avatar_1.Avatar,
