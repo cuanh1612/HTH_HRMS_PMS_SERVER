@@ -159,6 +159,10 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "discussions", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => Project_1.Project, (Project) => Project.Added_by),
+    __metadata("design:type", Array)
+], Employee.prototype, "Projects", void 0);
+__decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)
 ], Employee.prototype, "token_version", void 0);

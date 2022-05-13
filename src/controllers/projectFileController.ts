@@ -1,9 +1,7 @@
 import { Request, Response } from 'express'
-import { Secret, verify } from 'jsonwebtoken'
 import { Project } from '../entities/Project'
 import { Project_file } from '../entities/Project_File'
 import { createOrUpdatetProjectFilesPayload } from '../type/projectFilePayLoad'
-import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 
 const projectFileController = {

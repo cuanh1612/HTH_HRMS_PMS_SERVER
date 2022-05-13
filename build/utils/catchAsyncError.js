@@ -26,7 +26,7 @@ const handleCatchError = (func) => {
             if (error.code === '23505') {
                 const fieldDuplicate = error.detail.split(`"`)[1];
                 statusCode = 400;
-                message = `${fieldDuplicate} already exist`;
+                message = fieldDuplicate ? `${fieldDuplicate} already exist` : error.detail;
             }
             //Hand delete but have reference to other table
             if (error.code === '23503') {

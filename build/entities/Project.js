@@ -9,12 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Project = exports.enumCurrency = void 0;
+exports.Project = exports.enumStatus = exports.enumCurrency = void 0;
 const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const Department_1 = require("./Department");
 const Employee_1 = require("./Employee");
 const Project_Category_1 = require("./Project_Category");
+const Project_File_1 = require("./Project_File");
 var enumCurrency;
 (function (enumCurrency) {
     enumCurrency["USD"] = "USD";
@@ -23,6 +24,14 @@ var enumCurrency;
     enumCurrency["INR"] = "INR";
     enumCurrency["VND"] = "VND";
 })(enumCurrency = exports.enumCurrency || (exports.enumCurrency = {}));
+var enumStatus;
+(function (enumStatus) {
+    enumStatus["NOT_STARTED"] = "Not Started";
+    enumStatus["IN_PROGRESS"] = "In Progress";
+    enumStatus["ON_HOLD"] = "On Hold";
+    enumStatus["CANCELED"] = "Canceled";
+    enumStatus["FINISHED"] = "Finished";
+})(enumStatus = exports.enumStatus || (exports.enumStatus = {}));
 let Project = class Project extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -30,7 +39,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Project.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
 ], Project.prototype, "name", void 0);
 __decorate([
@@ -42,11 +51,11 @@ __decorate([
     __metadata("design:type", Date)
 ], Project.prototype, "Deadline", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Project.prototype, "project_summary", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Project.prototype, "notes", void 0);
 __decorate([
@@ -63,21 +72,24 @@ __decorate([
 ], Project.prototype, "send_task_noti", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Project_Category_1.Project_Category, (project_Category) => project_Category.projects, {
-        onDelete: 'SET NULL'
+        onDelete: 'SET NULL',
+        nullable: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Project_Category_1.Project_Category)
 ], Project.prototype, "project_category", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.projects, {
-        onDelete: 'SET NULL'
+        onDelete: 'SET NULL',
+        nullable: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Department_1.Department)
 ], Project.prototype, "department", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Client_1.Client, (client) => client.projects, {
-        onDelete: 'CASCADE'
+        onDelete: 'SET NULL',
+        nullable: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Client_1.Client)
@@ -88,9 +100,44 @@ __decorate([
     __metadata("design:type", Array)
 ], Project.prototype, "employees", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'enum', enum: enumStatus, default: enumStatus.NOT_STARTED }),
+    __metadata("design:type", String)
+], Project.prototype, "project_status", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: enumCurrency, default: enumCurrency.USD }),
     __metadata("design:type", String)
 ], Project.prototype, "currency", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: 0 }),
+    __metadata("design:type", Number)
+], Project.prototype, "Progress", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (Employee) => Employee.projects, {
+        onDelete: 'SET NULL'
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Employee_1.Employee)
+], Project.prototype, "Added_by", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Project_File_1.Project_file, (project_file) => project_file.project, {
+        onDelete: 'SET NULL',
+        nullable: true
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Array)
+], Project.prototype, "project_files", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({
+        name: 'created_at',
+    }),
+    __metadata("design:type", Date)
+], Project.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)({
+        name: 'updated_at',
+    }),
+    __metadata("design:type", Date)
+], Project.prototype, "updatedAt", void 0);
 Project = __decorate([
     (0, typeorm_1.Entity)()
 ], Project);
