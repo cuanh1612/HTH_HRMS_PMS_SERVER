@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getManager  } from 'typeorm'
+import { getManager } from 'typeorm'
 import { Attendance } from '../entities/Attendance'
 import { Employee } from '../entities/Employee'
 import { createOrUpdateAttendacePayload } from '../type/AttendacePayload'
@@ -8,8 +8,7 @@ import { attendanceValid } from '../utils/valid/attendanceValid'
 
 const attendanceController = {
 	getAll: handleCatchError(async (req: Request, res: Response) => {
-		const {date} = req.query
-	
+		const { date } = req.query
 		let data = await Employee.find({
 			select: {
 				id: true,
@@ -17,14 +16,19 @@ const attendanceController = {
 				avatar: {
 					url: true,
 				},
-				attendances: true
-			}
+				attendances: true,
+			},
 		})
 
-		if(date) {
-			data.map(employee=> {
-				employee.attendances = employee.attendances.filter(attendance=> {
-					return new Date(attendance.date) <= new Date(date as string)
+		if (date) {
+			data.map((employee) => {
+				employee.attendances = employee.attendances.filter((attendance) => {
+					return (
+						new Date(attendance.date).getMonth() ==
+							new Date(date as string).getMonth() &&
+						new Date(attendance.date).getFullYear() ==
+							new Date(date as string).getFullYear()
+					)
 				})
 			})
 		}
@@ -33,15 +37,15 @@ const attendanceController = {
 			code: 200,
 			success: true,
 			message: 'Mark attendances successfully',
-			data: data || []
+			data: data || [],
 		})
 	}),
 
 	insertOne: handleCatchError(async (req: Request, res: Response) => {
-		const {employee, date } : Attendance = req.body
-		
+		const { employee, date }: Attendance = req.body
+
 		const messageValid = attendanceValid.insertOne(req.body)
-		if(messageValid) {
+		if (messageValid) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -51,14 +55,14 @@ const attendanceController = {
 
 		const user = await Employee.findOne({
 			select: {
-				attendances: true
+				attendances: true,
 			},
 			where: {
-				id: Number(employee)
-			}
+				id: Number(employee),
+			},
 		})
 
-		if(!user) {
+		if (!user) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -66,24 +70,24 @@ const attendanceController = {
 			})
 		}
 
-		const attendanceExist = user?.attendances.find(attendance=> {
-		
-			return new Date(attendance.date).toLocaleDateString() == new Date(new Date(date).setHours(0,0,0,0)).toLocaleDateString()
+		const attendanceExist = user?.attendances.find((attendance) => {
+			return (
+				new Date(attendance.date).toLocaleDateString() ==
+				new Date(new Date(date).setHours(0, 0, 0, 0)).toLocaleDateString()
+			)
 		})
 
 		if (attendanceExist) {
-			console.log('fdsdfsdf')
-			 await Attendance.update(attendanceExist.id, {
+			await Attendance.update(attendanceExist.id, {
 				...req.body,
 				employee: user,
-				date: new Date(date)
+				date: new Date(date),
 			})
-		
 		} else {
 			await Attendance.insert({
 				...req.body,
 				employee: user,
-				date: new Date(date)
+				date: new Date(date),
 			})
 		}
 

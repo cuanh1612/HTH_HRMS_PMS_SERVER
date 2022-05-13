@@ -134,6 +134,11 @@ export class Employee extends BaseEntity {
 	@OneToMany(() => Discussion, (discussion) => discussion.employee)
 	discussions: Discussion[]
 
+	
+	@OneToMany(() => Project, (Project) => Project.Added_by)
+	Projects: Project[]
+
+
 	@Column({ default: 0 })
 	token_version: number
 
