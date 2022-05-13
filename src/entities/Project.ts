@@ -28,7 +28,7 @@ export class Project extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number
 
-    @Column()
+    @Column({unique: true})
     name!: string
 
     @Column({ type: 'date' })
@@ -96,7 +96,8 @@ export class Project extends BaseEntity {
     Added_by: Employee
 
     @OneToMany(() => Project_file, (project_file) => project_file.project,{
-        onDelete: 'SET NULL'
+        onDelete: 'SET NULL',
+        nullable: true
     })
     @JoinColumn()
     project_files: Project_file[]

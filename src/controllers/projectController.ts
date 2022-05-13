@@ -1,9 +1,8 @@
-
+import { create } from 'domain'
 import { Request, Response } from 'express'
 import { Client } from '../entities/Client'
 import { Department } from '../entities/Department'
 import { Employee } from '../entities/Employee'
-import { Holiday } from '../entities/Holiday'
 import { Project } from '../entities/Project'
 import { Project_Category } from '../entities/Project_Category'
 import { Project_file } from '../entities/Project_File'
@@ -17,328 +16,331 @@ const projectController = {
         const dataNewProject: createOrUpdateProjectPayload = req.body
         const { name, project_category, department, client, employees, Added_by, project_files} = dataNewProject
         let projectEmployees: Employee[] = []
-        let projectFiles: Project_file[] = []
 
-        //Check valid input create new project
-        //Check valid
-        const messageValid = projectValid.createOrUpdate(dataNewProject)
+		//Check valid input create new project
+		//Check valid
+		const messageValid = projectValid.createOrUpdate(dataNewProject)
 
-        if (messageValid)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: messageValid,
-            })
+		if (messageValid)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: messageValid,
+			})
 
-        //check existing name of project
-        const existingName = await Project.findOne({
-            where: {
-                name: String(name)
+		//check existing name of project
+		const existingName = await Project.findOne({
+			where: {
+				name: String(name),
+			},
+		})
 
-            }
-        })
+		if (existingName)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Name of project already exist in the system',
+			})
 
-        if (existingName)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Name of project already exist in the system',
-            })
+		//check exist Added by
+		if (Added_by) {
+			const existingAddedBy = await Employee.findOne({
+				where: {
+					id: Added_by,
+				},
+			})
+			if (!existingAddedBy)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Addmin add this project does not exist in the system',
+				})
+		}
 
-        //check exist Added by
-        if (Added_by) {
-            const existingAddedBy = await Employee.findOne({
-                where: {
-                    id: Added_by
-                }
-            })
-            if (!existingAddedBy)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Addmin add this project does not exist in the system'
-                })
-        }
+		//check exist client
+		const existingClient = await Client.findOne({
+			where: {
+				id: client,
+			},
+		})
+		if (!existingClient)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Client does not exist in the system',
+			})
+		//check exist department
+		const existingDepartment = await Department.findOne({
+			where: {
+				id: department,
+			},
+		})
+		if (!existingDepartment)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Department does not exist in the system',
+			})
+		//check exist project categories
+		const existingCategories = await Project_Category.findOne({
+			where: {
+				id: project_category,
+			},
+		})
+		if (!existingCategories)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Category does not exist in the system',
+			})
 
-        //check exist client
-        const existingClient = await Client.findOne({
-            where: {
-                id: client
-            }
-        })
-        if (!existingClient)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Client does not exist in the system',
-            })
-        //check exist department
-        const existingDepartment = await Department.findOne({
-            where: {
-                id: department
-            }
-        })
-        if (!existingDepartment)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Department does not exist in the system',
-            })
-        //check exist project categories
-        const existingCategories = await Project_Category.findOne({
-            where: {
-                id: project_category
-            }
-        })
-        if (!existingCategories)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Category does not exist in the system',
-            })
+		for (let index = 0; index < employees.length; index++) {
+			const employee_id = employees[index]
+			const existingEmployee = await Employee.findOne({
+				where: {
+					id: employee_id,
+				},
+			})
+			if (!existingEmployee)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Employees does not exist in the system',
+				})
+			projectEmployees.push(existingEmployee)
+		}
 
-        for (let index = 0; index < employees.length; index++) {
-            const employee_id = employees[index];
-            const existingEmployee = await Employee.findOne({
-                where: {
-                    id: employee_id
-                }
-            })
-            if (!existingEmployee)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Employees does not exist in the system'
-                })
-            projectEmployees.push(existingEmployee)
-
-        }
-
-        //Create project files
-        for (let index = 0; index < project_files.length; index++) {
-            const project_file = project_files[index];
-            const createProjectFile = await Project_file.create({
-                ...project_file
-            }).save()
-            projectFiles.push(createProjectFile)
-        }
-
+		//create project file
         const createdProject = await Project.create({
             ...dataNewProject,
-            employees: projectEmployees,
-            project_files: projectFiles
+            employees: projectEmployees
         }).save()
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            project: createdProject,
-            message: 'Create new Project successfully'
-        })
-    }),
-
-    //Update Project
-    update: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
-        const dataUpdateProject: createOrUpdateProjectPayload = req.body
-        const {Added_by, client, department, project_category, employees,} = dataUpdateProject
-        let projectEmployees: Employee[] = []
-
-        const existingproject = await Holiday.findOne({
-            where: {
-                id: Number(id),
-            }
-        })
-
-        if (!existingproject)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Project does not exist in the system'
-            })
-
-        //Check valid input create new project
-        //Check valid
-        const messageValid = projectValid.createOrUpdate(dataUpdateProject)
-
-        if (messageValid)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: messageValid,
-            })
-
-        //check exist Added by
-        if (Added_by) {
-            const existingAddedBy = await Employee.findOne({
-                where: {
-                    id: Added_by
-                }
-            })
-            if (!existingAddedBy)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Addmin add this project does not exist in the system'
-                })
+		   //Create project files
+		   for (let index = 0; index < project_files.length; index++) {
+            const project_file = project_files[index];
+            await Project_file.create({
+                ...project_file,
+				project: createdProject
+            }).save()
         }
 
-        //check exist client
-        const existingClient = await Client.findOne({
-            where: {
-                id: client
-            }
-        })
-        if (!existingClient)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Client does not exist in the system',
-            })
-        //check exist department
-        const existingDepartment = await Department.findOne({
-            where: {
-                id: department
-            }
-        })
-        if (!existingDepartment)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Department does not exist in the system',
-            })
-        //check exist project categories
-        const existingCategories = await Project_Category.findOne({
-            where: {
-                id: project_category
-            }
-        })
-        if (!existingCategories)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Category does not exist in the system',
-            })
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			project: createdProject,
+			message: 'Create new Project successfully',
+		})
+	}),
 
-        for (let index = 0; index < employees.length; index++) {
-            const employee_id = employees[index];
-            const existingEmployee = await Employee.findOne({
-                where: {
-                    id: employee_id
-                }
-            })
-            if (!existingEmployee)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Employees does not exist in the system'
-                })
-            projectEmployees.push(existingEmployee)
 
-        }
+	//Update Project
+	update: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
+		const dataUpdateProject: createOrUpdateProjectPayload = req.body
+		const { Added_by, client, department, project_category, employees } = dataUpdateProject
+		let projectEmployees: Employee[] = []
 
-        await Project.update(existingproject.id, {
-            ...dataUpdateProject,
-            employees: projectEmployees
-        })
+		const existingproject = await Project.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Update Project successfully',
-        })
-    }),
+		if (!existingproject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
 
-    //Get all project
-    getAll: handleCatchError(async (_: Request, res: Response) => {
-        const projects = await Project.find()
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            projects: projects,
-            message: 'Get all projects success',
-        })
-    }),
+		//Check valid input create new project
+		//Check valid
+		const messageValid = projectValid.createOrUpdate(dataUpdateProject)
 
-    //Get detail project
-    getDetail: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
+		if (messageValid)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: messageValid,
+			})
 
-        const existingproject = await Project.findOne({
-            where: {
-                id: Number(id),
-            },
-        })
+		//check exist Added by
+		const existingAddedBy = await Employee.findOne({
+			where: {
+				id: Added_by,
+			},
+		})
+		if (!existingAddedBy)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Addmin add this project does not exist in the system',
+			})
 
-        if (!existingproject)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Project does not exist in the system',
-            })
+		//check exist client
+		const existingClient = await Client.findOne({
+			where: {
+				id: client,
+			},
+		})
+		if (!existingClient)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Client does not exist in the system',
+			})
+		//check exist department
+		const existingDepartment = await Department.findOne({
+			where: {
+				id: department,
+			},
+		})
+		if (!existingDepartment)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Department does not exist in the system',
+			})
+		//check exist project categories
+		const existingCategories = await Project_Category.findOne({
+			where: {
+				id: project_category,
+			},
+		})
+		if (!existingCategories)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Category does not exist in the system',
+			})
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            project: existingproject,
-            message: 'Get detail of project success',
-        })
-    }),
+		for (let index = 0; index < employees.length; index++) {
+			const employee_id = employees[index]
+			const existingEmployee = await Employee.findOne({
+				where: {
+					id: employee_id,
+				},
+			})
+			if (!existingEmployee)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Employees does not exist in the system',
+				})
+			projectEmployees.push(existingEmployee)
+		}
 
-    //Delete project
-    delete: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
+		//update project
 
-        const existingproject = await Project.findOne({
-            where: {
-                id: Number(id),
-            }
-        })
+		;(existingproject.name = dataUpdateProject.name),
+			(existingproject.project_category = existingCategories),
+			(existingproject.department = existingDepartment),
+			(existingproject.client = existingClient),
+			(existingproject.Added_by = existingAddedBy),
+			(existingproject.start_date = dataUpdateProject.start_date),
+			(existingproject.deadline = dataUpdateProject.deadline),
+			(existingproject.send_task_noti = true)
+		existingproject.employees = projectEmployees
 
-        if (!existingproject)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Project does not exist in the system',
-            })
+		await existingproject.save()
 
-        await existingproject.remove()
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Update Project successfully',
+		})
+	}),
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Delete project success',
-        })
-    }),
+	//Get all project
+	getAll: handleCatchError(async (_: Request, res: Response) => {
+		const projects = await Project.find()
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			projects: projects,
+			message: 'Get all projects success',
+		})
+	}),
 
-    deletemany: handleCatchError(async (req: Request, res: Response) => {
-        const { projects } = req.body
+	//Get detail project
+	getDetail: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
 
-        //check array of projects
-        if (!Array.isArray(projects) || !projects)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Project does not exist in the system',
-            })
-        for (let index = 0; index < projects.length; index++) {
-            const itemProject = projects[index]
-            const existingproject = await Project.findOne({
-                where: {
-                    id: itemProject.id,
-                }
-            })
-            if (existingproject) {
-                await existingproject.remove()
-            }
-        }
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Delete projects success',
-        })
-    })
+		const existingproject = await Project.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
 
+		if (!existingproject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			project: existingproject,
+			message: 'Get detail of project success',
+		})
+	}),
+
+	//Delete project
+	delete: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
+
+		const existingproject = await Project.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
+
+		if (!existingproject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+
+		await existingproject.remove()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete project success',
+		})
+	}),
+
+	deletemany: handleCatchError(async (req: Request, res: Response) => {
+		const { projects } = req.body
+
+		//check array of projects
+		if (!Array.isArray(projects) || !projects)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+		for (let index = 0; index < projects.length; index++) {
+			const itemProject = projects[index]
+			const existingproject = await Project.findOne({
+				where: {
+					id: itemProject.id,
+				},
+			})
+			if (existingproject) {
+				await existingproject.remove()
+			}
+		}
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete projects success',
+		})
+	}),
 }
 
 export default projectController

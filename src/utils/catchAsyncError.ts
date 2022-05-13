@@ -30,7 +30,7 @@ const handleCatchError = (func: (req: Request, res: Response, next: NextFunction
 			if (error.code === '23505') {
 				const fieldDuplicate = (error.detail as string).split(`"`)[1]
 				statusCode = 400
-				message = `${fieldDuplicate} already exist`
+				message = fieldDuplicate ? `${fieldDuplicate} already exist` : error.detail
 			}
 
 			//Hand delete but have reference to other table
@@ -41,7 +41,7 @@ const handleCatchError = (func: (req: Request, res: Response, next: NextFunction
 
 			//Hand delete but have reference to other table
 			if (error.code === '23502') {
-				statusCode = 400
+				statusCode = 400 
 				message = `Please enter full field`
 			}
 

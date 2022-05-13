@@ -49,7 +49,6 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/project-categories', projectCategoryRouter)
 
 	app.use('/api/projects', projectRouter)
-
 	
 	app.use('/api/attendances', attendanceRouter)
 

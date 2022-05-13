@@ -7,15 +7,25 @@ export const projectValid = {
         start_date,
         deadline,
         employees,
-        currency
+        currency,
     }: createOrUpdateProjectPayload) => {
         let messageError = ''
 
+        //Check exist datas
         if (!name || !start_date || !deadline || !employees) {
-            messageError = 'Pleas enter full field'
+            messageError = 'Pleas enter full field 1'
+            return messageError
+        }
+        
+        //Check valid time
+        const StartDateProject = new Date(start_date)
+        const EndDateProject = new Date(deadline)
+        if(EndDateProject < StartDateProject) {
+            messageError = 'Deadline date project must be greater than start date project'
             return messageError
         }
 
+        //Check enum currency
         if (
             currency &&
             currency !== enumCurrency.EUR &&

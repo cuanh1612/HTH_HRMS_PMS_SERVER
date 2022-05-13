@@ -39,7 +39,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Project.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
 ], Project.prototype, "name", void 0);
 __decorate([
@@ -120,7 +120,8 @@ __decorate([
 ], Project.prototype, "Added_by", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Project_File_1.Project_file, (project_file) => project_file.project, {
-        onDelete: 'SET NULL'
+        onDelete: 'SET NULL',
+        nullable: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)
