@@ -59,7 +59,6 @@ const connectDB = () => {
 			Project,
 			Project_Category,
 			Project_file
-			
 		],
 	})
 		.then(() => {
