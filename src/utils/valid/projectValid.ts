@@ -5,13 +5,13 @@ export const projectValid = {
     createOrUpdate: ({
         name,
         start_date,
-        Deadline,
+        deadline,
         employees,
         currency
     }: createOrUpdateProjectPayload) => {
         let messageError = ''
 
-        if (!name || !start_date || !Deadline || !employees) {
+        if (!name || !start_date || !deadline || !employees) {
             messageError = 'Pleas enter full field'
             return messageError
         }

@@ -6,6 +6,7 @@ import { Employee } from '../entities/Employee'
 import { Holiday } from '../entities/Holiday'
 import { Project } from '../entities/Project'
 import { Project_Category } from '../entities/Project_Category'
+import { Project_file } from '../entities/Project_File'
 import { createOrUpdateProjectPayload } from '../type/ProjectPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { projectValid } from '../utils/valid/projectValid'
@@ -14,8 +15,9 @@ const projectController = {
     //Create new project
     create: handleCatchError(async (req: Request, res: Response) => {
         const dataNewProject: createOrUpdateProjectPayload = req.body
-        const { name, project_category, department, client, employees, Added_by } = dataNewProject
+        const { name, project_category, department, client, employees, Added_by, project_files} = dataNewProject
         let projectEmployees: Employee[] = []
+        let projectFiles: Project_file[] = []
 
         //Check valid input create new project
         //Check valid
@@ -112,9 +114,19 @@ const projectController = {
 
         }
 
+        //Create project files
+        for (let index = 0; index < project_files.length; index++) {
+            const project_file = project_files[index];
+            const createProjectFile = await Project_file.create({
+                ...project_file
+            }).save()
+            projectFiles.push(createProjectFile)
+        }
+
         const createdProject = await Project.create({
             ...dataNewProject,
-            employees: projectEmployees
+            employees: projectEmployees,
+            project_files: projectFiles
         }).save()
 
         return res.status(200).json({

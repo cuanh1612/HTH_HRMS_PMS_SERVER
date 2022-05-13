@@ -35,7 +35,7 @@ export class Project extends BaseEntity {
     start_date!: Date
 
     @Column({ type: 'date' })
-    Deadline: Date
+    deadline: Date
 
     @Column({nullable: true})
     project_summary: string
