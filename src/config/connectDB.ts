@@ -22,14 +22,17 @@ import { Contract_file } from '../entities/Contract_File'
 import { Project } from '../entities/Project'
 import { Project_Category } from '../entities/Project_Category'
 import { Project_file } from '../entities/Project_File'
+import { Task } from '../entities/Task'
+import { Task_Category } from '../entities/Task_Category'
+import { Task_file } from '../entities/Task_File'
 
 const connectDB = () => {
 	console.log(process.env.DB_HOST)
 	createConnection({
 		type: 'postgres',
 		database:  process.env.DB_DATABASE,
-		username: process.env.DB_USERNAME_DEV,
-		password: process.env.DB_PASSWORD_DEV,
+		username: process.env.DB_USER,
+		password: process.env.DB_PASSWORD,
 		logging: true,
 		synchronize: true,
 		entities: [
@@ -55,7 +58,10 @@ const connectDB = () => {
 			Contract_file,
 			Project,
 			Project_Category,
-			Project_file
+			Project_file,
+			Task,
+			Task_Category,
+			Task_file
 		],
 	})
 		.then(() => {

@@ -5,6 +5,7 @@ import { Employee } from '../entities/Employee'
 import { Project } from '../entities/Project'
 import { Project_Category } from '../entities/Project_Category'
 import { Project_file } from '../entities/Project_File'
+import { enumStatus, Task } from '../entities/Task'
 import { createOrUpdateProjectPayload } from '../type/ProjectPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { projectValid } from '../utils/valid/projectValid'
@@ -95,6 +96,8 @@ const projectController = {
 					success: false,
 					message: 'Employees does not exist in the system',
 				})
+
+			//check role employee
 			projectEmployees.push(existingEmployee)
 		}
 
@@ -247,6 +250,27 @@ const projectController = {
 				success: false,
 				message: 'Project does not exist in the system',
 			})
+
+		// //Calculate percentage of project progress from completed tasks
+		const countTasks = await Task.createQueryBuilder('task')
+			.where('task.projectId = :id', {
+				id: existingproject.id,
+			})
+			.getCount()
+
+		const countSuccessTasks = await Task.createQueryBuilder('task')
+			.where('task.projectId = :id', {
+				id: existingproject.id,
+			})
+			.andWhere('task.status = :status', {
+				status: enumStatus.COMPLETED,
+			})
+			.getCount()
+
+		if (countSuccessTasks !== 0 && countTasks !== 0) {
+			existingproject.Progress = (countSuccessTasks / countTasks) * 100
+			await existingproject.save()
+		}
 
 		return res.status(200).json({
 			code: 200,

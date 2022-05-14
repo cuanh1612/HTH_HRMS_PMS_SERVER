@@ -16,6 +16,7 @@ import { Department } from './Department'
 import { Employee } from './Employee'
 import { Project_Category } from './Project_Category'
 import { Project_file } from './Project_File'
+import { Task } from './Task'
 
 export enum enumCurrency {
 	USD = 'USD',
@@ -112,6 +113,11 @@ export class Project extends BaseEntity {
 	})
 	@JoinColumn()
 	project_files: Project_file[]
+
+    @OneToMany(() => Task, (task) => task.project,{
+        onDelete:"SET NULL"
+    })
+    tasks: Task[]
 
 	@CreateDateColumn({
 		name: 'created_at',

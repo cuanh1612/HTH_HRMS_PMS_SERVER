@@ -18,6 +18,7 @@ const Employee_1 = require("../entities/Employee");
 const Project_1 = require("../entities/Project");
 const Project_Category_1 = require("../entities/Project_Category");
 const Project_File_1 = require("../entities/Project_File");
+const Task_1 = require("../entities/Task");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const projectValid_1 = require("../utils/valid/projectValid");
 const projectController = {
@@ -98,6 +99,7 @@ const projectController = {
                     success: false,
                     message: 'Employees does not exist in the system',
                 });
+            //check role employee
             projectEmployees.push(existingEmployee);
         }
         //create project file
@@ -226,6 +228,24 @@ const projectController = {
                 success: false,
                 message: 'Project does not exist in the system',
             });
+        // //Calculate percentage of project progress from completed tasks
+        const countTasks = yield Task_1.Task.createQueryBuilder('task')
+            .where('task.projectId = :id', {
+            id: existingproject.id,
+        })
+            .getCount();
+        const countSuccessTasks = yield Task_1.Task.createQueryBuilder('task')
+            .where('task.projectId = :id', {
+            id: existingproject.id,
+        })
+            .andWhere('task.status = :status', {
+            status: Task_1.enumStatus.COMPLETED,
+        })
+            .getCount();
+        if (countSuccessTasks !== 0 && countTasks !== 0) {
+            existingproject.Progress = (countSuccessTasks / countTasks) * 100;
+            yield existingproject.save();
+        }
         return res.status(200).json({
             code: 200,
             success: true,
