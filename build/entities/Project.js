@@ -16,6 +16,7 @@ const Department_1 = require("./Department");
 const Employee_1 = require("./Employee");
 const Project_Category_1 = require("./Project_Category");
 const Project_File_1 = require("./Project_File");
+const Task_1 = require("./Task");
 var enumCurrency;
 (function (enumCurrency) {
     enumCurrency["USD"] = "USD";
@@ -123,9 +124,14 @@ __decorate([
         onDelete: 'SET NULL',
         nullable: true
     }),
-    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)
 ], Project.prototype, "project_files", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Task_1.Task, (task) => task.project, {
+        onDelete: "SET NULL"
+    }),
+    __metadata("design:type", Array)
+], Project.prototype, "tasks", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

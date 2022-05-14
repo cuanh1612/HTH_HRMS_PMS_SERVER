@@ -24,6 +24,7 @@ const holidayRouter_1 = __importDefault(require("./holidayRouter"));
 const leaveRouter_1 = __importDefault(require("./leaveRouter"));
 const leaveTypeRouter_1 = __importDefault(require("./leaveTypeRouter"));
 const signRouter_1 = __importDefault(require("./signRouter"));
+const taskCategoryRouter_copy_1 = __importDefault(require("./taskCategoryRouter copy"));
 const mainRouter = (app) => {
     app.use('/api/auth', authRouter_1.default);
     app.use('/api/employees', employeeRouter_1.default);
@@ -46,5 +47,6 @@ const mainRouter = (app) => {
     app.use('/api/discussions', discussionRouter_1.default);
     app.use('/api/contract-files', contractFileRouter_1.default);
     app.use('/api/events', eventRouter_1.default);
+    app.use('/api/task-categories', taskCategoryRouter_copy_1.default);
 };
 exports.default = mainRouter;

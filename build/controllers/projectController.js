@@ -110,6 +110,7 @@ const projectController = {
                     success: false,
                     message: 'Employees does not exist in the system',
                 });
+            //check role employee
             projectEmployees.push(existingEmployee);
         }
         //create project file

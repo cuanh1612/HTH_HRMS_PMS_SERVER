@@ -20,6 +20,7 @@ import holidayRouter from './holidayRouter'
 import leaveRouter from './leaveRouter'
 import leaveTypeRouter from './leaveTypeRouter'
 import signRouter from './signRouter'
+import taskCategoryRouter from './taskCategoryRouter copy'
 
 const mainRouter = (app: core.Express) => {
 	app.use('/api/auth', authRouter)
@@ -63,6 +64,8 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/contract-files', contractFileRouter)
 
 	app.use('/api/events', eventRouter)
+
+	app.use('/api/task-categories', taskCategoryRouter)
 }
 
 export default mainRouter

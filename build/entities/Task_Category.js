@@ -9,38 +9,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Project_Category = void 0;
+exports.Task_Category = void 0;
 const typeorm_1 = require("typeorm");
-const Project_1 = require("./Project");
-let Project_Category = class Project_Category extends typeorm_1.BaseEntity {
+const Task_1 = require("./Task");
+let Task_Category = class Task_Category extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Project_Category.prototype, "id", void 0);
+], Task_Category.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Project_Category.prototype, "name", void 0);
+], Task_Category.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Project_1.Project, (project) => project.project_category, {
+    (0, typeorm_1.OneToMany)(() => Task_1.Task, (task) => task.task_category, {
         onDelete: 'SET NULL'
     }),
     __metadata("design:type", Array)
-], Project_Category.prototype, "projects", void 0);
+], Task_Category.prototype, "tasks", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], Project_Category.prototype, "createdAt", void 0);
+], Task_Category.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], Project_Category.prototype, "updatedAt", void 0);
-Project_Category = __decorate([
+], Task_Category.prototype, "updatedAt", void 0);
+Task_Category = __decorate([
     (0, typeorm_1.Entity)()
-], Project_Category);
-exports.Project_Category = Project_Category;
+], Task_Category);
+exports.Task_Category = Task_Category;

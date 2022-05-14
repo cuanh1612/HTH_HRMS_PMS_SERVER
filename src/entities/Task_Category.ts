@@ -8,22 +8,21 @@ import {
     OneToMany,
     
 } from "typeorm";
-import { Project } from "./Project";
+import { Task  } from "./Task";
 
 
 @Entity()
-export class Project_Category extends BaseEntity {
+export class Task_Category extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number
 
     @Column()
     name!: string
     
-    @OneToMany(() => Project, (project) => project.project_category,{
+    @OneToMany(() => Task, (task) => task.task_category,{
         onDelete: 'SET NULL'
-        
     })
-    projects: Project[]
+    tasks: Task[]
 
     @CreateDateColumn({
         name: 'created_at',

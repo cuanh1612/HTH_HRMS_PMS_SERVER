@@ -1,4 +1,4 @@
-import { create } from 'domain'
+
 import { Request, Response } from 'express'
 import { Client } from '../entities/Client'
 import { Department } from '../entities/Department'
@@ -107,6 +107,8 @@ const projectController = {
 					success: false,
 					message: 'Employees does not exist in the system',
 				})
+
+			//check role employee
 			projectEmployees.push(existingEmployee)
 		}
 
@@ -228,6 +230,8 @@ const projectController = {
 					success: false,
 					message: 'Employees does not exist in the system',
 				})
+
+				
 			projectEmployees.push(existingEmployee)
 		}
 
