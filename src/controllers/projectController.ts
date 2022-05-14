@@ -4,16 +4,17 @@ import { Department } from '../entities/Department'
 import { Employee } from '../entities/Employee'
 import { Project } from '../entities/Project'
 import { Project_Category } from '../entities/Project_Category'
+import { Project_file } from '../entities/Project_File'
 import { createOrUpdateProjectPayload } from '../type/ProjectPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { projectValid } from '../utils/valid/projectValid'
 
 const projectController = {
-	//Create new project
-	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewProject: createOrUpdateProjectPayload = req.body
-		const { project_category, department, client, employees, Added_by } = dataNewProject
-		let projectEmployees: Employee[] = []
+    //Create new project
+    create: handleCatchError(async (req: Request, res: Response) => {
+        const dataNewProject: createOrUpdateProjectPayload = req.body
+        const { project_category, department, client, employees, Added_by, project_files} = dataNewProject
+        let projectEmployees: Employee[] = []
 
 		//Check valid input create new project
 		//Check valid
@@ -97,10 +98,20 @@ const projectController = {
 			projectEmployees.push(existingEmployee)
 		}
 
-		const createdProject = await Project.create({
-			...dataNewProject,
-			employees: projectEmployees,
-		}).save()
+		//create project file
+        const createdProject = await Project.create({
+            ...dataNewProject,
+            employees: projectEmployees
+        }).save()
+
+		   //Create project files
+		   for (let index = 0; index < project_files.length; index++) {
+            const project_file = project_files[index];
+            await Project_file.create({
+                ...project_file,
+				project: createdProject
+            }).save()
+        }
 
 		return res.status(200).json({
 			code: 200,
@@ -109,6 +120,7 @@ const projectController = {
 			message: 'Create new Project successfully',
 		})
 	}),
+
 
 	//Update Project
 	update: handleCatchError(async (req: Request, res: Response) => {
