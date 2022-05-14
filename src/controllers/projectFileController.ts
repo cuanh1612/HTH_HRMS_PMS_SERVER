@@ -19,7 +19,7 @@ const projectFileController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Contract does not exist in the system',
+				message: 'Project does not exist in the system',
 			})
 
 		//Create new project file
@@ -35,7 +35,7 @@ const projectFileController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			message: 'Create new contract files success successfully',
+			message: 'Create new Project files success successfully',
 		})
 	}),
 
@@ -64,7 +64,7 @@ const projectFileController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Contract does not exist in the system',
+				message: 'Project does not exist in the system',
 			})
 
 
@@ -82,7 +82,7 @@ const projectFileController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: `Contract file does not exist in the system ${projectFileId} ${projectId}`,
+				message: `Project file does not exist in the system ${projectFileId} ${projectId}`,
 			})
 
 		//Delete project file
@@ -91,7 +91,7 @@ const projectFileController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			message: 'Delete contract file success successfully',
+			message: 'Delete Project file success successfully',
 		})
 	}),
 
@@ -109,7 +109,7 @@ const projectFileController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Contract does not exist in the system',
+				message: 'Project does not exist in the system',
 			})
 
         //Get all project file 
@@ -128,7 +128,7 @@ const projectFileController = {
 			code: 200,
 			success: true,
             projectFiles,
-			message: 'Get all contract files success successfully',
+			message: 'Get all project files success successfully',
 		})
 	}),
 }

@@ -24,7 +24,7 @@ const projectController = {
     //Create new project
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewProject = req.body;
-        const { name, project_category, department, client, employees, Added_by, project_files } = dataNewProject;
+        const { project_category, department, client, employees, Added_by, project_files } = dataNewProject;
         let projectEmployees = [];
         //Check valid input create new project
         //Check valid
@@ -34,18 +34,6 @@ const projectController = {
                 code: 400,
                 success: false,
                 message: messageValid,
-            });
-        //check existing name of project
-        const existingName = yield Project_1.Project.findOne({
-            where: {
-                name: String(name),
-            },
-        });
-        if (existingName)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Name of project already exist in the system',
             });
         //check exist Added by
         if (Added_by) {

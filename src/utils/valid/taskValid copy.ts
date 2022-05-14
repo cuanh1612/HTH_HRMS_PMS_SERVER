@@ -1,7 +1,7 @@
 import { enumCurrency } from '../../entities/Project'
 import { createOrUpdateProjectPayload } from '../../type/ProjectPayload'
 
-export const projectValid = {
+export const taskValid = {
     createOrUpdate: ({
         name,
         start_date,

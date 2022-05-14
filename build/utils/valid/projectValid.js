@@ -7,7 +7,7 @@ exports.projectValid = {
         let messageError = '';
         //Check exist datas
         if (!name || !start_date || !deadline || !employees) {
-            messageError = 'Pleas enter full field 1';
+            messageError = 'Pleas enter full field';
             return messageError;
         }
         //Check valid time

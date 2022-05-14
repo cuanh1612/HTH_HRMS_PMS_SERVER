@@ -29,8 +29,8 @@ const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
         database: process.env.DB_DATABASE,
-        username: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
+        username: process.env.DB_USERNAME_DEV,
+        password: process.env.DB_PASSWORD_DEV,
         logging: true,
         synchronize: true,
         entities: [

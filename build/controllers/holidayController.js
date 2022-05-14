@@ -20,19 +20,23 @@ const holidayController = {
         const { holidays } = req.body;
         for (let index = 0; index < holidays.length; index++) {
             const itemHoliday = holidays[index];
-            const existingName = yield Holiday_1.Holiday.findOne({
+            //Check date holiday
+            const existingHoliday = yield Holiday_1.Holiday.findOne({
                 where: {
-                    holiday_date: itemHoliday.holiday_date,
-                    occasion: itemHoliday.occasion,
+                    holiday_date: new Date(itemHoliday.holiday_date),
                 },
             });
-            if (!existingName) {
+            if (!existingHoliday) {
                 yield Holiday_1.Holiday.create({
                     occasion: itemHoliday.occasion,
                     holiday_date: itemHoliday.holiday_date,
                 }).save();
             }
-            console.log('tjhvg hjkhkhbk');
+            else {
+                //update name holiday
+                existingHoliday.occasion = itemHoliday.occasion;
+                yield existingHoliday.save();
+            }
         }
         return res.status(200).json({
             code: 200,
@@ -44,6 +48,16 @@ const holidayController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const dataUpdateholiday = req.body;
+        //Check date holiday existing and delete
+        const existingHolidayDate = yield Holiday_1.Holiday.findOne({
+            where: {
+                holiday_date: new Date(dataUpdateholiday.holiday_date),
+            },
+        });
+        if (existingHolidayDate) {
+            yield existingHolidayDate.remove();
+        }
+        //Check existing date holiday
         const existingholiday = yield Holiday_1.Holiday.findOne({
             where: {
                 id: Number(id),

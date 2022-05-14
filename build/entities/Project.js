@@ -74,7 +74,8 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Project_Category_1.Project_Category, (project_Category) => project_Category.projects, {
         onDelete: 'SET NULL',
-        nullable: true
+        nullable: true,
+        eager: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Project_Category_1.Project_Category)
@@ -82,7 +83,8 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.projects, {
         onDelete: 'SET NULL',
-        nullable: true
+        nullable: true,
+        eager: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Department_1.Department)
@@ -90,13 +92,14 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Client_1.Client, (client) => client.projects, {
         onDelete: 'SET NULL',
-        nullable: true
+        nullable: true,
+        eager: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Client_1.Client)
 ], Project.prototype, "client", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { onDelete: 'CASCADE' }),
+    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { onDelete: 'CASCADE', eager: true }),
     (0, typeorm_1.JoinTable)({ name: 'project_employee' }),
     __metadata("design:type", Array)
 ], Project.prototype, "employees", void 0);
@@ -114,7 +117,8 @@ __decorate([
 ], Project.prototype, "Progress", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (Employee) => Employee.projects, {
-        onDelete: 'SET NULL'
+        onDelete: 'SET NULL',
+        eager: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Employee_1.Employee)
@@ -122,8 +126,9 @@ __decorate([
 __decorate([
     (0, typeorm_1.OneToMany)(() => Project_File_1.Project_file, (project_file) => project_file.project, {
         onDelete: 'SET NULL',
-        nullable: true
+        nullable: true,
     }),
+    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)
 ], Project.prototype, "project_files", void 0);
 __decorate([

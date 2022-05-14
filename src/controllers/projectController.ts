@@ -14,32 +14,18 @@ const projectController = {
     //Create new project
     create: handleCatchError(async (req: Request, res: Response) => {
         const dataNewProject: createOrUpdateProjectPayload = req.body
-        const { name, project_category, department, client, employees, Added_by, project_files} = dataNewProject
+        const { project_category, department, client, employees, Added_by, project_files} = dataNewProject
         let projectEmployees: Employee[] = []
 
 		//Check valid input create new project
 		//Check valid
 		const messageValid = projectValid.createOrUpdate(dataNewProject)
-
+		
 		if (messageValid)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: messageValid,
-			})
-
-		//check existing name of project
-		const existingName = await Project.findOne({
-			where: {
-				name: String(name),
-			},
-		})
-
-		if (existingName)
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'Name of project already exist in the system',
 			})
 
 		//check exist Added by
@@ -69,6 +55,7 @@ const projectController = {
 				success: false,
 				message: 'Client does not exist in the system',
 			})
+
 		//check exist department
 		const existingDepartment = await Department.findOne({
 			where: {
@@ -81,6 +68,8 @@ const projectController = {
 				success: false,
 				message: 'Department does not exist in the system',
 			})
+
+		
 		//check exist project categories
 		const existingCategories = await Project_Category.findOne({
 			where: {
@@ -236,7 +225,6 @@ const projectController = {
 		}
 
 		//update project
-
 		;(existingproject.name = dataUpdateProject.name),
 			(existingproject.project_category = existingCategories),
 			(existingproject.department = existingDepartment),
