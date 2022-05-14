@@ -3,10 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.projectValid = void 0;
 const Project_1 = require("../../entities/Project");
 exports.projectValid = {
-    createOrUpdate: ({ name, start_date, deadline, employees, currency, }) => {
+    createOrUpdate: ({ name, start_date, deadline, employees, currency }, typeValid) => {
         let messageError = '';
         //Check exist datas
-        if (!name || !start_date || !deadline || !employees) {
+        if (!name || !start_date || !deadline) {
+            messageError = 'Pleas enter full field';
+            return messageError;
+        }
+        if (typeValid === 'create' && !employees) {
             messageError = 'Pleas enter full field';
             return messageError;
         }
