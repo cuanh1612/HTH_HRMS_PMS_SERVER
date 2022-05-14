@@ -4,6 +4,8 @@ import { Department } from '../entities/Department'
 import { Employee } from '../entities/Employee'
 import { Project } from '../entities/Project'
 import { Project_Category } from '../entities/Project_Category'
+import { Project_file } from '../entities/Project_File'
+import { enumStatus, Task } from '../entities/Task'
 import { createOrUpdateProjectPayload } from '../type/ProjectPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { projectValid } from '../utils/valid/projectValid'
@@ -12,32 +14,19 @@ const projectController = {
 	//Create new project
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewProject: createOrUpdateProjectPayload = req.body
-		const { name, project_category, department, client, employees, Added_by } = dataNewProject
+		const { project_category, department, client, employees, Added_by, project_files } =
+			dataNewProject
 		let projectEmployees: Employee[] = []
 
 		//Check valid input create new project
 		//Check valid
-		const messageValid = projectValid.createOrUpdate(dataNewProject)
+		const messageValid = projectValid.createOrUpdate(dataNewProject, 'create')
 
 		if (messageValid)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: messageValid,
-			})
-
-		//check existing name of project
-		const existingName = await Project.findOne({
-			where: {
-				name: String(name),
-			},
-		})
-
-		if (existingName)
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'Name of project already exist in the system',
 			})
 
 		//check exist Added by
@@ -67,6 +56,7 @@ const projectController = {
 				success: false,
 				message: 'Client does not exist in the system',
 			})
+
 		//check exist department
 		const existingDepartment = await Department.findOne({
 			where: {
@@ -79,6 +69,7 @@ const projectController = {
 				success: false,
 				message: 'Department does not exist in the system',
 			})
+
 		//check exist project categories
 		const existingCategories = await Project_Category.findOne({
 			where: {
@@ -105,13 +96,25 @@ const projectController = {
 					success: false,
 					message: 'Employees does not exist in the system',
 				})
+
+			//check role employee
 			projectEmployees.push(existingEmployee)
 		}
 
+		//create project file
 		const createdProject = await Project.create({
 			...dataNewProject,
 			employees: projectEmployees,
 		}).save()
+
+		//Create project files
+		for (let index = 0; index < project_files.length; index++) {
+			const project_file = project_files[index]
+			await Project_file.create({
+				...project_file,
+				project: createdProject,
+			}).save()
+		}
 
 		return res.status(200).json({
 			code: 200,
@@ -125,8 +128,7 @@ const projectController = {
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 		const dataUpdateProject: createOrUpdateProjectPayload = req.body
-		const { Added_by, client, department, project_category, employees } = dataUpdateProject
-		let projectEmployees: Employee[] = []
+		const { Added_by, client, department, project_category } = dataUpdateProject
 
 		const existingproject = await Project.findOne({
 			where: {
@@ -143,7 +145,7 @@ const projectController = {
 
 		//Check valid input create new project
 		//Check valid
-		const messageValid = projectValid.createOrUpdate(dataUpdateProject)
+		const messageValid = projectValid.createOrUpdate(dataUpdateProject, 'update')
 
 		if (messageValid)
 			return res.status(400).json({
@@ -202,33 +204,15 @@ const projectController = {
 				message: 'Category does not exist in the system',
 			})
 
-		for (let index = 0; index < employees.length; index++) {
-			const employee_id = employees[index]
-			const existingEmployee = await Employee.findOne({
-				where: {
-					id: employee_id,
-				},
-			})
-			if (!existingEmployee)
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Employees does not exist in the system',
-				})
-			projectEmployees.push(existingEmployee)
-		}
-
-		//update project
-
+			//update project
 		;(existingproject.name = dataUpdateProject.name),
 			(existingproject.project_category = existingCategories),
 			(existingproject.department = existingDepartment),
 			(existingproject.client = existingClient),
 			(existingproject.Added_by = existingAddedBy),
 			(existingproject.start_date = dataUpdateProject.start_date),
-			(existingproject.Deadline = dataUpdateProject.Deadline),
+			(existingproject.deadline = dataUpdateProject.deadline),
 			(existingproject.send_task_noti = true)
-		existingproject.employees = projectEmployees
 
 		await existingproject.save()
 
@@ -266,6 +250,27 @@ const projectController = {
 				success: false,
 				message: 'Project does not exist in the system',
 			})
+
+		// //Calculate percentage of project progress from completed tasks
+		const countTasks = await Task.createQueryBuilder('task')
+			.where('task.projectId = :id', {
+				id: existingproject.id,
+			})
+			.getCount()
+
+		const countSuccessTasks = await Task.createQueryBuilder('task')
+			.where('task.projectId = :id', {
+				id: existingproject.id,
+			})
+			.andWhere('task.status = :status', {
+				status: enumStatus.COMPLETED,
+			})
+			.getCount()
+
+		if (countSuccessTasks !== 0 && countTasks !== 0) {
+			existingproject.Progress = (countSuccessTasks / countTasks) * 100
+			await existingproject.save()
+		}
 
 		return res.status(200).json({
 			code: 200,

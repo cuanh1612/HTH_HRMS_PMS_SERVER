@@ -12,15 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Project_Category_1 = require("../entities/Project_Category");
+const Task_Category_1 = require("../entities/Task_Category");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
-const projectCategoryController = {
-    //Create new project category
+const taskCategoryController = {
+    //Create new task category
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewCategory = req.body;
         const { name } = dataNewCategory;
         //Check existing name
-        const existingName = yield Project_Category_1.Project_Category.findOne({
+        const existingName = yield Task_Category_1.Task_Category.findOne({
             where: {
                 name: String(name),
             },
@@ -29,35 +29,35 @@ const projectCategoryController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Project category already exist in the system',
+                message: 'Task category already exist in the system',
             });
-        const createdproject_category = yield Project_Category_1.Project_Category.create(dataNewCategory).save();
+        const createdtask_category = yield Task_Category_1.Task_Category.create(dataNewCategory).save();
         return res.status(200).json({
             code: 200,
             success: true,
-            project_category: createdproject_category,
-            message: 'Created new project_category successfully',
+            task_category: createdtask_category,
+            message: 'Created new task_category successfully',
         });
     })),
-    //Update project category
+    //Update task category
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const dataUpdateproject_category = req.body;
-        const { name } = dataUpdateproject_category;
-        const existingproject_category = yield Project_Category_1.Project_Category.findOne({
+        const dataUpdatetask_category = req.body;
+        const { name } = dataUpdatetask_category;
+        const existingtask_category = yield Task_Category_1.Task_Category.findOne({
             where: {
                 id: Number(id),
             },
         });
-        //check existed project_category
-        if (!existingproject_category)
+        //check existed task_category
+        if (!existingtask_category)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Project category does not exist in the system',
+                message: 'task category does not exist in the system',
             });
-        if (name !== existingproject_category.name) {
-            const existingName = yield Project_Category_1.Project_Category.findOne({
+        if (name !== existingtask_category.name) {
+            const existingName = yield Task_Category_1.Task_Category.findOne({
                 where: {
                     name: String(name),
                 },
@@ -66,67 +66,67 @@ const projectCategoryController = {
                 return res.status(400).json({
                     code: 400,
                     success: false,
-                    message: 'project_category already exist in the system',
+                    message: 'task_category already exist in the system',
                 });
         }
-        yield Project_Category_1.Project_Category.update(existingproject_category.id, Object.assign({}, dataUpdateproject_category));
+        yield Task_Category_1.Task_Category.update(existingtask_category.id, Object.assign({}, dataUpdatetask_category));
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Update project category successfully',
+            message: 'Update task category successfully',
         });
     })),
-    //Get all project category
+    //Get all task category
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const project_categories = yield Project_Category_1.Project_Category.find();
+        const task_categories = yield Task_Category_1.Task_Category.find();
         return res.status(200).json({
             code: 200,
             success: true,
-            projectCategories: project_categories,
-            message: 'Get all project categories successfully',
+            task_categorys: task_categories,
+            message: 'Get all task categories successfully',
         });
     })),
-    //Get detail project category
+    //Get detail task category
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingproject_category = yield Project_Category_1.Project_Category.findOne({
+        const existingtask_category = yield Task_Category_1.Task_Category.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!existingproject_category)
+        if (!existingtask_category)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'project_category does not exist in the system',
+                message: 'task_category does not exist in the system',
             });
         return res.status(200).json({
             code: 200,
             success: true,
-            project_category: existingproject_category,
-            message: 'Get detail of project_category successfully',
+            task_category: existingtask_category,
+            message: 'Get detail of task_category successfully',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingproject_category = yield Project_Category_1.Project_Category.findOne({
+        const existingtask_category = yield Task_Category_1.Task_Category.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!existingproject_category)
+        if (!existingtask_category)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Project category does not exist in the system',
+                message: 'task category does not exist in the system',
             });
-        //Delete project category
-        yield existingproject_category.remove();
+        //Delete task category
+        yield existingtask_category.remove();
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete project_category successfully',
+            message: 'Delete task_category successfully',
         });
     })),
 };
-exports.default = projectCategoryController;
+exports.default = taskCategoryController;

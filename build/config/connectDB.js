@@ -24,6 +24,9 @@ const Contract_File_1 = require("../entities/Contract_File");
 const Project_1 = require("../entities/Project");
 const Project_Category_1 = require("../entities/Project_Category");
 const Project_File_1 = require("../entities/Project_File");
+const Task_1 = require("../entities/Task");
+const Task_Category_1 = require("../entities/Task_Category");
+const Task_File_1 = require("../entities/Task_File");
 const connectDB = () => {
     console.log(process.env.DB_HOST);
     (0, typeorm_1.createConnection)({
@@ -56,7 +59,10 @@ const connectDB = () => {
             Contract_File_1.Contract_file,
             Project_1.Project,
             Project_Category_1.Project_Category,
-            Project_File_1.Project_file
+            Project_File_1.Project_file,
+            Task_1.Task,
+            Task_Category_1.Task_Category,
+            Task_File_1.Task_file
         ],
     })
         .then(() => {

@@ -22,6 +22,7 @@ import { Discussion } from './Discussion'
 import { Event } from './Event'
 import { Leave } from './Leave'
 import { Project } from './Project'
+import { Task } from './Task'
 
 export enum enumGender {
 	MALE = 'Male',
@@ -138,6 +139,9 @@ export class Employee extends BaseEntity {
 	@OneToMany(() => Project, (Project) => Project.Added_by)
 	Projects: Project[]
 
+	@ManyToMany(() => Task)
+    @JoinTable({name: 'task_employee'})
+    tasks: Task[];
 
 	@Column({ default: 0 })
 	token_version: number
