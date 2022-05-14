@@ -118,6 +118,7 @@ const holidayController = {
     deletemany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { holidays } = req.body;
         //check array of holidays
+        console.log(holidays);
         if (!Array.isArray(holidays) || !holidays)
             return res.status(400).json({
                 code: 400,
@@ -128,7 +129,7 @@ const holidayController = {
             const itemHoliday = holidays[index];
             const existingholiday = yield Holiday_1.Holiday.findOne({
                 where: {
-                    id: itemHoliday.id,
+                    id: Number(itemHoliday),
                 },
             });
             if (existingholiday) {

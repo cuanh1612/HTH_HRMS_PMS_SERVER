@@ -8,7 +8,8 @@ import { attendanceValid } from '../utils/valid/attendanceValid'
 
 const attendanceController = {
 	getAll: handleCatchError(async (req: Request, res: Response) => {
-		const { date } = req.query
+		const { date, department, employee } = req.query
+
 		let data = await Employee.find({
 			select: {
 				id: true,
@@ -16,7 +17,17 @@ const attendanceController = {
 				avatar: {
 					url: true,
 				},
+				department: {
+					id: true,
+					name: true,
+				},
 				attendances: true,
+			},
+			where: {
+				department: {
+					id: Number(department) || undefined,
+				},
+				id: Number(employee) || undefined,
 			},
 		})
 

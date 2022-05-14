@@ -27,15 +27,11 @@ const connectDB = () => {
 	console.log(process.env.DB_HOST)
 	createConnection({
 		type: 'postgres',
-		host: process.env.DB_HOST,
 		database:  process.env.DB_DATABASE,
 		username: process.env.DB_USER,
 		password: process.env.DB_PASSWORD,
-		logging: false,
-		synchronize: false,
-		ssl: {
-			rejectUnauthorized: false
-		},
+		logging: true,
+		synchronize: true,
 		entities: [
 			Employee,
 			Avatar,
