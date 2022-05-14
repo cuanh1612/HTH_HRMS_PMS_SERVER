@@ -27,15 +27,11 @@ const Project_File_1 = require("../entities/Project_File");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
-        host: process.env.DB_HOST,
         database: process.env.DB_DATABASE,
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         logging: true,
         synchronize: true,
-        ssl: {
-            rejectUnauthorized: false
-        },
         entities: [
             Employee_1.Employee,
             Avatar_1.Avatar,

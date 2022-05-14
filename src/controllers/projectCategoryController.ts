@@ -84,7 +84,7 @@ const projectCategoryController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			project_categorys: project_categories,
+			projectCategories: project_categories,
 			message: 'Get all project categories successfully',
 		})
 	}),

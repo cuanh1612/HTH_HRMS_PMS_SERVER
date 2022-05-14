@@ -49,7 +49,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ type: 'date' }),
     __metadata("design:type", Date)
-], Project.prototype, "Deadline", void 0);
+], Project.prototype, "deadline", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
