@@ -37,7 +37,7 @@ const clientController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            clients: clients,
+            clients: clients || [],
             message: 'Get all clients successfully',
         });
     })),
