@@ -44,15 +44,6 @@ const projectFileController = {
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { projectFileId, projectId } = req.params;
-        //auth Header here is "Bearer accessToken"
-        const authHeader = req.header('Authorization');
-        const accessToken = authHeader && authHeader.split(' ')[1];
-        if (!accessToken)
-            return res.status(401).json({
-                code: 401,
-                success: false,
-                message: 'Not authenticated to perform operations',
-            });
         //Check exist project
         const existingProject = yield Project_1.Project.findOne({
             where: {
@@ -78,7 +69,7 @@ const projectFileController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: `Project file does not exist in the system ${projectFileId} ${projectId}`,
+                message: `Project file does not exist in the system`,
             });
         //Delete project file
         yield existingProjectFile.remove();

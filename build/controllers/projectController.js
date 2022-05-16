@@ -104,10 +104,12 @@ const projectController = {
         }
         //create project file
         const createdProject = yield Project_1.Project.create(Object.assign(Object.assign({}, dataNewProject), { employees: projectEmployees })).save();
-        //Create project files
-        for (let index = 0; index < project_files.length; index++) {
-            const project_file = project_files[index];
-            yield Project_File_1.Project_file.create(Object.assign(Object.assign({}, project_file), { project: createdProject })).save();
+        if (project_files) {
+            //Create project files
+            for (let index = 0; index < project_files.length; index++) {
+                const project_file = project_files[index];
+                yield Project_File_1.Project_file.create(Object.assign(Object.assign({}, project_file), { project: createdProject })).save();
+            }
         }
         return res.status(200).json({
             code: 200,
@@ -228,7 +230,7 @@ const projectController = {
                 success: false,
                 message: 'Project does not exist in the system',
             });
-        // //Calculate percentage of project progress from completed tasks
+        //Calculate percentage of project progress from completed tasks
         const countTasks = yield Task_1.Task.createQueryBuilder('task')
             .where('task.projectId = :id', {
             id: existingproject.id,

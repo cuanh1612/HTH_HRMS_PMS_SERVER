@@ -25,6 +25,7 @@ import { Project_file } from '../entities/Project_File'
 import { Task } from '../entities/Task'
 import { Task_Category } from '../entities/Task_Category'
 import { Task_file } from '../entities/Task_File'
+import { Salary } from '../entities/salary'
 
 const connectDB = () => {
 	console.log(process.env.DB_HOST)
@@ -61,7 +62,8 @@ const connectDB = () => {
 			Project_file,
 			Task,
 			Task_Category,
-			Task_file
+			Task_file,
+			Salary
 		],
 	})
 		.then(() => {
