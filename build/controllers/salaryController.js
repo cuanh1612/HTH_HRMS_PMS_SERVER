@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Employee_1 = require("../entities/Employee");
-const salary_1 = require("../entities/salary");
+const Salary_1 = require("../entities/Salary");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const salaryValid_1 = require("../utils/valid/salaryValid");
 const salaryController = {
@@ -42,7 +42,7 @@ const salaryController = {
                 message: 'Employee does not exist in the system',
             });
         //Create new salary
-        const createdSalary = yield salary_1.Salary.create(Object.assign({}, dataNewSalary)).save();
+        const createdSalary = yield Salary_1.Salary.create(Object.assign({}, dataNewSalary)).save();
         return res.status(200).json({
             code: 200,
             success: true,

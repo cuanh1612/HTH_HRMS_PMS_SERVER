@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
-import { Salary } from '../entities/salary'
+import { Salary } from '../entities/Salary'
 import { createOrUpdatetSalaryFilesPayload } from '../type/SalaryPayLoad'
 import handleCatchError from '../utils/catchAsyncError'
 import { salaryValid } from '../utils/valid/salaryValid'

@@ -1,4 +1,4 @@
-import { Salary } from '../entities/salary'
+import { Salary } from '../entities/Salary'
 
 export type createOrUpdatetSalaryFilesPayload = Salary & {
     employee: number

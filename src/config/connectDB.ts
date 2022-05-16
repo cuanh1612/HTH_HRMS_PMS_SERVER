@@ -25,7 +25,7 @@ import { Project_file } from '../entities/Project_File'
 import { Task } from '../entities/Task'
 import { Task_Category } from '../entities/Task_Category'
 import { Task_file } from '../entities/Task_File'
-import { Salary } from '../entities/salary'
+import { Salary } from '../entities/Salary'
 
 const connectDB = () => {
 	console.log(process.env.DB_HOST)
