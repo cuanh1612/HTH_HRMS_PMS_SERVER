@@ -107,13 +107,15 @@ const projectController = {
 			employees: projectEmployees,
 		}).save()
 
-		//Create project files
-		for (let index = 0; index < project_files.length; index++) {
-			const project_file = project_files[index]
-			await Project_file.create({
-				...project_file,
-				project: createdProject,
-			}).save()
+		if (project_files) {
+			//Create project files
+			for (let index = 0; index < project_files.length; index++) {
+				const project_file = project_files[index]
+				await Project_file.create({
+					...project_file,
+					project: createdProject,
+				}).save()
+			}
 		}
 
 		return res.status(200).json({
@@ -251,7 +253,7 @@ const projectController = {
 				message: 'Project does not exist in the system',
 			})
 
-		// //Calculate percentage of project progress from completed tasks
+		//Calculate percentage of project progress from completed tasks
 		const countTasks = await Task.createQueryBuilder('task')
 			.where('task.projectId = :id', {
 				id: existingproject.id,

@@ -23,6 +23,8 @@ import signRouter from './signRouter'
 import taskCategoryRouter from './taskCategoryRouter copy'
 import projectFileRouter from './projectFileRouter'
 import taskFileRouter from './taskFileRouter copy'
+import dashboardRouter from './dashboardRouter'
+import salaryRouter from './salaryRouter'
 
 const mainRouter = (app: core.Express) => {
 	app.use('/api/auth', authRouter)
@@ -72,6 +74,10 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/project-files', projectFileRouter)
 
 	app.use('/api/task-files', taskFileRouter)
+
+	app.use('/api/dashboard', dashboardRouter)
+
+	app.use('/api/salaries', salaryRouter)
 }
 
 export default mainRouter
