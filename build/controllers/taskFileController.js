@@ -12,101 +12,90 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Project_1 = require("../entities/Project");
-const Project_File_1 = require("../entities/Project_File");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
-const projectFileController = {
+const Task_1 = require("../entities/Task");
+const Task_File_1 = require("../entities/Task_File");
+const taskFileController = {
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { files, project } = req.body;
-        //Check exist Project
-        const existingProject = yield Project_1.Project.findOne({
+        const { files, task } = req.body;
+        //check exist task
+        const existingTask = yield Task_1.Task.findOne({
             where: {
-                id: project,
-            },
+                id: task,
+            }
         });
-        if (!existingProject)
+        if (!existingTask)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Project does not exist in the system',
+                message: 'This task does not exist in the system',
             });
-        //Create new project file
         if (Array.isArray(files)) {
             files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
-                yield Project_File_1.Project_file.create(Object.assign(Object.assign({}, file), { project: existingProject })).save();
+                yield Task_File_1.Task_file.create(Object.assign(Object.assign({}, file), { task: existingTask })).save();
             }));
         }
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Create new Project files success successfully',
+            message: 'Create new task files success'
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { projectFileId, projectId } = req.params;
-        //auth Header here is "Bearer accessToken"
-        const authHeader = req.header('Authorization');
-        const accessToken = authHeader && authHeader.split(' ')[1];
-        if (!accessToken)
-            return res.status(401).json({
-                code: 401,
-                success: false,
-                message: 'Not authenticated to perform operations',
-            });
-        //Check exist project
-        const existingProject = yield Project_1.Project.findOne({
+        const { taskFileID, taskId } = req.params;
+        const existingTask = yield Task_1.Task.findOne({
             where: {
-                id: Number(projectId),
+                id: Number(taskId),
             },
         });
-        if (!existingProject)
+        if (!existingTask)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Project does not exist in the system',
+                message: 'This task does not existing in the system'
             });
-        //Check exist Project file
-        const existingProjectFile = yield Project_File_1.Project_file.findOne({
+        //check existing task file
+        const existingTaskFile = yield Task_File_1.Task_file.findOne({
             where: {
-                id: Number(projectFileId),
-                project: {
-                    id: Number(projectId),
-                },
-            },
+                id: Number(taskFileID),
+                task: {
+                    id: Number(taskId),
+                }
+            }
         });
-        if (!existingProjectFile)
+        if (!existingTaskFile)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: `Project file does not exist in the system ${projectFileId} ${projectId}`,
+                message: 'This task file does not existing in the system'
             });
-        //Delete project file
-        yield existingProjectFile.remove();
+        //delete task file 
+        yield existingTaskFile.remove();
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete Project file success successfully',
+            message: 'Delete task file success'
         });
     })),
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { projectId } = req.params;
-        //Check exist Project
-        const existingProject = yield Project_1.Project.findOne({
+        const { taskId } = req.params;
+        //Check existtask
+        const existingtask = yield Task_1.Task.findOne({
             where: {
-                id: Number(projectId),
+                id: Number(taskId),
             },
         });
-        if (!existingProject)
+        if (!existingtask)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Project does not exist in the system',
+                message: 'Contract does not exist in the system',
             });
-        //Get all project file 
-        const projectFiles = yield Project_File_1.Project_file.find({
+        //Get alltask file 
+        const taskFiles = yield Task_File_1.Task_file.find({
             where: {
-                project: {
-                    id: Number(projectId)
+                task: {
+                    id: Number(taskId)
                 }
             },
             order: {
@@ -116,9 +105,9 @@ const projectFileController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            projectFiles,
-            message: 'Get all project files success successfully',
+            taskFiles,
+            message: 'Get all contract files success successfully',
         });
     })),
 };
-exports.default = projectFileController;
+exports.default = taskFileController;

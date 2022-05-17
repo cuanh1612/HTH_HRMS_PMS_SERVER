@@ -10,7 +10,7 @@ import {
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn,
+	UpdateDateColumn
 } from 'typeorm'
 import { Attendance } from './Attendance'
 import { Avatar } from './Avatar'
@@ -22,6 +22,8 @@ import { Discussion } from './Discussion'
 import { Event } from './Event'
 import { Leave } from './Leave'
 import { Project } from './Project'
+import { Project_discussion_reply } from './Project_Discussion_Reply'
+import { Project_Discussion_Room } from './Project_Discussion_Room'
 import { Task } from './Task'
 
 export enum enumGender {
@@ -121,27 +123,34 @@ export class Employee extends BaseEntity {
 	conversation_replies: Conversation_reply[]
 
 	@ManyToMany(() => Conversation)
-    @JoinTable({name: 'conversation_employee'})
-    conversations: Conversation[];
+	@JoinTable({ name: 'conversation_employee' })
+	conversations: Conversation[];
 
+	@ManyToMany(() => Project_Discussion_Room)
+	@JoinTable({ name: 'project_discussion_room_employee' })
+	project_discussion_rooms: Project_Discussion_Room[];
+
+	@OneToMany(() => Project_discussion_reply, (project_discussion_reply)=> project_discussion_reply.employee)
+	project_discussion_replies: Project_discussion_reply[]
+	
 	@ManyToMany(() => Event)
-    @JoinTable({name: 'event_employee'})
-    events: Event[];
+	@JoinTable({ name: 'event_employee' })
+	events: Event[];
 
 	@ManyToMany(() => Project)
-    @JoinTable({name: 'project_employee'})
-    projects: Project[];
+	@JoinTable({ name: 'project_employee' })
+	projects: Project[];
 
 	@OneToMany(() => Discussion, (discussion) => discussion.employee)
 	discussions: Discussion[]
 
-	
+
 	@OneToMany(() => Project, (Project) => Project.Added_by)
 	Projects: Project[]
 
 	@ManyToMany(() => Task)
-    @JoinTable({name: 'task_employee'})
-    tasks: Task[];
+	@JoinTable({ name: 'task_employee' })
+	tasks: Task[];
 
 	@Column({ default: 0 })
 	token_version: number

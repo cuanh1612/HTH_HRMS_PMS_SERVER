@@ -23,8 +23,10 @@ import signRouter from './signRouter'
 import taskCategoryRouter from './taskCategoryRouter copy'
 import projectFileRouter from './projectFileRouter'
 import taskFileRouter from './taskFileRouter copy'
+import projectDiscussionCategoryRouter from './projectDiscussionCategoryRouter'
+import projectDiscussionReplyRouter from './projectDiscussionReplyRouter'
 
-const mainRouter = (app: core.Express) => {
+function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
 
 	app.use('/api/employees', employeeRouter)
@@ -52,7 +54,7 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/project-categories', projectCategoryRouter)
 
 	app.use('/api/projects', projectRouter)
-	
+
 	app.use('/api/attendances', attendanceRouter)
 
 	app.use('/api/signs', signRouter)
@@ -72,6 +74,12 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/project-files', projectFileRouter)
 
 	app.use('/api/task-files', taskFileRouter)
+	
+	app.use('/api/project-discussion-categories', projectDiscussionCategoryRouter)
+
+	app.use('/api/project-discussion-reply', projectDiscussionReplyRouter)
+
+	
 }
 
 export default mainRouter

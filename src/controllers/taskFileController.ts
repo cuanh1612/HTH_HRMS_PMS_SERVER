@@ -3,7 +3,7 @@ import { Task } from "../entities/Task";
 import { Task_file } from "../entities/Task_File";
 import { createOrUpdatetTaskFilesPayload } from "../type/taskFilePayLoad copy";
 import { Request, Response } from 'express'
-import { transpileModule } from "typescript";
+
 
 
 
@@ -25,9 +25,10 @@ const taskFileController = {
                 message: 'This task does not exist in the system',
             })
         if (Array.isArray(files)) {
+            
             files.map(async (file) => {
                 await Task_file.create({
-                    ...files,
+                    ...file,
                     task: existingTask
                 }).save()
             })
