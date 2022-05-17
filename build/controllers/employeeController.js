@@ -28,6 +28,7 @@ const Avatar_1 = require("../entities/Avatar");
 const Department_1 = require("../entities/Department");
 const Designation_1 = require("../entities/Designation");
 const Employee_1 = require("../entities/Employee");
+const Salary_1 = require("../entities/Salary");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const employeeValid_1 = require("../utils/valid/employeeValid");
 const employeeController = {
@@ -116,6 +117,12 @@ const employeeController = {
         //Create new employee
         const newEmployee = Employee_1.Employee.create(Object.assign(Object.assign({}, dataNewEmployee), { password: hashPassword }));
         const createdEmployee = yield newEmployee.save();
+        //Create initial salary
+        yield Salary_1.Salary.create({
+            date: new Date(),
+            amount: 0,
+            employee: createdEmployee,
+        }).save();
         return res.status(200).json({
             code: 200,
             success: true,

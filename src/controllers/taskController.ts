@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
 import { Project } from '../entities/Project'
@@ -7,10 +8,17 @@ import { Task_file } from '../entities/Task_File'
 import { createOrUpdateTaskPayload } from '../type/taskPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { taskValid } from '../utils/valid/taskValid'
+=======
+// import { Request, Response } from 'express'
+// import { createOrUpdateTaskPayload } from '../type/taskPayload copy'
+// import handleCatchError from '../utils/catchAsyncError'
+// import { taskValid } from '../utils/valid/taskValid copy'
+>>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
 
 
-const taskController = {
+// const taskController = {
 
+<<<<<<< HEAD
     //Create new task
     create: handleCatchError(async (req: Request, res: Response) =>{
         const dataNewTask: createOrUpdateTaskPayload = req.body
@@ -279,3 +287,16 @@ const taskController = {
 
 
 export default taskController
+=======
+//     //Create new task
+//     create: handleCatchError(async (req: Request, res: Response) =>{
+//         const dataNewTask: createOrUpdateTaskPayload = req.body
+//         const { task_category, project, employees, task_files} = dataNewTask
+        
+//         //check valid 
+//         const messageValid = taskValid.createOrUpdate(dataNewTask)
+//     })
+// }
+
+// export default taskController
+>>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21

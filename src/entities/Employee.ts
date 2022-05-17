@@ -22,8 +22,12 @@ import { Discussion } from './Discussion'
 import { Event } from './Event'
 import { Leave } from './Leave'
 import { Project } from './Project'
+<<<<<<< HEAD
 import { Project_discussion_reply } from './Project_Discussion_Reply'
 import { Project_Discussion_Room } from './Project_Discussion_Room'
+=======
+import { Salary } from './Salary'
+>>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
 import { Task } from './Task'
 
 export enum enumGender {
@@ -151,6 +155,9 @@ export class Employee extends BaseEntity {
 	@ManyToMany(() => Task)
 	@JoinTable({ name: 'task_employee' })
 	tasks: Task[];
+
+	@OneToMany(() => Salary, (salary) => salary.employee)
+	salaries: Salary[]
 
 	@Column({ default: 0 })
 	token_version: number

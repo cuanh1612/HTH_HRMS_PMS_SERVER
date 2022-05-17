@@ -11,5 +11,5 @@ projectRouter.put('/:id', projectController_1.default.update);
 projectRouter.get('/', projectController_1.default.getAll);
 projectRouter.get('/:id', projectController_1.default.getDetail);
 projectRouter.delete('/:id', projectController_1.default.delete);
-projectRouter.delete('/delete-many', projectController_1.default.deletemany);
+projectRouter.post('/delete-many', projectController_1.default.deletemany);
 exports.default = projectRouter;

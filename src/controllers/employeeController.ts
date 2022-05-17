@@ -4,6 +4,7 @@ import { Avatar } from '../entities/Avatar'
 import { Department } from '../entities/Department'
 import { Designation } from '../entities/Designation'
 import { Employee } from '../entities/Employee'
+import { Salary } from '../entities/Salary'
 import { createOrUpdatetEmployeePayload } from '../type/EmployeePayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { employeeValid } from '../utils/valid/employeeValid'
@@ -113,6 +114,13 @@ const employeeController = {
 		})
 
 		const createdEmployee = await newEmployee.save()
+
+		//Create initial salary
+		await Salary.create({
+			date: new Date(),
+			amount: 0,
+			employee: createdEmployee,
+		}).save()
 
 		return res.status(200).json({
 			code: 200,

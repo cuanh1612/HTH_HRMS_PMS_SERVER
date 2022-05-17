@@ -19,7 +19,7 @@ const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const attendanceValid_1 = require("../utils/valid/attendanceValid");
 const attendanceController = {
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { date } = req.query;
+        const { date, department, employee } = req.query;
         let data = yield Employee_1.Employee.find({
             select: {
                 id: true,
@@ -27,7 +27,17 @@ const attendanceController = {
                 avatar: {
                     url: true,
                 },
+                department: {
+                    id: true,
+                    name: true,
+                },
                 attendances: true,
+            },
+            where: {
+                department: {
+                    id: Number(department) || undefined,
+                },
+                id: Number(employee) || undefined,
             },
         });
         if (date) {

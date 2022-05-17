@@ -12,5 +12,5 @@ holidayRouter.put('/:id', (0, checkAuth_1.checkAuth)(['Admin']), holidayControll
 holidayRouter.get('/', holidayController_1.default.getAll);
 holidayRouter.get('/:id', holidayController_1.default.getDetail);
 holidayRouter.delete('/:id', (0, checkAuth_1.checkAuth)(['Admin']), holidayController_1.default.delete);
-holidayRouter.delete('/delete-many', (0, checkAuth_1.checkAuth)(['Admin']), holidayController_1.default.deletemany);
+holidayRouter.post('/delete-many', (0, checkAuth_1.checkAuth)(['Admin']), holidayController_1.default.deletemany);
 exports.default = holidayRouter;

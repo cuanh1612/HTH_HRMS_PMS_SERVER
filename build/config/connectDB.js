@@ -27,9 +27,13 @@ const Project_File_1 = require("../entities/Project_File");
 const Task_1 = require("../entities/Task");
 const Task_Category_1 = require("../entities/Task_Category");
 const Task_File_1 = require("../entities/Task_File");
+<<<<<<< HEAD
 const Project_Discussion_Category_1 = require("../entities/Project_Discussion_Category");
 const Project_Discussion_Reply_1 = require("../entities/Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("../entities/Project_Discussion_Room");
+=======
+const Salary_1 = require("../entities/Salary");
+>>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -65,9 +69,13 @@ const connectDB = () => {
             Task_1.Task,
             Task_Category_1.Task_Category,
             Task_File_1.Task_file,
+<<<<<<< HEAD
             Project_Discussion_Category_1.Project_discussion_category,
             Project_Discussion_Reply_1.Project_discussion_reply,
             Project_Discussion_Room_1.Project_Discussion_Room
+=======
+            Salary_1.Salary
+>>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
         ],
     })
         .then(() => {

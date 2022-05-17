@@ -21,8 +21,12 @@ const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
 const Leave_1 = require("./Leave");
 const Project_1 = require("./Project");
+<<<<<<< HEAD
 const Project_Discussion_Reply_1 = require("./Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
+=======
+const Salary_1 = require("./Salary");
+>>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
 const Task_1 = require("./Task");
 var enumGender;
 (function (enumGender) {
@@ -179,6 +183,10 @@ __decorate([
     (0, typeorm_1.JoinTable)({ name: 'task_employee' }),
     __metadata("design:type", Array)
 ], Employee.prototype, "tasks", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Salary_1.Salary, (salary) => salary.employee),
+    __metadata("design:type", Array)
+], Employee.prototype, "salaries", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)

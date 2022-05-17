@@ -1,16 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.projectValid = void 0;
+exports.taskValid = void 0;
 const Project_1 = require("../../entities/Project");
-exports.projectValid = {
-    createOrUpdate: ({ name, start_date, deadline, employees, currency }, typeValid) => {
+exports.taskValid = {
+    createOrUpdate: ({ name, start_date, deadline, employees, currency, }) => {
         let messageError = '';
         //Check exist datas
-        if (!name || !start_date || !deadline) {
-            messageError = 'Pleas enter full field';
-            return messageError;
-        }
-        if (typeValid === 'create' && !employees) {
+        if (!name || !start_date || !deadline || !employees) {
             messageError = 'Pleas enter full field';
             return messageError;
         }

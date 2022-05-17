@@ -27,9 +27,15 @@ const signRouter_1 = __importDefault(require("./signRouter"));
 const taskCategoryRouter_copy_1 = __importDefault(require("./taskCategoryRouter copy"));
 const projectFileRouter_1 = __importDefault(require("./projectFileRouter"));
 const taskFileRouter_copy_1 = __importDefault(require("./taskFileRouter copy"));
+<<<<<<< HEAD
 const projectDiscussionCategoryRouter_1 = __importDefault(require("./projectDiscussionCategoryRouter"));
 const projectDiscussionReplyRouter_1 = __importDefault(require("./projectDiscussionReplyRouter"));
 function mainRouter(app) {
+=======
+const dashboardRouter_1 = __importDefault(require("./dashboardRouter"));
+const salaryRouter_1 = __importDefault(require("./salaryRouter"));
+const mainRouter = (app) => {
+>>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
     app.use('/api/auth', authRouter_1.default);
     app.use('/api/employees', employeeRouter_1.default);
     app.use('/api/departments', departmentRouter_1.default);
@@ -54,7 +60,13 @@ function mainRouter(app) {
     app.use('/api/task-categories', taskCategoryRouter_copy_1.default);
     app.use('/api/project-files', projectFileRouter_1.default);
     app.use('/api/task-files', taskFileRouter_copy_1.default);
+<<<<<<< HEAD
     app.use('/api/project-discussion-categories', projectDiscussionCategoryRouter_1.default);
     app.use('/api/project-discussion-reply', projectDiscussionReplyRouter_1.default);
 }
+=======
+    app.use('/api/dashboard', dashboardRouter_1.default);
+    app.use('/api/salaries', salaryRouter_1.default);
+};
+>>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
 exports.default = mainRouter;

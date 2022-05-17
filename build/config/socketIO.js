@@ -56,6 +56,18 @@ const createSocketServer = (httpServer) => {
         socket.on('newFile', (contractId) => {
             socket.in('roomFileContract' + contractId).emit('getNewFileContract');
         });
+        //join room file project
+        socket.on('joinRoomFileProject', (projectId) => {
+            socket.join('roomFileProject' + projectId);
+        });
+        //leave room file project
+        socket.on('leaveRoomFileProject', (projectId) => {
+            socket.leave('roomFileProject' + projectId);
+        });
+        //emit user join room file project when have new change file
+        socket.on('newFileProject', (projectId) => {
+            socket.in('roomFileProject' + projectId).emit('getNewFileProject');
+        });
     });
 };
 exports.default = createSocketServer;

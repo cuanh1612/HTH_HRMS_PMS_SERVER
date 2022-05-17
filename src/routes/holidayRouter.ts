@@ -14,6 +14,6 @@ holidayRouter.get('/', holidayController.getAll)
 holidayRouter.get('/:id', holidayController.getDetail)
 
 holidayRouter.delete('/:id', checkAuth(['Admin']), holidayController.delete)
-holidayRouter.delete('/delete-many', checkAuth(['Admin']), holidayController.deletemany)
+holidayRouter.post('/delete-many', checkAuth(['Admin']), holidayController.deletemany)
 
 export default holidayRouter

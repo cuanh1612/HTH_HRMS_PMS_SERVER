@@ -138,7 +138,7 @@ const holidayController = {
 	deletemany: handleCatchError(async (req: Request, res: Response) => {
 		const { holidays } = req.body
 		//check array of holidays
-
+		console.log(holidays)
 		if (!Array.isArray(holidays) || !holidays)
 			return res.status(400).json({
 				code: 400,
@@ -150,7 +150,7 @@ const holidayController = {
 			const itemHoliday = holidays[index]
 			const existingholiday = await Holiday.findOne({
 				where: {
-					id: itemHoliday.id,
+					id: Number(itemHoliday),
 				},
 			})
 			if (existingholiday) {

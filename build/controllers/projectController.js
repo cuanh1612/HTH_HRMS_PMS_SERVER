@@ -18,6 +18,7 @@ const Employee_1 = require("../entities/Employee");
 const Project_1 = require("../entities/Project");
 const Project_Category_1 = require("../entities/Project_Category");
 const Project_File_1 = require("../entities/Project_File");
+const Task_1 = require("../entities/Task");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const projectValid_1 = require("../utils/valid/projectValid");
 const projectController = {
@@ -28,7 +29,7 @@ const projectController = {
         let projectEmployees = [];
         //Check valid input create new project
         //Check valid
-        const messageValid = projectValid_1.projectValid.createOrUpdate(dataNewProject);
+        const messageValid = projectValid_1.projectValid.createOrUpdate(dataNewProject, 'create');
         if (messageValid)
             return res.status(400).json({
                 code: 400,
@@ -103,10 +104,12 @@ const projectController = {
         }
         //create project file
         const createdProject = yield Project_1.Project.create(Object.assign(Object.assign({}, dataNewProject), { employees: projectEmployees })).save();
-        //Create project files
-        for (let index = 0; index < project_files.length; index++) {
-            const project_file = project_files[index];
-            yield Project_File_1.Project_file.create(Object.assign(Object.assign({}, project_file), { project: createdProject })).save();
+        if (project_files) {
+            //Create project files
+            for (let index = 0; index < project_files.length; index++) {
+                const project_file = project_files[index];
+                yield Project_File_1.Project_file.create(Object.assign(Object.assign({}, project_file), { project: createdProject })).save();
+            }
         }
         return res.status(200).json({
             code: 200,
@@ -119,8 +122,7 @@ const projectController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const dataUpdateProject = req.body;
-        const { Added_by, client, department, project_category, employees } = dataUpdateProject;
-        let projectEmployees = [];
+        const { Added_by, client, department, project_category } = dataUpdateProject;
         const existingproject = yield Project_1.Project.findOne({
             where: {
                 id: Number(id),
@@ -134,7 +136,7 @@ const projectController = {
             });
         //Check valid input create new project
         //Check valid
-        const messageValid = projectValid_1.projectValid.createOrUpdate(dataUpdateProject);
+        const messageValid = projectValid_1.projectValid.createOrUpdate(dataUpdateProject, 'update');
         if (messageValid)
             return res.status(400).json({
                 code: 400,
@@ -189,23 +191,6 @@ const projectController = {
                 success: false,
                 message: 'Category does not exist in the system',
             });
-        for (let index = 0; index < employees.length; index++) {
-            const employee_id = employees[index];
-            const existingEmployee = yield Employee_1.Employee.findOne({
-                where: {
-                    id: employee_id,
-                },
-            });
-            if (!existingEmployee)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Employees does not exist in the system',
-                });
-            projectEmployees.push(existingEmployee);
-        }
-        //update project
-        ;
         (existingproject.name = dataUpdateProject.name),
             (existingproject.project_category = existingCategories),
             (existingproject.department = existingDepartment),
@@ -214,7 +199,6 @@ const projectController = {
             (existingproject.start_date = dataUpdateProject.start_date),
             (existingproject.deadline = dataUpdateProject.deadline),
             (existingproject.send_task_noti = true);
-        existingproject.employees = projectEmployees;
         yield existingproject.save();
         return res.status(200).json({
             code: 200,
@@ -246,6 +230,24 @@ const projectController = {
                 success: false,
                 message: 'Project does not exist in the system',
             });
+        //Calculate percentage of project progress from completed tasks
+        const countTasks = yield Task_1.Task.createQueryBuilder('task')
+            .where('task.projectId = :id', {
+            id: existingproject.id,
+        })
+            .getCount();
+        const countSuccessTasks = yield Task_1.Task.createQueryBuilder('task')
+            .where('task.projectId = :id', {
+            id: existingproject.id,
+        })
+            .andWhere('task.status = :status', {
+            status: Task_1.enumStatus.COMPLETED,
+        })
+            .getCount();
+        if (countSuccessTasks !== 0 && countTasks !== 0) {
+            existingproject.Progress = (countSuccessTasks / countTasks) * 100;
+            yield existingproject.save();
+        }
         return res.status(200).json({
             code: 200,
             success: true,
