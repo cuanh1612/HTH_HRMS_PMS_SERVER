@@ -23,13 +23,11 @@ import signRouter from './signRouter'
 import taskCategoryRouter from './taskCategoryRouter copy'
 import projectFileRouter from './projectFileRouter'
 import taskFileRouter from './taskFileRouter copy'
-<<<<<<< HEAD
 import projectDiscussionCategoryRouter from './projectDiscussionCategoryRouter'
 import projectDiscussionReplyRouter from './projectDiscussionReplyRouter'
-=======
 import dashboardRouter from './dashboardRouter'
 import salaryRouter from './salaryRouter'
->>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
+import projectDiscussionRoomRouter from './projectDiscussionRoomRouter'
 
 function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
@@ -79,19 +77,16 @@ function mainRouter(app: core.Express) {
 	app.use('/api/project-files', projectFileRouter)
 
 	app.use('/api/task-files', taskFileRouter)
-<<<<<<< HEAD
 	
 	app.use('/api/project-discussion-categories', projectDiscussionCategoryRouter)
 
-	app.use('/api/project-discussion-reply', projectDiscussionReplyRouter)
-
-	
-=======
+	app.use('/api/project-discussion-replies', projectDiscussionReplyRouter)
 
 	app.use('/api/dashboard', dashboardRouter)
 
 	app.use('/api/salaries', salaryRouter)
->>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
+
+	app.use('/api/project-discussion-rooms', projectDiscussionRoomRouter)
 }
 
 export default mainRouter

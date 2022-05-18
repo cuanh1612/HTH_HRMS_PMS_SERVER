@@ -2,53 +2,10 @@ import { Request, Response } from 'express'
 import { Project_discussion_category } from '../entities/Project_Discussion_Category'
 import handleCatchError from '../utils/catchAsyncError'
 
-const projectDiscussionCategory = {
+const projectDiscussionCategoryController = {
     //Create new project discussion category
     create: handleCatchError(async (req: Request, res: Response) => {
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
+        
         
         const dataNewCategory: Project_discussion_category = req.body
         const { name } = dataNewCategory
@@ -187,4 +144,4 @@ const projectDiscussionCategory = {
 
 }
 
-export default projectDiscussionCategory
+export default projectDiscussionCategoryController

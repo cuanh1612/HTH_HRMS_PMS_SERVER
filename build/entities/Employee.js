@@ -21,12 +21,9 @@ const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
 const Leave_1 = require("./Leave");
 const Project_1 = require("./Project");
-<<<<<<< HEAD
 const Project_Discussion_Reply_1 = require("./Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
-=======
 const Salary_1 = require("./Salary");
->>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
 const Task_1 = require("./Task");
 var enumGender;
 (function (enumGender) {

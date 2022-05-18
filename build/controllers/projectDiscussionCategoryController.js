@@ -14,53 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Project_Discussion_Category_1 = require("../entities/Project_Discussion_Category");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
-const projectDiscussionCategory = {
+const projectDiscussionCategoryController = {
     //Create new project discussion category
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
-        console.log("sdafsadfasdfsa");
         const dataNewCategory = req.body;
         const { name } = dataNewCategory;
         //Check existing name
@@ -174,4 +130,4 @@ const projectDiscussionCategory = {
         });
     })),
 };
-exports.default = projectDiscussionCategory;
+exports.default = projectDiscussionCategoryController;

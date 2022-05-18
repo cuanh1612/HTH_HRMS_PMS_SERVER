@@ -3,13 +3,10 @@ import { Task } from "../entities/Task";
 import { Task_file } from "../entities/Task_File";
 import { createOrUpdatetTaskFilesPayload } from "../type/taskFilePayLoad copy";
 import { Request, Response } from 'express'
-<<<<<<< HEAD
 
 
 
 
-=======
->>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
 
 const taskFileController = {
     create: handleCatchError(async (req: Request, res: Response) => {

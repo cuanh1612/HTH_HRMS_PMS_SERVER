@@ -8,6 +8,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from 'typeorm'
+import { Project } from './Project'
 import { Project_discussion_category } from './Project_Discussion_Category'
 import { Project_discussion_reply } from './Project_Discussion_Reply'
 
@@ -26,6 +27,14 @@ export class Project_Discussion_Room extends BaseEntity {
 	})
 	@JoinColumn()
 	project_discussion_category: Project_discussion_category
+
+	@ManyToOne(() => Project, (project) => project.project_discussion_rooms, {
+		onDelete: 'CASCADE',
+		nullable: true,
+		eager: true,
+	})
+	@JoinColumn()
+	project: Project
 
 	@Column()
 	title: String

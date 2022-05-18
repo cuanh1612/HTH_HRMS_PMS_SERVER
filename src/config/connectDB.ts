@@ -25,13 +25,10 @@ import { Project_file } from '../entities/Project_File'
 import { Task } from '../entities/Task'
 import { Task_Category } from '../entities/Task_Category'
 import { Task_file } from '../entities/Task_File'
-<<<<<<< HEAD
 import { Project_discussion_category } from '../entities/Project_Discussion_Category'
 import { Project_discussion_reply } from '../entities/Project_Discussion_Reply'
 import { Project_Discussion_Room } from '../entities/Project_Discussion_Room'
-=======
 import { Salary } from '../entities/Salary'
->>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
 
 const connectDB = () => {
 	createConnection({
@@ -68,13 +65,10 @@ const connectDB = () => {
 			Task,
 			Task_Category,
 			Task_file,
-<<<<<<< HEAD
 			Project_discussion_category,
 			Project_discussion_reply,
-			Project_Discussion_Room
-=======
-			Salary
->>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
+			Project_Discussion_Room,
+			Salary,
 		],
 	})
 		.then(() => {

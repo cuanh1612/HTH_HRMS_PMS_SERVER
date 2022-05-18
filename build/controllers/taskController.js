@@ -1,5 +1,4 @@
 "use strict";
-<<<<<<< HEAD
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -20,6 +19,10 @@ const Task_Category_1 = require("../entities/Task_Category");
 const Task_File_1 = require("../entities/Task_File");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const taskValid_1 = require("../utils/valid/taskValid");
+// import { Request, Response } from 'express'
+// import { createOrUpdateTaskPayload } from '../type/taskPayload copy'
+// import handleCatchError from '../utils/catchAsyncError'
+// import { taskValid } from '../utils/valid/taskValid copy'
 const taskController = {
     //Create new task
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -248,12 +251,6 @@ const taskController = {
     })),
 };
 exports.default = taskController;
-=======
-// import { Request, Response } from 'express'
-// import { createOrUpdateTaskPayload } from '../type/taskPayload copy'
-// import handleCatchError from '../utils/catchAsyncError'
-// import { taskValid } from '../utils/valid/taskValid copy'
-// const taskController = {
 //     //Create new task
 //     create: handleCatchError(async (req: Request, res: Response) =>{
 //         const dataNewTask: createOrUpdateTaskPayload = req.body
@@ -263,4 +260,3 @@ exports.default = taskController;
 //     })
 // }
 // export default taskController
->>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21

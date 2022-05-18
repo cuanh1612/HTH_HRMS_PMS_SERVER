@@ -69,11 +69,7 @@ const projectFileController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-<<<<<<< HEAD
-                message: `Project file does not exist in the system ${projectFileId} ${projectId}`,
-=======
                 message: `Project file does not exist in the system`,
->>>>>>> fdeb6aa819f872be90108d0c1efe5ee7240bdc21
             });
         //Delete project file
         yield existingProjectFile.remove();

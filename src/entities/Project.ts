@@ -15,6 +15,7 @@ import { Client } from './Client'
 import { Department } from './Department'
 import { Employee } from './Employee'
 import { Project_Category } from './Project_Category'
+import { Project_Discussion_Room } from './Project_Discussion_Room'
 import { Project_file } from './Project_File'
 import { Task } from './Task'
 
@@ -111,8 +112,13 @@ export class Project extends BaseEntity {
 		onDelete: 'SET NULL',
 		nullable: true,
 	})
-	@JoinColumn()
 	project_files: Project_file[]
+
+	@OneToMany(() => Project_Discussion_Room, (project_Discussion_Room) => project_Discussion_Room.project, {
+		onDelete: 'SET NULL',
+		nullable: true,
+	})
+	project_discussion_rooms: Project_Discussion_Room[]
 
     @OneToMany(() => Task, (task) => task.project,{
         onDelete:"SET NULL"

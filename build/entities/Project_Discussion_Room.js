@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Project_Discussion_Room = void 0;
 const typeorm_1 = require("typeorm");
+const Project_1 = require("./Project");
 const Project_Discussion_Category_1 = require("./Project_Discussion_Category");
 const Project_Discussion_Reply_1 = require("./Project_Discussion_Reply");
 let Project_Discussion_Room = class Project_Discussion_Room extends typeorm_1.BaseEntity {
@@ -32,6 +33,15 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Project_Discussion_Category_1.Project_discussion_category)
 ], Project_Discussion_Room.prototype, "project_discussion_category", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Project_1.Project, (project) => project.project_discussion_rooms, {
+        onDelete: 'CASCADE',
+        nullable: true,
+        eager: true,
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Project_1.Project)
+], Project_Discussion_Room.prototype, "project", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
