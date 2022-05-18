@@ -8,14 +8,6 @@ import {
 } from 'typeorm'
 import { Employee } from './Employee'
 
-export enum enumCurrency {
-	USD = 'USD',
-	GBP = 'GBP',
-	EUR = 'EUR',
-	INR = 'INR',
-	VND = 'VND',
-}
-
 export enum enumTypeSalary {
 	INCREMENT = 'Increment',
 	DECREMENT = 'Decrement',

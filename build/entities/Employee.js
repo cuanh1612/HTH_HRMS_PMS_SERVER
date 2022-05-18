@@ -21,7 +21,7 @@ const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
 const Leave_1 = require("./Leave");
 const Project_1 = require("./Project");
-const salary_1 = require("./salary");
+const Salary_1 = require("./Salary");
 const Task_1 = require("./Task");
 var enumGender;
 (function (enumGender) {
@@ -170,7 +170,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "tasks", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => salary_1.Salary, (salary) => salary.employee),
+    (0, typeorm_1.OneToMany)(() => Salary_1.Salary, (salary) => salary.employee),
     __metadata("design:type", Array)
 ], Employee.prototype, "salaries", void 0);
 __decorate([

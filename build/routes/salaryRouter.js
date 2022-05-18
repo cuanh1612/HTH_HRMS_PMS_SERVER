@@ -9,4 +9,6 @@ const checkAuth_1 = require("../utils/middleware/checkAuth");
 const salaryRouter = express_1.default.Router();
 salaryRouter.post('/', (0, checkAuth_1.checkAuth)([]), salaryController_1.default.create);
 salaryRouter.get('/', (0, checkAuth_1.checkAuth)([]), salaryController_1.default.getAll);
+salaryRouter.get('/employee/:employeeId', (0, checkAuth_1.checkAuth)([]), salaryController_1.default.getHistoryByUser);
+salaryRouter.delete('/:salaryId', (0, checkAuth_1.checkAuth)([]), salaryController_1.default.delete);
 exports.default = salaryRouter;

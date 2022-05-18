@@ -22,7 +22,7 @@ import { Discussion } from './Discussion'
 import { Event } from './Event'
 import { Leave } from './Leave'
 import { Project } from './Project'
-import { Salary } from './salary'
+import { Salary } from './Salary'
 import { Task } from './Task'
 
 export enum enumGender {

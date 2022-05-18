@@ -11,10 +11,9 @@ const clientSubCategoryRouter_1 = __importDefault(require("./clientSubCategoryRo
 const contractFileRouter_1 = __importDefault(require("./contractFileRouter"));
 const contractRouter_1 = __importDefault(require("./contractRouter"));
 const contractTypeRouter_1 = __importDefault(require("./contractTypeRouter"));
-const projectCategoryRouter_1 = __importDefault(require("./projectCategoryRouter"));
-const projectRouter_1 = __importDefault(require("./projectRouter"));
 const conversationReplyRouter_1 = __importDefault(require("./conversationReplyRouter"));
 const conversationRouter_1 = __importDefault(require("./conversationRouter"));
+const dashboardRouter_1 = __importDefault(require("./dashboardRouter"));
 const departmentRouter_1 = __importDefault(require("./departmentRouter"));
 const designationRouter_1 = __importDefault(require("./designationRouter"));
 const discussionRouter_1 = __importDefault(require("./discussionRouter"));
@@ -23,12 +22,14 @@ const eventRouter_1 = __importDefault(require("./eventRouter"));
 const holidayRouter_1 = __importDefault(require("./holidayRouter"));
 const leaveRouter_1 = __importDefault(require("./leaveRouter"));
 const leaveTypeRouter_1 = __importDefault(require("./leaveTypeRouter"));
+const noticeBoardRouter_1 = __importDefault(require("./noticeBoardRouter"));
+const projectCategoryRouter_1 = __importDefault(require("./projectCategoryRouter"));
+const projectFileRouter_1 = __importDefault(require("./projectFileRouter"));
+const projectRouter_1 = __importDefault(require("./projectRouter"));
+const salaryRouter_1 = __importDefault(require("./salaryRouter"));
 const signRouter_1 = __importDefault(require("./signRouter"));
 const taskCategoryRouter_copy_1 = __importDefault(require("./taskCategoryRouter copy"));
-const projectFileRouter_1 = __importDefault(require("./projectFileRouter"));
 const taskFileRouter_copy_1 = __importDefault(require("./taskFileRouter copy"));
-const dashboardRouter_1 = __importDefault(require("./dashboardRouter"));
-const salaryRouter_1 = __importDefault(require("./salaryRouter"));
 const mainRouter = (app) => {
     app.use('/api/auth', authRouter_1.default);
     app.use('/api/employees', employeeRouter_1.default);
@@ -56,5 +57,6 @@ const mainRouter = (app) => {
     app.use('/api/task-files', taskFileRouter_copy_1.default);
     app.use('/api/dashboard', dashboardRouter_1.default);
     app.use('/api/salaries', salaryRouter_1.default);
+    app.use('/api/notice-boards', noticeBoardRouter_1.default);
 };
 exports.default = mainRouter;

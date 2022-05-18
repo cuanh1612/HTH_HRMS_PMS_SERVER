@@ -9,53 +9,44 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Salary = exports.enumTypeSalary = void 0;
+exports.Notice_board = exports.enumNoticeTo = void 0;
 const typeorm_1 = require("typeorm");
-const Employee_1 = require("./Employee");
-var enumTypeSalary;
-(function (enumTypeSalary) {
-    enumTypeSalary["INCREMENT"] = "Increment";
-    enumTypeSalary["DECREMENT"] = "Decrement";
-})(enumTypeSalary = exports.enumTypeSalary || (exports.enumTypeSalary = {}));
-let Salary = class Salary extends typeorm_1.BaseEntity {
+var enumNoticeTo;
+(function (enumNoticeTo) {
+    enumNoticeTo["CLIENTS"] = "Clients";
+    enumNoticeTo["EMPLOYEES"] = "Employees";
+})(enumNoticeTo = exports.enumNoticeTo || (exports.enumNoticeTo = {}));
+let Notice_board = class Notice_board extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Salary.prototype, "id", void 0);
+], Notice_board.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'enum', enum: enumNoticeTo, default: enumNoticeTo.CLIENTS }),
+    __metadata("design:type", String)
+], Notice_board.prototype, "notice_to", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Salary.prototype, "amount", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'date' }),
-    __metadata("design:type", Date)
-], Salary.prototype, "date", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (Employee) => Employee.salaries, {
-        onDelete: 'CASCADE',
-        eager: true
-    }),
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", Employee_1.Employee)
-], Salary.prototype, "employee", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: enumTypeSalary, default: enumTypeSalary.INCREMENT }),
     __metadata("design:type", String)
-], Salary.prototype, "type", void 0);
+], Notice_board.prototype, "heading", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Notice_board.prototype, "details", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], Salary.prototype, "createdAt", void 0);
+], Notice_board.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], Salary.prototype, "updatedAt", void 0);
-Salary = __decorate([
+], Notice_board.prototype, "updatedAt", void 0);
+Notice_board = __decorate([
     (0, typeorm_1.Entity)()
-], Salary);
-exports.Salary = Salary;
+], Notice_board);
+exports.Notice_board = Notice_board;

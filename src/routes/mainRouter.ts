@@ -7,10 +7,9 @@ import clientSubCategoryRouter from './clientSubCategoryRouter'
 import contractFileRouter from './contractFileRouter'
 import contractRouter from './contractRouter'
 import contractTypeRouter from './contractTypeRouter'
-import projectCategoryRouter from './projectCategoryRouter'
-import projectRouter from './projectRouter'
 import conversationReplyRouter from './conversationReplyRouter'
 import conversationRouter from './conversationRouter'
+import dashboardRouter from './dashboardRouter'
 import departmentRouter from './departmentRouter'
 import designationRouter from './designationRouter'
 import discussionRouter from './discussionRouter'
@@ -19,12 +18,14 @@ import eventRouter from './eventRouter'
 import holidayRouter from './holidayRouter'
 import leaveRouter from './leaveRouter'
 import leaveTypeRouter from './leaveTypeRouter'
+import noticeBoardRouter from './noticeBoardRouter'
+import projectCategoryRouter from './projectCategoryRouter'
+import projectFileRouter from './projectFileRouter'
+import projectRouter from './projectRouter'
+import salaryRouter from './salaryRouter'
 import signRouter from './signRouter'
 import taskCategoryRouter from './taskCategoryRouter copy'
-import projectFileRouter from './projectFileRouter'
 import taskFileRouter from './taskFileRouter copy'
-import dashboardRouter from './dashboardRouter'
-import salaryRouter from './salaryRouter'
 
 const mainRouter = (app: core.Express) => {
 	app.use('/api/auth', authRouter)
@@ -54,7 +55,7 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/project-categories', projectCategoryRouter)
 
 	app.use('/api/projects', projectRouter)
-	
+
 	app.use('/api/attendances', attendanceRouter)
 
 	app.use('/api/signs', signRouter)
@@ -78,6 +79,8 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/dashboard', dashboardRouter)
 
 	app.use('/api/salaries', salaryRouter)
+
+	app.use('/api/notice-boards', noticeBoardRouter)
 }
 
 export default mainRouter
