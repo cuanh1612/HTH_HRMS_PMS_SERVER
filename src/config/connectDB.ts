@@ -27,9 +27,11 @@ import { Task_Category } from '../entities/Task_Category'
 import { Task_file } from '../entities/Task_File'
 import { Salary } from '../entities/Salary'
 import { Notice_board } from '../entities/Notice_Board'
+import { Project_discussion_category } from '../entities/Project_Discussion_Category'
+import { Project_discussion_reply } from '../entities/Project_Discussion_Reply'
+import { Project_Discussion_Room } from '../entities/Project_Discussion_Room'
 
 const connectDB = () => {
-	console.log(process.env.DB_HOST)
 	createConnection({
 		type: 'postgres',
 		database:  process.env.DB_DATABASE,
@@ -65,7 +67,11 @@ const connectDB = () => {
 			Task_Category,
 			Task_file,
 			Salary,
-			Notice_board
+			Notice_board,
+			Project_discussion_category,
+			Project_discussion_reply,
+			Project_Discussion_Room,
+			Salary,
 		],
 	})
 		.then(() => {

@@ -40,7 +40,7 @@ const checkAuth = (roles) => {
                     });
                 }
             }
-            return next();
+            return next({ decodeUser });
         }
         catch (error) {
             return res.status(401).json({

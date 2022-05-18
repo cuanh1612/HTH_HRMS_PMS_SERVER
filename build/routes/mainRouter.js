@@ -30,7 +30,10 @@ const salaryRouter_1 = __importDefault(require("./salaryRouter"));
 const signRouter_1 = __importDefault(require("./signRouter"));
 const taskCategoryRouter_copy_1 = __importDefault(require("./taskCategoryRouter copy"));
 const taskFileRouter_copy_1 = __importDefault(require("./taskFileRouter copy"));
-const mainRouter = (app) => {
+const projectDiscussionCategoryRouter_1 = __importDefault(require("./projectDiscussionCategoryRouter"));
+const projectDiscussionReplyRouter_1 = __importDefault(require("./projectDiscussionReplyRouter"));
+const projectDiscussionRoomRouter_1 = __importDefault(require("./projectDiscussionRoomRouter"));
+function mainRouter(app) {
     app.use('/api/auth', authRouter_1.default);
     app.use('/api/employees', employeeRouter_1.default);
     app.use('/api/departments', departmentRouter_1.default);
@@ -55,8 +58,11 @@ const mainRouter = (app) => {
     app.use('/api/task-categories', taskCategoryRouter_copy_1.default);
     app.use('/api/project-files', projectFileRouter_1.default);
     app.use('/api/task-files', taskFileRouter_copy_1.default);
+    app.use('/api/project-discussion-categories', projectDiscussionCategoryRouter_1.default);
+    app.use('/api/project-discussion-replies', projectDiscussionReplyRouter_1.default);
     app.use('/api/dashboard', dashboardRouter_1.default);
     app.use('/api/salaries', salaryRouter_1.default);
     app.use('/api/notice-boards', noticeBoardRouter_1.default);
-};
+    app.use('/api/project-discussion-rooms', projectDiscussionRoomRouter_1.default);
+}
 exports.default = mainRouter;

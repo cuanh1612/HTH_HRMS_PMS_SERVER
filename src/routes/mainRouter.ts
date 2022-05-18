@@ -26,8 +26,11 @@ import salaryRouter from './salaryRouter'
 import signRouter from './signRouter'
 import taskCategoryRouter from './taskCategoryRouter copy'
 import taskFileRouter from './taskFileRouter copy'
+import projectDiscussionCategoryRouter from './projectDiscussionCategoryRouter'
+import projectDiscussionReplyRouter from './projectDiscussionReplyRouter'
+import projectDiscussionRoomRouter from './projectDiscussionRoomRouter'
 
-const mainRouter = (app: core.Express) => {
+function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
 
 	app.use('/api/employees', employeeRouter)
@@ -75,12 +78,17 @@ const mainRouter = (app: core.Express) => {
 	app.use('/api/project-files', projectFileRouter)
 
 	app.use('/api/task-files', taskFileRouter)
+	
+	app.use('/api/project-discussion-categories', projectDiscussionCategoryRouter)
+
+	app.use('/api/project-discussion-replies', projectDiscussionReplyRouter)
 
 	app.use('/api/dashboard', dashboardRouter)
 
 	app.use('/api/salaries', salaryRouter)
 
 	app.use('/api/notice-boards', noticeBoardRouter)
+	app.use('/api/project-discussion-rooms', projectDiscussionRoomRouter)
 }
 
 export default mainRouter

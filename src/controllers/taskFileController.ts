@@ -4,6 +4,10 @@ import { Task_file } from "../entities/Task_File";
 import { createOrUpdatetTaskFilesPayload } from "../type/taskFilePayLoad copy";
 import { Request, Response } from 'express'
 
+
+
+
+
 const taskFileController = {
     create: handleCatchError(async (req: Request, res: Response) => {
         const { files, task } = req.body as createOrUpdatetTaskFilesPayload
@@ -21,6 +25,7 @@ const taskFileController = {
                 message: 'This task does not exist in the system',
             })
         if (Array.isArray(files)) {
+            
             files.map(async (file) => {
                 await Task_file.create({
                     ...file,

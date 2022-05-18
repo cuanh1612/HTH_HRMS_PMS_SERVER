@@ -15,6 +15,7 @@ const Client_1 = require("./Client");
 const Department_1 = require("./Department");
 const Employee_1 = require("./Employee");
 const Project_Category_1 = require("./Project_Category");
+const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
 const Project_File_1 = require("./Project_File");
 const Task_1 = require("./Task");
 var enumCurrency;
@@ -128,9 +129,15 @@ __decorate([
         onDelete: 'SET NULL',
         nullable: true,
     }),
-    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)
 ], Project.prototype, "project_files", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Project_Discussion_Room_1.Project_Discussion_Room, (project_Discussion_Room) => project_Discussion_Room.project, {
+        onDelete: 'SET NULL',
+        nullable: true,
+    }),
+    __metadata("design:type", Array)
+], Project.prototype, "project_discussion_rooms", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Task_1.Task, (task) => task.project, {
         onDelete: "SET NULL"
