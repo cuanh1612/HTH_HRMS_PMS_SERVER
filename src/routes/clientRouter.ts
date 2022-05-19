@@ -5,7 +5,7 @@ import { checkAuth } from '../utils/middleware/checkAuth';
 const clientRouter = express.Router()
 
 clientRouter.post('/', checkAuth(['Admin']), clientController.create);
-clientRouter.post('/delete_may', checkAuth(['Admin']), clientController.deleteMany);
+clientRouter.post('/delete-may', checkAuth(['Admin']), clientController.deleteMany);
 
 clientRouter.put('/:clientId', checkAuth(['Admin']), clientController.update)
 
