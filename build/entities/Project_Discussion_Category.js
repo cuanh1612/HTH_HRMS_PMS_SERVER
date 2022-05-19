@@ -23,6 +23,10 @@ __decorate([
     __metadata("design:type", String)
 ], Project_discussion_category.prototype, "name", void 0);
 __decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Project_discussion_category.prototype, "color", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => Project_Discussion_Room_1.Project_Discussion_Room, (project_discussion_room) => project_discussion_room.project_discussion_category),
     __metadata("design:type", Array)
 ], Project_discussion_category.prototype, "project_discussion_rooms", void 0);
