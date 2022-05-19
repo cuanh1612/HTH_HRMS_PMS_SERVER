@@ -41,7 +41,7 @@ export const checkAuth = (roles: string[] | null) => {
 				}
 			}
 
-			return next()
+			return next({decodeUser})
 		} catch (error) {
 			return res.status(401).json({
 				code: 401,

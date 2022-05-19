@@ -9,11 +9,7 @@ import handleCatchError from '../utils/catchAsyncError'
 
 const dashBoardController = {
 	overview: handleCatchError(async (_: Request, res: Response) => {
-		const countClients = new Promise(async (resolve, reject) => {
-			const value = await Client.createQueryBuilder('client').getCount()
-			if (value) resolve(value)
-			reject()
-		})
+		const countClients = await Client.createQueryBuilder('client').getCount()
 		const countEmployees = await Employee.createQueryBuilder('employee').getCount()
 		const countProjects = await Project.createQueryBuilder('project').getCount()
 		const countAttendancesToday = await Attendance.createQueryBuilder('attendance')

@@ -6,6 +6,7 @@ import { Contract_type } from '../entities/Contract_Type'
 import { createOrUpdatetContractPayload } from '../type/ContractPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { contractValid } from '../utils/valid/contractValid'
+import {sign} from 'jsonwebtoken'
 
 const contractController = {
 	getAll: handleCatchError(async (_: Request, res: Response) => {
@@ -40,6 +41,67 @@ const contractController = {
 			success: true,
 			contract: existingContract,
 			message: 'Get detail contract successfully',
+		})
+	}),
+
+	publicLink: handleCatchError(async (req: Request, res: Response) => {
+		const { idContract } = req.body
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		console.log('hoang',idContract)
+		if (!idContract) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Contract not exist.',
+			})
+		}
+		const contract = await Contract.findOne({
+			where: {
+				id: Number(idContract),
+			},
+		})
+
+		if (!contract)
+			return res.status(400).json({
+				code: 400, 
+				success: false,
+				message: 'Contract does not exists in the system',
+			})
+		
+		const token = sign(
+			{
+				id: idContract
+			},`${process.env.CONTRACT_TOKEN_SECRET}`,
+			{
+				expiresIn: '10m',
+			}
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			token,
+			message: 'Created contract token successfully',
 		})
 	}),
 
