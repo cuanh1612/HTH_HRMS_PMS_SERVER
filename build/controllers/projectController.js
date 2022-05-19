@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = require("jsonwebtoken");
 const Client_1 = require("../entities/Client");
 const Department_1 = require("../entities/Department");
 const Employee_1 = require("../entities/Employee");
@@ -300,6 +301,55 @@ const projectController = {
             code: 200,
             success: true,
             message: 'Delete projects success',
+        });
+    })),
+    //member huy
+    checkAssigned: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        const { projectId } = req.params;
+        //Check exist project
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId),
+            },
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not exist in the system',
+            });
+        //check exist current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
+        if (!existingProject.employees.some((employeeItem) => employeeItem.id === existingUser.id))
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You not asigned this project',
+            });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'You already signed this project',
         });
     })),
 };

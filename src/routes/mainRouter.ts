@@ -88,6 +88,7 @@ function mainRouter(app: core.Express) {
 	app.use('/api/salaries', salaryRouter)
 
 	app.use('/api/notice-boards', noticeBoardRouter)
+	
 	app.use('/api/project-discussion-rooms', projectDiscussionRoomRouter)
 }
 

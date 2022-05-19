@@ -14,7 +14,7 @@ export class Project_discussion_category extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id!: number
 
-	@Column()
+@Column()
 	name!: string
 
 	@OneToMany(() => Project_Discussion_Room, (project_discussion_room) => project_discussion_room.project_discussion_category)

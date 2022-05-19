@@ -23,7 +23,6 @@ export class Project_discussion_reply extends BaseEntity {
 
 	@ManyToOne(() => Project_Discussion_Room, (project_discussion_room) => project_discussion_room.project_discussion_replies, {
 		onDelete: 'CASCADE',
-		eager: true,
 		nullable: true,
 	})
 	@JoinColumn()

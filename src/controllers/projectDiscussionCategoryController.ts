@@ -85,7 +85,7 @@ const projectDiscussionCategoryController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            project_discussion_categories: project_discussion_categories,
+            projectDiscussionCategories: project_discussion_categories,
             message: 'Get all project discussion categories successfully',
         })
     }),

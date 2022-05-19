@@ -193,7 +193,7 @@ const projectDiscussionRoomController = {
                 success: false,
                 message: 'Project does not exist in the system'
             });
-        const projectDiscussionRoom = yield Project_Discussion_Room_1.Project_Discussion_Room.find({
+        const projectDiscussionRooms = yield Project_Discussion_Room_1.Project_Discussion_Room.find({
             where: {
                 project: {
                     id: existingProject.id
@@ -203,7 +203,7 @@ const projectDiscussionRoomController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            projectDiscussionRoom,
+            projectDiscussionRooms,
             message: 'Get project discussion room by project success'
         });
     }))
