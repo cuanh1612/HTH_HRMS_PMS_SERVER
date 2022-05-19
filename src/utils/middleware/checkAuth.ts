@@ -10,7 +10,6 @@ export const checkAuth = (roles: string[] | null) => {
 			//auth Header here is "Bearer accessToken"
 			const authHeader = req.header('Authorization')
 			const accessToken = authHeader && authHeader.split(' ')[1]
-			console.log(accessToken)
 
 			if (!accessToken)
 				return res.status(401).json({
@@ -41,7 +40,7 @@ export const checkAuth = (roles: string[] | null) => {
 				}
 			}
 
-			return next({decodeUser})
+			return next()
 		} catch (error) {
 			return res.status(401).json({
 				code: 401,

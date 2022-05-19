@@ -5,7 +5,7 @@ import {
 	Entity,
 	OneToMany,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn
+	UpdateDateColumn,
 } from 'typeorm'
 import { Project_Discussion_Room } from './Project_Discussion_Room'
 
@@ -14,10 +14,16 @@ export class Project_discussion_category extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id!: number
 
-@Column()
+	@Column()
 	name!: string
 
-	@OneToMany(() => Project_Discussion_Room, (project_discussion_room) => project_discussion_room.project_discussion_category)
+	@Column()
+	color: string
+
+	@OneToMany(
+		() => Project_Discussion_Room,
+		(project_discussion_room) => project_discussion_room.project_discussion_category
+	)
 	project_discussion_rooms: Project_Discussion_Room[]
 
 	@CreateDateColumn({
