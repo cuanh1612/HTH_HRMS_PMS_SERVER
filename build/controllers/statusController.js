@@ -135,6 +135,7 @@ const statusController = {
     //Change position of status 
     changeposition: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id1, id2 } = req.body;
+        console.log(id1, id2);
         // if(id2 > id1){
         const existingstatus = yield Status_1.Status.findOne({
             where: {

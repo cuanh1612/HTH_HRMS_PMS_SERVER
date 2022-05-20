@@ -146,12 +146,12 @@ const statusController = {
             success: true,
             message: 'Delete status success',
         })
-
     }),
 
     //Change position of status 
     changeposition: handleCatchError(async (req: Request, res: Response) => {
         const { id1, id2 } = req.body
+        console.log(id1, id2)
 
         // if(id2 > id1){
 

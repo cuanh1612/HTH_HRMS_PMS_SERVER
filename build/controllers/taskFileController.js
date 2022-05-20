@@ -157,6 +157,11 @@ const taskFileController = {
                 message: 'change position of task success'
             });
         }
+        return res.status(400).json({
+            code: 400,
+            success: false,
+            message: 'Either task does not exist in the system',
+        });
     }))
 };
 exports.default = taskFileController;
