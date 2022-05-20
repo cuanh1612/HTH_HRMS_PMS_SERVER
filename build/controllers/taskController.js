@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Employee_1 = require("../entities/Employee");
 const Project_1 = require("../entities/Project");
+const Status_1 = require("../entities/Status");
 const Task_1 = require("../entities/Task");
 const Task_Category_1 = require("../entities/Task_Category");
 const Task_File_1 = require("../entities/Task_File");
@@ -27,7 +28,7 @@ const taskController = {
     //Create new task
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewTask = req.body;
-        const { task_category, project, employees, task_files } = dataNewTask;
+        const { task_category, project, employees, task_files, status } = dataNewTask;
         let taskEmployees = [];
         //check valid 
         const messageValid = taskValid_1.taskValid.createOrUpdate(dataNewTask);
@@ -36,6 +37,18 @@ const taskController = {
                 code: 400,
                 success: false,
                 message: messageValid,
+            });
+        //check exist status
+        const existingStatus = yield Status_1.Status.findOne({
+            where: {
+                id: status,
+            },
+        });
+        if (!existingStatus)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Status does not existing'
             });
         //check exist project
         const existingproject = yield Project_1.Project.findOne({
@@ -54,12 +67,13 @@ const taskController = {
                 id: task_category
             },
         });
-        if (!existingCategories)
+        if (!existingCategories) {
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Task Category does not exist in the system',
             });
+        }
         for (let index = 0; index < employees.length; index++) {
             const employee_id = employees[index];
             const existingEmployee = yield Employee_1.Employee.findOne({
@@ -78,10 +92,12 @@ const taskController = {
         }
         //create taskfile
         const createdTask = yield Task_1.Task.create(Object.assign(Object.assign({}, dataNewTask), { employees: taskEmployees })).save();
-        //create task files
-        for (let index = 0; index < task_files.length; index++) {
-            const task_file = task_files[index];
-            yield Task_File_1.Task_file.create(Object.assign(Object.assign({}, task_file), { task: task_file })).save();
+        if (Array.isArray(task_files)) {
+            //create task files
+            for (let index = 0; index < task_files.length; index++) {
+                const task_file = task_files[index];
+                yield Task_File_1.Task_file.create(Object.assign(Object.assign({}, task_file), { task: task_file })).save();
+            }
         }
         return res.status(200).json({
             code: 200,

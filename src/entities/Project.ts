@@ -9,7 +9,7 @@ import {
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn,
+	UpdateDateColumn
 } from 'typeorm'
 import { Client } from './Client'
 import { Department } from './Department'
@@ -17,6 +17,7 @@ import { Employee } from './Employee'
 import { Project_Category } from './Project_Category'
 import { Project_Discussion_Room } from './Project_Discussion_Room'
 import { Project_file } from './Project_File'
+import { Status } from './Status'
 import { Task } from './Task'
 
 export enum enumCurrency {
@@ -27,13 +28,7 @@ export enum enumCurrency {
 	VND = 'VND',
 }
 
-export enum enumStatus {
-	NOT_STARTED = 'Not Started',
-	IN_PROGRESS = 'In Progress',
-	ON_HOLD = 'On Hold',
-	CANCELED = 'Canceled',
-	FINISHED = 'Finished',
-}
+
 
 @Entity()
 export class Project extends BaseEntity {
@@ -92,8 +87,6 @@ export class Project extends BaseEntity {
 	@JoinTable({ name: 'project_employee' })
 	employees: Employee[]
 
-	@Column({ type: 'enum', enum: enumStatus, default: enumStatus.NOT_STARTED })
-	project_status: string
 
 	@Column({ type: 'enum', enum: enumCurrency, default: enumCurrency.USD })
 	currency: string
@@ -103,7 +96,7 @@ export class Project extends BaseEntity {
 
 	@ManyToOne(() => Employee, (Employee) => Employee.projects, {
 		onDelete: 'SET NULL',
-        eager: true
+		eager: true
 	})
 	@JoinColumn()
 	Added_by: Employee
@@ -120,10 +113,13 @@ export class Project extends BaseEntity {
 	})
 	project_discussion_rooms: Project_Discussion_Room[]
 
-    @OneToMany(() => Task, (task) => task.project,{
-        onDelete:"SET NULL"
-    })
-    tasks: Task[]
+	@OneToMany(() => Status, (status) => status.project)
+	status: Status
+
+	@OneToMany(() => Task, (task) => task.project, {
+		onDelete: "SET NULL"
+	})
+	tasks: Task[]
 
 	@CreateDateColumn({
 		name: 'created_at',

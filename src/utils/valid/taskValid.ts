@@ -1,4 +1,4 @@
-import { enumStatus } from '../../entities/Task'
+
 import { enumPriority } from '../../entities/Task'
 import { createOrUpdateTaskPayload } from '../../type/taskPayload'
 
@@ -8,15 +8,14 @@ export const taskValid = {
         start_date,
         deadline,
         employees,
-        status,
         priority
 
     }: createOrUpdateTaskPayload) => {
         let messageError = ''
 
         //Check exist datas
-        if (!name || !start_date || !deadline || !employees) {
-            messageError = 'Pleas enter full field'
+        if (!name || !start_date || !deadline || ! Array.isArray(employees)) {
+            messageError = 'Please enter full field'
             return messageError
         }
         
@@ -28,18 +27,7 @@ export const taskValid = {
             return messageError
         }
 
-        //Check enum currency
-        if (
-            status &&
-            status !== enumStatus.COMPLETED &&
-            status !== enumStatus.DOING &&
-            status !== enumStatus.INCOMPLETE &&
-            status !== enumStatus.TO_DO
-          
-        ) {
-            messageError = 'Status not valid'
-            return messageError
-        }
+        
         //Check enum currency
         if (
             priority &&

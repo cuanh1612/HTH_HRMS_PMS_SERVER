@@ -29,6 +29,8 @@ import taskFileRouter from './taskFileRouter copy'
 import projectDiscussionCategoryRouter from './projectDiscussionCategoryRouter'
 import projectDiscussionReplyRouter from './projectDiscussionReplyRouter'
 import projectDiscussionRoomRouter from './projectDiscussionRoomRouter'
+import statusRouter from './statusRouter'
+import taskRouter from './taskRouter'
 
 function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
@@ -90,6 +92,10 @@ function mainRouter(app: core.Express) {
 	app.use('/api/notice-boards', noticeBoardRouter)
 	
 	app.use('/api/project-discussion-rooms', projectDiscussionRoomRouter)
+
+	app.use('/api/status/', statusRouter)
+
+	app.use('/api/tasks', taskRouter)
 }
 
 export default mainRouter

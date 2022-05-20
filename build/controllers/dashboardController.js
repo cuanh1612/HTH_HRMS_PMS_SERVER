@@ -17,7 +17,6 @@ const Client_1 = require("../entities/Client");
 const Employee_1 = require("../entities/Employee");
 const Leave_1 = require("../entities/Leave");
 const Project_1 = require("../entities/Project");
-const Task_1 = require("../entities/Task");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const dashBoardController = {
     overview: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -34,18 +33,18 @@ const dashBoardController = {
                 status: 'Pending',
             },
         });
-        const pendingTasks = yield Task_1.Task.find({
-            where: {
-                status: 'Incomplete' || 'To Do' || 'Doing' || 'Completed',
-            },
-        });
+        // const pendingTasks = await Task.find({
+        // 	where: {
+        // 		status: 'Incomplete' || 'To Do' || 'Doing' || 'Completed',
+        // 	},
+        // })
         const overview = {
             countClients,
             countEmployees,
             countProjects,
             countAttendancesToday,
             pendingLeaves,
-            pendingTasks,
+            // pendingTasks,np
         };
         return res.status(200).json({
             code: 200,
