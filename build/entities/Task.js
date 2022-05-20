@@ -10,19 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var Task_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Task = exports.enumPriority = exports.enumStatus = void 0;
+exports.Task = exports.enumPriority = void 0;
 const typeorm_1 = require("typeorm");
 const Employee_1 = require("./Employee");
 const Project_1 = require("./Project");
+const Status_1 = require("./Status");
 const Task_Category_1 = require("./Task_Category");
 const Task_File_1 = require("./Task_File");
-var enumStatus;
-(function (enumStatus) {
-    enumStatus["INCOMPLETE"] = "Incomplete";
-    enumStatus["TO_DO"] = "To Do";
-    enumStatus["DOING"] = "Doing";
-    enumStatus["COMPLETED"] = "Completed";
-})(enumStatus = exports.enumStatus || (exports.enumStatus = {}));
 var enumPriority;
 (function (enumPriority) {
     enumPriority["LOW"] = "Low";
@@ -48,6 +42,10 @@ __decorate([
     __metadata("design:type", Date)
 ], Task.prototype, "deadline", void 0);
 __decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Task.prototype, "index", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Task_Category_1.Task_Category, (task_Category) => task_Category.tasks, {
         onDelete: 'SET NULL',
         nullable: true
@@ -72,10 +70,6 @@ __decorate([
     __metadata("design:type", String)
 ], Task.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: enumStatus, default: enumStatus.TO_DO }),
-    __metadata("design:type", String)
-], Task.prototype, "status", void 0);
-__decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: enumPriority, default: enumPriority.LOW }),
     __metadata("design:type", String)
 ], Task.prototype, "priority", void 0);
@@ -97,6 +91,14 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Task.prototype, "task_files", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Status_1.Status, (status) => status.tasks, {
+        onDelete: 'CASCADE',
+        nullable: true,
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Status_1.Status)
+], Task.prototype, "status", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

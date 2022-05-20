@@ -6,7 +6,8 @@ import { Employee } from '../entities/Employee'
 import { Project } from '../entities/Project'
 import { Project_Category } from '../entities/Project_Category'
 import { Project_file } from '../entities/Project_File'
-import { enumStatus, Task } from '../entities/Task'
+import { Status } from '../entities/Status'
+import { Task } from '../entities/Task'
 import { createOrUpdateProjectPayload } from '../type/ProjectPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
@@ -107,8 +108,9 @@ const projectController = {
 		const createdProject = await Project.create({
 			...dataNewProject,
 			employees: projectEmployees,
+		
 		}).save()
-
+		console.log('ngtientrong1')
 		if (project_files) {
 			//Create project files
 			for (let index = 0; index < project_files.length; index++) {
@@ -119,6 +121,28 @@ const projectController = {
 				}).save()
 			}
 		}
+
+		const status1 = await Status.create({
+			title: 'Incomplete',
+			root: true,
+			project: createdProject,
+			index: 0,
+			color: 'red'
+
+		}).save()
+
+		console.log('ngtientrong', status1)
+
+		await Status.create({
+			title: 'Complete',
+			root: true,
+			project: createdProject,
+			index: 1,
+			color: 'green'
+
+
+		}).save()
+
 
 		return res.status(200).json({
 			code: 200,
@@ -256,25 +280,23 @@ const projectController = {
 			})
 
 		//Calculate percentage of project progress from completed tasks
-		const countTasks = await Task.createQueryBuilder('task')
-			.where('task.projectId = :id', {
-				id: existingproject.id,
-			})
-			.getCount()
+	
+			
+		const countSuccessTasks = await Task.createQueryBuilder("task")
+		.leftJoinAndSelect("status", "status", "task.statusId = status.id")
+		.where('task.projectId = :id', {
+			id: existingproject.id,
+		}).andWhere('status.title = :title', {
+			title: 'Complete',
+		}).getRawMany()
 
-		const countSuccessTasks = await Task.createQueryBuilder('task')
-			.where('task.projectId = :id', {
-				id: existingproject.id,
-			})
-			.andWhere('task.status = :status', {
-				status: enumStatus.COMPLETED,
-			})
-			.getCount()
+		console.log(countSuccessTasks);
+		
 
-		if (countSuccessTasks !== 0 && countTasks !== 0) {
-			existingproject.Progress = (countSuccessTasks / countTasks) * 100
-			await existingproject.save()
-		}
+		// if (countSuccessTasks !== 0 && countTasks !== 0) {
+		// 	existingproject.Progress = (countSuccessTasks / countTasks) * 100
+		// 	await existingproject.save()
+		// }
 
 		return res.status(200).json({
 			code: 200,

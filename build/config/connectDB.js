@@ -27,11 +27,12 @@ const Project_File_1 = require("../entities/Project_File");
 const Task_1 = require("../entities/Task");
 const Task_Category_1 = require("../entities/Task_Category");
 const Task_File_1 = require("../entities/Task_File");
-const Salary_1 = require("../entities/Salary");
 const Notice_Board_1 = require("../entities/Notice_Board");
 const Project_Discussion_Category_1 = require("../entities/Project_Discussion_Category");
 const Project_Discussion_Reply_1 = require("../entities/Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("../entities/Project_Discussion_Room");
+const Salary_1 = require("../entities/Salary");
+const Status_1 = require("../entities/Status");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -73,6 +74,7 @@ const connectDB = () => {
             Project_Discussion_Reply_1.Project_discussion_reply,
             Project_Discussion_Room_1.Project_Discussion_Room,
             Salary_1.Salary,
+            Status_1.Status
         ],
     })
         .then(() => {

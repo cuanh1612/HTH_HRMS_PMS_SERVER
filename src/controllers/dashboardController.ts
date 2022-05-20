@@ -4,7 +4,6 @@ import { Client } from '../entities/Client'
 import { Employee } from '../entities/Employee'
 import { Leave } from '../entities/Leave'
 import { Project } from '../entities/Project'
-import { Task } from '../entities/Task'
 import handleCatchError from '../utils/catchAsyncError'
 
 const dashBoardController = {
@@ -22,11 +21,11 @@ const dashBoardController = {
 				status: 'Pending',
 			},
 		})
-		const pendingTasks = await Task.find({
-			where: {
-				status: 'Incomplete' || 'To Do' || 'Doing' || 'Completed',
-			},
-		})
+		// const pendingTasks = await Task.find({
+		// 	where: {
+		// 		status: 'Incomplete' || 'To Do' || 'Doing' || 'Completed',
+		// 	},
+		// })
 
 		const overview = {
 			countClients,
@@ -34,7 +33,7 @@ const dashBoardController = {
 			countProjects,
 			countAttendancesToday,
 			pendingLeaves,
-			pendingTasks,
+			// pendingTasks,np
 		}
 
 		return res.status(200).json({
