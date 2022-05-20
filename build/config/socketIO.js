@@ -68,6 +68,30 @@ const createSocketServer = (httpServer) => {
         socket.on('newFileProject', (projectId) => {
             socket.in('roomFileProject' + projectId).emit('getNewFileProject');
         });
+        //join room project
+        socket.on('joinRoomProject', (projectId) => {
+            socket.join('roomProject' + projectId);
+        });
+        //leave room project
+        socket.on('leaveRoomProject', (projectId) => {
+            socket.leave('roomProject' + projectId);
+        });
+        //emit user join room project when have new discussion room
+        socket.on('newProjectDiscussion', (projectId) => {
+            socket.in('roomProject' + projectId).emit('getNewProjectDiscussion');
+        });
+        //join room project discussion
+        socket.on('joinRoomProjectDiscussion', (projectDiscussionId) => {
+            socket.join('roomProjectDiscussion' + projectDiscussionId);
+        });
+        //leave room project discussion
+        socket.on('leaveRoomProjectDiscussison', (projectDiscussionId) => {
+            socket.leave('roomProjectDiscussion' + projectDiscussionId);
+        });
+        //emit user join room project when have new discussion reply
+        socket.on('newProjectDiscussionReply', (projectDiscussionId) => {
+            socket.in('roomProjectDiscussion' + projectDiscussionId).emit('getNewProjectDiscussionReply');
+        });
     });
 };
 exports.default = createSocketServer;

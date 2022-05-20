@@ -8,6 +8,7 @@ const projectDiscussionReplyController_1 = __importDefault(require("../controlle
 const projectDiscussionReplyRouter = express_1.default.Router();
 projectDiscussionReplyRouter.post('/', projectDiscussionReplyController_1.default.create);
 projectDiscussionReplyRouter.get('/project-discussion-room/:projectDiscussionRoomId', projectDiscussionReplyController_1.default.getByProjectDiscussionRoom);
+projectDiscussionReplyRouter.get('/:reply_id', projectDiscussionReplyController_1.default.getDetail);
 projectDiscussionReplyRouter.delete('/:reply_id', projectDiscussionReplyController_1.default.delete);
 projectDiscussionReplyRouter.put('/:reply_id', projectDiscussionReplyController_1.default.update);
 exports.default = projectDiscussionReplyRouter;

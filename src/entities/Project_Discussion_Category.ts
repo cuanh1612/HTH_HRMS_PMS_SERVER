@@ -17,7 +17,7 @@ export class Project_discussion_category extends BaseEntity {
 	@Column()
 	name!: string
 
-	@Column()
+	@Column({default: "#16813D"})
 	color: string
 
 	@OneToMany(

@@ -149,11 +149,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "conversations", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Project_Discussion_Room_1.Project_Discussion_Room),
-    (0, typeorm_1.JoinTable)({ name: 'project_discussion_room_employee' }),
-    __metadata("design:type", Array)
-], Employee.prototype, "project_discussion_rooms", void 0);
-__decorate([
     (0, typeorm_1.OneToMany)(() => Project_Discussion_Reply_1.Project_discussion_reply, (project_discussion_reply) => project_discussion_reply.employee),
     __metadata("design:type", Array)
 ], Employee.prototype, "project_discussion_replies", void 0);
@@ -184,6 +179,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Salary_1.Salary, (salary) => salary.employee),
     __metadata("design:type", Array)
 ], Employee.prototype, "salaries", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Project_Discussion_Room_1.Project_Discussion_Room, (project_discussion_room) => project_discussion_room.assigner),
+    __metadata("design:type", Array)
+], Employee.prototype, "project_discussion_rooms", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)

@@ -23,7 +23,6 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.project_discussion_replies, {
         onDelete: 'CASCADE',
         eager: true,
-        nullable: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Employee_1.Employee)
@@ -31,7 +30,6 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Project_Discussion_Room_1.Project_Discussion_Room, (project_discussion_room) => project_discussion_room.project_discussion_replies, {
         onDelete: 'CASCADE',
-        nullable: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Project_Discussion_Room_1.Project_Discussion_Room)

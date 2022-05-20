@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Project_Discussion_Room = void 0;
 const typeorm_1 = require("typeorm");
+const Employee_1 = require("./Employee");
 const Project_1 = require("./Project");
 const Project_Discussion_Category_1 = require("./Project_Discussion_Category");
 const Project_Discussion_Reply_1 = require("./Project_Discussion_Reply");
@@ -21,7 +22,9 @@ __decorate([
     __metadata("design:type", Number)
 ], Project_Discussion_Room.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Project_Discussion_Reply_1.Project_discussion_reply, (project_discussion_reply) => project_discussion_reply.project_discussion_room),
+    (0, typeorm_1.OneToMany)(() => Project_Discussion_Reply_1.Project_discussion_reply, (project_discussion_reply) => project_discussion_reply.project_discussion_room, {
+        eager: true,
+    }),
     __metadata("design:type", Array)
 ], Project_Discussion_Room.prototype, "project_discussion_replies", void 0);
 __decorate([
@@ -34,10 +37,18 @@ __decorate([
     __metadata("design:type", Project_Discussion_Category_1.Project_discussion_category)
 ], Project_Discussion_Room.prototype, "project_discussion_category", void 0);
 __decorate([
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.project_discussion_rooms, {
+        onDelete: 'CASCADE',
+        eager: true,
+        nullable: true,
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Employee_1.Employee)
+], Project_Discussion_Room.prototype, "assigner", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Project_1.Project, (project) => project.project_discussion_rooms, {
         onDelete: 'CASCADE',
         nullable: true,
-        eager: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Project_1.Project)

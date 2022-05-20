@@ -16,14 +16,12 @@ export class Project_discussion_reply extends BaseEntity {
 	@ManyToOne(() => Employee, (employee) => employee.project_discussion_replies, {
 		onDelete: 'CASCADE',
 		eager: true,
-		nullable: true,
 	})
 	@JoinColumn()
 	employee: Employee
 
 	@ManyToOne(() => Project_Discussion_Room, (project_discussion_room) => project_discussion_room.project_discussion_replies, {
 		onDelete: 'CASCADE',
-		nullable: true,
 	})
 	@JoinColumn()
 	project_discussion_room: Project_Discussion_Room

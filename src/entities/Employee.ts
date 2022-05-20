@@ -127,10 +127,6 @@ export class Employee extends BaseEntity {
 	@JoinTable({ name: 'conversation_employee' })
 	conversations: Conversation[];
 
-	@ManyToMany(() => Project_Discussion_Room)
-	@JoinTable({ name: 'project_discussion_room_employee' })
-	project_discussion_rooms: Project_Discussion_Room[];
-
 	@OneToMany(() => Project_discussion_reply, (project_discussion_reply)=> project_discussion_reply.employee)
 	project_discussion_replies: Project_discussion_reply[]
 	
@@ -155,6 +151,10 @@ export class Employee extends BaseEntity {
 
 	@OneToMany(() => Salary, (salary) => salary.employee)
 	salaries: Salary[]
+
+	@OneToMany(() => Project_Discussion_Room, (project_discussion_room) => project_discussion_room.assigner)
+	project_discussion_rooms: Project_Discussion_Room[]
+
 
 	@Column({ default: 0 })
 	token_version: number
