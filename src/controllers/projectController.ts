@@ -126,7 +126,8 @@ const projectController = {
 			title: 'Incomplete',
 			root: true,
 			project: createdProject,
-			index: 0
+			index: 0,
+			color: 'red'
 
 		}).save()
 
@@ -136,7 +137,9 @@ const projectController = {
 			title: 'Complete',
 			root: true,
 			project: createdProject,
-			index: 1
+			index: 1,
+			color: 'green'
+
 
 		}).save()
 

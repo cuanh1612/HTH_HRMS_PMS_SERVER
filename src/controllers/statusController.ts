@@ -68,7 +68,7 @@ const statusController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            status: findbyproject,
+            statuses: findbyproject,
             message: 'Get all status success'
         })
 
