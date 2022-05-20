@@ -51,6 +51,7 @@ const statusController = {
                 tasks: true,
             },
             order: {
+                index: 'ASC',              
                 tasks: {
                     index: 'ASC'
                 }
