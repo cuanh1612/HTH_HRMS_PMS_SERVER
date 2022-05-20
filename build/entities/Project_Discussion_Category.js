@@ -23,7 +23,7 @@ __decorate([
     __metadata("design:type", String)
 ], Project_discussion_category.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ default: "#16813D" }),
     __metadata("design:type", String)
 ], Project_discussion_category.prototype, "color", void 0);
 __decorate([

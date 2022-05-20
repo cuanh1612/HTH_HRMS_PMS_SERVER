@@ -24,23 +24,23 @@ const projectDiscussionReplyController = {
         var _a;
         const dataNewDiscussionReply = req.body;
         const { project, project_discussion_room } = dataNewDiscussionReply;
-        //check project discussion room 
+        //check project discussion room
         const existingProjectDiscussionRoom = yield Project_Discussion_Room_1.Project_Discussion_Room.findOne({
             where: {
-                id: project_discussion_room
-            }
+                id: project_discussion_room,
+            },
         });
         if (!existingProjectDiscussionRoom)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Project discussion room does not exist in the system'
+                message: 'Project discussion room does not exist in the system',
             });
         //check project exists
         const existingProject = yield Project_1.Project.findOne({
             where: {
-                id: project
-            }
+                id: project,
+            },
         });
         if (!existingProject)
             return res.status(400).json({
@@ -67,19 +67,24 @@ const projectDiscussionReplyController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'User does not exist in the system'
+                message: 'User does not exist in the system',
             });
         if (!existingProject.employees.some((employee) => employee.id === existingUser.id))
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Employee does not exist in the discussion room'
+                message: 'Employee does not exist in the discussion room',
             });
-        const createdDiscussionReply = yield Project_Discussion_Reply_1.Project_discussion_reply.create(Object.assign({}, dataNewDiscussionReply)).save();
+        console.log(existingProject);
+        yield Project_Discussion_Reply_1.Project_discussion_reply.create({
+            reply: dataNewDiscussionReply.reply,
+            employee: existingUser,
+            project_discussion_room: existingProjectDiscussionRoom,
+        }).save();
         return res.status(200).json({
             code: 200,
             success: true,
-            projectDiscussionReply: createdDiscussionReply,
+            message: 'Reply successfully',
         });
     })),
     getByProjectDiscussionRoom: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -88,27 +93,27 @@ const projectDiscussionReplyController = {
         const existingprojectDiscussionRoom = yield Project_Discussion_Room_1.Project_Discussion_Room.findOne({
             where: {
                 id: Number(projectDiscussionRoomId),
-            }
+            },
         });
         if (!existingprojectDiscussionRoom)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Project discussion roome does not exist in the system'
+                message: 'Project discussion roome does not exist in the system',
             });
         const replies = yield Project_Discussion_Reply_1.Project_discussion_reply.find({
             where: {
-                project_discussion_room: { id: existingprojectDiscussionRoom.id }
+                project_discussion_room: { id: existingprojectDiscussionRoom.id },
             },
             order: {
-                createdAt: 'ASC',
+                createdAt: 'DESC',
             },
         });
         return res.status(200).json({
             code: 200,
             success: true,
-            replies,
-            message: 'Get replies by project discussion success'
+            projectDiscussionReplies: replies,
+            message: 'Get replies by project discussion success',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -117,14 +122,14 @@ const projectDiscussionReplyController = {
         //check existing reply
         const existingReply = yield Project_Discussion_Reply_1.Project_discussion_reply.findOne({
             where: {
-                id: Number(reply_id)
-            }
+                id: Number(reply_id),
+            },
         });
         if (!existingReply)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Project discussion reply does not exist in the system'
+                message: 'Project discussion reply does not exist in the system',
             });
         //check exist current user
         const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
@@ -145,7 +150,7 @@ const projectDiscussionReplyController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'User does not exist in the system'
+                message: 'User does not exist in the system',
             });
         //check author reply
         if (existingUser.id === existingReply.employee.id) {
@@ -155,13 +160,13 @@ const projectDiscussionReplyController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'You not authorization action this request'
+                message: 'You not authorization action this request',
             });
         }
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete discussion reply success'
+            message: 'Delete discussion reply success',
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -171,14 +176,14 @@ const projectDiscussionReplyController = {
         //check existing reply
         const existingReply = yield Project_Discussion_Reply_1.Project_discussion_reply.findOne({
             where: {
-                id: Number(reply_id)
-            }
+                id: Number(reply_id),
+            },
         });
         if (!existingReply)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Project discussion reply does not exist in the system'
+                message: 'Project discussion reply does not exist in the system',
             });
         //check exist current user
         const token = (_c = req.headers.authorization) === null || _c === void 0 ? void 0 : _c.split(' ')[1];
@@ -199,7 +204,7 @@ const projectDiscussionReplyController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'User does not exist in the system'
+                message: 'User does not exist in the system',
             });
         //check author reply
         if (existingUser.id === existingReply.employee.id) {
@@ -210,7 +215,7 @@ const projectDiscussionReplyController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'You not authorization action this request'
+                message: 'You not authorization action this request',
             });
         }
         return res.status(200).json({
@@ -218,6 +223,57 @@ const projectDiscussionReplyController = {
             success: true,
             message: 'Update reply success',
         });
-    }))
+    })),
+    getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _d;
+        const { reply_id } = req.params;
+        //check existing reply
+        const existingReply = yield Project_Discussion_Reply_1.Project_discussion_reply.findOne({
+            where: {
+                id: Number(reply_id),
+            },
+        });
+        if (!existingReply)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project discussion reply does not exist in the system',
+            });
+        //check exist current user
+        const token = (_d = req.headers.authorization) === null || _d === void 0 ? void 0 : _d.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
+        //check author reply
+        if (existingUser.id != existingReply.employee.id) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You not authorization action this request',
+            });
+        }
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            projectDiscussionReply: existingReply,
+            message: 'Update reply success',
+        });
+    })),
 };
 exports.default = projectDiscussionReplyController;
