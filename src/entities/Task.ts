@@ -28,7 +28,7 @@ export class Task extends BaseEntity {
     deadline: Date
 
     @Column()
-    index: Number
+    index: number
 
     @ManyToOne(() => Task_Category, (task_Category) => task_Category.tasks, {
         onDelete: 'SET NULL',
