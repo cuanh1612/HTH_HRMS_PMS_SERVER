@@ -45,15 +45,20 @@ const statusController = {
     //get all status by project
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { projectId } = req.params;
-        const findbyproject = yield Project_1.Project.findOne({
+        const findbyproject = yield Status_1.Status.find({
             where: {
-                id: Number(projectId)
-            },
-            relations: {
-                status: {
-                    tasks: true
+                project: {
+                    id: Number(projectId)
                 }
             },
+            relations: {
+                tasks: true,
+            },
+            order: {
+                tasks: {
+                    index: 'ASC'
+                }
+            }
         });
         if (!findbyproject)
             return res.status(400).json({
@@ -99,6 +104,7 @@ const statusController = {
             message: 'Update Status success'
         });
     })),
+    //Delete status
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const existingstatus = yield Status_1.Status.findOne({
@@ -126,8 +132,10 @@ const statusController = {
             message: 'Delete status success',
         });
     })),
+    //Change position of status 
     changeposition: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id1, id2 } = req.body;
+        // if(id2 > id1){
         const existingstatus = yield Status_1.Status.findOne({
             where: {
                 id: Number(id2)
@@ -137,9 +145,9 @@ const statusController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'falseasdfasdf',
+                message: 'Either status does not exist in the system',
             });
-        const allstatus = yield Status_1.Status.createQueryBuilder('status').where('status.index > :index', {
+        const allstatus = yield Status_1.Status.createQueryBuilder('status').where('status.index >= :index', {
             index: existingstatus.index
         }).getMany();
         if (allstatus)
@@ -156,13 +164,54 @@ const statusController = {
         yield Status_1.Status.update({
             id: id1
         }, {
-            index: Number(existingstatus.index) + 1
+            index: Number(existingstatus.index)
         });
         return res.status(200).json({
             code: 200,
             success: true,
             message: 'change position of status success'
         });
+        // }
+        // if(id1>id2)
+        // {
+        //     const existingstatus = await Status.findOne({
+        //         where: {
+        //             id: Number(id2)
+        //         }
+        //     })
+        //     if (!existingstatus)
+        //         return res.status(400).json({
+        //             code: 400,
+        //             success: false,
+        //             message: 'Either status does not exist in the system',
+        //         })
+        //     const allstatus = await Status.createQueryBuilder('status').where('status.index >= :index', {
+        //         index: existingstatus.index
+        //     }).getMany()
+        //     if (allstatus)
+        //         await Promise.all(
+        //             allstatus.map(async (status) => {
+        //                 return new Promise(async (resolve) => {
+        //                     const result = Status.update({
+        //                         id: Number(status.id)
+        //                     }, {
+        //                         index: Number(status.index) + 1
+        //                     })
+        //                     resolve(result)
+        //                 })
+        //             })
+        //         )
+        //     await Status.update({
+        //         id: id1
+        //     }, {
+        //         index: Number(existingstatus.index) 
+        //     })
+        //     return res.status(200).json({
+        //         code: 200,
+        //         success: true,
+        //         message: 'change position of status success'
+        //     })
+        // }
     }))
 };
 exports.default = statusController;

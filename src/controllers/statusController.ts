@@ -41,16 +41,22 @@ const statusController = {
     getAll: handleCatchError(async (req: Request, res: Response) => {
         const { projectId } = req.params
 
-        const findbyproject = await Project.findOne({
-            where: {
-                id: Number(projectId)
-            },
-            relations: {
-                status: {
-                    tasks: true
+        const findbyproject = await Status.find({
+            where:{
+                project: {
+                    id: Number(projectId)
                 }
             },
+            relations:{
+                tasks: true,
+            },
+            order: {
+                tasks: {
+                    index: 'ASC'
+                }
+            }
         })
+
 
         if (!findbyproject)
             return res.status(400).json({
@@ -109,6 +115,7 @@ const statusController = {
 
     }),
 
+    //Delete status
     delete: handleCatchError(async (req: Request, res: Response) => {
         const { id } = req.params
 
@@ -142,57 +149,102 @@ const statusController = {
 
     }),
 
+    //Change position of status 
     changeposition: handleCatchError(async (req: Request, res: Response) => {
         const { id1, id2 } = req.body
 
+        // if(id2 > id1){
 
-        const existingstatus = await Status.findOne({
-            where: {
-                id: Number(id2)
-            }
-        })
-
-        if (!existingstatus)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'falseasdfasdf',
+            const existingstatus = await Status.findOne({
+                where: {
+                    id: Number(id2)
+                }
+            })
+    
+            if (!existingstatus)
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Either status does not exist in the system',
+                })
+    
+            const allstatus = await Status.createQueryBuilder('status').where('status.index >= :index', {
+                index: existingstatus.index
+            }).getMany()
+    
+            if (allstatus)
+                await Promise.all(
+                    allstatus.map(async (status) => {
+                        return new Promise(async (resolve) => {
+                            const result = Status.update({
+                                id: Number(status.id)
+                            }, {
+                                index: Number(status.index) + 1
+                            })
+                            resolve(result)
+                        })
+                    })
+                )
+    
+            await Status.update({
+                id: id1
+            }, {
+                index: Number(existingstatus.index) 
+            })
+    
+            return res.status(200).json({
+                code: 200,
+                success: true,
+                message: 'change position of status success'
             })
 
-        const allstatus = await Status.createQueryBuilder('status').where('status.index > :index', {
-            index: existingstatus.index
-        }).getMany()
+        // }
+        // if(id1>id2)
+        // {
+        //     const existingstatus = await Status.findOne({
+        //         where: {
+        //             id: Number(id2)
+        //         }
+        //     })
+    
+        //     if (!existingstatus)
+        //         return res.status(400).json({
+        //             code: 400,
+        //             success: false,
+        //             message: 'Either status does not exist in the system',
+        //         })
+    
+        //     const allstatus = await Status.createQueryBuilder('status').where('status.index >= :index', {
+        //         index: existingstatus.index
+        //     }).getMany()
+    
+        //     if (allstatus)
+        //         await Promise.all(
+        //             allstatus.map(async (status) => {
+        //                 return new Promise(async (resolve) => {
+        //                     const result = Status.update({
+        //                         id: Number(status.id)
+        //                     }, {
+        //                         index: Number(status.index) + 1
+        //                     })
+        //                     resolve(result)
+        //                 })
+        //             })
+        //         )
+    
+        //     await Status.update({
+        //         id: id1
+        //     }, {
+        //         index: Number(existingstatus.index) 
+        //     })
+    
+        //     return res.status(200).json({
+        //         code: 200,
+        //         success: true,
+        //         message: 'change position of status success'
+        //     })
 
-        if (allstatus)
-            await Promise.all(
-                allstatus.map(async (status) => {
-                    return new Promise(async (resolve) => {
-                        const result = Status.update({
-                            id: Number(status.id)
-                        }, {
-                            index: Number(status.index) + 1
-                        })
-                        resolve(result)
-                    })
-                })
-            )
-
-
-
-
-        await Status.update({
-            id: id1
-        }, {
-            index: Number(existingstatus.index) + 1
-        })
-
-
-
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'change position of status success'
-        })
+        // }
 
 
 
