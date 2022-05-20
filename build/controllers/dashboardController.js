@@ -20,12 +20,7 @@ const Project_1 = require("../entities/Project");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const dashBoardController = {
     overview: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const countClients = new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
-            const value = yield Client_1.Client.createQueryBuilder('client').getCount();
-            if (value)
-                resolve(value);
-            reject();
-        }));
+        const countClients = yield Client_1.Client.createQueryBuilder('client').getCount();
         const countEmployees = yield Employee_1.Employee.createQueryBuilder('employee').getCount();
         const countProjects = yield Project_1.Project.createQueryBuilder('project').getCount();
         const countAttendancesToday = yield Attendance_1.Attendance.createQueryBuilder('attendance')

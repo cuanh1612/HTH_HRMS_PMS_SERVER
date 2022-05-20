@@ -25,11 +25,16 @@ import { Project_file } from '../entities/Project_File'
 import { Task } from '../entities/Task'
 import { Task_Category } from '../entities/Task_Category'
 import { Task_file } from '../entities/Task_File'
+import { Salary } from '../entities/Salary'
+import { Notice_board } from '../entities/Notice_Board'
 import { Project_discussion_category } from '../entities/Project_Discussion_Category'
 import { Project_discussion_reply } from '../entities/Project_Discussion_Reply'
 import { Project_Discussion_Room } from '../entities/Project_Discussion_Room'
+<<<<<<< HEAD
 import { Salary } from '../entities/Salary'
 import { Status } from '../entities/Status'
+=======
+>>>>>>> d829f648c916c7a45f65c93652b6676eb8abe854
 
 const connectDB = () => {
 	createConnection({
@@ -66,6 +71,8 @@ const connectDB = () => {
 			Task,
 			Task_Category,
 			Task_file,
+			Salary,
+			Notice_board,
 			Project_discussion_category,
 			Project_discussion_reply,
 			Project_Discussion_Room,

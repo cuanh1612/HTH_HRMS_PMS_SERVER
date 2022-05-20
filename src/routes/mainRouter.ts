@@ -7,10 +7,9 @@ import clientSubCategoryRouter from './clientSubCategoryRouter'
 import contractFileRouter from './contractFileRouter'
 import contractRouter from './contractRouter'
 import contractTypeRouter from './contractTypeRouter'
-import projectCategoryRouter from './projectCategoryRouter'
-import projectRouter from './projectRouter'
 import conversationReplyRouter from './conversationReplyRouter'
 import conversationRouter from './conversationRouter'
+import dashboardRouter from './dashboardRouter'
 import departmentRouter from './departmentRouter'
 import designationRouter from './designationRouter'
 import discussionRouter from './discussionRouter'
@@ -19,14 +18,16 @@ import eventRouter from './eventRouter'
 import holidayRouter from './holidayRouter'
 import leaveRouter from './leaveRouter'
 import leaveTypeRouter from './leaveTypeRouter'
+import noticeBoardRouter from './noticeBoardRouter'
+import projectCategoryRouter from './projectCategoryRouter'
+import projectFileRouter from './projectFileRouter'
+import projectRouter from './projectRouter'
+import salaryRouter from './salaryRouter'
 import signRouter from './signRouter'
 import taskCategoryRouter from './taskCategoryRouter copy'
-import projectFileRouter from './projectFileRouter'
 import taskFileRouter from './taskFileRouter copy'
 import projectDiscussionCategoryRouter from './projectDiscussionCategoryRouter'
 import projectDiscussionReplyRouter from './projectDiscussionReplyRouter'
-import dashboardRouter from './dashboardRouter'
-import salaryRouter from './salaryRouter'
 import projectDiscussionRoomRouter from './projectDiscussionRoomRouter'
 import statusRouter from './statusRouter'
 import taskRouter from './taskRouter'
@@ -88,6 +89,8 @@ function mainRouter(app: core.Express) {
 
 	app.use('/api/salaries', salaryRouter)
 
+	app.use('/api/notice-boards', noticeBoardRouter)
+	
 	app.use('/api/project-discussion-rooms', projectDiscussionRoomRouter)
 
 	app.use('/api/status/', statusRouter)

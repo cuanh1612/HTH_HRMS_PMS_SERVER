@@ -27,10 +27,11 @@ const Project_File_1 = require("../entities/Project_File");
 const Task_1 = require("../entities/Task");
 const Task_Category_1 = require("../entities/Task_Category");
 const Task_File_1 = require("../entities/Task_File");
+const Salary_1 = require("../entities/Salary");
+const Notice_Board_1 = require("../entities/Notice_Board");
 const Project_Discussion_Category_1 = require("../entities/Project_Discussion_Category");
 const Project_Discussion_Reply_1 = require("../entities/Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("../entities/Project_Discussion_Room");
-const Salary_1 = require("../entities/Salary");
 const Status_1 = require("../entities/Status");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
@@ -67,6 +68,8 @@ const connectDB = () => {
             Task_1.Task,
             Task_Category_1.Task_Category,
             Task_File_1.Task_file,
+            Salary_1.Salary,
+            Notice_Board_1.Notice_board,
             Project_Discussion_Category_1.Project_discussion_category,
             Project_Discussion_Reply_1.Project_discussion_reply,
             Project_Discussion_Room_1.Project_Discussion_Room,

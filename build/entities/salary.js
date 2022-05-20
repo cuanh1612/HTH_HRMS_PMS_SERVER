@@ -9,17 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Salary = exports.enumTypeSalary = exports.enumCurrency = void 0;
+exports.Salary = exports.enumTypeSalary = void 0;
 const typeorm_1 = require("typeorm");
 const Employee_1 = require("./Employee");
-var enumCurrency;
-(function (enumCurrency) {
-    enumCurrency["USD"] = "USD";
-    enumCurrency["GBP"] = "GBP";
-    enumCurrency["EUR"] = "EUR";
-    enumCurrency["INR"] = "INR";
-    enumCurrency["VND"] = "VND";
-})(enumCurrency = exports.enumCurrency || (exports.enumCurrency = {}));
 var enumTypeSalary;
 (function (enumTypeSalary) {
     enumTypeSalary["INCREMENT"] = "Increment";

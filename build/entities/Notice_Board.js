@@ -9,40 +9,44 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Project_discussion_category = void 0;
+exports.Notice_board = exports.enumNoticeTo = void 0;
 const typeorm_1 = require("typeorm");
-const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
-let Project_discussion_category = class Project_discussion_category extends typeorm_1.BaseEntity {
+var enumNoticeTo;
+(function (enumNoticeTo) {
+    enumNoticeTo["CLIENTS"] = "Clients";
+    enumNoticeTo["EMPLOYEES"] = "Employees";
+})(enumNoticeTo = exports.enumNoticeTo || (exports.enumNoticeTo = {}));
+let Notice_board = class Notice_board extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Project_discussion_category.prototype, "id", void 0);
+], Notice_board.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'enum', enum: enumNoticeTo, default: enumNoticeTo.CLIENTS }),
+    __metadata("design:type", String)
+], Notice_board.prototype, "notice_to", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Project_discussion_category.prototype, "name", void 0);
+], Notice_board.prototype, "heading", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Project_discussion_category.prototype, "color", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => Project_Discussion_Room_1.Project_Discussion_Room, (project_discussion_room) => project_discussion_room.project_discussion_category),
-    __metadata("design:type", Array)
-], Project_discussion_category.prototype, "project_discussion_rooms", void 0);
+], Notice_board.prototype, "details", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], Project_discussion_category.prototype, "createdAt", void 0);
+], Notice_board.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], Project_discussion_category.prototype, "updatedAt", void 0);
-Project_discussion_category = __decorate([
+], Notice_board.prototype, "updatedAt", void 0);
+Notice_board = __decorate([
     (0, typeorm_1.Entity)()
-], Project_discussion_category);
-exports.Project_discussion_category = Project_discussion_category;
+], Notice_board);
+exports.Notice_board = Notice_board;

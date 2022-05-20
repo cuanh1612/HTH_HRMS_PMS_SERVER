@@ -44,20 +44,82 @@ const salaryController = {
 			code: 200,
 			success: true,
 			salary: createdSalary,
-			message: 'Create new Project files success successfully',
+			message: 'Create new Project files successfully',
+		})
+	}),
+
+	delete: handleCatchError(async (req: Request, res: Response) => {
+		const { salaryId } = req.params
+
+		//Check exist salary
+		const existingSalary = await Salary.findOne({
+			where: {
+				id: Number(salaryId),
+			},
+		})
+
+		if (!existingSalary)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Salary does not exist in the system',
+			})
+
+		//Delete salary
+		await existingSalary.remove()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Deleted salary successfully',
 		})
 	}),
 
 	getAll: handleCatchError(async (_: Request, res: Response) => {
 		const salaries = await Employee.createQueryBuilder('employee')
 			.leftJoinAndSelect('employee.salaries', 'salary')
+			.orderBy('salary.date', 'DESC')
 			.getMany()
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-            salaries,
+			salaries,
 			message: 'Create new Project files success successfully',
+		})
+	}),
+
+	getHistoryByUser: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check exist employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Employee does not exist in the system',
+			})
+
+		//Get salary history of employee
+		const historySalary = await Employee.createQueryBuilder('employee')
+			.where('employee.id = :id', {
+				id: Number(employeeId),
+			})
+			.leftJoinAndSelect('employee.salaries', 'salary')
+			.orderBy('salary.date', 'DESC')
+			.getOne()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			historySalary,
+			message: 'Create new Project files successfully',
 		})
 	}),
 }
