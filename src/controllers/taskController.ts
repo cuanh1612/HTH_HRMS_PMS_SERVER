@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
 import { Project } from '../entities/Project'
+import { Status } from '../entities/Status'
 import { Task } from '../entities/Task'
 import { Task_Category } from '../entities/Task_Category'
 import { Task_file } from '../entities/Task_File'
@@ -18,7 +19,7 @@ const taskController = {
     //Create new task
     create: handleCatchError(async (req: Request, res: Response) =>{
         const dataNewTask: createOrUpdateTaskPayload = req.body
-        const { task_category, project, employees, task_files} = dataNewTask
+        const { task_category, project, employees, task_files, status} = dataNewTask
         let taskEmployees: Employee[] = []
     
         //check valid 
@@ -31,7 +32,20 @@ const taskController = {
                 message: messageValid,
             })
        
-      
+        //check exist status
+        const existingStatus = await Status.findOne({
+            where: {
+                id: status,
+            },
+        })
+        
+        if(!existingStatus)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Status does not existing'
+            })
+
         //check exist project
         const existingproject = await Project.findOne({
             where: {
@@ -49,13 +63,16 @@ const taskController = {
                 id: task_category
             },
         })
-        if (!existingCategories)
+        if (!existingCategories) {
+
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Task Category does not exist in the system',
 			})
-            for (let index = 0; index < employees.length; index++) {
+        }
+        
+        for (let index = 0; index < employees.length; index++) {
                 const employee_id = employees[index]
                 const existingEmployee = await Employee.findOne({
                     where: {
@@ -72,12 +89,14 @@ const taskController = {
                 //check role employee
                 taskEmployees.push(existingEmployee)
             }
+
         //create taskfile
         const createdTask = await Task.create({
             ...dataNewTask,
             employees: taskEmployees
         }).save()
 
+        if(Array.isArray(task_files)){
             //create task files
             for (let index = 0; index < task_files.length; index++) {
                 const task_file = task_files[index];
@@ -86,6 +105,8 @@ const taskController = {
                     task: task_file
                 }).save()
             }
+        }
+        
         return res.status(200).json({
             code: 200,
             success: true,

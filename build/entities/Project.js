@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Project = exports.enumStatus = exports.enumCurrency = void 0;
+exports.Project = exports.enumCurrency = void 0;
 const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const Department_1 = require("./Department");
@@ -17,6 +17,7 @@ const Employee_1 = require("./Employee");
 const Project_Category_1 = require("./Project_Category");
 const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
 const Project_File_1 = require("./Project_File");
+const Status_1 = require("./Status");
 const Task_1 = require("./Task");
 var enumCurrency;
 (function (enumCurrency) {
@@ -26,14 +27,6 @@ var enumCurrency;
     enumCurrency["INR"] = "INR";
     enumCurrency["VND"] = "VND";
 })(enumCurrency = exports.enumCurrency || (exports.enumCurrency = {}));
-var enumStatus;
-(function (enumStatus) {
-    enumStatus["NOT_STARTED"] = "Not Started";
-    enumStatus["IN_PROGRESS"] = "In Progress";
-    enumStatus["ON_HOLD"] = "On Hold";
-    enumStatus["CANCELED"] = "Canceled";
-    enumStatus["FINISHED"] = "Finished";
-})(enumStatus = exports.enumStatus || (exports.enumStatus = {}));
 let Project = class Project extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -105,10 +98,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Project.prototype, "employees", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: enumStatus, default: enumStatus.NOT_STARTED }),
-    __metadata("design:type", String)
-], Project.prototype, "project_status", void 0);
-__decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: enumCurrency, default: enumCurrency.USD }),
     __metadata("design:type", String)
 ], Project.prototype, "currency", void 0);
@@ -138,6 +127,10 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Project.prototype, "project_discussion_rooms", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Status_1.Status, (status) => status.project),
+    __metadata("design:type", Status_1.Status)
+], Project.prototype, "status", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Task_1.Task, (task) => task.project, {
         onDelete: "SET NULL"

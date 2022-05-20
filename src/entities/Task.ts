@@ -1,16 +1,11 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Employee } from "./Employee";
 import { Project } from "./Project";
+import { Status } from "./Status";
 import { Task_Category } from "./Task_Category";
 import { Task_file } from "./Task_File";
 
 
-export enum enumStatus {
-    INCOMPLETE = 'Incomplete',
-    TO_DO = 'To Do',
-    DOING = 'Doing',
-    COMPLETED = 'Completed'
-}
 
 export enum enumPriority {
     LOW = 'Low',
@@ -32,6 +27,9 @@ export class Task extends BaseEntity {
     @Column({ type: 'date' })
     deadline: Date
 
+    @Column()
+    index: Number
+
     @ManyToOne(() => Task_Category, (task_Category) => task_Category.tasks, {
         onDelete: 'SET NULL',
         nullable: true
@@ -52,8 +50,6 @@ export class Task extends BaseEntity {
     @Column({ nullable: true})
     description: string
 
-    @Column({type: 'enum', enum: enumStatus, default: enumStatus.TO_DO})
-    status: string
 
     @Column({type: 'enum', enum: enumPriority, default: enumPriority.LOW})
     priority: string
@@ -73,6 +69,12 @@ export class Task extends BaseEntity {
     })
     task_files: Task_file[]
 
+    @ManyToOne(() => Status, (status) => status.tasks, {
+        onDelete: 'CASCADE',
+        nullable: true,
+    })
+    @JoinColumn()
+    status: Status
 
     @CreateDateColumn({
 		name: 'created_at',

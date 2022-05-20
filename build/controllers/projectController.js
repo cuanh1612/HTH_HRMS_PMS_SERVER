@@ -18,6 +18,7 @@ const Employee_1 = require("../entities/Employee");
 const Project_1 = require("../entities/Project");
 const Project_Category_1 = require("../entities/Project_Category");
 const Project_File_1 = require("../entities/Project_File");
+const Status_1 = require("../entities/Status");
 const Task_1 = require("../entities/Task");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const projectValid_1 = require("../utils/valid/projectValid");
@@ -104,6 +105,7 @@ const projectController = {
         }
         //create project file
         const createdProject = yield Project_1.Project.create(Object.assign(Object.assign({}, dataNewProject), { employees: projectEmployees })).save();
+        console.log('ngtientrong1');
         if (project_files) {
             //Create project files
             for (let index = 0; index < project_files.length; index++) {
@@ -111,6 +113,19 @@ const projectController = {
                 yield Project_File_1.Project_file.create(Object.assign(Object.assign({}, project_file), { project: createdProject })).save();
             }
         }
+        const status1 = yield Status_1.Status.create({
+            title: 'Incomplete',
+            root: true,
+            project: createdProject,
+            index: 0
+        }).save();
+        console.log('ngtientrong', status1);
+        yield Status_1.Status.create({
+            title: 'Complete',
+            root: true,
+            project: createdProject,
+            index: 1
+        }).save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -231,23 +246,18 @@ const projectController = {
                 message: 'Project does not exist in the system',
             });
         //Calculate percentage of project progress from completed tasks
-        const countTasks = yield Task_1.Task.createQueryBuilder('task')
+        const countSuccessTasks = yield Task_1.Task.createQueryBuilder("task")
+            .leftJoinAndSelect("status", "status", "task.statusId = status.id")
             .where('task.projectId = :id', {
             id: existingproject.id,
-        })
-            .getCount();
-        const countSuccessTasks = yield Task_1.Task.createQueryBuilder('task')
-            .where('task.projectId = :id', {
-            id: existingproject.id,
-        })
-            .andWhere('task.status = :status', {
-            status: Task_1.enumStatus.COMPLETED,
-        })
-            .getCount();
-        if (countSuccessTasks !== 0 && countTasks !== 0) {
-            existingproject.Progress = (countSuccessTasks / countTasks) * 100;
-            yield existingproject.save();
-        }
+        }).andWhere('status.title = :title', {
+            title: 'Complete',
+        }).getRawMany();
+        console.log(countSuccessTasks);
+        // if (countSuccessTasks !== 0 && countTasks !== 0) {
+        // 	existingproject.Progress = (countSuccessTasks / countTasks) * 100
+        // 	await existingproject.save()
+        // }
         return res.status(200).json({
             code: 200,
             success: true,

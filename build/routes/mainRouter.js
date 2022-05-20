@@ -32,6 +32,8 @@ const projectDiscussionReplyRouter_1 = __importDefault(require("./projectDiscuss
 const dashboardRouter_1 = __importDefault(require("./dashboardRouter"));
 const salaryRouter_1 = __importDefault(require("./salaryRouter"));
 const projectDiscussionRoomRouter_1 = __importDefault(require("./projectDiscussionRoomRouter"));
+const statusRouter_1 = __importDefault(require("./statusRouter"));
+const taskRouter_1 = __importDefault(require("./taskRouter"));
 function mainRouter(app) {
     app.use('/api/auth', authRouter_1.default);
     app.use('/api/employees', employeeRouter_1.default);
@@ -62,5 +64,7 @@ function mainRouter(app) {
     app.use('/api/dashboard', dashboardRouter_1.default);
     app.use('/api/salaries', salaryRouter_1.default);
     app.use('/api/project-discussion-rooms', projectDiscussionRoomRouter_1.default);
+    app.use('/api/status/', statusRouter_1.default);
+    app.use('/api/tasks', taskRouter_1.default);
 }
 exports.default = mainRouter;
