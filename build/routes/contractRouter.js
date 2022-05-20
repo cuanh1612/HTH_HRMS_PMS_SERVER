@@ -9,6 +9,7 @@ const checkAuth_1 = require("../utils/middleware/checkAuth");
 const contractRouter = express_1.default.Router();
 contractRouter.post('/', (0, checkAuth_1.checkAuth)(['Admin']), contractController_1.default.create);
 contractRouter.post('/public-link', (0, checkAuth_1.checkAuth)(['Admin']), contractController_1.default.publicLink);
+contractRouter.get('/public/:token', contractController_1.default.public);
 contractRouter.post('/delete-many', (0, checkAuth_1.checkAuth)(['Admin']), contractController_1.default.deleteMany);
 contractRouter.get('/', contractController_1.default.getAll);
 contractRouter.get('/:contractId', (0, checkAuth_1.checkAuth)(['Admin', 'Client']), contractController_1.default.getDetail);

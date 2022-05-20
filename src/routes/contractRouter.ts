@@ -8,6 +8,8 @@ contractRouter.post('/', checkAuth(['Admin']), contractController.create)
 
 contractRouter.post('/public-link', checkAuth(['Admin']), contractController.publicLink)
 
+contractRouter.get('/public/:token', contractController.public)
+
 contractRouter.post('/delete-many', checkAuth(['Admin']), contractController.deleteMany)
 
 contractRouter.get('/', contractController.getAll)

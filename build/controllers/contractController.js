@@ -63,28 +63,6 @@ const contractController = {
     })),
     publicLink: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { idContract } = req.body;
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
-        console.log('hoang', idContract);
         if (!idContract) {
             return res.status(400).json({
                 code: 400,
@@ -104,7 +82,7 @@ const contractController = {
                 message: 'Contract does not exists in the system',
             });
         const token = (0, jsonwebtoken_1.sign)({
-            id: idContract
+            id: idContract,
         }, `${process.env.CONTRACT_TOKEN_SECRET}`, {
             expiresIn: '10m',
         });
@@ -114,6 +92,36 @@ const contractController = {
             token,
             message: 'Created contract token successfully',
         });
+    })),
+    public: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { token } = req.params;
+        try {
+            const { id } = (0, jsonwebtoken_1.verify)(token, `${process.env.CONTRACT_TOKEN_SECRET}`);
+            const contract = yield Contract_1.Contract.findOne({
+                where: {
+                    id: Number(id),
+                },
+            });
+            if (!contract)
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Contract does not exists in the system',
+                });
+            return res.status(200).json({
+                code: 200,
+                success: true,
+                contract,
+                message: 'Created contract token successfully',
+            });
+        }
+        catch (error) {
+            return res.status(403).json({
+                code: 403,
+                success: false,
+                message: 'You not allow to see',
+            });
+        }
     })),
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewContract = req.body;
