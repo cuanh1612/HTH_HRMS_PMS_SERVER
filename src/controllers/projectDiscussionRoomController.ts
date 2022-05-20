@@ -88,6 +88,7 @@ const projectDiscussionRoomController = {
 
         const createRoom = await Project_Discussion_Room.create({
             ...dataNewPdiscussionRoom,
+            assigner: existingUser
         }).save()
 
 
@@ -111,8 +112,17 @@ const projectDiscussionRoomController = {
         const existingDiscussionroom = await Project_Discussion_Room.findOne({
             where: {
                 id: Number(id)
+            },
+            select: {
+                project: {
+                    id: true
+                }
+            },
+            relations: {
+                project: true
             }
         })
+        
 
         if (!existingDiscussionroom)
             return res.status(400).json({
@@ -120,6 +130,7 @@ const projectDiscussionRoomController = {
                 success: false,
                 message: ' Project discussion room does not exist in the system'
             })
+        
 
         //get project
         const existingProject = await Project.findOne({
@@ -222,6 +233,9 @@ const projectDiscussionRoomController = {
                 project: {
                     id: existingProject.id
                 }
+            },
+            order: {
+                createdAt: "DESC"
             }
         })
 

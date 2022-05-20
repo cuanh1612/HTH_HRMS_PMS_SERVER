@@ -12,7 +12,7 @@ export class Status extends BaseEntity {
     title: String
 
     @Column()
-    index: Number
+    index: number
 
     @ManyToOne(() => Project, (project) => project.status, {
         onDelete: 'CASCADE',

@@ -85,7 +85,7 @@ const projectDiscussionRoomController = {
                     message: 'Project Discussion Category does not exist in the system'
                 });
         }
-        const createRoom = yield Project_Discussion_Room_1.Project_Discussion_Room.create(Object.assign({}, dataNewPdiscussionRoom)).save();
+        const createRoom = yield Project_Discussion_Room_1.Project_Discussion_Room.create(Object.assign(Object.assign({}, dataNewPdiscussionRoom), { assigner: existingUser })).save();
         //create first reply
         yield Project_Discussion_Reply_1.Project_discussion_reply.create({
             reply: description,
@@ -105,6 +105,14 @@ const projectDiscussionRoomController = {
         const existingDiscussionroom = yield Project_Discussion_Room_1.Project_Discussion_Room.findOne({
             where: {
                 id: Number(id)
+            },
+            select: {
+                project: {
+                    id: true
+                }
+            },
+            relations: {
+                project: true
             }
         });
         if (!existingDiscussionroom)
@@ -198,6 +206,9 @@ const projectDiscussionRoomController = {
                 project: {
                     id: existingProject.id
                 }
+            },
+            order: {
+                createdAt: "DESC"
             }
         });
         return res.status(200).json({
