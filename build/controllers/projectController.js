@@ -118,14 +118,16 @@ const projectController = {
             title: 'Incomplete',
             root: true,
             project: createdProject,
-            index: 0
+            index: 0,
+            color: 'red'
         }).save();
         console.log('ngtientrong', status1);
         yield Status_1.Status.create({
             title: 'Complete',
             root: true,
             project: createdProject,
-            index: 1
+            index: 1,
+            color: 'green'
         }).save();
         return res.status(200).json({
             code: 200,
