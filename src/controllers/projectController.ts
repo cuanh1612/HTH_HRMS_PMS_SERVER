@@ -253,7 +253,11 @@ const projectController = {
 
 	//Get all project
 	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const projects = await Project.find()
+		const projects = await Project.find({relations:{
+			employees: true,
+			client: true,
+			
+		}})
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -267,6 +271,10 @@ const projectController = {
 		const { id } = req.params
 
 		const existingproject = await Project.findOne({
+			relations:{
+				client: true,
+				employees: true,
+			},
 			where: {
 				id: Number(id),
 			},
@@ -280,8 +288,6 @@ const projectController = {
 			})
 
 		//Calculate percentage of project progress from completed tasks
-	
-			
 		const countSuccessTasks = await Task.createQueryBuilder("task")
 		.leftJoinAndSelect("status", "status", "task.statusId = status.id")
 		.where('task.projectId = :id', {
