@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const typeorm_1 = require("typeorm");
 const Client_1 = require("../entities/Client");
 const Employee_1 = require("../entities/Employee");
 const Event_1 = require("../entities/Event");
@@ -107,8 +108,22 @@ const eventController = {
             message: 'Created new Events successfully',
         });
     })),
-    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const allEvent = yield Event_1.Event.find();
+    getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employee, client, name } = req.query;
+        var filter = {};
+        if (name)
+            filter.name = (0, typeorm_1.Like)(String(name));
+        if (employee)
+            filter.employees = {
+                id: Number(employee),
+            };
+        if (client)
+            filter.clients = {
+                id: Number(client),
+            };
+        const allEvent = yield Event_1.Event.find({
+            where: filter,
+        });
         return res.status(200).json({
             code: 200,
             success: true,

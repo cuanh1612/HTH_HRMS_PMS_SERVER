@@ -19,20 +19,33 @@ const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const leaveValid_1 = require("../utils/valid/leaveValid");
 const leaveController = {
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { date } = req.query;
-        let leaves = yield Leave_1.Leave.find();
+        const { date, employee, status, leaveType } = req.query;
+        var filter = {};
+        if (status)
+            filter.status = String(status);
+        if (employee)
+            filter.employee = {
+                id: Number(employee),
+            };
+        if (leaveType)
+            filter.leave_type = {
+                id: Number(leaveType),
+            };
+        let leaves = yield Leave_1.Leave.find({
+            where: filter,
+        });
         if (date) {
-            leaves = leaves.filter(leave => {
+            leaves = leaves.filter((leave) => {
                 const leaveDate = new Date(leave.date);
                 const dateFilter = new Date(date);
-                return leaveDate.getMonth() <= dateFilter.getMonth() &&
-                    leaveDate.getFullYear() <= dateFilter.getFullYear();
+                return (leaveDate.getMonth() <= dateFilter.getMonth() &&
+                    leaveDate.getFullYear() <= dateFilter.getFullYear());
             });
         }
         return res.status(200).json({
             code: 200,
             success: true,
-            leaves,
+            leaves: leaves || [],
             message: 'Get all leaves successfully',
         });
     })),
@@ -241,7 +254,7 @@ const leaveController = {
             reason: dataUpdateLeave.reason,
             duration: dataUpdateLeave.duration,
             leave_type: dataUpdateLeave.leave_type,
-            status: dataUpdateLeave.status
+            status: dataUpdateLeave.status,
         });
         return res.status(200).json({
             code: 200,
