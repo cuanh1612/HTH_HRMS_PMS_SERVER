@@ -23,12 +23,12 @@ const statusController = {
         const laststatus = yield Status_1.Status.findOne({
             where: {
                 project: {
-                    id: project
-                }
+                    id: project,
+                },
             },
             order: {
-                index: "DESC"
-            }
+                index: 'DESC',
+            },
         });
         if (!laststatus)
             return res.status(400).json({
@@ -38,8 +38,8 @@ const statusController = {
             });
         const existingproject = yield Project_1.Project.findOne({
             where: {
-                id: project
-            }
+                id: project,
+            },
         });
         if (!existingproject)
             return res.status(400).json({
@@ -51,13 +51,13 @@ const statusController = {
             project: existingproject,
             title: title,
             color: color,
-            index: laststatus.index + 1
+            index: laststatus.index + 1,
         }).save();
         return res.status(200).json({
             code: 200,
             success: true,
             message: 'Create status success',
-            result: status_result
+            result: status_result,
         });
     })),
     //get all status by project
@@ -171,7 +171,7 @@ const statusController = {
             const allstatus = yield Status_1.Status.createQueryBuilder('status')
                 .where('status.index >= :index and status.projectId = :projectId', {
                 index: status2.index,
-                projectId
+                projectId,
             })
                 .getMany();
             if (allstatus)
@@ -191,8 +191,9 @@ const statusController = {
                 .where('status.index > :index and status.index <= :index2 and status.projectId = :projectId', {
                 index: status1.index,
                 index2: status2.index,
-                projectId
-            }).getMany();
+                projectId,
+            })
+                .getMany();
             if (allstatus)
                 yield Promise.all(allstatus.map((status) => __awaiter(void 0, void 0, void 0, function* () {
                     return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
