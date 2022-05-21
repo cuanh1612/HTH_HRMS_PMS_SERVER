@@ -67,7 +67,9 @@ const statusController = {
 				},
 			},
 			relations: {
-				tasks: true,
+				tasks: {
+					employees: true
+				},
 			},
 			order: {
 				index: 'ASC',
