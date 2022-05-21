@@ -66,7 +66,7 @@ function mainRouter(app) {
     app.use('/api/salaries', salaryRouter_1.default);
     app.use('/api/notice-boards', noticeBoardRouter_1.default);
     app.use('/api/project-discussion-rooms', projectDiscussionRoomRouter_1.default);
-    app.use('/api/status/', statusRouter_1.default);
+    app.use('/api/status', statusRouter_1.default);
     app.use('/api/tasks', taskRouter_1.default);
 }
 exports.default = mainRouter;

@@ -93,7 +93,7 @@ function mainRouter(app: core.Express) {
 	
 	app.use('/api/project-discussion-rooms', projectDiscussionRoomRouter)
 
-	app.use('/api/status/', statusRouter)
+	app.use('/api/status', statusRouter)
 
 	app.use('/api/tasks', taskRouter)
 }

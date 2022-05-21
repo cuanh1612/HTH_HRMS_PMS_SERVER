@@ -6,34 +6,56 @@ import handleCatchError from '../utils/catchAsyncError'
 import { statusValid } from '../utils/valid/statusValid'
 
 const statusController = {
-	//create new status
-	create: handleCatchError(async (req: Request, res: Response) => {
-		const { project, title, color } = req.body
+    //create new status
+    create: handleCatchError(async (req: Request, res: Response) => {
+        const { project, title, color} = req.body
 
-		const existingproject = await Project.findOne({
-			where: {
-				id: project,
-			},
-		})
-		if (!existingproject)
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'Project does not exist in the system',
-			})
+        const laststatus = await Status.findOne({
+            where: {
+                project: {
+                    id: project
+                }
+            },
+            order: {
+                index: "DESC"
+            }
+        })
 
-		const status_result = await Status.create({
-			project: existingproject,
-			title: title,
-			color: color,
-		}).save()
+        if(!laststatus)
+        return res.status(400).json({
+            code: 400,
+            success: false,
+            message: 'Status does not exist in the system',
+        })
 
-		return res.status(200).json({
-			code: 200,
-			success: true,
-			message: status_result,
-		})
-	}),
+        
+        const existingproject = await Project.findOne({
+            where: {
+                id: project
+            }
+        })
+        if (!existingproject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not exist in the system',
+            })
+
+        const status_result = await Status.create({
+            project: existingproject,
+            title: title,
+            color: color,
+            index: laststatus.index +1
+        }).save()
+
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Create status success',
+            result: status_result
+        })
+    }),
+    
 	//get all status by project
 	getAll: handleCatchError(async (req: Request, res: Response) => {
 		const { projectId } = req.params
