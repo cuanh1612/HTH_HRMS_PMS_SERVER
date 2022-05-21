@@ -20,6 +20,22 @@ const statusController = {
     //create new status
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { project, title, color } = req.body;
+        const laststatus = yield Status_1.Status.findOne({
+            where: {
+                project: {
+                    id: project
+                }
+            },
+            order: {
+                index: "DESC"
+            }
+        });
+        if (!laststatus)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Status does not exist in the system',
+            });
         const existingproject = yield Project_1.Project.findOne({
             where: {
                 id: project
@@ -34,12 +50,13 @@ const statusController = {
         const status_result = yield Status_1.Status.create({
             project: existingproject,
             title: title,
-            color: color
+            color: color,
+            index: laststatus.index + 1
         }).save();
         return res.status(200).json({
             code: 200,
             success: true,
-            message: status_result
+            message: 'Create status success'
         });
     })),
     //get all status by project

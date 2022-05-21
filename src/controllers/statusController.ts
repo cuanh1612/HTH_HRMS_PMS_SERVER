@@ -10,8 +10,28 @@ import { statusValid } from '../utils/valid/statusValid';
 const statusController = {
     //create new status
     create: handleCatchError(async (req: Request, res: Response) => {
-        const { project, title, color } = req.body
+        const { project, title, color} = req.body
 
+        const laststatus = await Status.findOne({
+            where: {
+                project: {
+                    id: project
+                }
+            },
+            order: {
+                index: "DESC"
+            }
+        })
+
+        if(!laststatus)
+        return res.status(400).json({
+            code: 400,
+            success: false,
+            message: 'Status does not exist in the system',
+        })
+
+
+        
         const existingproject = await Project.findOne({
             where: {
                 id: project
@@ -27,14 +47,15 @@ const statusController = {
         const status_result = await Status.create({
             project: existingproject,
             title: title,
-            color: color
-
+            color: color,
+            index: laststatus.index +1
         }).save()
 
         return res.status(200).json({
             code: 200,
             success: true,
-            message: status_result
+            message: 'Create status success',
+            result: status_result
         })
     }),
     //get all status by project
