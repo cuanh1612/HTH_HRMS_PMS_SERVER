@@ -90,8 +90,19 @@ const taskController = {
             //check role employee
             taskEmployees.push(existingEmployee);
         }
-        //create taskfile
-        const createdTask = yield Task_1.Task.create(Object.assign(Object.assign({}, dataNewTask), { employees: taskEmployees })).save();
+        const lasttask = yield Task_1.Task.findOne({
+            where: {
+                status: {
+                    id: status
+                }
+            },
+            order: {
+                index: "DESC"
+            }
+        });
+        var index = lasttask ? lasttask.index + 1 : 1;
+        //create task
+        const createdTask = yield Task_1.Task.create(Object.assign(Object.assign({}, dataNewTask), { employees: taskEmployees, index })).save();
         if (Array.isArray(task_files)) {
             //create task files
             for (let index = 0; index < task_files.length; index++) {
@@ -265,6 +276,87 @@ const taskController = {
             message: 'Delete tasks success',
         });
     })),
+    // changeposition: handleCatchError(async (req:Request, res: Response) =>{
+    //     const { id1, id2, status1, status2 } = req.body
+    //     const existingstatus1 = Task.findOne({
+    //         where:{
+    //             id: status1
+    //         }
+    //     })
+    //     const existingstatus2 = Task.findOne({
+    //         where:{
+    //             id: status2
+    //         }
+    //     })
+    //     if(!existingstatus1 && !existingstatus2)
+    //         return res.status(400).json({
+    //             code: 400,
+    //             success: false,
+    //             message: 'Either status does not existing in the system'
+    //         })
+    //     if( status1 = status2){
+    //         const id1 = await Task.createQueryBuilder('task')
+    //             .where('task.id = :id1', { id1 })
+    //             .getOne()
+    //         const task2 = await Task.createQueryBuilder('task')
+    //             .where('task.id = :id2', { id2 })
+    //             .getOne()
+    //         if (!id1 || !id2)
+    //             return res.status(400).json({
+    //                 code: 400,
+    //                 success: false,
+    //                 message: 'Either status does not exist in the system',
+    //             })
+    //         if (task1.index > task2.index) {
+    //             const alltask = await Task.createQueryBuilder('task')
+    //                 .where('task.index >= :index and task.projectId = :projectId', {
+    //                     index: task2.index,
+    //                     status1
+    //                 })
+    //                 .getMany()
+    //             if (alltask)
+    //                 await Promise.all(
+    //                     alltask.map(async (task) => {
+    //                         return new Promise(async (resolve) => {
+    //                             const result = Task.update(
+    //                                 {
+    //                                     id: Number(task.id),
+    //                                 },
+    //                                 {
+    //                                     index: Number(task.index) + 1,
+    //                                 }
+    //                             )
+    //                             resolve(result)
+    //                         })
+    //                     })
+    //                 )
+    //         }
+    //         if (task1.index < task2.index) {
+    //             const alltask = await Task.createQueryBuilder('task')
+    //                 .where('status.index > :index and status.index <= :index2 and status.projectId = :projectId', {
+    //                     index: task1.index,
+    //                     index2: task2.index,
+    //                     projectId
+    //                 }).getMany()
+    //             if (alltask)
+    //                 await Promise.all(
+    //                     alltask.map(async (task) => {
+    //                         return new Promise(async (resolve) => {
+    //                             task.index = task.index - 1
+    //                             resolve(await task.save())
+    //                         })
+    //                     })
+    //                 )
+    //         }
+    //         task1.index = task2.index
+    //         await task1.save()
+    //         return res.status(200).json({
+    //             code: 200,
+    //             success: true,
+    //             message: 'change position of status success',
+    //         })
+    //     }
+    // })
 };
 exports.default = taskController;
 //     //Create new task
