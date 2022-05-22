@@ -399,9 +399,7 @@ const taskController = {
             const task1 = await Task.createQueryBuilder('task')
                 .where('task.id = :id1', { id1 })
                 .getOne()
-            const task2 = await Task.createQueryBuilder('task')
-                .where('task.id = :id2', { id2 })
-                .getOne()
+            
 
             const status2Exist = await Status.findOne({
                 where: {
@@ -409,13 +407,29 @@ const taskController = {
                 }
             })
 
-            if (!task1 || !task2 || !status2Exist)
+            if (!task1 || !status2Exist)
                 return res.status(400).json({
                     code: 400,
                     success: false,
                     message: 'Either status does not exist in the system',
                 })
 
+            if(!id2){
+                task1.index = 1
+                task1.status =  status2Exist
+    
+                await task1.save()
+    
+                return res.status(200).json({
+                    code: 200,
+                    success: true,
+                    message: 'change position of status success',
+                })
+            }
+            
+            const task2 = await Task.createQueryBuilder('task')
+                .where('task.id = :id2', { id2 })
+                .getOne()
             const index = task2?.index
 
             const alltask = await Task.createQueryBuilder('task').where(
