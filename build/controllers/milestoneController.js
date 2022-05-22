@@ -36,7 +36,7 @@ const mileStoneController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const dataUpdateMileStone = req.body;
-        const existingMileStone = Milestone_1.Milestone.findOne({
+        const existingMileStone = yield Milestone_1.Milestone.findOne({
             where: {
                 id: Number(id)
             }
@@ -47,7 +47,11 @@ const mileStoneController = {
                 success: false,
                 message: 'Milestone does not existing in the system',
             });
-        yield Milestone_1.Milestone.update(dataUpdateMileStone.id, Object.assign({}, dataUpdateMileStone));
+        existingMileStone.title = dataUpdateMileStone.title;
+        existingMileStone.summary = dataUpdateMileStone.summary;
+        existingMileStone.cost = dataUpdateMileStone.cost;
+        existingMileStone.addtobudget = dataUpdateMileStone.addtobudget;
+        yield existingMileStone.save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -101,33 +105,6 @@ const mileStoneController = {
             code: 200,
             success: true,
             message: 'Delete of milestone success'
-        });
-    })),
-    deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { milestones } = req.body;
-        //check array of milestones
-        console.log(milestones);
-        if (!Array.isArray(milestones) || !milestones)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'milestone does not exist in the system',
-            });
-        for (let index = 0; index < milestones.length; index++) {
-            const itemmilestone = milestones[index];
-            const existingmilestone = yield Milestone_1.Milestone.findOne({
-                where: {
-                    id: Number(itemmilestone),
-                },
-            });
-            if (existingmilestone) {
-                yield existingmilestone.remove();
-            }
-        }
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Delete milestones successfully',
         });
     })),
 };

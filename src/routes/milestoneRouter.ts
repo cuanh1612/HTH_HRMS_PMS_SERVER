@@ -14,6 +14,6 @@ milestoneRouter.get('/', milestoneController.getAll)
 milestoneRouter.get('/:id', milestoneController.getDetail)
 
 milestoneRouter.delete('/:id', milestoneController.delete)
-milestoneRouter.post('/delete-many', milestoneController.deleteMany)
+
 
 export default milestoneRouter

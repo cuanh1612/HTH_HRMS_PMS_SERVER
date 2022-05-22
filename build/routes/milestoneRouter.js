@@ -11,5 +11,4 @@ milestoneRouter.put('/:id', milestoneController_1.default.update);
 milestoneRouter.get('/', milestoneController_1.default.getAll);
 milestoneRouter.get('/:id', milestoneController_1.default.getDetail);
 milestoneRouter.delete('/:id', milestoneController_1.default.delete);
-milestoneRouter.post('/delete-many', milestoneController_1.default.deleteMany);
 exports.default = milestoneRouter;
