@@ -242,7 +242,6 @@ const taskController = {
             relations: {
                 project: true,
                 task_category: true,
-                status: true,
                 employees: true
             }
         });

@@ -55,9 +55,36 @@ const statusController = {
             result: status_result
         })
     }),
-    
-	//get all status by project
+
 	getAll: handleCatchError(async (req: Request, res: Response) => {
+		const { projectId } = req.params
+
+		const findbyproject = await Status.find({
+			where: {
+				project: {
+					id: Number(projectId),
+				},
+			},
+			
+		})
+
+		if (!findbyproject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			statuses: findbyproject,
+			message: 'Get all status success',
+		})
+	}),
+
+	//get all status by project (with task)
+	getAllWithTask: handleCatchError(async (req: Request, res: Response) => {
 		const { projectId } = req.params
 
 		const findbyproject = await Status.find({
