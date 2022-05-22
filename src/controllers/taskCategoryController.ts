@@ -27,7 +27,7 @@ const taskCategoryController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			task_category: createdtask_category,
+			taskCategory: createdtask_category,
 			message: 'Created new task_category successfully',
 		})
 	}),
@@ -84,7 +84,7 @@ const taskCategoryController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			task_categorys: task_categories,
+			taskCategories: task_categories,
 			message: 'Get all task categories successfully',
 		})
 	}),
@@ -109,7 +109,7 @@ const taskCategoryController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			task_category: existingtask_category,
+			taskCategory: existingtask_category,
 			message: 'Get detail of task_category successfully',
 		})
 	}),

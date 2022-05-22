@@ -188,8 +188,10 @@ const projectNoteController = {
 		existProjectNote.title = dataUpProjectNote.title
 		existProjectNote.detail = dataUpProjectNote.detail
 		existProjectNote.note_type = dataUpProjectNote.note_type
-		existProjectNote.visible_to_client = dataUpProjectNote.visible_to_client
-		existProjectNote.ask_re_password = dataUpProjectNote.ask_re_password
+		existProjectNote.visible_to_client =
+			dataUpProjectNote.note_type === 'Public' ? false : dataUpProjectNote.visible_to_client
+		existProjectNote.ask_re_password =
+			dataUpProjectNote.note_type === 'Public' ? false : dataUpProjectNote.ask_re_password
 		existProjectNote.employees = listEmployeesUpdate
 		await existProjectNote.save()
 
@@ -230,17 +232,17 @@ const projectNoteController = {
 		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
 
 		//Get data user
-        const existingUser =
-        (await Employee.findOne({
-            where: {
-                email: decode.email,
-            },
-        })) ||
-        (await Client.findOne({
-            where: {
-                email: decode.email,
-            },
-        }))
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: decode.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: decode.email,
+				},
+			}))
 
 		if (!existingUser)
 			return res.status(400).json({
@@ -281,17 +283,17 @@ const projectNoteController = {
 		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
 
 		//Get data user
-        const existingUser =
-        (await Employee.findOne({
-            where: {
-                email: decode.email,
-            },
-        })) ||
-        (await Client.findOne({
-            where: {
-                email: decode.email,
-            },
-        }))
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: decode.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: decode.email,
+				},
+			}))
 
 		if (!existingUser)
 			return res.status(400).json({
@@ -363,17 +365,17 @@ const projectNoteController = {
 		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
 
 		//Get data user
-        const existingUser =
-        (await Employee.findOne({
-            where: {
-                email: decode.email,
-            },
-        })) ||
-        (await Client.findOne({
-            where: {
-                email: decode.email,
-            },
-        }))
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: decode.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: decode.email,
+				},
+			}))
 
 		if (!existingUser)
 			return res.status(400).json({
@@ -428,9 +430,7 @@ const projectNoteController = {
 			})
 		}
 
-		if (
-			existingUser.role === enumRole.ADMIN
-		) {
+		if (existingUser.role === enumRole.ADMIN) {
 			const projectNotes = await Project_note.find({
 				where: {
 					project: {
@@ -455,15 +455,17 @@ const projectNoteController = {
 			})
 		}
 
-        if (existingProject.employees.some((employeeItem) => employeeItem.id === existingUser.id)){
-            const projectNotesForClient = await Project_note.find({
+		if (existingProject.employees.some((employeeItem) => employeeItem.id === existingUser.id)) {
+			const projectNotesForClient = await Project_note.find({
 				where: {
 					project: {
 						id: Number(projectId),
 					},
-                    employees: [{
-                        id: existingUser.id
-                    }]
+					employees: [
+						{
+							id: existingUser.id,
+						},
+					],
 				},
 				select: {
 					project: {
@@ -475,13 +477,13 @@ const projectNoteController = {
 				},
 			})
 
-            return res.status(200).json({
+			return res.status(200).json({
 				code: 200,
 				success: true,
 				projectNotes: [...projectNotesForClient, ...projectNotesPublic],
 				message: 'Get project note by project success successfully',
 			})
-        }
+		}
 
 		return res.status(200).json({
 			code: 200,
