@@ -12,6 +12,9 @@ taskRouter.get('/:id', taskController.getDetail)
 taskRouter.delete('/:id', taskController.delete)
 taskRouter.post('/delete-many', taskController.deletemany)
 
+taskRouter.put('/position', taskController.changeposition)
 taskRouter.put('/:id', taskController.update)
+
+
 
 export default taskRouter

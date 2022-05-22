@@ -63,7 +63,7 @@ export class Project extends BaseEntity {
 	@ManyToOne(() => Project_Category, (project_Category) => project_Category.projects, {
 		onDelete: 'SET NULL',
 		nullable: true,
-		eager: true,
+
 	})
 	@JoinColumn()
 	project_category: Project_Category
@@ -71,7 +71,7 @@ export class Project extends BaseEntity {
 	@ManyToOne(() => Department, (department) => department.projects, {
 		onDelete: 'SET NULL',
 		nullable: true,
-		eager: true,
+
 	})
 	@JoinColumn()
 	department: Department
@@ -79,7 +79,7 @@ export class Project extends BaseEntity {
 	@ManyToOne(() => Client, (client) => client.projects, {
 		onDelete: 'SET NULL',
 		nullable: true,
-		eager: true,
+
 	})
 	@JoinColumn()
 	client: Client
@@ -97,7 +97,7 @@ export class Project extends BaseEntity {
 
 	@ManyToOne(() => Employee, (Employee) => Employee.projects, {
 		onDelete: 'SET NULL',
-		eager: true
+
 	})
 	@JoinColumn()
 	Added_by: Employee

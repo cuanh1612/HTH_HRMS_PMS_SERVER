@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const Task_1 = require("../entities/Task");
 const Task_File_1 = require("../entities/Task_File");
+const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const taskFileController = {
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { files, task } = req.body;
@@ -157,10 +157,10 @@ const taskFileController = {
                 message: 'change position of task success'
             });
         }
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'change position of task success'
+        return res.status(400).json({
+            code: 400,
+            success: false,
+            message: 'Either task does not exist in the system',
         });
     }))
 };

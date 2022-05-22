@@ -11,5 +11,6 @@ taskRouter.get('/', taskController_1.default.getAll);
 taskRouter.get('/:id', taskController_1.default.getDetail);
 taskRouter.delete('/:id', taskController_1.default.delete);
 taskRouter.post('/delete-many', taskController_1.default.deletemany);
+taskRouter.put('/position', taskController_1.default.changeposition);
 taskRouter.put('/:id', taskController_1.default.update);
 exports.default = taskRouter;

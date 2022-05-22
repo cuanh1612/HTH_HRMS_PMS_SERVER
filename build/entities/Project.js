@@ -70,7 +70,6 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Project_Category_1.Project_Category, (project_Category) => project_Category.projects, {
         onDelete: 'SET NULL',
         nullable: true,
-        eager: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Project_Category_1.Project_Category)
@@ -79,7 +78,6 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.projects, {
         onDelete: 'SET NULL',
         nullable: true,
-        eager: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Department_1.Department)
@@ -88,7 +86,6 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Client_1.Client, (client) => client.projects, {
         onDelete: 'SET NULL',
         nullable: true,
-        eager: true,
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Client_1.Client)
@@ -109,7 +106,6 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (Employee) => Employee.projects, {
         onDelete: 'SET NULL',
-        eager: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Employee_1.Employee)

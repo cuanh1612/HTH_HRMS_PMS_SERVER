@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { Like } from 'typeorm'
 import { Client } from '../entities/Client'
 import { Employee } from '../entities/Employee'
 import { Event } from '../entities/Event'
@@ -133,8 +134,31 @@ const eventController = {
 		})
 	}),
 
-	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const allEvent = await Event.find()
+	getAll: handleCatchError(async (req: Request, res: Response) => {
+		const { employee, client, name } = req.query
+		var filter: {
+			name?: any
+			employees?: {
+				id: number
+			}
+			clients?: {
+				id: number
+			}
+		} = {}
+		if (name) filter.name = Like(String(name))
+		if (employee)
+			filter.employees = {
+				id: Number(employee),
+			}
+
+		if (client)
+			filter.clients = {
+				id: Number(client),
+			}
+
+		const allEvent = await Event.find({
+			where: filter,
+		})
 
 		return res.status(200).json({
 			code: 200,

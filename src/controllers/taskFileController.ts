@@ -1,8 +1,8 @@
-import handleCatchError from "../utils/catchAsyncError";
+import { Request, Response } from 'express';
 import { Task } from "../entities/Task";
 import { Task_file } from "../entities/Task_File";
 import { createOrUpdatetTaskFilesPayload } from "../type/taskFilePayLoad copy";
-import { Request, Response } from 'express'
+import handleCatchError from "../utils/catchAsyncError";
 
 
 
@@ -114,7 +114,7 @@ const taskFileController = {
 			message: 'Get all contract files success successfully',
 		})
 	}),
-    changeposition: handleCatchError(async(req: Request, res: Response) =>{
+    changeposition: handleCatchError(async (req: Request, res: Response) => {
         const { status1, task1, status2, task2}:{[index: string]:number} = req.body
         console.log(status1)
 
@@ -170,13 +170,11 @@ const taskFileController = {
                 message: 'change position of task success'
             })
         }
-
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'change position of task success'
+        return res.status(400).json({
+            code: 400,
+            success: false,
+            message: 'Either task does not exist in the system',
         })
-
     })
 }
 export default taskFileController
