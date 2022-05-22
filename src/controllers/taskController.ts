@@ -261,6 +261,11 @@ const taskController = {
             where: {
                 id: Number(id),
             },
+            relations:{
+                project: true,
+                task_category: true,
+                status: true
+            }
         })
 
         if (!existingtask)

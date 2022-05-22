@@ -25,12 +25,12 @@ const mileStoneController = {
         })
     }),
     update: handleCatchError( async ( req: Request, res: Response) =>{
-        const { mileStoneId } = req.params
+        const { id } = req.params
         const dataUpdateMileStone: Milestone = req.body
 
         const existingMileStone = Milestone.findOne({
             where: {
-                id: Number(mileStoneId)
+                id: Number(id)
             }
         })
 
@@ -52,7 +52,7 @@ const mileStoneController = {
 		})
 
     }),
-    getall: handleCatchError( async (_: Request, res: Response) =>{
+    getAll: handleCatchError( async (_: Request, res: Response) =>{
         const milestones = await Milestone.find()
         return res.status(200).json({
 			code: 200,
@@ -62,12 +62,12 @@ const mileStoneController = {
 		})
     }),
     
-    getdetail: handleCatchError( async ( req: Request, res:Response) =>{
-        const {mileStoneId} = req.params
+    getDetail: handleCatchError( async ( req: Request, res:Response) =>{
+        const {id} = req.params
         
         const existingMileStone = await Milestone.findOne({
             where:{
-                id: Number(mileStoneId)
+                id: Number(id)
             }
         })
 
@@ -88,11 +88,11 @@ const mileStoneController = {
     }),
     
     delete: handleCatchError( async (req: Request, res: Response) =>{
-        const {mileStoneId} = req.params
+        const {id} = req.params
         
         const existingMileStone = await Milestone.findOne({
             where:{
-                id: Number(mileStoneId)
+                id: Number(id)
             }
         })
 
@@ -111,7 +111,7 @@ const mileStoneController = {
         }) 
     }),
 
-    deletemany: handleCatchError(async (req: Request, res: Response)=>{
+    deleteMany: handleCatchError(async (req: Request, res: Response)=>{
         const { milestones } = req.body
 		//check array of milestones
 		console.log(milestones)

@@ -34,11 +34,11 @@ const mileStoneController = {
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { mileStoneId } = req.params;
+        const { id } = req.params;
         const dataUpdateMileStone = req.body;
         const existingMileStone = Milestone_1.Milestone.findOne({
             where: {
-                id: Number(mileStoneId)
+                id: Number(id)
             }
         });
         if (!existingMileStone)
@@ -54,7 +54,7 @@ const mileStoneController = {
             message: 'Update milestone successfully',
         });
     })),
-    getall: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const milestones = yield Milestone_1.Milestone.find();
         return res.status(200).json({
             code: 200,
@@ -63,11 +63,11 @@ const mileStoneController = {
             message: 'Get all milestone successfully',
         });
     })),
-    getdetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { mileStoneId } = req.params;
+    getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
         const existingMileStone = yield Milestone_1.Milestone.findOne({
             where: {
-                id: Number(mileStoneId)
+                id: Number(id)
             }
         });
         if (!existingMileStone)
@@ -84,10 +84,10 @@ const mileStoneController = {
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { mileStoneId } = req.params;
+        const { id } = req.params;
         const existingMileStone = yield Milestone_1.Milestone.findOne({
             where: {
-                id: Number(mileStoneId)
+                id: Number(id)
             }
         });
         if (!existingMileStone)
@@ -103,7 +103,7 @@ const mileStoneController = {
             message: 'Delete of milestone success'
         });
     })),
-    deletemany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { milestones } = req.body;
         //check array of milestones
         console.log(milestones);

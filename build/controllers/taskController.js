@@ -122,7 +122,7 @@ const taskController = {
         const { id } = req.params;
         const dataUpdateTask = req.body;
         // const { task_category, project, employees} = dataUpdateTask
-        const { employees } = dataUpdateTask;
+        const { employees, status } = dataUpdateTask;
         let taskEmployees = [];
         const existingtask = yield Task_1.Task.findOne({
             where: {
@@ -135,6 +135,28 @@ const taskController = {
                 success: false,
                 message: 'Task does not exist in the system',
             });
+        const existingStatus = yield Status_1.Status.findOne({
+            where: {
+                id: Number(status),
+            },
+        });
+        if (!existingStatus)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Task does not exist in the system',
+            });
+        const lasttask = yield Task_1.Task.findOne({
+            where: {
+                status: {
+                    id: status,
+                },
+            },
+            order: {
+                index: 'DESC',
+            },
+        });
+        var index = lasttask ? lasttask.index + 1 : 1;
         //check exist task category
         const existingtaskcategory = yield Task_1.Task.findOne({
             where: {
@@ -190,7 +212,9 @@ const taskController = {
             (existingtask.start_date = dataUpdateTask.start_date),
             (existingtask.deadline = dataUpdateTask.deadline),
             (existingtask.task_category = dataUpdateTask.task_category),
-            (existingtask.employees = taskEmployees);
+            (existingtask.employees = taskEmployees),
+            (existingtask.index = index),
+            (existingtask.status = existingStatus);
         yield existingtask.save();
         return res.status(200).json({
             code: 200,
@@ -215,6 +239,11 @@ const taskController = {
             where: {
                 id: Number(id),
             },
+            relations: {
+                project: true,
+                task_category: true,
+                status: true
+            }
         });
         if (!existingtask)
             return res.status(400).json({
