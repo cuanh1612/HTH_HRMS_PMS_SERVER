@@ -354,20 +354,30 @@ const taskController = {
             const task1 = yield Task_1.Task.createQueryBuilder('task')
                 .where('task.id = :id1', { id1 })
                 .getOne();
-            const task2 = yield Task_1.Task.createQueryBuilder('task')
-                .where('task.id = :id2', { id2 })
-                .getOne();
             const status2Exist = yield Status_1.Status.findOne({
                 where: {
                     id: status2
                 }
             });
-            if (!task1 || !task2 || !status2Exist)
+            if (!task1 || !status2Exist)
                 return res.status(400).json({
                     code: 400,
                     success: false,
                     message: 'Either status does not exist in the system',
                 });
+            if (!id2) {
+                task1.index = 1;
+                task1.status = status2Exist;
+                yield task1.save();
+                return res.status(200).json({
+                    code: 200,
+                    success: true,
+                    message: 'change position of status success',
+                });
+            }
+            const task2 = yield Task_1.Task.createQueryBuilder('task')
+                .where('task.id = :id2', { id2 })
+                .getOne();
             const index = task2 === null || task2 === void 0 ? void 0 : task2.index;
             const alltask = yield Task_1.Task.createQueryBuilder('task').where('task.statusId = :status and task.index >= :index', { status: status2, index: task2 === null || task2 === void 0 ? void 0 : task2.index }).getMany();
             if (alltask)
