@@ -415,7 +415,19 @@ const taskController = {
                 })
 
             if(!id2){
-                task1.index = 1
+                const lastTask = await Task.findOne({
+                    where: {
+                        status:{
+                            id: status2
+                        }
+                    },
+                    order:{
+                        index: "DESC"
+                    }
+                })
+            
+
+                task1.index = lastTask? lastTask.index + 1 : 1
                 task1.status =  status2Exist
     
                 await task1.save()
