@@ -17,6 +17,7 @@ const Employee_1 = require("./Employee");
 const Project_Category_1 = require("./Project_Category");
 const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
 const Project_File_1 = require("./Project_File");
+const Project_Note_1 = require("./Project_Note");
 const Status_1 = require("./Status");
 const Task_1 = require("./Task");
 var enumCurrency;
@@ -133,6 +134,12 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Project.prototype, "tasks", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Project_Note_1.Project_note, (project_notice) => project_notice.project, {
+        onDelete: 'SET NULL',
+    }),
+    __metadata("design:type", Array)
+], Project.prototype, "project_notes", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

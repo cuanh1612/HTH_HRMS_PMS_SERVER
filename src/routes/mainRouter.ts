@@ -31,6 +31,7 @@ import projectDiscussionReplyRouter from './projectDiscussionReplyRouter'
 import projectDiscussionRoomRouter from './projectDiscussionRoomRouter'
 import statusRouter from './statusRouter'
 import taskRouter from './taskRouter'
+import projectNoteRouter from './projectNoteRouter'
 
 function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
@@ -96,6 +97,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/status', statusRouter)
 
 	app.use('/api/tasks', taskRouter)
+
+	app.use('/api/project-notes', projectNoteRouter)
 }
 
 export default mainRouter
