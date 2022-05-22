@@ -129,7 +129,7 @@ const taskController = {
         const { id } = req.params
         const dataUpdateTask: createOrUpdateTaskPayload = req.body
         // const { task_category, project, employees} = dataUpdateTask
-        const { employees, status } = dataUpdateTask
+        const { employees, status, project, task_category } = dataUpdateTask
         let taskEmployees: Employee[] = []
 
         const existingtask = await Task.findOne({
@@ -171,9 +171,9 @@ const taskController = {
 
 
         //check exist task category
-        const existingtaskcategory = await Task.findOne({
+        const existingtaskcategory = await Task_Category.findOne({
             where: {
-                id: Number(id),
+                id: Number(task_category),
             },
         })
 
@@ -187,7 +187,7 @@ const taskController = {
         //check exist project
         const existingproject = await Project.findOne({
             where: {
-                id: Number(id),
+                id: Number(project),
             },
         })
 
