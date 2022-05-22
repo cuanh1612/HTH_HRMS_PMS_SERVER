@@ -10,6 +10,14 @@ const statusController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const { project, title, color } = req.body
 
+		if( !project || !title || !color) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please enter full field',
+			})
+		}
+
 		const laststatus = await Status.findOne({
 			where: {
 				project: {

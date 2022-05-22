@@ -20,6 +20,13 @@ const statusController = {
     //create new status
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { project, title, color } = req.body;
+        if (!project || !title || !color) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please enter full field',
+            });
+        }
         const laststatus = yield Status_1.Status.findOne({
             where: {
                 project: {
