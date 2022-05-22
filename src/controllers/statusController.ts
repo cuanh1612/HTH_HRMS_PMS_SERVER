@@ -175,7 +175,6 @@ const statusController = {
 	//Change position of status
 	changeposition: handleCatchError(async (req: Request, res: Response) => {
 		const { id1, id2, projectId } = req.body
-		console.log('fgdgfddfdfgdf dfg dfg', projectId)
 
 		const status1 = await Status.createQueryBuilder('status')
 			.where('status.id = :id1', { id1 })

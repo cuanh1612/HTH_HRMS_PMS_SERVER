@@ -19,13 +19,13 @@ const Project_Discussion_Category_1 = require("../entities/Project_Discussion_Ca
 const Project_Discussion_Reply_1 = require("../entities/Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("../entities/Project_Discussion_Room");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
-const project_discussion_payload_1 = require("../utils/valid/project_discussion_payload");
+const projectDiscussionRoomValid_1 = require("../utils/valid/projectDiscussionRoomValid");
 const projectDiscussionRoomController = {
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
         const dataNewPdiscussionRoom = req.body;
         const { project, project_discussion_category, description } = dataNewPdiscussionRoom;
-        const messageValid = project_discussion_payload_1.projectDiscussionRoomValid.createOrUpdate(dataNewPdiscussionRoom);
+        const messageValid = projectDiscussionRoomValid_1.projectDiscussionRoomValid.createOrUpdate(dataNewPdiscussionRoom);
         if (messageValid)
             return res.status(400).json({
                 code: 400,

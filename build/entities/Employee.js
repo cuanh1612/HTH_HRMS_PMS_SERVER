@@ -23,6 +23,7 @@ const Leave_1 = require("./Leave");
 const Project_1 = require("./Project");
 const Project_Discussion_Reply_1 = require("./Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
+const Project_Note_1 = require("./Project_Note");
 const Salary_1 = require("./Salary");
 const Task_1 = require("./Task");
 var enumGender;
@@ -148,6 +149,11 @@ __decorate([
     (0, typeorm_1.JoinTable)({ name: 'conversation_employee' }),
     __metadata("design:type", Array)
 ], Employee.prototype, "conversations", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Project_Note_1.Project_note),
+    (0, typeorm_1.JoinTable)({ name: 'project_note_employee' }),
+    __metadata("design:type", Array)
+], Employee.prototype, "project_notes", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Project_Discussion_Reply_1.Project_discussion_reply, (project_discussion_reply) => project_discussion_reply.employee),
     __metadata("design:type", Array)

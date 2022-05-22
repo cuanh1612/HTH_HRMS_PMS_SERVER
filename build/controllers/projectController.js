@@ -119,7 +119,7 @@ const projectController = {
             root: true,
             project: createdProject,
             index: 0,
-            color: 'red'
+            color: 'red',
         }).save();
         console.log('ngtientrong', status1);
         yield Status_1.Status.create({
@@ -127,7 +127,7 @@ const projectController = {
             root: true,
             project: createdProject,
             index: 1,
-            color: 'green'
+            color: 'green',
         }).save();
         return res.status(200).json({
             code: 200,
@@ -256,13 +256,15 @@ const projectController = {
                 message: 'Project does not exist in the system',
             });
         //Calculate percentage of project progress from completed tasks
-        const countSuccessTasks = yield Task_1.Task.createQueryBuilder("task")
-            .leftJoinAndSelect("status", "status", "task.statusId = status.id")
+        const countSuccessTasks = yield Task_1.Task.createQueryBuilder('task')
+            .leftJoinAndSelect('status', 'status', 'task.statusId = status.id')
             .where('task.projectId = :id', {
             id: existingproject.id,
-        }).andWhere('status.title = :title', {
+        })
+            .andWhere('status.title = :title', {
             title: 'Complete',
-        }).getRawMany();
+        })
+            .getRawMany();
         console.log(countSuccessTasks);
         // if (countSuccessTasks !== 0 && countTasks !== 0) {
         // 	existingproject.Progress = (countSuccessTasks / countTasks) * 100
@@ -348,28 +350,39 @@ const projectController = {
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        const existingUser = (yield Employee_1.Employee.findOne({
             where: {
-                id: decode.userId,
+                email: decode.email,
             },
-        });
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email: decode.email,
+                },
+            }));
         if (!existingUser)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'User does not exist in the system',
             });
-        if (!existingProject.employees.some((employeeItem) => employeeItem.id === existingUser.id))
+        if ((existingUser.role === Employee_1.enumRole.EMPLOYEE &&
+            existingProject.employees.some((employeeItem) => employeeItem.id === existingUser.id)) ||
+            existingUser.role === Employee_1.enumRole.ADMIN ||
+            (existingUser.role === 'Client' && existingProject.client.email === existingUser.email)) {
+            return res.status(200).json({
+                code: 200,
+                success: true,
+                message: 'You already signed this project',
+            });
+        }
+        else {
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'You not asigned this project',
             });
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'You already signed this project',
-        });
+        }
     })),
 };
 exports.default = projectController;
