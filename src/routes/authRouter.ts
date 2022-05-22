@@ -5,6 +5,7 @@ const authRouter = express.Router()
 
 authRouter.post('/login', authController.login)
 authRouter.post('/login-google', authController.googleLogin)
+authRouter.post('/ask-re-enter-password', authController.askReEnterPassword)
 
 authRouter.get('/refresh_token', authController.refreshToken)
 authRouter.get('/me', authController.currentUser)

@@ -207,5 +207,42 @@ const authController = {
             message: 'Get current user successfully',
         });
     })),
+    askReEnterPassword: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { email, password } = req.body;
+        const existingUser = (yield Employee_1.Employee.findOne({
+            where: {
+                email,
+            },
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email,
+                },
+            }));
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Incorrect email or password',
+            });
+        if (!existingUser.can_login)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: "You can't login to the system",
+            });
+        const isPasswordValid = yield argon2_1.default.verify(existingUser.password, password);
+        if (!isPasswordValid)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Incorrect email or password',
+            });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Ask re enter password correct',
+        });
+    })),
 };
 exports.default = authController;

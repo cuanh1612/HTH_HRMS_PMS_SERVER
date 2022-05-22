@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { Secret, verify } from 'jsonwebtoken'
 import { Client } from '../entities/Client'
 import { Department } from '../entities/Department'
-import { Employee } from '../entities/Employee'
+import { Employee, enumRole } from '../entities/Employee'
 import { Project } from '../entities/Project'
 import { Project_Category } from '../entities/Project_Category'
 import { Project_file } from '../entities/Project_File'
@@ -108,7 +108,6 @@ const projectController = {
 		const createdProject = await Project.create({
 			...dataNewProject,
 			employees: projectEmployees,
-		
 		}).save()
 		console.log('ngtientrong1')
 		if (project_files) {
@@ -127,8 +126,7 @@ const projectController = {
 			root: true,
 			project: createdProject,
 			index: 0,
-			color: 'red'
-
+			color: 'red',
 		}).save()
 
 		console.log('ngtientrong', status1)
@@ -138,11 +136,8 @@ const projectController = {
 			root: true,
 			project: createdProject,
 			index: 1,
-			color: 'green'
-
-
+			color: 'green',
 		}).save()
-
 
 		return res.status(200).json({
 			code: 200,
@@ -280,18 +275,18 @@ const projectController = {
 			})
 
 		//Calculate percentage of project progress from completed tasks
-	
-			
-		const countSuccessTasks = await Task.createQueryBuilder("task")
-		.leftJoinAndSelect("status", "status", "task.statusId = status.id")
-		.where('task.projectId = :id', {
-			id: existingproject.id,
-		}).andWhere('status.title = :title', {
-			title: 'Complete',
-		}).getRawMany()
 
-		console.log(countSuccessTasks);
-		
+		const countSuccessTasks = await Task.createQueryBuilder('task')
+			.leftJoinAndSelect('status', 'status', 'task.statusId = status.id')
+			.where('task.projectId = :id', {
+				id: existingproject.id,
+			})
+			.andWhere('status.title = :title', {
+				title: 'Complete',
+			})
+			.getRawMany()
+
+		console.log(countSuccessTasks)
 
 		// if (countSuccessTasks !== 0 && countTasks !== 0) {
 		// 	existingproject.Progress = (countSuccessTasks / countTasks) * 100
@@ -391,11 +386,17 @@ const projectController = {
 		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
 
 		//Get data user
-		const existingUser = await Employee.findOne({
-			where: {
-				id: decode.userId,
-			},
-		})
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: decode.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: decode.email,
+				},
+			}))
 
 		if (!existingUser)
 			return res.status(400).json({
@@ -404,18 +405,26 @@ const projectController = {
 				message: 'User does not exist in the system',
 			})
 
-		if (!existingProject.employees.some((employeeItem) => employeeItem.id === existingUser.id))
+		if (
+			(existingUser.role === enumRole.EMPLOYEE &&
+				existingProject.employees.some(
+					(employeeItem) => employeeItem.id === existingUser.id
+				)) ||
+			existingUser.role === enumRole.ADMIN ||
+			(existingUser.role === 'Client' && existingProject.client.email === existingUser.email)
+		) {
+			return res.status(200).json({
+				code: 200,
+				success: true,
+				message: 'You already signed this project',
+			})
+		} else {
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'You not asigned this project',
 			})
-
-		return res.status(200).json({
-			code: 200,
-			success: true,
-			message: 'You already signed this project',
-		})
+		}
 	}),
 }
 

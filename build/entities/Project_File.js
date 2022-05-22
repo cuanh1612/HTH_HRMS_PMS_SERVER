@@ -34,7 +34,6 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Project_1.Project, (project) => project.project_files, {
         onDelete: 'CASCADE',
         eager: true,
-        nullable: false
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Project_1.Project)

@@ -171,6 +171,12 @@ const taskFileController = {
             })
         }
 
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'change position of task success'
+        })
+
     })
 }
 export default taskFileController

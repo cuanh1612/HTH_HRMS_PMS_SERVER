@@ -17,6 +17,7 @@ import { Employee } from './Employee'
 import { Project_Category } from './Project_Category'
 import { Project_Discussion_Room } from './Project_Discussion_Room'
 import { Project_file } from './Project_File'
+import { Project_note } from './Project_Note'
 import { Status } from './Status'
 import { Task } from './Task'
 
@@ -120,6 +121,11 @@ export class Project extends BaseEntity {
 		onDelete: "SET NULL"
 	})
 	tasks: Task[]
+
+	@OneToMany(() => Project_note, (project_notice) => project_notice.project, {
+		onDelete: 'SET NULL',
+	})
+	project_notes: Project_note[]
 
 	@CreateDateColumn({
 		name: 'created_at',

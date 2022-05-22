@@ -8,7 +8,7 @@ import { Project_Discussion_Room } from '../entities/Project_Discussion_Room'
 import { createOrUpdateProjectDiscussionRoomPayload } from '../type/createOrUpdateProjectDiscussionRoomPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
-import { projectDiscussionRoomValid } from '../utils/valid/project_discussion_payload'
+import { projectDiscussionRoomValid } from '../utils/valid/projectDiscussionRoomValid'
 
 
 const projectDiscussionRoomController = {

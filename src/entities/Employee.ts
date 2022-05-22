@@ -24,6 +24,7 @@ import { Leave } from './Leave'
 import { Project } from './Project'
 import { Project_discussion_reply } from './Project_Discussion_Reply'
 import { Project_Discussion_Room } from './Project_Discussion_Room'
+import { Project_note } from './Project_Note'
 import { Salary } from './Salary'
 import { Task } from './Task'
 
@@ -126,6 +127,10 @@ export class Employee extends BaseEntity {
 	@ManyToMany(() => Conversation)
 	@JoinTable({ name: 'conversation_employee' })
 	conversations: Conversation[];
+	
+	@ManyToMany(() => Project_note)
+	@JoinTable({ name: 'project_note_employee' })
+	project_notes: Project_note[]
 
 	@OneToMany(() => Project_discussion_reply, (project_discussion_reply)=> project_discussion_reply.employee)
 	project_discussion_replies: Project_discussion_reply[]

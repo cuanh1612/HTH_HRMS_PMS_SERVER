@@ -31,6 +31,7 @@ import { Project_discussion_reply } from '../entities/Project_Discussion_Reply'
 import { Project_Discussion_Room } from '../entities/Project_Discussion_Room'
 import { Salary } from '../entities/Salary'
 import { Status } from '../entities/Status'
+import { Project_note } from '../entities/Project_Note'
 
 const connectDB = () => {
 	createConnection({
@@ -73,8 +74,8 @@ const connectDB = () => {
 			Project_discussion_reply,
 			Project_Discussion_Room,
 			Salary,
-			Status
-
+			Status,
+			Project_note
 		],
 	})
 		.then(() => {

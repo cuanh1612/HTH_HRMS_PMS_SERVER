@@ -27,7 +27,6 @@ export class Project_file extends BaseEntity {
     @ManyToOne(() => Project, (project) => project.project_files, {
 		onDelete: 'CASCADE',
 		eager: true,
-        nullable: false
 	})
 	@JoinColumn()
 	project: Project
