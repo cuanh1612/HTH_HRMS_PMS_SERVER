@@ -1,5 +1,6 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Employee } from "./Employee";
+import { Milestone } from "./Milestone";
 import { Project } from "./Project";
 import { Status } from "./Status";
 import { Task_Category } from "./Task_Category";
@@ -62,6 +63,13 @@ export class Task extends BaseEntity {
 
     @OneToMany(()=> Task, (task) => task.task)
     tasks: Task[]
+    
+    @ManyToOne(()=> Milestone, (milestone) => milestone.tasks,{
+        onDelete: 'SET NULL',
+		nullable: true
+    })
+    @JoinColumn()
+    milestone: Milestone
 
     @OneToMany(() => Task_file, (task_file) => task_file.task,{
         onDelete: 'SET NULL',

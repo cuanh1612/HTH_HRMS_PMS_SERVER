@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Task = exports.enumPriority = void 0;
 const typeorm_1 = require("typeorm");
 const Employee_1 = require("./Employee");
+const Milestone_1 = require("./Milestone");
 const Project_1 = require("./Project");
 const Status_1 = require("./Status");
 const Task_Category_1 = require("./Task_Category");
@@ -84,6 +85,14 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Task_1, (task) => task.task),
     __metadata("design:type", Array)
 ], Task.prototype, "tasks", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Milestone_1.Milestone, (milestone) => milestone.tasks, {
+        onDelete: 'SET NULL',
+        nullable: true
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Milestone_1.Milestone)
+], Task.prototype, "milestone", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Task_File_1.Task_file, (task_file) => task_file.task, {
         onDelete: 'SET NULL',

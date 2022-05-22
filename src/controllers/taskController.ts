@@ -129,7 +129,7 @@ const taskController = {
         const { id } = req.params
         const dataUpdateTask: createOrUpdateTaskPayload = req.body
         // const { task_category, project, employees} = dataUpdateTask
-        const { employees } = dataUpdateTask
+        const { employees, status } = dataUpdateTask
         let taskEmployees: Employee[] = []
 
         const existingtask = await Task.findOne({
@@ -143,6 +143,33 @@ const taskController = {
                 success: false,
                 message: 'Task does not exist in the system',
             })
+
+            const existingStatus = await Status.findOne({
+                where: {
+                    id: Number(status),
+                },
+            })
+            if (!existingStatus)
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Task does not exist in the system',
+                })
+    
+
+        const lasttask = await Task.findOne({
+            where: {
+                status: {
+                    id: status,
+                },
+            },
+            order: {
+                index: 'DESC',
+            },
+        })
+        var index = lasttask ? lasttask.index + 1 : 1
+
+
         //check exist task category
         const existingtaskcategory = await Task.findOne({
             where: {
@@ -204,7 +231,9 @@ const taskController = {
             (existingtask.start_date = dataUpdateTask.start_date),
             (existingtask.deadline = dataUpdateTask.deadline),
             (existingtask.task_category = dataUpdateTask.task_category),
-            (existingtask.employees = taskEmployees)
+            (existingtask.employees = taskEmployees),
+            (existingtask.index = index),
+            (existingtask.status = existingStatus)
 
         await existingtask.save()
 
@@ -399,7 +428,7 @@ const taskController = {
             const task1 = await Task.createQueryBuilder('task')
                 .where('task.id = :id1', { id1 })
                 .getOne()
-            
+
 
             const status2Exist = await Status.findOne({
                 where: {
@@ -414,31 +443,31 @@ const taskController = {
                     message: 'Either status does not exist in the system',
                 })
 
-            if(!id2){
+            if (!id2) {
                 const lastTask = await Task.findOne({
                     where: {
-                        status:{
+                        status: {
                             id: status2
                         }
                     },
-                    order:{
+                    order: {
                         index: "DESC"
                     }
                 })
-            
 
-                task1.index = lastTask? lastTask.index + 1 : 1
-                task1.status =  status2Exist
-    
+
+                task1.index = lastTask ? lastTask.index + 1 : 1
+                task1.status = status2Exist
+
                 await task1.save()
-    
+
                 return res.status(200).json({
                     code: 200,
                     success: true,
                     message: 'change position of status success',
                 })
             }
-            
+
             const task2 = await Task.createQueryBuilder('task')
                 .where('task.id = :id2', { id2 })
                 .getOne()
@@ -460,7 +489,7 @@ const taskController = {
                 )
 
             task1.index = Number(index)
-            task1.status =  status2Exist
+            task1.status = status2Exist
 
             await task1.save()
 
