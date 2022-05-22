@@ -165,8 +165,10 @@ const projectNoteController = {
         existProjectNote.title = dataUpProjectNote.title;
         existProjectNote.detail = dataUpProjectNote.detail;
         existProjectNote.note_type = dataUpProjectNote.note_type;
-        existProjectNote.visible_to_client = dataUpProjectNote.visible_to_client;
-        existProjectNote.ask_re_password = dataUpProjectNote.ask_re_password;
+        existProjectNote.visible_to_client =
+            dataUpProjectNote.note_type === 'Public' ? false : dataUpProjectNote.visible_to_client;
+        existProjectNote.ask_re_password =
+            dataUpProjectNote.note_type === 'Public' ? false : dataUpProjectNote.ask_re_password;
         existProjectNote.employees = listEmployeesUpdate;
         yield existProjectNote.save();
         return res.status(200).json({
@@ -397,9 +399,11 @@ const projectNoteController = {
                     project: {
                         id: Number(projectId),
                     },
-                    employees: [{
-                            id: existingUser.id
-                        }]
+                    employees: [
+                        {
+                            id: existingUser.id,
+                        },
+                    ],
                 },
                 select: {
                     project: {
