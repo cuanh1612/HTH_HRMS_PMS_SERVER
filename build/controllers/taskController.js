@@ -121,16 +121,9 @@ const taskController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const dataUpdateTask = req.body;
-        const { employees, task_category } = dataUpdateTask;
+        // const { task_category, project, employees} = dataUpdateTask
+        const { employees, status } = dataUpdateTask;
         let taskEmployees = [];
-        //Check valid
-        const messageValid = taskValid_1.taskValid.createOrUpdate(dataUpdateTask);
-        if (messageValid)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: messageValid,
-            });
         const existingtask = yield Task_1.Task.findOne({
             where: {
                 id: Number(id),
@@ -142,38 +135,86 @@ const taskController = {
                 success: false,
                 message: 'Task does not exist in the system',
             });
-        //check exist task category
-        const existingtaskcategory = yield Task_Category_1.Task_Category.findOne({
+        const existingStatus = yield Status_1.Status.findOne({
             where: {
-                id: task_category,
+                id: Number(status),
+            },
+        });
+        if (!existingStatus)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Task does not exist in the system',
+            });
+        const lasttask = yield Task_1.Task.findOne({
+            where: {
+                status: {
+                    id: status,
+                },
+            },
+            order: {
+                index: 'DESC',
+            },
+        });
+        var index = lasttask ? lasttask.index + 1 : 1;
+        //check exist task category
+        const existingtaskcategory = yield Task_1.Task.findOne({
+            where: {
+                id: Number(id),
             },
         });
         if (!existingtaskcategory)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Task category does not exist in the system 1',
+                message: 'Task category does not exist in the system',
             });
-        //Check exist list employees
-        yield Promise.all(employees.map((employeeId) => __awaiter(void 0, void 0, void 0, function* () {
-            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
-                const existingEmployee = yield Employee_1.Employee.findOne({
-                    where: {
-                        id: employeeId,
-                    },
+        //check exist project
+        const existingproject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(id),
+            },
+        });
+        if (!existingproject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not exist in the system',
+            });
+        //Check valid input create new task
+        //Check valid
+        const messageValid = taskValid_1.taskValid.createOrUpdate(dataUpdateTask);
+        if (messageValid)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: messageValid,
+            });
+        for (let index = 0; index < employees.length; index++) {
+            const employee_id = employees[index];
+            const existingEmployee = yield Employee_1.Employee.findOne({
+                where: {
+                    id: employee_id,
+                },
+            });
+            if (!existingEmployee)
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Employees does not exist in the system',
                 });
-                if (existingEmployee)
-                    taskEmployees.push(existingEmployee);
-                resolve(true);
-            }));
-        })));
+            taskEmployees.push(existingEmployee);
+        }
+        //update task
+        ;
         (existingtask.name = dataUpdateTask.name),
             (existingtask.project = dataUpdateTask.project),
             (existingtask.start_date = dataUpdateTask.start_date),
             (existingtask.deadline = dataUpdateTask.deadline),
             (existingtask.task_category = dataUpdateTask.task_category),
             (existingtask.employees = taskEmployees),
-            (existingtask.description = dataUpdateTask.description);
+            (existingtask.index = index),
+            (existingtask.status = existingStatus);
         yield existingtask.save();
         return res.status(200).json({
             code: 200,
@@ -197,12 +238,6 @@ const taskController = {
         const existingtask = yield Task_1.Task.findOne({
             where: {
                 id: Number(id),
-            },
-            relations: {
-                status: true,
-                project: true,
-                employees: true,
-                task_category: true,
             },
         });
         if (!existingtask)
@@ -339,11 +374,62 @@ const taskController = {
                 message: 'change position of status success',
             });
         }
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'change position of status success',
-        });
+        else {
+            const task1 = yield Task_1.Task.createQueryBuilder('task')
+                .where('task.id = :id1', { id1 })
+                .getOne();
+            const status2Exist = yield Status_1.Status.findOne({
+                where: {
+                    id: status2
+                }
+            });
+            if (!task1 || !status2Exist)
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Either status does not exist in the system',
+                });
+            if (!id2) {
+                const lastTask = yield Task_1.Task.findOne({
+                    where: {
+                        status: {
+                            id: status2
+                        }
+                    },
+                    order: {
+                        index: "DESC"
+                    }
+                });
+                task1.index = lastTask ? lastTask.index + 1 : 1;
+                task1.status = status2Exist;
+                yield task1.save();
+                return res.status(200).json({
+                    code: 200,
+                    success: true,
+                    message: 'change position of status success',
+                });
+            }
+            const task2 = yield Task_1.Task.createQueryBuilder('task')
+                .where('task.id = :id2', { id2 })
+                .getOne();
+            const index = task2 === null || task2 === void 0 ? void 0 : task2.index;
+            const alltask = yield Task_1.Task.createQueryBuilder('task').where('task.statusId = :status and task.index >= :index', { status: status2, index: task2 === null || task2 === void 0 ? void 0 : task2.index }).getMany();
+            if (alltask)
+                yield Promise.all(alltask.map((task) => __awaiter(void 0, void 0, void 0, function* () {
+                    return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                        task.index = task.index + 1;
+                        resolve(yield task.save());
+                    }));
+                })));
+            task1.index = Number(index);
+            task1.status = status2Exist;
+            yield task1.save();
+            return res.status(200).json({
+                code: 200,
+                success: true,
+                message: 'change position of status success',
+            });
+        }
     })),
 };
 exports.default = taskController;

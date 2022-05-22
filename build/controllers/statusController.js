@@ -156,7 +156,6 @@ const statusController = {
     //Change position of status
     changeposition: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id1, id2, projectId } = req.body;
-        console.log('fgdgfddfdfgdf dfg dfg', projectId);
         const status1 = yield Status_1.Status.createQueryBuilder('status')
             .where('status.id = :id1', { id1 })
             .getOne();
