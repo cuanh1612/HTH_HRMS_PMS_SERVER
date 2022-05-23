@@ -9,7 +9,9 @@ milestoneRouter.post('/', milestoneController.create)
 
 milestoneRouter.put('/:id', milestoneController.update)
 
-milestoneRouter.get('/:id', milestoneController.getByProject)
+milestoneRouter.get('/normal/:id', milestoneController.getByProject)
+milestoneRouter.get('/:id', milestoneController.getByProjectWithTask)
+
 
 milestoneRouter.delete('/:id', milestoneController.delete)
 

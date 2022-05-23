@@ -72,7 +72,7 @@ const mileStoneController = {
             message: 'Update milestone successfully',
         });
     })),
-    getByProject: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    getByProjectWithTask: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const existingProject = yield Project_1.Project.findOne({
             where: {
@@ -93,6 +93,39 @@ const mileStoneController = {
             },
             relations: {
                 tasks: true
+            }
+        });
+        if (!existingMileStones)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'MileStone does not existing in the system'
+            });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            milestones: existingMileStones,
+            message: 'Get milestones by project success'
+        });
+    })),
+    getByProject: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(id)
+            }
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not existing',
+            });
+        const existingMileStones = yield Milestone_1.Milestone.find({
+            where: {
+                project: {
+                    id: Number(id)
+                }
             }
         });
         if (!existingMileStones)
