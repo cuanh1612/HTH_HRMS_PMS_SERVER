@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const Department_1 = require("./Department");
 const Employee_1 = require("./Employee");
+const Hourly_rate_project_1 = require("./Hourly_rate_project");
 const Milestone_1 = require("./Milestone");
 const Project_Category_1 = require("./Project_Category");
 const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
@@ -130,11 +131,20 @@ __decorate([
     __metadata("design:type", Status_1.Status)
 ], Project.prototype, "status", void 0);
 __decorate([
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.projects_management),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Employee_1.Employee)
+], Project.prototype, "project_Admin", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => Task_1.Task, (task) => task.project, {
         onDelete: "SET NULL"
     }),
     __metadata("design:type", Array)
 ], Project.prototype, "tasks", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Hourly_rate_project_1.Hourly_rate_project, hourly_rate_project => hourly_rate_project.project),
+    __metadata("design:type", Array)
+], Project.prototype, "hourly_rate_projects", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Milestone_1.Milestone, (milestone) => milestone.project, {
         onDelete: 'SET NULL'

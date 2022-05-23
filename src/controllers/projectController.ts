@@ -12,6 +12,8 @@ import { createOrUpdateProjectPayload } from '../type/ProjectPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { projectValid } from '../utils/valid/projectValid'
+import {getManager} from 'typeorm'
+import { Hourly_rate_project } from '../entities/Hourly_rate_project'
 
 const projectController = {
 	//Create new project
@@ -93,12 +95,15 @@ const projectController = {
 					id: employee_id,
 				},
 			})
+
 			if (!existingEmployee)
 				return res.status(400).json({
 					code: 400,
 					success: false,
 					message: 'Employees does not exist in the system',
 				})
+			
+			
 
 			//check role employee
 			projectEmployees.push(existingEmployee)
@@ -109,7 +114,21 @@ const projectController = {
 			...dataNewProject,
 			employees: projectEmployees,
 		}).save()
-		console.log('ngtientrong1')
+
+		await Promise.all(projectEmployees.map(async employee => {
+			return new Promise(async (resolve)=> {
+				resolve(await Hourly_rate_project.insert({
+					project: {
+						id: createdProject.id
+					},
+					employee: {
+						id: employee.id
+					},
+					hourly_rate: employee.hourly_rate
+				}))
+			})
+		})) 
+		
 		if (project_files) {
 			//Create project files
 			for (let index = 0; index < project_files.length; index++) {
@@ -121,15 +140,13 @@ const projectController = {
 			}
 		}
 
-		const status1 = await Status.create({
+		await Status.create({
 			title: 'Incomplete',
 			root: true,
 			project: createdProject,
 			index: 0,
 			color: 'red',
 		}).save()
-
-		console.log('ngtientrong', status1)
 
 		await Status.create({
 			title: 'Complete',
@@ -433,6 +450,152 @@ const projectController = {
 			})
 		}
 	}),
+
+	setProjectAdmin: handleCatchError(async (req: Request, res: Response) => {
+		const {idProject, idEmployee} = req.body
+		if(!idProject || !idEmployee) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You need to enter full field',
+			})
+		}
+
+		const project = await Project.findOne({
+			where: {
+				id: Number(idProject)
+			}
+		})
+
+		const employee =  await Employee.findOne({
+			where: {
+				id: Number(idEmployee)
+			}
+		})
+
+		if(!project) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'This project not exist',
+			})
+		}
+
+		if(!employee) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'This employee not exist',
+			})
+		}
+
+		project.project_Admin = employee
+		await project.save()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Update role successfully',
+		})
+	}),
+
+	allEmployees: handleCatchError(async (req: Request, res: Response) => {
+		const {idProject} = req.params
+		if(!idProject) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You need to enter full field',
+			})
+		}
+
+		const project = await Project.findOne({
+			where: {
+				id: Number(idProject),
+			},
+			relations: {
+				project_Admin: true,
+				employees: true,
+			}
+		})
+	
+		if(!project) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'This project not exist',
+			})
+		}
+
+		const  hourly_rate_projects = await Promise.all(project.employees.map(async (employee)=> {
+			return new Promise(async (resolve)=> {
+				return resolve(await Hourly_rate_project.findOne({
+					where: {
+						project: {
+							id: project.id
+						},
+						employee: {
+							id: employee.id
+						}
+					}
+				}))
+			})
+		}))
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			project,
+			message: 'get all Employees successfully',
+			hourly_rate_projects
+		})
+	}),
+
+	deleteEmployee: handleCatchError(async (req: Request, res: Response) => {
+		const {projectId, employeeId} = req.body
+		const manager = getManager('huprom')
+
+		if(!projectId || !employeeId) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please enter full field',
+			})
+		}
+
+		const project = await Project.findOne({
+			where: {
+				id: Number(projectId)
+			},
+			relations: {
+				project_Admin: true
+			}
+		})
+
+		if(project?.project_Admin) {
+			if(project.project_Admin.id == Number(employeeId)) {
+				await manager.query(`update project set "projectAdminId" = null where project.id = ${project.id}`)
+			}
+		}
+
+		const dataExist = await manager.query(`select * from project_employee where "projectId" = ${Number(projectId)} and "employeeId" =  ${Number(employeeId)}`)
+		if(!dataExist || dataExist.length == 0) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'This employee is not involved in this project',
+			})
+		}
+		
+		await manager.query(`DELETE FROM project_employee WHERE "projectId" = ${Number(projectId)} and "employeeId" = ${Number(employeeId)}`)
+	
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete employee successfully',
+		})
+		
+	})
 }
 
 export default projectController

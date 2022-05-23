@@ -17,7 +17,7 @@ const Project_1 = require("../entities/Project");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const mileStoneController = {
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { title, summary, project } = req.body;
+        const { title, summary, project, cost } = req.body;
         const existingProject = yield Project_1.Project.findOne({
             where: {
                 id: Number(project)
@@ -38,7 +38,8 @@ const mileStoneController = {
         yield Milestone_1.Milestone.create({
             title: title,
             summary: summary,
-            project: project
+            project: project,
+            cost: Number(cost)
         }).save();
         return res.status(200).json({
             code: 200,
@@ -64,7 +65,7 @@ const mileStoneController = {
         existingMileStone.summary = dataUpdateMileStone.summary;
         existingMileStone.cost = dataUpdateMileStone.cost;
         existingMileStone.addtobudget = dataUpdateMileStone.addtobudget;
-        existingMileStone.project = dataUpdateMileStone.project;
+        existingMileStone.status = dataUpdateMileStone.status;
         yield existingMileStone.save();
         return res.status(200).json({
             code: 200,

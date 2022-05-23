@@ -24,7 +24,7 @@ __decorate([
     __metadata("design:type", String)
 ], Milestone.prototype, "title", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)('float', { nullable: true }),
     __metadata("design:type", Number)
 ], Milestone.prototype, "cost", void 0);
 __decorate([

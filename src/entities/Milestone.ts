@@ -11,7 +11,7 @@ export class Milestone extends BaseEntity {
     @Column({unique: true})
     title: String
 
-    @Column({nullable: true})
+    @Column('float', {nullable: true})
     cost: number
 
     @Column({default:false})

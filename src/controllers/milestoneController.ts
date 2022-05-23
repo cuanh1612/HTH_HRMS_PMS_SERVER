@@ -5,7 +5,7 @@ import handleCatchError from "../utils/catchAsyncError";
 
 const mileStoneController = {
     create: handleCatchError(async (req: Request, res: Response) => {
-        const { title, summary, project } = req.body
+        const { title, summary, project, cost } = req.body
 
         const existingProject = await Project.findOne({
             where: {
@@ -30,7 +30,8 @@ const mileStoneController = {
         await Milestone.create({
             title: title,
             summary: summary,
-            project: project
+            project: project,
+            cost: Number(cost)
         }).save()
 
         return res.status(200).json({
@@ -60,7 +61,7 @@ const mileStoneController = {
         existingMileStone.summary = dataUpdateMileStone.summary
         existingMileStone.cost = dataUpdateMileStone.cost
         existingMileStone.addtobudget = dataUpdateMileStone.addtobudget
-        existingMileStone.project = dataUpdateMileStone.project
+        existingMileStone.status = dataUpdateMileStone.status
 
         await existingMileStone.save()
 

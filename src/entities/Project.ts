@@ -14,6 +14,7 @@ import {
 import { Client } from './Client'
 import { Department } from './Department'
 import { Employee } from './Employee'
+import { Hourly_rate_project } from './Hourly_rate_project'
 import { Milestone } from './Milestone'
 import { Project_Category } from './Project_Category'
 import { Project_Discussion_Room } from './Project_Discussion_Room'
@@ -118,11 +119,17 @@ export class Project extends BaseEntity {
 	@OneToMany(() => Status, (status) => status.project)
 	status: Status
 
+	@ManyToOne(()=> Employee, (employee)=> employee.projects_management)
+	@JoinColumn()
+	project_Admin: Employee
+
 	@OneToMany(() => Task, (task) => task.project, {
 		onDelete: "SET NULL"
 	})
 	tasks: Task[]
 
+	@OneToMany(()=> Hourly_rate_project, hourly_rate_project=> hourly_rate_project.project)
+	hourly_rate_projects: Hourly_rate_project[]
 	@OneToMany(() => Milestone, (milestone) => milestone.project, {
 		onDelete: 'SET NULL'
 	})
