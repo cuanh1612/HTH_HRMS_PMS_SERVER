@@ -12,7 +12,7 @@ import { createOrUpdateProjectPayload } from '../type/ProjectPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { projectValid } from '../utils/valid/projectValid'
-import {getManager} from 'typeorm'
+import { getManager } from 'typeorm'
 import { Hourly_rate_project } from '../entities/Hourly_rate_project'
 
 const projectController = {
@@ -102,8 +102,6 @@ const projectController = {
 					success: false,
 					message: 'Employees does not exist in the system',
 				})
-			
-			
 
 			//check role employee
 			projectEmployees.push(existingEmployee)
@@ -115,20 +113,24 @@ const projectController = {
 			employees: projectEmployees,
 		}).save()
 
-		await Promise.all(projectEmployees.map(async employee => {
-			return new Promise(async (resolve)=> {
-				resolve(await Hourly_rate_project.insert({
-					project: {
-						id: createdProject.id
-					},
-					employee: {
-						id: employee.id
-					},
-					hourly_rate: employee.hourly_rate
-				}))
+		await Promise.all(
+			projectEmployees.map(async (employee) => {
+				return new Promise(async (resolve) => {
+					resolve(
+						await Hourly_rate_project.insert({
+							project: {
+								id: createdProject.id,
+							},
+							employee: {
+								id: employee.id,
+							},
+							hourly_rate: employee.hourly_rate,
+						})
+					)
+				})
 			})
-		})) 
-		
+		)
+
 		if (project_files) {
 			//Create project files
 			for (let index = 0; index < project_files.length; index++) {
@@ -265,11 +267,12 @@ const projectController = {
 
 	//Get all project
 	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const projects = await Project.find({relations:{
-			employees: true,
-			client: true,
-			
-		}})
+		const projects = await Project.find({
+			relations: {
+				employees: true,
+				client: true,
+			},
+		})
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -278,12 +281,129 @@ const projectController = {
 		})
 	}),
 
+	//Get employee not in the projet
+	getEmployeeNotIn: handleCatchError(async (req: Request, res: Response) => {
+		const { projectId } = req.params
+
+		const existingProject = await Project.findOne({
+			where: {
+				id: Number(projectId),
+			},
+			relations: {
+				employees: true,
+			},
+		})
+
+		if (!existingProject)
+			return res.status(400).json({
+				code: 200,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+
+		const idEmployees = existingProject.employees.map((employee) => {
+			return employee.id
+		})
+
+		const allEmployees = await Employee.createQueryBuilder('employee')
+			.where('employee.id NOT IN (:...ids)', {
+				ids: idEmployees,
+			})
+			.getMany()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			employees: allEmployees,
+			message: 'Get employee not in the project success',
+		})
+	}),
+
+	//Assign Employee into project
+	assignEmployee: handleCatchError(async (req: Request, res: Response) => {
+		const { projectId } = req.params
+		const { employees }: { employees: Array<number> } = req.body
+
+		const existingProject = await Project.findOne({
+			where: {
+				id: Number(projectId),
+			},
+			relations: {
+				employees: true,
+			},
+		})
+		if (!existingProject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+
+		const allEmployees = await Employee.createQueryBuilder('employee')
+			.where('employee.id IN (:...ids)', {
+				ids: employees,
+			})
+			.getMany()
+
+		existingProject.employees = [...existingProject.employees, ...allEmployees]
+		await existingProject.save()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Assign employee success',
+		})
+	}),
+
+	//Assign Employee into project by department
+	assignEmployeeByDepartment: handleCatchError(async (req: Request, res: Response) => {
+		const { projectId } = req.params
+		const { departments }: { departments: Array<number> } = req.body
+
+		const existingProject = await Project.findOne({
+			where: {
+				id: Number(projectId),
+			},
+			relations: {
+				employees: true,
+			},
+		})
+		if (!existingProject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+
+		const allEmployees = await Employee.createQueryBuilder('employee')
+			.where('"departmentId" IN (:...ids)', {
+				ids: departments,
+			})
+			.getMany()
+
+		if (allEmployees.length == 0)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'There are no employees left to participate in the project',
+			})
+
+		existingProject.employees = [...existingProject.employees, ...allEmployees]
+		await existingProject.save()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Assign employee success',
+		})
+	}),
+
 	//Get detail project
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
 		const existingproject = await Project.findOne({
-			relations:{
+			relations: {
 				client: true,
 				employees: true,
 			},
@@ -389,8 +509,8 @@ const projectController = {
 				id: Number(projectId),
 			},
 			relations: {
-				client: true
-			}
+				client: true,
+			},
 		})
 
 		if (!existingProject)
@@ -410,7 +530,7 @@ const projectController = {
 				message: 'Please login first',
 			})
 
-		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload		
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
 
 		//Get data user
 		const existingUser =
@@ -455,8 +575,8 @@ const projectController = {
 	}),
 
 	setProjectAdmin: handleCatchError(async (req: Request, res: Response) => {
-		const {idProject, idEmployee} = req.body
-		if(!idProject || !idEmployee) {
+		const { idProject, idEmployee } = req.body
+		if (!idProject || !idEmployee) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -466,17 +586,17 @@ const projectController = {
 
 		const project = await Project.findOne({
 			where: {
-				id: Number(idProject)
-			}
+				id: Number(idProject),
+			},
 		})
 
-		const employee =  await Employee.findOne({
+		const employee = await Employee.findOne({
 			where: {
-				id: Number(idEmployee)
-			}
+				id: Number(idEmployee),
+			},
 		})
 
-		if(!project) {
+		if (!project) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -484,7 +604,7 @@ const projectController = {
 			})
 		}
 
-		if(!employee) {
+		if (!employee) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -503,8 +623,8 @@ const projectController = {
 	}),
 
 	allEmployees: handleCatchError(async (req: Request, res: Response) => {
-		const {idProject} = req.params
-		if(!idProject) {
+		const { idProject } = req.params
+		if (!idProject) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -519,10 +639,10 @@ const projectController = {
 			relations: {
 				project_Admin: true,
 				employees: true,
-			}
+			},
 		})
-	
-		if(!project) {
+
+		if (!project) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -530,35 +650,39 @@ const projectController = {
 			})
 		}
 
-		const  hourly_rate_projects = await Promise.all(project.employees.map(async (employee)=> {
-			return new Promise(async (resolve)=> {
-				return resolve(await Hourly_rate_project.findOne({
-					where: {
-						project: {
-							id: project.id
-						},
-						employee: {
-							id: employee.id
-						}
-					}
-				}))
+		const hourly_rate_projects = await Promise.all(
+			project.employees.map(async (employee) => {
+				return new Promise(async (resolve) => {
+					return resolve(
+						await Hourly_rate_project.findOne({
+							where: {
+								project: {
+									id: project.id,
+								},
+								employee: {
+									id: employee.id,
+								},
+							},
+						})
+					)
+				})
 			})
-		}))
+		)
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
 			project,
 			message: 'get all Employees successfully',
-			hourly_rate_projects
+			hourly_rate_projects,
 		})
 	}),
 
 	deleteEmployee: handleCatchError(async (req: Request, res: Response) => {
-		const {projectId, employeeId} = req.body
+		const { projectId, employeeId } = req.body
 		const manager = getManager('huprom')
 
-		if(!projectId || !employeeId) {
+		if (!projectId || !employeeId) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -568,37 +692,46 @@ const projectController = {
 
 		const project = await Project.findOne({
 			where: {
-				id: Number(projectId)
+				id: Number(projectId),
 			},
 			relations: {
-				project_Admin: true
-			}
+				project_Admin: true,
+			},
 		})
 
-		if(project?.project_Admin) {
-			if(project.project_Admin.id == Number(employeeId)) {
-				await manager.query(`update project set "projectAdminId" = null where project.id = ${project.id}`)
+		if (project?.project_Admin) {
+			if (project.project_Admin.id == Number(employeeId)) {
+				await manager.query(
+					`update project set "projectAdminId" = null where project.id = ${project.id}`
+				)
 			}
 		}
 
-		const dataExist = await manager.query(`select * from project_employee where "projectId" = ${Number(projectId)} and "employeeId" =  ${Number(employeeId)}`)
-		if(!dataExist || dataExist.length == 0) {
+		const dataExist = await manager.query(
+			`select * from project_employee where "projectId" = ${Number(
+				projectId
+			)} and "employeeId" =  ${Number(employeeId)}`
+		)
+		if (!dataExist || dataExist.length == 0) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'This employee is not involved in this project',
 			})
 		}
-		
-		await manager.query(`DELETE FROM project_employee WHERE "projectId" = ${Number(projectId)} and "employeeId" = ${Number(employeeId)}`)
-	
+
+		await manager.query(
+			`DELETE FROM project_employee WHERE "projectId" = ${Number(
+				projectId
+			)} and "employeeId" = ${Number(employeeId)}`
+		)
+
 		return res.status(200).json({
 			code: 200,
 			success: true,
 			message: 'Delete employee successfully',
 		})
-		
-	})
+	}),
 }
 
 export default projectController

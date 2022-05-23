@@ -112,12 +112,12 @@ const projectController = {
             return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
                 resolve(yield Hourly_rate_project_1.Hourly_rate_project.insert({
                     project: {
-                        id: createdProject.id
+                        id: createdProject.id,
                     },
                     employee: {
-                        id: employee.id
+                        id: employee.id,
                     },
-                    hourly_rate: employee.hourly_rate
+                    hourly_rate: employee.hourly_rate,
                 }));
             }));
         })));
@@ -239,15 +239,117 @@ const projectController = {
     })),
     //Get all project
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const projects = yield Project_1.Project.find({ relations: {
+        const projects = yield Project_1.Project.find({
+            relations: {
                 employees: true,
                 client: true,
-            } });
+            },
+        });
         return res.status(200).json({
             code: 200,
             success: true,
             projects: projects,
             message: 'Get all projects success',
+        });
+    })),
+    //Get employee not in the projet
+    getEmployeeNotIn: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { projectId } = req.params;
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId),
+            },
+            relations: {
+                employees: true,
+            },
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 200,
+                success: false,
+                message: 'Project does not exist in the system',
+            });
+        const idEmployees = existingProject.employees.map((employee) => {
+            return employee.id;
+        });
+        const allEmployees = yield Employee_1.Employee.createQueryBuilder('employee')
+            .where('employee.id NOT IN (:...ids)', {
+            ids: idEmployees,
+        })
+            .getMany();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            employees: allEmployees,
+            message: 'Get employee not in the project success',
+        });
+    })),
+    //Assign Employee into project
+    assignEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { projectId } = req.params;
+        const { employees } = req.body;
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId),
+            },
+            relations: {
+                employees: true,
+            },
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not exist in the system',
+            });
+        const allEmployees = yield Employee_1.Employee.createQueryBuilder('employee')
+            .where('employee.id IN (:...ids)', {
+            ids: employees,
+        })
+            .getMany();
+        existingProject.employees = [...existingProject.employees, ...allEmployees];
+        yield existingProject.save();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Assign employee success',
+        });
+    })),
+    //Assign Employee into project by department
+    assignEmployeeByDepartment: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { projectId } = req.params;
+        const { departments } = req.body;
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId),
+            },
+            relations: {
+                employees: true,
+            },
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not exist in the system',
+            });
+        const allEmployees = yield Employee_1.Employee.createQueryBuilder('employee')
+            .where('"departmentId" IN (:...ids)', {
+            ids: departments,
+        })
+            .getMany();
+        if (allEmployees.length == 0)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'There are no employees left to participate in the project',
+            });
+        existingProject.employees = [...existingProject.employees, ...allEmployees];
+        yield existingProject.save();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Assign employee success',
         });
     })),
     //Get detail project
@@ -347,8 +449,8 @@ const projectController = {
                 id: Number(projectId),
             },
             relations: {
-                client: true
-            }
+                client: true,
+            },
         });
         if (!existingProject)
             return res.status(400).json({
@@ -411,13 +513,13 @@ const projectController = {
         }
         const project = yield Project_1.Project.findOne({
             where: {
-                id: Number(idProject)
-            }
+                id: Number(idProject),
+            },
         });
         const employee = yield Employee_1.Employee.findOne({
             where: {
-                id: Number(idEmployee)
-            }
+                id: Number(idEmployee),
+            },
         });
         if (!project) {
             return res.status(400).json({
@@ -457,7 +559,7 @@ const projectController = {
             relations: {
                 project_Admin: true,
                 employees: true,
-            }
+            },
         });
         if (!project) {
             return res.status(400).json({
@@ -471,12 +573,12 @@ const projectController = {
                 return resolve(yield Hourly_rate_project_1.Hourly_rate_project.findOne({
                     where: {
                         project: {
-                            id: project.id
+                            id: project.id,
                         },
                         employee: {
-                            id: employee.id
-                        }
-                    }
+                            id: employee.id,
+                        },
+                    },
                 }));
             }));
         })));
@@ -485,7 +587,7 @@ const projectController = {
             success: true,
             project,
             message: 'get all Employees successfully',
-            hourly_rate_projects
+            hourly_rate_projects,
         });
     })),
     deleteEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -500,11 +602,11 @@ const projectController = {
         }
         const project = yield Project_1.Project.findOne({
             where: {
-                id: Number(projectId)
+                id: Number(projectId),
             },
             relations: {
-                project_Admin: true
-            }
+                project_Admin: true,
+            },
         });
         if (project === null || project === void 0 ? void 0 : project.project_Admin) {
             if (project.project_Admin.id == Number(employeeId)) {
@@ -525,6 +627,6 @@ const projectController = {
             success: true,
             message: 'Delete employee successfully',
         });
-    }))
+    })),
 };
 exports.default = projectController;

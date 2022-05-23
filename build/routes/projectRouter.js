@@ -8,9 +8,12 @@ const projectController_1 = __importDefault(require("../controllers/projectContr
 const projectRouter = express_1.default.Router();
 projectRouter.post('/delete-employee', projectController_1.default.deleteEmployee);
 projectRouter.post('/', projectController_1.default.create);
+projectRouter.put('/assign-employee/:projectId', projectController_1.default.assignEmployee);
+projectRouter.put('/assign-employee/department/:projectId', projectController_1.default.assignEmployeeByDepartment);
+projectRouter.put('/:id', projectController_1.default.update);
+projectRouter.get('/get-employees-not-in-project/:projectId', projectController_1.default.getEmployeeNotIn);
 projectRouter.get('/all-employees/:idProject', projectController_1.default.allEmployees);
 projectRouter.get('/:projectId/check-asigned', projectController_1.default.checkAssigned);
-projectRouter.put('/:id', projectController_1.default.update);
 projectRouter.get('/', projectController_1.default.getAll);
 projectRouter.get('/:id', projectController_1.default.getDetail);
 projectRouter.delete('/:id', projectController_1.default.delete);
