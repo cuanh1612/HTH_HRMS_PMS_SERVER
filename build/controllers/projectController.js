@@ -239,10 +239,12 @@ const projectController = {
     })),
     //Get all project
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const projects = yield Project_1.Project.find({ relations: {
+        const projects = yield Project_1.Project.find({
+            relations: {
                 employees: true,
                 client: true,
-            } });
+            }
+        });
         return res.status(200).json({
             code: 200,
             success: true,
@@ -278,6 +280,35 @@ const projectController = {
             success: true,
             employees: allEmployees,
             message: 'Get employee not in the project success'
+        });
+    })),
+    //Assign Employee into project
+    assignEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { projectId } = req.params;
+        const { employees } = req.body;
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId)
+            },
+            relations: {
+                employees: true
+            }
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 200,
+                success: false,
+                message: 'Project does not exist in the system'
+            });
+        const allEmployees = yield Employee_1.Employee.createQueryBuilder('employee').where('employee.id IN (:...ids)', {
+            ids: employees
+        }).getMany();
+        existingProject.employees = [...existingProject.employees, ...allEmployees];
+        yield existingProject.save();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Assign employee success'
         });
     })),
     //Get detail project
