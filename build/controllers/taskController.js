@@ -122,7 +122,7 @@ const taskController = {
         const { id } = req.params;
         const dataUpdateTask = req.body;
         // const { task_category, project, employees} = dataUpdateTask
-        const { employees, status } = dataUpdateTask;
+        const { employees, status, project, task_category } = dataUpdateTask;
         let taskEmployees = [];
         const existingtask = yield Task_1.Task.findOne({
             where: {
@@ -158,9 +158,9 @@ const taskController = {
         });
         var index = lasttask ? lasttask.index + 1 : 1;
         //check exist task category
-        const existingtaskcategory = yield Task_1.Task.findOne({
+        const existingtaskcategory = yield Task_Category_1.Task_Category.findOne({
             where: {
-                id: Number(id),
+                id: Number(task_category),
             },
         });
         if (!existingtaskcategory)
@@ -172,7 +172,7 @@ const taskController = {
         //check exist project
         const existingproject = yield Project_1.Project.findOne({
             where: {
-                id: Number(id),
+                id: Number(project),
             },
         });
         if (!existingproject)
