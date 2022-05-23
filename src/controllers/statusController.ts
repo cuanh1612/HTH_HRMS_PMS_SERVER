@@ -56,6 +56,30 @@ const statusController = {
         })
     }),
 
+	getDetail: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params	
+
+		const existingStatus = await Status.findOne({
+			where: {
+				id: Number(id)
+			}
+		})
+
+		if(!existingStatus)
+		return res.status(400).json({
+			code: 400,
+			success: false,
+			message: 'Status does not exist in the system',
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			project: existingStatus,
+			message: 'Get detail of project success',
+		})
+	}),
+
 	getAll: handleCatchError(async (req: Request, res: Response) => {
 		const { projectId } = req.params
 

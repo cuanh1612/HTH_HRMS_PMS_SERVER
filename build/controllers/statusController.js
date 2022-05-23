@@ -60,6 +60,26 @@ const statusController = {
             result: status_result
         });
     })),
+    getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
+        const existingStatus = yield Status_1.Status.findOne({
+            where: {
+                id: Number(id)
+            }
+        });
+        if (!existingStatus)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Status does not exist in the system',
+            });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            project: existingStatus,
+            message: 'Get detail of project success',
+        });
+    })),
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { projectId } = req.params;
         const findbyproject = yield Status_1.Status.find({
