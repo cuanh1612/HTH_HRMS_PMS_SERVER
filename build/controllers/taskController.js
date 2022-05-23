@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Employee_1 = require("../entities/Employee");
+const Milestone_1 = require("../entities/Milestone");
 const Project_1 = require("../entities/Project");
 const Status_1 = require("../entities/Status");
 const Task_1 = require("../entities/Task");
@@ -28,7 +29,7 @@ const taskController = {
     //Create new task
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewTask = req.body;
-        const { task_category, project, employees, task_files, status } = dataNewTask;
+        const { task_category, project, employees, task_files, status, milestone } = dataNewTask;
         let taskEmployees = [];
         //check valid
         const messageValid = taskValid_1.taskValid.createOrUpdate(dataNewTask);
@@ -62,6 +63,7 @@ const taskController = {
                 success: false,
                 message: 'Project does not exist in the system',
             });
+        //Check exist task category
         const existingCategories = yield Task_Category_1.Task_Category.findOne({
             where: {
                 id: task_category,
@@ -73,6 +75,21 @@ const taskController = {
                 success: false,
                 message: 'Task Category does not exist in the system',
             });
+        }
+        //Check exist milestone
+        if (milestone) {
+            const existingMilestone = yield Milestone_1.Milestone.findOne({
+                where: {
+                    id: milestone,
+                },
+            });
+            if (!existingMilestone) {
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Milestone does not exist in the system',
+                });
+            }
         }
         for (let index = 0; index < employees.length; index++) {
             const employee_id = employees[index];
@@ -122,7 +139,7 @@ const taskController = {
         const { id } = req.params;
         const dataUpdateTask = req.body;
         // const { task_category, project, employees} = dataUpdateTask
-        const { employees, status, project, task_category } = dataUpdateTask;
+        const { employees, status, project, task_category, milestone } = dataUpdateTask;
         let taskEmployees = [];
         const existingtask = yield Task_1.Task.findOne({
             where: {
@@ -205,6 +222,24 @@ const taskController = {
                 });
             taskEmployees.push(existingEmployee);
         }
+        //Check exist milestone
+        if (milestone) {
+            const existingMilestone = yield Milestone_1.Milestone.findOne({
+                where: {
+                    id: milestone,
+                },
+            });
+            if (!existingMilestone) {
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Milestone does not exist in the system',
+                });
+            }
+            else {
+                existingtask.milestone = existingMilestone;
+            }
+        }
         //update task
         ;
         (existingtask.name = dataUpdateTask.name),
@@ -243,8 +278,8 @@ const taskController = {
                 project: true,
                 task_category: true,
                 status: true,
-                employees: true
-            }
+                employees: true,
+            },
         });
         if (!existingtask)
             return res.status(400).json({
@@ -386,8 +421,8 @@ const taskController = {
                 .getOne();
             const status2Exist = yield Status_1.Status.findOne({
                 where: {
-                    id: status2
-                }
+                    id: status2,
+                },
             });
             if (!task1 || !status2Exist)
                 return res.status(400).json({
@@ -399,12 +434,12 @@ const taskController = {
                 const lastTask = yield Task_1.Task.findOne({
                     where: {
                         status: {
-                            id: status2
-                        }
+                            id: status2,
+                        },
                     },
                     order: {
-                        index: "DESC"
-                    }
+                        index: 'DESC',
+                    },
                 });
                 task1.index = lastTask ? lastTask.index + 1 : 1;
                 task1.status = status2Exist;
@@ -419,7 +454,12 @@ const taskController = {
                 .where('task.id = :id2', { id2 })
                 .getOne();
             const index = task2 === null || task2 === void 0 ? void 0 : task2.index;
-            const alltask = yield Task_1.Task.createQueryBuilder('task').where('task.statusId = :status and task.index >= :index', { status: status2, index: task2 === null || task2 === void 0 ? void 0 : task2.index }).getMany();
+            const alltask = yield Task_1.Task.createQueryBuilder('task')
+                .where('task.statusId = :status and task.index >= :index', {
+                status: status2,
+                index: task2 === null || task2 === void 0 ? void 0 : task2.index,
+            })
+                .getMany();
             if (alltask)
                 yield Promise.all(alltask.map((task) => __awaiter(void 0, void 0, void 0, function* () {
                     return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
