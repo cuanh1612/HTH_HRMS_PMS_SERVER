@@ -9,6 +9,7 @@ const milestoneRouter = express_1.default.Router();
 milestoneRouter.post('/', milestoneController_1.default.create);
 milestoneRouter.put('/:id', milestoneController_1.default.update);
 milestoneRouter.get('/normal/:id', milestoneController_1.default.getByProject);
+milestoneRouter.get('/detail/:id', milestoneController_1.default.getDetail);
 milestoneRouter.get('/:id', milestoneController_1.default.getByProjectWithTask);
 milestoneRouter.delete('/:id', milestoneController_1.default.delete);
 exports.default = milestoneRouter;
