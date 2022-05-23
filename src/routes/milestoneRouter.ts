@@ -10,6 +10,7 @@ milestoneRouter.post('/', milestoneController.create)
 milestoneRouter.put('/:id', milestoneController.update)
 
 milestoneRouter.get('/normal/:id', milestoneController.getByProject)
+milestoneRouter.get('/detail/:id', milestoneController.getDetail)
 milestoneRouter.get('/:id', milestoneController.getByProjectWithTask)
 
 

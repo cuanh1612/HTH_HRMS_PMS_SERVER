@@ -279,7 +279,7 @@ const taskController = {
 			message: 'Update Task success',
 		})
 	}),
-    
+
 	//Get all task
 	getAll: handleCatchError(async (_: Request, res: Response) => {
 		const tasks = await Task.find()
@@ -294,17 +294,18 @@ const taskController = {
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingtask = await Task.findOne({
-			where: {
-				id: Number(id),
-			},
-			relations: {
-				project: true,
-				task_category: true,
-				status: true,
-				employees: true,
-			},
-		})
+        const existingtask = await Task.findOne({
+            where: {
+                id: Number(id),
+            },
+            relations:{
+                project: true,
+                task_category: true,
+                status:true,
+                employees: true,
+                milestone: true
+            }
+        })
 
 		if (!existingtask)
 			return res.status(400).json({

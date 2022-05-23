@@ -142,6 +142,29 @@ const mileStoneController = {
             message: 'Get milestones by project success'
         });
     })),
+    getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
+        const existingMileStone = yield Milestone_1.Milestone.findOne({
+            where: {
+                id: Number(id),
+            },
+            relations: {
+                tasks: true,
+            }
+        });
+        if (!existingMileStone)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'MileStone does not existing in the system'
+            });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            milestones: existingMileStone,
+            message: 'Get milestones by project success'
+        });
+    })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const existingMileStone = yield Milestone_1.Milestone.findOne({

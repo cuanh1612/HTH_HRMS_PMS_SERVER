@@ -279,7 +279,8 @@ const taskController = {
                 task_category: true,
                 status: true,
                 employees: true,
-            },
+                milestone: true
+            }
         });
         if (!existingtask)
             return res.status(400).json({

@@ -7,6 +7,7 @@ import statusController from "../controllers/statusController";
  statusRouter.post('/', statusController.create)
  
  statusRouter.get('/normal/:projectId', statusController.getAll)
+ statusRouter.get('/detail/:id', statusController.getDetail)
  statusRouter.get('/:projectId', statusController.getAllWithTask)
 
  
