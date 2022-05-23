@@ -32,6 +32,7 @@ import { Project_Discussion_Room } from '../entities/Project_Discussion_Room'
 import { Salary } from '../entities/Salary'
 import { Status } from '../entities/Status'
 import { Project_note } from '../entities/Project_Note'
+import { Hourly_rate_project } from '../entities/Hourly_rate_project'
 import { Milestone } from '../entities/Milestone'
 
 const connectDB = () => {
@@ -78,6 +79,7 @@ const connectDB = () => {
 			Salary,
 			Status,
 			Project_note,
+			Hourly_rate_project,
 			Milestone
 		],
 	})

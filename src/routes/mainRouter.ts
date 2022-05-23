@@ -32,6 +32,7 @@ import projectDiscussionRoomRouter from './projectDiscussionRoomRouter'
 import statusRouter from './statusRouter'
 import taskRouter from './taskRouter'
 import projectNoteRouter from './projectNoteRouter'
+import hourlyRateRouter from './hourlyRateRouter'
 import milestoneRouter from './milestoneRouter'
 
 function mainRouter(app: core.Express) {
@@ -101,6 +102,7 @@ function mainRouter(app: core.Express) {
 
 	app.use('/api/project-notes', projectNoteRouter)
 
+	app.use('/api/hourly-Rate', hourlyRateRouter)
 	app.use('/api/milestone', milestoneRouter)
 }
 
