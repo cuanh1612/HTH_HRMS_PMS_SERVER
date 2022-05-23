@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
+import { Milestone } from '../entities/Milestone'
 import { Project } from '../entities/Project'
 import { Status } from '../entities/Status'
 import { Task } from '../entities/Task'
@@ -14,248 +15,284 @@ import { taskValid } from '../utils/valid/taskValid'
 // import { taskValid } from '../utils/valid/taskValid copy'
 
 const taskController = {
-    //Create new task
-    create: handleCatchError(async (req: Request, res: Response) => {
-        const dataNewTask: createOrUpdateTaskPayload = req.body
-        const { task_category, project, employees, task_files, status } = dataNewTask
-        let taskEmployees: Employee[] = []
+	//Create new task
+	create: handleCatchError(async (req: Request, res: Response) => {
+		const dataNewTask: createOrUpdateTaskPayload = req.body
+		const { task_category, project, employees, task_files, status, milestone } = dataNewTask
+		let taskEmployees: Employee[] = []
 
-        //check valid
-        const messageValid = taskValid.createOrUpdate(dataNewTask)
+		//check valid
+		const messageValid = taskValid.createOrUpdate(dataNewTask)
 
-        if (messageValid)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: messageValid,
-            })
-        //check exist status
-        const existingStatus = await Status.findOne({
-            where: {
-                id: status,
-            },
-        })
+		if (messageValid)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: messageValid,
+			})
+		//check exist status
+		const existingStatus = await Status.findOne({
+			where: {
+				id: status,
+			},
+		})
 
-        if (!existingStatus)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Status does not existing',
-            })
+		if (!existingStatus)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Status does not existing',
+			})
 
-        //check exist project
-        const existingproject = await Project.findOne({
-            where: {
-                id: project,
-            },
-        })
-        if (!existingproject)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Project does not exist in the system',
-            })
-        const existingCategories = await Task_Category.findOne({
-            where: {
-                id: task_category,
-            },
-        })
-        if (!existingCategories) {
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Task Category does not exist in the system',
-            })
-        }
+		//check exist project
+		const existingproject = await Project.findOne({
+			where: {
+				id: project,
+			},
+		})
+		if (!existingproject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
 
-        for (let index = 0; index < employees.length; index++) {
-            const employee_id = employees[index]
-            const existingEmployee = await Employee.findOne({
-                where: {
-                    id: employee_id,
-                },
-            })
-            if (!existingEmployee)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Employees does not exist in the system',
-                })
+		//Check exist task category
+		const existingCategories = await Task_Category.findOne({
+			where: {
+				id: task_category,
+			},
+		})
+		if (!existingCategories) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Task Category does not exist in the system',
+			})
+		}
 
-            //check role employee
-            taskEmployees.push(existingEmployee)
-        }
+		//Check exist milestone
+		if (milestone) {
+			const existingMilestone = await Milestone.findOne({
+				where: {
+					id: milestone,
+				},
+			})
+			if (!existingMilestone) {
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Milestone does not exist in the system',
+				})
+			}
+		}
 
-        const lasttask = await Task.findOne({
-            where: {
-                status: {
-                    id: status,
-                },
-            },
-            order: {
-                index: 'DESC',
-            },
-        })
-        var index = lasttask ? lasttask.index + 1 : 1
+		for (let index = 0; index < employees.length; index++) {
+			const employee_id = employees[index]
+			const existingEmployee = await Employee.findOne({
+				where: {
+					id: employee_id,
+				},
+			})
+			if (!existingEmployee)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Employees does not exist in the system',
+				})
 
-        //create task
-        const createdTask = await Task.create({
-            ...dataNewTask,
-            employees: taskEmployees,
-            index,
-        }).save()
+			//check role employee
+			taskEmployees.push(existingEmployee)
+		}
 
-        if (Array.isArray(task_files)) {
-            //create task files
-            for (let index = 0; index < task_files.length; index++) {
-                const task_file = task_files[index]
-                await Task_file.create({
-                    ...task_file,
-                    task: task_file,
-                }).save()
-            }
-        }
+		const lasttask = await Task.findOne({
+			where: {
+				status: {
+					id: status,
+				},
+			},
+			order: {
+				index: 'DESC',
+			},
+		})
+		var index = lasttask ? lasttask.index + 1 : 1
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            task: createdTask,
-            message: ' Create new Task success',
-        })
-    }),
+		//create task
+		const createdTask = await Task.create({
+			...dataNewTask,
+			employees: taskEmployees,
+			index,
+		}).save()
 
-    //Update Task
-    update: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
-        const dataUpdateTask: createOrUpdateTaskPayload = req.body
-        // const { task_category, project, employees} = dataUpdateTask
-        const { employees, status, project, task_category } = dataUpdateTask
-        let taskEmployees: Employee[] = []
+		if (Array.isArray(task_files)) {
+			//create task files
+			for (let index = 0; index < task_files.length; index++) {
+				const task_file = task_files[index]
+				await Task_file.create({
+					...task_file,
+					task: task_file,
+				}).save()
+			}
+		}
 
-        const existingtask = await Task.findOne({
-            where: {
-                id: Number(id),
-            },
-        })
-        if (!existingtask)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Task does not exist in the system',
-            })
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			task: createdTask,
+			message: ' Create new Task success',
+		})
+	}),
 
-            const existingStatus = await Status.findOne({
-                where: {
-                    id: Number(status),
-                },
-            })
-            if (!existingStatus)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Task does not exist in the system',
-                })
-    
+	//Update Task
+	update: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
+		const dataUpdateTask: createOrUpdateTaskPayload = req.body
+		// const { task_category, project, employees} = dataUpdateTask
+		const { employees, status, project, task_category, milestone } = dataUpdateTask
+		let taskEmployees: Employee[] = []
 
-        const lasttask = await Task.findOne({
-            where: {
-                status: {
-                    id: status,
-                },
-            },
-            order: {
-                index: 'DESC',
-            },
-        })
-        var index = lasttask ? lasttask.index + 1 : 1
+		const existingtask = await Task.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
+		if (!existingtask)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Task does not exist in the system',
+			})
 
+		const existingStatus = await Status.findOne({
+			where: {
+				id: Number(status),
+			},
+		})
+		if (!existingStatus)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Task does not exist in the system',
+			})
 
-        //check exist task category
-        const existingtaskcategory = await Task_Category.findOne({
-            where: {
-                id: Number(task_category),
-            },
-        })
+		const lasttask = await Task.findOne({
+			where: {
+				status: {
+					id: status,
+				},
+			},
+			order: {
+				index: 'DESC',
+			},
+		})
+		var index = lasttask ? lasttask.index + 1 : 1
 
-        if (!existingtaskcategory)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Task category does not exist in the system',
-            })
+		//check exist task category
+		const existingtaskcategory = await Task_Category.findOne({
+			where: {
+				id: Number(task_category),
+			},
+		})
 
-        //check exist project
-        const existingproject = await Project.findOne({
-            where: {
-                id: Number(project),
-            },
-        })
+		if (!existingtaskcategory)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Task category does not exist in the system',
+			})
 
-        if (!existingproject)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Project does not exist in the system',
-            })
-        //Check valid input create new task
-        //Check valid
-        const messageValid = taskValid.createOrUpdate(dataUpdateTask)
+		//check exist project
+		const existingproject = await Project.findOne({
+			where: {
+				id: Number(project),
+			},
+		})
 
-        if (messageValid)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: messageValid,
-            })
+		if (!existingproject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
 
-        for (let index = 0; index < employees.length; index++) {
-            const employee_id = employees[index]
-            const existingEmployee = await Employee.findOne({
-                where: {
-                    id: employee_id,
-                },
-            })
-            if (!existingEmployee)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Employees does not exist in the system',
-                })
+		//Check valid input create new task
+		//Check valid
+		const messageValid = taskValid.createOrUpdate(dataUpdateTask)
 
-            taskEmployees.push(existingEmployee)
-        }
+		if (messageValid)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: messageValid,
+			})
 
-        //update task
-        ; (existingtask.name = dataUpdateTask.name),
-            (existingtask.project = dataUpdateTask.project),
-            (existingtask.start_date = dataUpdateTask.start_date),
-            (existingtask.deadline = dataUpdateTask.deadline),
-            (existingtask.task_category = dataUpdateTask.task_category),
-            (existingtask.employees = taskEmployees),
-            (existingtask.index = index),
-            (existingtask.status = existingStatus)
+		for (let index = 0; index < employees.length; index++) {
+			const employee_id = employees[index]
+			const existingEmployee = await Employee.findOne({
+				where: {
+					id: employee_id,
+				},
+			})
+			if (!existingEmployee)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Employees does not exist in the system',
+				})
 
-        await existingtask.save()
+			taskEmployees.push(existingEmployee)
+		}
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Update Task success',
-        })
-    }),
-    //Get all task
-    getAll: handleCatchError(async (_: Request, res: Response) => {
-        const tasks = await Task.find()
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            projects: tasks,
-            message: 'Get all projects success',
-        })
-    }),
-    //Get detail task
-    getDetail: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
+		//Check exist milestone
+		if (milestone) {
+			const existingMilestone = await Milestone.findOne({
+				where: {
+					id: milestone,
+				},
+			})
+			if (!existingMilestone) {
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Milestone does not exist in the system',
+				})
+			} else {
+				existingtask.milestone = existingMilestone
+			}
+		}
+
+		//update task
+		;(existingtask.name = dataUpdateTask.name),
+			(existingtask.project = dataUpdateTask.project),
+			(existingtask.start_date = dataUpdateTask.start_date),
+			(existingtask.deadline = dataUpdateTask.deadline),
+			(existingtask.task_category = dataUpdateTask.task_category),
+			(existingtask.employees = taskEmployees),
+			(existingtask.index = index),
+			(existingtask.status = existingStatus)
+
+		await existingtask.save()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Update Task success',
+		})
+	}),
+
+	//Get all task
+	getAll: handleCatchError(async (_: Request, res: Response) => {
+		const tasks = await Task.find()
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			projects: tasks,
+			message: 'Get all projects success',
+		})
+	}),
+	//Get detail task
+	getDetail: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
 
         const existingtask = await Task.findOne({
             where: {
@@ -270,244 +307,243 @@ const taskController = {
             }
         })
 
-        if (!existingtask)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'task does not exist in the system',
-            })
+		if (!existingtask)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'task does not exist in the system',
+			})
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            task: existingtask,
-            message: 'Get detail of task success',
-        })
-    }),
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			task: existingtask,
+			message: 'Get detail of task success',
+		})
+	}),
 
-    //Delete task
-    delete: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
+	//Delete task
+	delete: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
 
-        const existingtask = await Task.findOne({
-            where: {
-                id: Number(id),
-            },
-        })
+		const existingtask = await Task.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
 
-        if (!existingtask)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'task does not exist in the system',
-            })
+		if (!existingtask)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'task does not exist in the system',
+			})
 
-        await existingtask.remove()
+		await existingtask.remove()
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Delete task success',
-        })
-    }),
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete task success',
+		})
+	}),
 
-    deletemany: handleCatchError(async (req: Request, res: Response) => {
-        const { tasks } = req.body
+	deletemany: handleCatchError(async (req: Request, res: Response) => {
+		const { tasks } = req.body
 
-        //check array of tasks
-        if (!Array.isArray(tasks) || !tasks)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Project does not exist in the system',
-            })
-        for (let index = 0; index < tasks.length; index++) {
-            const itemtask = tasks[index]
-            const existingtask = await Task.findOne({
-                where: {
-                    id: itemtask.id,
-                },
-            })
-            if (existingtask) {
-                await existingtask.remove()
-            }
-        }
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Delete tasks success',
-        })
-    }),
+		//check array of tasks
+		if (!Array.isArray(tasks) || !tasks)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+		for (let index = 0; index < tasks.length; index++) {
+			const itemtask = tasks[index]
+			const existingtask = await Task.findOne({
+				where: {
+					id: itemtask.id,
+				},
+			})
+			if (existingtask) {
+				await existingtask.remove()
+			}
+		}
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete tasks success',
+		})
+	}),
 
-    changeposition: handleCatchError(async (req: Request, res: Response) => {
-        const { id1, id2, status1, status2 } = req.body
+	changeposition: handleCatchError(async (req: Request, res: Response) => {
+		const { id1, id2, status1, status2 } = req.body
 
-        const existingstatus1 = Task.findOne({
-            where: {
-                id: status1,
-            },
-        })
-        const existingstatus2 = Task.findOne({
-            where: {
-                id: status2,
-            },
-        })
-        if (!existingstatus1 && !existingstatus2)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Either status does not existing in the system',
-            })
+		const existingstatus1 = Task.findOne({
+			where: {
+				id: status1,
+			},
+		})
+		const existingstatus2 = Task.findOne({
+			where: {
+				id: status2,
+			},
+		})
+		if (!existingstatus1 && !existingstatus2)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Either status does not existing in the system',
+			})
 
-        if (status1 == status2) {
-            const task1 = await Task.createQueryBuilder('task')
-                .where('task.id = :id1', { id1 })
-                .getOne()
-            const task2 = await Task.createQueryBuilder('task')
-                .where('task.id = :id2', { id2 })
-                .getOne()
+		if (status1 == status2) {
+			const task1 = await Task.createQueryBuilder('task')
+				.where('task.id = :id1', { id1 })
+				.getOne()
+			const task2 = await Task.createQueryBuilder('task')
+				.where('task.id = :id2', { id2 })
+				.getOne()
 
-            if (!task1 || !task2)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Either status does not exist in the system',
-                })
+			if (!task1 || !task2)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Either status does not exist in the system',
+				})
 
-            if (task1.index > task2.index) {
-                const alltask = await Task.createQueryBuilder('task')
-                    .where('task.index >= :index and task.statusId = :status', {
-                        index: task2.index,
-                        status: status1,
-                    })
-                    .getMany()
+			if (task1.index > task2.index) {
+				const alltask = await Task.createQueryBuilder('task')
+					.where('task.index >= :index and task.statusId = :status', {
+						index: task2.index,
+						status: status1,
+					})
+					.getMany()
 
-                if (alltask)
-                    await Promise.all(
-                        alltask.map(async (task) => {
-                            return new Promise(async (resolve) => {
-                                const result = Task.update(
-                                    {
-                                        id: Number(task.id),
-                                    },
-                                    {
-                                        index: Number(task.index) + 1,
-                                    }
-                                )
-                                resolve(result)
-                            })
-                        })
-                    )
-            }
+				if (alltask)
+					await Promise.all(
+						alltask.map(async (task) => {
+							return new Promise(async (resolve) => {
+								const result = Task.update(
+									{
+										id: Number(task.id),
+									},
+									{
+										index: Number(task.index) + 1,
+									}
+								)
+								resolve(result)
+							})
+						})
+					)
+			}
 
-            if (task1.index < task2.index) {
-                const alltask = await Task.createQueryBuilder('task')
-                    .where(
-                        'task.index > :index and task.index <= :index2 and task.statusId = :status',
-                        {
-                            index: task1.index,
-                            index2: task2.index,
-                            status: status2,
-                        }
-                    )
-                    .getMany()
+			if (task1.index < task2.index) {
+				const alltask = await Task.createQueryBuilder('task')
+					.where(
+						'task.index > :index and task.index <= :index2 and task.statusId = :status',
+						{
+							index: task1.index,
+							index2: task2.index,
+							status: status2,
+						}
+					)
+					.getMany()
 
-                if (alltask)
-                    await Promise.all(
-                        alltask.map(async (task) => {
-                            return new Promise(async (resolve) => {
-                                task.index = task.index - 1
-                                resolve(await task.save())
-                            })
-                        })
-                    )
-            }
+				if (alltask)
+					await Promise.all(
+						alltask.map(async (task) => {
+							return new Promise(async (resolve) => {
+								task.index = task.index - 1
+								resolve(await task.save())
+							})
+						})
+					)
+			}
 
-            task1.index = task2.index
-            await task1.save()
+			task1.index = task2.index
+			await task1.save()
 
-            return res.status(200).json({
-                code: 200,
-                success: true,
-                message: 'change position of status success',
-            })
-        } else {
-            const task1 = await Task.createQueryBuilder('task')
-                .where('task.id = :id1', { id1 })
-                .getOne()
+			return res.status(200).json({
+				code: 200,
+				success: true,
+				message: 'change position of status success',
+			})
+		} else {
+			const task1 = await Task.createQueryBuilder('task')
+				.where('task.id = :id1', { id1 })
+				.getOne()
 
+			const status2Exist = await Status.findOne({
+				where: {
+					id: status2,
+				},
+			})
 
-            const status2Exist = await Status.findOne({
-                where: {
-                    id: status2
-                }
-            })
+			if (!task1 || !status2Exist)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Either status does not exist in the system',
+				})
 
-            if (!task1 || !status2Exist)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Either status does not exist in the system',
-                })
+			if (!id2) {
+				const lastTask = await Task.findOne({
+					where: {
+						status: {
+							id: status2,
+						},
+					},
+					order: {
+						index: 'DESC',
+					},
+				})
 
-            if (!id2) {
-                const lastTask = await Task.findOne({
-                    where: {
-                        status: {
-                            id: status2
-                        }
-                    },
-                    order: {
-                        index: "DESC"
-                    }
-                })
+				task1.index = lastTask ? lastTask.index + 1 : 1
+				task1.status = status2Exist
 
+				await task1.save()
 
-                task1.index = lastTask ? lastTask.index + 1 : 1
-                task1.status = status2Exist
+				return res.status(200).json({
+					code: 200,
+					success: true,
+					message: 'change position of status success',
+				})
+			}
 
-                await task1.save()
+			const task2 = await Task.createQueryBuilder('task')
+				.where('task.id = :id2', { id2 })
+				.getOne()
+			const index = task2?.index
 
-                return res.status(200).json({
-                    code: 200,
-                    success: true,
-                    message: 'change position of status success',
-                })
-            }
+			const alltask = await Task.createQueryBuilder('task')
+				.where('task.statusId = :status and task.index >= :index', {
+					status: status2,
+					index: task2?.index,
+				})
+				.getMany()
 
-            const task2 = await Task.createQueryBuilder('task')
-                .where('task.id = :id2', { id2 })
-                .getOne()
-            const index = task2?.index
+			if (alltask)
+				await Promise.all(
+					alltask.map(async (task) => {
+						return new Promise(async (resolve) => {
+							task.index = task.index + 1
+							resolve(await task.save())
+						})
+					})
+				)
 
-            const alltask = await Task.createQueryBuilder('task').where(
-                'task.statusId = :status and task.index >= :index',
-                { status: status2, index: task2?.index }
-            ).getMany()
+			task1.index = Number(index)
+			task1.status = status2Exist
 
-            if (alltask)
-                await Promise.all(
-                    alltask.map(async (task) => {
-                        return new Promise(async (resolve) => {
-                            task.index = task.index + 1
-                            resolve(await task.save())
-                        })
-                    })
-                )
+			await task1.save()
 
-            task1.index = Number(index)
-            task1.status = status2Exist
-
-            await task1.save()
-
-            return res.status(200).json({
-                code: 200,
-                success: true,
-                message: 'change position of status success',
-            })
-
-        }
-    }),
+			return res.status(200).json({
+				code: 200,
+				success: true,
+				message: 'change position of status success',
+			})
+		}
+	}),
 }
 
 export default taskController

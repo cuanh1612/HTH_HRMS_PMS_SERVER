@@ -402,6 +402,9 @@ const projectController = {
 			where: {
 				id: Number(projectId),
 			},
+			relations: {
+				client: true
+			}
 		})
 
 		if (!existingProject)
@@ -421,7 +424,7 @@ const projectController = {
 				message: 'Please login first',
 			})
 
-		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload		
 
 		//Get data user
 		const existingUser =

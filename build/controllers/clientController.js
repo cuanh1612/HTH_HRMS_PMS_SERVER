@@ -142,7 +142,6 @@ const clientController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataUpdateClient = req.body;
         const { clientId } = req.params;
-        console.log(clientId);
         //Check valid
         const messageValid = clientValid_1.clientValid.createOrUpdate(dataUpdateClient, 'update');
         if (messageValid)
@@ -235,7 +234,36 @@ const clientController = {
                 newAvatar = yield Avatar_1.Avatar.create(Object.assign({}, avatar)).save();
             }
         }
-        console.log(dataUpdateClientBase, existingClient);
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
+        console.log('sdfgsdfgh dfgdf dfsg');
         //Update client
         yield Client_1.Client.update({
             id: existingClient.id,

@@ -343,6 +343,9 @@ const projectNoteController = {
 			where: {
 				id: Number(projectId),
 			},
+			relations: {
+				client: true
+			}
 		})
 
 		if (!existingProject)

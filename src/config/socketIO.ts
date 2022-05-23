@@ -75,7 +75,6 @@ const createSocketServer = (httpServer: Server) => {
 			socket.in('roomFileContract' + contractId).emit('getNewFileContract')
 		})
 
-
 		//join room file project
 		socket.on('joinRoomFileProject', (projectId: string) => {
 			socket.join('roomFileProject' + projectId)
@@ -118,7 +117,24 @@ const createSocketServer = (httpServer: Server) => {
 
 		//emit user join room project when have new discussion reply
 		socket.on('newProjectDiscussionReply', (projectDiscussionId: string | number) => {
-			socket.in('roomProjectDiscussion' + projectDiscussionId).emit('getNewProjectDiscussionReply')
+			socket
+				.in('roomProjectDiscussion' + projectDiscussionId)
+				.emit('getNewProjectDiscussionReply')
+		})
+
+		//join room project discussion
+		socket.on('joinRoomProjectNote', (projectId: string | number) => {
+			socket.join('roomProjectNote' + projectId)
+		})
+
+		//leave room project discussion
+		socket.on('leaveRoomProjectNote', (projectId: string | number) => {
+			socket.leave('roomProjectNote' + projectId)
+		})
+
+		//emit user join room project when have new discussion reply
+		socket.on('newProjectNote', (projectId: string | number) => {
+			socket.in('roomProjectNote' + projectId).emit('getNewProjectNote')
 		})
 	})
 }
