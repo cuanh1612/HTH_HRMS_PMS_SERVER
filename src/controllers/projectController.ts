@@ -282,12 +282,37 @@ const projectController = {
 	getEmployeeNotIn: handleCatchError(async (req:Request, res: Response) =>{
 		const {projectId} = req.params
 
-		const allEmployees = await Project.find({
+		
+		
+		const existingProject = await Project.findOne({
 			where:{
-				
+				id: Number(projectId)	
 			},
-			
+			relations:{
+				employees: true
+			}
+		})
 
+		if(!existingProject)
+			return res.status(400).json({
+				code: 200,
+				success: false,
+				message: 'Project does not exist in the system'
+			})
+
+		const idEmployees = existingProject.employees.map(employee =>{
+			return employee.id
+		})
+
+		const allEmployees = await Employee.createQueryBuilder('employee').where('employee.id NOT IN (:...ids)',{
+			ids: idEmployees
+		}).getMany()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			employees: allEmployees,
+			message: 'Get employee not in the project success'
 		})
 
  	}),

@@ -253,8 +253,31 @@ const projectController = {
     //Get employee not in the projet
     getEmployeeNotIn: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { projectId } = req.params;
-        const allEmployees = yield Project_1.Project.find({
-            where: {},
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId)
+            },
+            relations: {
+                employees: true
+            }
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 200,
+                success: false,
+                message: 'Project does not exist in the system'
+            });
+        const idEmployees = existingProject.employees.map(employee => {
+            return employee.id;
+        });
+        const allEmployees = yield Employee_1.Employee.createQueryBuilder('employee').where('employee.id NOT IN (:...ids)', {
+            ids: idEmployees
+        }).getMany();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            employees: allEmployees,
+            message: 'Get employee not in the project success'
         });
     })),
     //Get detail project
