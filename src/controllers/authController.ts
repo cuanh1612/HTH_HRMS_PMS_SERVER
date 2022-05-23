@@ -12,19 +12,26 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 const authController = {
 	login: handleCatchError(async (req: Request, res: Response) => {
-		const { email, password } = req.body		
+		const { email, password } = req.body
 
 		const existingUser =
-			(await Employee.findOne({
-				where: {
-					email,
-				},
-			})) ||
-			(await Client.findOne({
-				where: {
-					email,
-				},
-			}))
+			(await Employee.createQueryBuilder('employee')
+				.where('employee.email = :email', { email: email })
+				.select('employee.password')
+				.addSelect('employee.can_login')
+				.getOne()) ||
+			(await Client.createQueryBuilder('client')
+				.where('client.email = :email', { email: email })
+				.select('employee.password')
+				.addSelect('employee.can_login')
+				.getOne())
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Incorrect email or password',
+			})
 
 		if (!existingUser)
 			return res.status(400).json({
@@ -238,19 +245,17 @@ const authController = {
 	}),
 
 	askReEnterPassword: handleCatchError(async (req: Request, res: Response) => {
-		const { email, password } = req.body		
+		const { email, password } = req.body
 
 		const existingUser =
-			(await Employee.findOne({
-				where: {
-					email,
-				},
-			})) ||
-			(await Client.findOne({
-				where: {
-					email,
-				},
-			}))
+			(await Employee.createQueryBuilder('employee')
+				.where('employee.email = :email', { email: email })
+				.select('employee.password')
+				.getOne()) ||
+			(await Client.createQueryBuilder('client')
+				.where('client.email = :email', { email: email })
+				.select('employee.password')
+				.getOne())
 
 		if (!existingUser)
 			return res.status(400).json({
@@ -259,20 +264,13 @@ const authController = {
 				message: 'Incorrect email or password',
 			})
 
-		if (!existingUser.can_login)
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: "You can't login to the system",
-			})
-
 		const isPasswordValid = await argon2.verify(existingUser.password, password)
 
 		if (!isPasswordValid)
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Incorrect email or password',
+				message: 'Incorrect email or password 1',
 			})
 
 		return res.status(200).json({

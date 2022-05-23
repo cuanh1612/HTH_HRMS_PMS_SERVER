@@ -35,15 +35,16 @@ const Salary_1 = require("../entities/Salary");
 const Status_1 = require("../entities/Status");
 const Project_Note_1 = require("../entities/Project_Note");
 const Hourly_rate_project_1 = require("../entities/Hourly_rate_project");
+const Milestone_1 = require("../entities/Milestone");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
         database: process.env.DB_DATABASE,
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
+        name: 'huprom',
         logging: true,
         synchronize: true,
-        name: 'huprom',
         entities: [
             Employee_1.Employee,
             Avatar_1.Avatar,
@@ -79,7 +80,8 @@ const connectDB = () => {
             Salary_1.Salary,
             Status_1.Status,
             Project_Note_1.Project_note,
-            Hourly_rate_project_1.Hourly_rate_project
+            Hourly_rate_project_1.Hourly_rate_project,
+            Milestone_1.Milestone
         ],
     })
         .then(() => {

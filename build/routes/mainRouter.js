@@ -37,6 +37,7 @@ const statusRouter_1 = __importDefault(require("./statusRouter"));
 const taskRouter_1 = __importDefault(require("./taskRouter"));
 const projectNoteRouter_1 = __importDefault(require("./projectNoteRouter"));
 const hourlyRateRouter_1 = __importDefault(require("./hourlyRateRouter"));
+const milestoneRouter_1 = __importDefault(require("./milestoneRouter"));
 function mainRouter(app) {
     app.use('/api/auth', authRouter_1.default);
     app.use('/api/employees', employeeRouter_1.default);
@@ -72,5 +73,6 @@ function mainRouter(app) {
     app.use('/api/tasks', taskRouter_1.default);
     app.use('/api/project-notes', projectNoteRouter_1.default);
     app.use('/api/hourly-Rate', hourlyRateRouter_1.default);
+    app.use('/api/milestone', milestoneRouter_1.default);
 }
 exports.default = mainRouter;
