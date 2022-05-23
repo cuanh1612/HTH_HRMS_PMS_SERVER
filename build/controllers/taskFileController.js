@@ -42,7 +42,7 @@ const taskFileController = {
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { taskFileID, taskId } = req.params;
+        const { taskFileId, taskId } = req.params;
         const existingTask = yield Task_1.Task.findOne({
             where: {
                 id: Number(taskId),
@@ -57,7 +57,7 @@ const taskFileController = {
         //check existing task file
         const existingTaskFile = yield Task_File_1.Task_file.findOne({
             where: {
-                id: Number(taskFileID),
+                id: Number(taskFileId),
                 task: {
                     id: Number(taskId),
                 }

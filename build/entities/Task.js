@@ -17,6 +17,7 @@ const Milestone_1 = require("./Milestone");
 const Project_1 = require("./Project");
 const Status_1 = require("./Status");
 const Task_Category_1 = require("./Task_Category");
+const Task_Comment_1 = require("./Task_Comment");
 const Task_File_1 = require("./Task_File");
 var enumPriority;
 (function (enumPriority) {
@@ -85,6 +86,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Task_1, (task) => task.task),
     __metadata("design:type", Array)
 ], Task.prototype, "tasks", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Task_Comment_1.Task_comment, (task_comment) => task_comment.task),
+    __metadata("design:type", Array)
+], Task.prototype, "task_comments", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Milestone_1.Milestone, (milestone) => milestone.tasks, {
         onDelete: 'SET NULL',

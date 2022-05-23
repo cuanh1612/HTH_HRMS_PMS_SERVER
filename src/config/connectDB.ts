@@ -34,6 +34,7 @@ import { Status } from '../entities/Status'
 import { Project_note } from '../entities/Project_Note'
 import { Hourly_rate_project } from '../entities/Hourly_rate_project'
 import { Milestone } from '../entities/Milestone'
+import { Task_comment } from '../entities/Task_Comment'
 
 const connectDB = () => {
 	createConnection({
@@ -80,7 +81,8 @@ const connectDB = () => {
 			Status,
 			Project_note,
 			Hourly_rate_project,
-			Milestone
+			Milestone,
+			Task_comment
 		],
 	})
 		.then(() => {

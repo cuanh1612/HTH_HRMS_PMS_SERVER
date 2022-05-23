@@ -4,6 +4,7 @@ import { Milestone } from "./Milestone";
 import { Project } from "./Project";
 import { Status } from "./Status";
 import { Task_Category } from "./Task_Category";
+import { Task_comment } from "./Task_Comment";
 import { Task_file } from "./Task_File";
 
 
@@ -63,6 +64,9 @@ export class Task extends BaseEntity {
 
     @OneToMany(()=> Task, (task) => task.task)
     tasks: Task[]
+
+    @OneToMany(()=> Task_comment, (task_comment) => task_comment.task)
+    task_comments: Task_comment[]
     
     @ManyToOne(()=> Milestone, (milestone) => milestone.tasks,{
         onDelete: 'SET NULL',

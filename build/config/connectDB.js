@@ -36,6 +36,7 @@ const Status_1 = require("../entities/Status");
 const Project_Note_1 = require("../entities/Project_Note");
 const Hourly_rate_project_1 = require("../entities/Hourly_rate_project");
 const Milestone_1 = require("../entities/Milestone");
+const Task_Comment_1 = require("../entities/Task_Comment");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -81,7 +82,8 @@ const connectDB = () => {
             Status_1.Status,
             Project_Note_1.Project_note,
             Hourly_rate_project_1.Hourly_rate_project,
-            Milestone_1.Milestone
+            Milestone_1.Milestone,
+            Task_Comment_1.Task_comment
         ],
     })
         .then(() => {
