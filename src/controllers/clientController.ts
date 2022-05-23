@@ -146,7 +146,6 @@ const clientController = {
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const dataUpdateClient: createOrUpdatetClientPayload = req.body
 		const { clientId } = req.params
-		console.log(clientId)
 
 		//Check valid
 		const messageValid = clientValid.createOrUpdate(dataUpdateClient, 'update')
@@ -258,7 +257,36 @@ const clientController = {
 			}
 		}
 
-		console.log(dataUpdateClientBase, existingClient)
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
+		console.log('sdfgsdfgh dfgdf dfsg')
 
 		//Update client
 		await Client.update(

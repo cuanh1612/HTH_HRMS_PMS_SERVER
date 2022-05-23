@@ -127,14 +127,12 @@ export class Client extends BaseEntity {
 		eager: true,
 		nullable: true,
 	})
+	@JoinColumn()
+	client_sub_category: Client_Sub_Category
 
 	@OneToMany(() => Project, (project) => project.client)
 	@JoinColumn()
 	projects: Project[]
-
-
-	@JoinColumn()
-	client_sub_category: Client_Sub_Category
 
 	@OneToMany(() => Contract, (contract) => contract.client)
 	contracts: Contract[]

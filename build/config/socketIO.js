@@ -90,7 +90,21 @@ const createSocketServer = (httpServer) => {
         });
         //emit user join room project when have new discussion reply
         socket.on('newProjectDiscussionReply', (projectDiscussionId) => {
-            socket.in('roomProjectDiscussion' + projectDiscussionId).emit('getNewProjectDiscussionReply');
+            socket
+                .in('roomProjectDiscussion' + projectDiscussionId)
+                .emit('getNewProjectDiscussionReply');
+        });
+        //join room project discussion
+        socket.on('joinRoomProjectNote', (projectId) => {
+            socket.join('roomProjectNote' + projectId);
+        });
+        //leave room project discussion
+        socket.on('leaveRoomProjectNote', (projectId) => {
+            socket.leave('roomProjectNote' + projectId);
+        });
+        //emit user join room project when have new discussion reply
+        socket.on('newProjectNote', (projectId) => {
+            socket.in('roomProjectNote' + projectId).emit('getNewProjectNote');
         });
     });
 };

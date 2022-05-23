@@ -14,16 +14,24 @@ const authController = {
 	login: handleCatchError(async (req: Request, res: Response) => {
 		const { email, password } = req.body
 
-		const existingUser =
+		const existingUser = await Employee.findOne({
+			where: {
+				email
+			}
+		}) || await Client.findOne({
+			where: {
+				email
+			}
+		})
+
+		const existingUserPassword =
 			(await Employee.createQueryBuilder('employee')
 				.where('employee.email = :email', { email: email })
 				.select('employee.password')
-				.addSelect('employee.can_login')
 				.getOne()) ||
 			(await Client.createQueryBuilder('client')
 				.where('client.email = :email', { email: email })
-				.select('employee.password')
-				.addSelect('employee.can_login')
+				.select('client.password')
 				.getOne())
 
 		if (!existingUser)
@@ -33,7 +41,7 @@ const authController = {
 				message: 'Incorrect email or password',
 			})
 
-		if (!existingUser)
+		if (!existingUser || !existingUserPassword?.password)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -47,7 +55,7 @@ const authController = {
 				message: "You can't login to the system",
 			})
 
-		const isPasswordValid = await argon2.verify(existingUser.password, password)
+		const isPasswordValid = await argon2.verify(existingUserPassword.password, password)
 
 		if (!isPasswordValid)
 			return res.status(400).json({

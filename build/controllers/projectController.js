@@ -333,6 +333,9 @@ const projectController = {
             where: {
                 id: Number(projectId),
             },
+            relations: {
+                client: true
+            }
         });
         if (!existingProject)
             return res.status(400).json({

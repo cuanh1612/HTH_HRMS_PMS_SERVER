@@ -23,15 +23,22 @@ const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_
 const authController = {
     login: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
-        const existingUser = (yield Employee_1.Employee.createQueryBuilder('employee')
+        const existingUser = (yield Employee_1.Employee.findOne({
+            where: {
+                email
+            }
+        })) || (yield Client_1.Client.findOne({
+            where: {
+                email
+            }
+        }));
+        const existingUserPassword = (yield Employee_1.Employee.createQueryBuilder('employee')
             .where('employee.email = :email', { email: email })
             .select('employee.password')
-            .addSelect('employee.can_login')
             .getOne()) ||
             (yield Client_1.Client.createQueryBuilder('client')
                 .where('client.email = :email', { email: email })
-                .select('employee.password')
-                .addSelect('employee.can_login')
+                .select('client.password')
                 .getOne());
         if (!existingUser)
             return res.status(400).json({
@@ -39,7 +46,7 @@ const authController = {
                 success: false,
                 message: 'Incorrect email or password',
             });
-        if (!existingUser)
+        if (!existingUser || !(existingUserPassword === null || existingUserPassword === void 0 ? void 0 : existingUserPassword.password))
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -51,7 +58,7 @@ const authController = {
                 success: false,
                 message: "You can't login to the system",
             });
-        const isPasswordValid = yield argon2_1.default.verify(existingUser.password, password);
+        const isPasswordValid = yield argon2_1.default.verify(existingUserPassword.password, password);
         if (!isPasswordValid)
             return res.status(400).json({
                 code: 400,

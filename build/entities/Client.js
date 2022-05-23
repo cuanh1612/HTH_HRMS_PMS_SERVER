@@ -150,14 +150,14 @@ __decorate([
         eager: true,
         nullable: true,
     }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Client_Sub_Category_1.Client_Sub_Category)
+], Client.prototype, "client_sub_category", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => Project_1.Project, (project) => project.client),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)
 ], Client.prototype, "projects", void 0);
-__decorate([
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", Client_Sub_Category_1.Client_Sub_Category)
-], Client.prototype, "client_sub_category", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Contract_1.Contract, (contract) => contract.client),
     __metadata("design:type", Array)
