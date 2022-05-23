@@ -250,6 +250,13 @@ const projectController = {
             message: 'Get all projects success',
         });
     })),
+    //Get employee not in the projet
+    getEmployeeNotIn: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { projectId } = req.params;
+        const allEmployees = yield Project_1.Project.find({
+            where: {},
+        });
+    })),
     //Get detail project
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;

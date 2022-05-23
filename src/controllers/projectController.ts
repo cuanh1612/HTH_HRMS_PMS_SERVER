@@ -277,6 +277,20 @@ const projectController = {
 			message: 'Get all projects success',
 		})
 	}),
+	
+	//Get employee not in the projet
+	getEmployeeNotIn: handleCatchError(async (req:Request, res: Response) =>{
+		const {projectId} = req.params
+
+		const allEmployees = await Project.find({
+			where:{
+				
+			},
+			
+
+		})
+
+ 	}),
 
 	//Get detail project
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
