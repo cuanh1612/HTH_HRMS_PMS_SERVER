@@ -6,4 +6,5 @@ export class timeLog extends BaseEntity {
     id!: number
 
     
+    
 }

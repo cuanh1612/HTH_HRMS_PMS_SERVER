@@ -265,7 +265,8 @@ const taskController = {
                 project: true,
                 task_category: true,
                 status:true,
-                employees: true
+                employees: true,
+                milestone: true
             }
         })
 
