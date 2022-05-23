@@ -7,11 +7,11 @@ const milestoneRouter = express.Router()
 
 milestoneRouter.post('/', milestoneController.create)
 
-
 milestoneRouter.put('/:id', milestoneController.update)
 
-milestoneRouter.get('/', milestoneController.getAll)
-milestoneRouter.get('/:id', milestoneController.getDetail)
+milestoneRouter.get('/normal/:id', milestoneController.getByProject)
+milestoneRouter.get('/:id', milestoneController.getByProjectWithTask)
+
 
 milestoneRouter.delete('/:id', milestoneController.delete)
 
