@@ -8,6 +8,8 @@ projectRouter.post('/delete-employee', projectController.deleteEmployee)
 projectRouter.post('/', projectController.create)
 
 projectRouter.put('/assign-employee/:projectId', projectController.assignEmployee)
+projectRouter.put('/assign-employee/department/:projectId', projectController.assignEmployeeByDepartment)
+
 projectRouter.put('/:id', projectController.update)
 
 projectRouter.get('/get-employees-not-in-project/:projectId', projectController.getEmployeeNotIn)
