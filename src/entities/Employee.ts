@@ -20,6 +20,7 @@ import { Department } from './Department'
 import { Designation } from './Designation'
 import { Discussion } from './Discussion'
 import { Event } from './Event'
+import { Hourly_rate_project } from './Hourly_rate_project'
 import { Leave } from './Leave'
 import { Project } from './Project'
 import { Project_discussion_reply } from './Project_Discussion_Reply'
@@ -106,6 +107,9 @@ export class Employee extends BaseEntity {
 	@JoinColumn()
 	designation: Designation
 
+	@OneToMany(()=> Project, (project)=> project.project_Admin)
+	projects_management: Project[]
+
 	@ManyToOne(() => Department, (department) => department.employees, {
 		onDelete: 'SET NULL',
 		eager: true,
@@ -159,6 +163,9 @@ export class Employee extends BaseEntity {
 
 	@OneToMany(() => Project_Discussion_Room, (project_discussion_room) => project_discussion_room.assigner)
 	project_discussion_rooms: Project_Discussion_Room[]
+
+	@OneToMany(()=> Hourly_rate_project, hourly_rate_project=> hourly_rate_project.employee)
+	hourly_rate_projects: Hourly_rate_project[]
 
 
 	@Column({ default: 0 })

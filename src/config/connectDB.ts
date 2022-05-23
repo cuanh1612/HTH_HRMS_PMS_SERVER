@@ -32,6 +32,7 @@ import { Project_Discussion_Room } from '../entities/Project_Discussion_Room'
 import { Salary } from '../entities/Salary'
 import { Status } from '../entities/Status'
 import { Project_note } from '../entities/Project_Note'
+import { Hourly_rate_project } from '../entities/Hourly_rate_project'
 
 const connectDB = () => {
 	createConnection({
@@ -41,6 +42,7 @@ const connectDB = () => {
 		password: process.env.DB_PASSWORD,
 		logging: true,
 		synchronize: true,
+		name: 'huprom',
 		entities: [
 			Employee,
 			Avatar,
@@ -75,7 +77,8 @@ const connectDB = () => {
 			Project_Discussion_Room,
 			Salary,
 			Status,
-			Project_note
+			Project_note,
+			Hourly_rate_project
 		],
 	})
 		.then(() => {

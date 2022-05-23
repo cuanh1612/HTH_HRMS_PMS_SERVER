@@ -23,6 +23,8 @@ const Status_1 = require("../entities/Status");
 const Task_1 = require("../entities/Task");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const projectValid_1 = require("../utils/valid/projectValid");
+const typeorm_1 = require("typeorm");
+const Hourly_rate_project_1 = require("../entities/Hourly_rate_project");
 const projectController = {
     //Create new project
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -106,7 +108,19 @@ const projectController = {
         }
         //create project file
         const createdProject = yield Project_1.Project.create(Object.assign(Object.assign({}, dataNewProject), { employees: projectEmployees })).save();
-        console.log('ngtientrong1');
+        yield Promise.all(projectEmployees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                resolve(yield Hourly_rate_project_1.Hourly_rate_project.insert({
+                    project: {
+                        id: createdProject.id
+                    },
+                    employee: {
+                        id: employee.id
+                    },
+                    hourly_rate: employee.hourly_rate
+                }));
+            }));
+        })));
         if (project_files) {
             //Create project files
             for (let index = 0; index < project_files.length; index++) {
@@ -114,14 +128,13 @@ const projectController = {
                 yield Project_File_1.Project_file.create(Object.assign(Object.assign({}, project_file), { project: createdProject })).save();
             }
         }
-        const status1 = yield Status_1.Status.create({
+        yield Status_1.Status.create({
             title: 'Incomplete',
             root: true,
             project: createdProject,
             index: 0,
             color: 'red',
         }).save();
-        console.log('ngtientrong', status1);
         yield Status_1.Status.create({
             title: 'Complete',
             root: true,
@@ -384,5 +397,131 @@ const projectController = {
             });
         }
     })),
+    setProjectAdmin: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { idProject, idEmployee } = req.body;
+        if (!idProject || !idEmployee) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You need to enter full field',
+            });
+        }
+        const project = yield Project_1.Project.findOne({
+            where: {
+                id: Number(idProject)
+            }
+        });
+        const employee = yield Employee_1.Employee.findOne({
+            where: {
+                id: Number(idEmployee)
+            }
+        });
+        if (!project) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'This project not exist',
+            });
+        }
+        if (!employee) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'This employee not exist',
+            });
+        }
+        project.project_Admin = employee;
+        yield project.save();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Update role successfully',
+        });
+    })),
+    allEmployees: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { idProject } = req.params;
+        if (!idProject) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You need to enter full field',
+            });
+        }
+        const project = yield Project_1.Project.findOne({
+            where: {
+                id: Number(idProject),
+            },
+            relations: {
+                project_Admin: true,
+                employees: true,
+            }
+        });
+        if (!project) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'This project not exist',
+            });
+        }
+        const hourly_rate_projects = yield Promise.all(project.employees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                return resolve(yield Hourly_rate_project_1.Hourly_rate_project.findOne({
+                    where: {
+                        project: {
+                            id: project.id
+                        },
+                        employee: {
+                            id: employee.id
+                        }
+                    }
+                }));
+            }));
+        })));
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            project,
+            message: 'get all Employees successfully',
+            hourly_rate_projects
+        });
+    })),
+    deleteEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { projectId, employeeId } = req.body;
+        const manager = (0, typeorm_1.getManager)('huprom');
+        if (!projectId || !employeeId) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please enter full field',
+            });
+        }
+        const project = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId)
+            },
+            relations: {
+                project_Admin: true
+            }
+        });
+        if (project === null || project === void 0 ? void 0 : project.project_Admin) {
+            if (project.project_Admin.id == Number(employeeId)) {
+                yield manager.query(`update project set "projectAdminId" = null where project.id = ${project.id}`);
+            }
+        }
+        const dataExist = yield manager.query(`select * from project_employee where "projectId" = ${Number(projectId)} and "employeeId" =  ${Number(employeeId)}`);
+        if (!dataExist || dataExist.length == 0) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'This employee is not involved in this project',
+            });
+        }
+        yield manager.query(`DELETE FROM project_employee WHERE "projectId" = ${Number(projectId)} and "employeeId" = ${Number(employeeId)}`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Delete employee successfully',
+        });
+    }))
 };
 exports.default = projectController;

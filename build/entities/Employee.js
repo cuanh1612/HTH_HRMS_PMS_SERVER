@@ -19,6 +19,7 @@ const Department_1 = require("./Department");
 const Designation_1 = require("./Designation");
 const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
+const Hourly_rate_project_1 = require("./Hourly_rate_project");
 const Leave_1 = require("./Leave");
 const Project_1 = require("./Project");
 const Project_Discussion_Reply_1 = require("./Project_Discussion_Reply");
@@ -123,6 +124,10 @@ __decorate([
     __metadata("design:type", Designation_1.Designation)
 ], Employee.prototype, "designation", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => Project_1.Project, (project) => project.project_Admin),
+    __metadata("design:type", Array)
+], Employee.prototype, "projects_management", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.employees, {
         onDelete: 'SET NULL',
         eager: true,
@@ -189,6 +194,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Project_Discussion_Room_1.Project_Discussion_Room, (project_discussion_room) => project_discussion_room.assigner),
     __metadata("design:type", Array)
 ], Employee.prototype, "project_discussion_rooms", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Hourly_rate_project_1.Hourly_rate_project, hourly_rate_project => hourly_rate_project.employee),
+    __metadata("design:type", Array)
+], Employee.prototype, "hourly_rate_projects", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)

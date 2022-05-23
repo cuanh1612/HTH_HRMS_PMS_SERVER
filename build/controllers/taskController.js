@@ -366,7 +366,17 @@ const taskController = {
                     message: 'Either status does not exist in the system',
                 });
             if (!id2) {
-                task1.index = 1;
+                const lastTask = yield Task_1.Task.findOne({
+                    where: {
+                        status: {
+                            id: status2
+                        }
+                    },
+                    order: {
+                        index: "DESC"
+                    }
+                });
+                task1.index = lastTask ? lastTask.index + 1 : 1;
                 task1.status = status2Exist;
                 yield task1.save();
                 return res.status(200).json({
