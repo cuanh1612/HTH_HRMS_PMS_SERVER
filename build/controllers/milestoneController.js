@@ -13,10 +13,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Milestone_1 = require("../entities/Milestone");
+const Project_1 = require("../entities/Project");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const mileStoneController = {
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { title, summary } = req.body;
+        const { title, summary, project } = req.body;
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(project)
+            }
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not existing',
+            });
         if (!title)
             return res.status(400).json({
                 code: 400,
@@ -25,7 +37,8 @@ const mileStoneController = {
             });
         yield Milestone_1.Milestone.create({
             title: title,
-            summary: summary
+            summary: summary,
+            project: project
         }).save();
         return res.status(200).json({
             code: 200,
@@ -51,6 +64,7 @@ const mileStoneController = {
         existingMileStone.summary = dataUpdateMileStone.summary;
         existingMileStone.cost = dataUpdateMileStone.cost;
         existingMileStone.addtobudget = dataUpdateMileStone.addtobudget;
+        existingMileStone.project = dataUpdateMileStone.project;
         yield existingMileStone.save();
         return res.status(200).json({
             code: 200,
@@ -58,23 +72,30 @@ const mileStoneController = {
             message: 'Update milestone successfully',
         });
     })),
-    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const milestones = yield Milestone_1.Milestone.find();
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            milestones: milestones,
-            message: 'Get all milestone successfully',
-        });
-    })),
-    getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    getByProject: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingMileStone = yield Milestone_1.Milestone.findOne({
+        const existingProject = yield Project_1.Project.findOne({
             where: {
                 id: Number(id)
             }
         });
-        if (!existingMileStone)
+        if (!existingProject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not existing',
+            });
+        const existingMileStones = yield Milestone_1.Milestone.find({
+            where: {
+                project: {
+                    id: Number(id)
+                }
+            },
+            relations: {
+                tasks: true
+            }
+        });
+        if (!existingMileStones)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -83,8 +104,8 @@ const mileStoneController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            milestone: existingMileStone,
-            message: 'Get detail of milestone success'
+            milestones: existingMileStones,
+            message: 'Get milestones by project success'
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Milestone = void 0;
 const typeorm_1 = require("typeorm");
+const Project_1 = require("./Project");
 const Task_1 = require("./Task");
 let Milestone = class Milestone extends typeorm_1.BaseEntity {
 };
@@ -38,6 +39,14 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Milestone.prototype, "summary", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Project_1.Project, (project) => project.milestones, {
+        nullable: true,
+        onDelete: 'CASCADE'
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Project_1.Project)
+], Milestone.prototype, "project", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Task_1.Task, (task) => task.milestone, {
         nullable: true,

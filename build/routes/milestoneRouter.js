@@ -8,7 +8,6 @@ const milestoneController_1 = __importDefault(require("../controllers/milestoneC
 const milestoneRouter = express_1.default.Router();
 milestoneRouter.post('/', milestoneController_1.default.create);
 milestoneRouter.put('/:id', milestoneController_1.default.update);
-milestoneRouter.get('/', milestoneController_1.default.getAll);
-milestoneRouter.get('/:id', milestoneController_1.default.getDetail);
+milestoneRouter.get('/:id', milestoneController_1.default.getByProject);
 milestoneRouter.delete('/:id', milestoneController_1.default.delete);
 exports.default = milestoneRouter;

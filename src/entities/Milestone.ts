@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Project } from "./Project";
 import { Task } from "./Task";
 
 
@@ -21,6 +22,13 @@ export class Milestone extends BaseEntity {
 
     @Column({nullable: true})
     summary: String
+
+    @ManyToOne(() => Project, (project) => project.milestones,{
+        nullable: true,
+        onDelete: 'CASCADE'
+    })
+    @JoinColumn()
+    project: Project
 
     @OneToMany(() => Task, (task) => task.milestone,{
         nullable: true,
