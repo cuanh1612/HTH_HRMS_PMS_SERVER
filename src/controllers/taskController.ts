@@ -294,18 +294,18 @@ const taskController = {
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-        const existingtask = await Task.findOne({
-            where: {
-                id: Number(id),
-            },
-            relations:{
-                project: true,
-                task_category: true,
-                status:true,
-                employees: true,
-                milestone: true
-            }
-        })
+		const existingtask = await Task.findOne({
+			where: {
+				id: Number(id),
+			},
+			relations: {
+				project: true,
+				task_category: true,
+				status: true,
+				employees: true,
+				milestone: true,
+			},
+		})
 
 		if (!existingtask)
 			return res.status(400).json({
@@ -544,17 +544,40 @@ const taskController = {
 			})
 		}
 	}),
+
+	getByProject: handleCatchError(async (req: Request, res: Response) => {
+		const { projectId } = req.params
+
+		//Check exist project
+		const exisitingProject = await Project.findOne({
+			where: {
+				id: Number(projectId),
+			},
+		})
+
+		if (!exisitingProject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+
+		//Get tasks by project
+		const tasks = await Task.find({
+			where: {
+				project: {
+					id: exisitingProject.id,
+				},
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			tasks,
+			message: 'Get tasks by projects successfully',
+		})
+	}),
 }
 
 export default taskController
-//     //Create new task
-//     create: handleCatchError(async (req: Request, res: Response) =>{
-//         const dataNewTask: createOrUpdateTaskPayload = req.body
-//         const { task_category, project, employees, task_files} = dataNewTask
-
-//         //check valid
-//         const messageValid = taskValid.createOrUpdate(dataNewTask)
-//     })
-// }
-
-// export default taskController
