@@ -21,15 +21,12 @@ export const timeLogValid = {
 			!ends_on_date ||
 			!ends_on_time
 		) {
-			messageError = 'Pleas enter full field'
+			messageError = 'Please enter full field'
 			return messageError
 		}
 
 		//Check time
-		if(new Date(starts_on_date) <= new Date(ends_on_date)){
-			messageError = 'time log end date time must be greater than start date'
-			return messageError
-		}
+		const 
 
 		return messageError
 	},

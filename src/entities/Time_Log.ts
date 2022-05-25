@@ -1,12 +1,12 @@
 import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn
 } from 'typeorm'
 import { Employee } from './Employee'
 import { Project } from './Project'
@@ -29,25 +29,25 @@ export class Time_log extends BaseEntity {
 	@JoinColumn()
 	task: Task
 
-  @ManyToOne(() => Employee, (employee) => employee.time_logs, {
+	@ManyToOne(() => Employee, (employee) => employee.time_logs, {
 		onDelete: 'CASCADE',
 	})
 	@JoinColumn()
 	employee: Employee
 
-  @Column({ type: 'date' })
+	@Column({ type: 'date' })
 	starts_on_date: Date
 
 	@Column({ type: 'date' })
 	ends_on_date: Date
 
-	@Column({type: "time"})
+	@Column({ type: "time" })
 	starts_on_time: String
 
-	@Column({type: "time"})
+	@Column({ type: "time" })
 	ends_on_time: String
 
-  @Column()
+	@Column()
 	memo: String
 
 	@CreateDateColumn({
@@ -59,4 +59,10 @@ export class Time_log extends BaseEntity {
 		name: 'updated_at',
 	})
 	updatedAt: Date
+
+	@Column({type: "number"})
+	total_hours: Number
+
+	@Column({type: "number"})
+	earnings: Number
 }
