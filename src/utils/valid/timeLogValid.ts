@@ -26,7 +26,7 @@ export const timeLogValid = {
 		}
 
 		//Check time
-		const 
+		
 
 		return messageError
 	},
