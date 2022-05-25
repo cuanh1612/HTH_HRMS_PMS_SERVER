@@ -9,7 +9,7 @@ export class Milestone extends BaseEntity {
     id!: number
 
     @Column({unique: true})
-    title: String
+    title: string
 
     @Column('float', {nullable: true})
     cost: number
@@ -21,7 +21,7 @@ export class Milestone extends BaseEntity {
     status: boolean
 
     @Column({nullable: true})
-    summary: String
+    summary: string
 
     @ManyToOne(() => Project, (project) => project.milestones,{
         nullable: true,

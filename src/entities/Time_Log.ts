@@ -42,13 +42,13 @@ export class Time_log extends BaseEntity {
 	ends_on_date: Date
 
 	@Column({ type: "time" })
-	starts_on_time: String
+	starts_on_time: string
 
 	@Column({ type: "time" })
-	ends_on_time: String
+	ends_on_time: string
 
 	@Column()
-	memo: String
+	memo: string
 
 	@CreateDateColumn({
 		name: 'created_at',
@@ -60,9 +60,9 @@ export class Time_log extends BaseEntity {
 	})
 	updatedAt: Date
 
-	@Column({type: "number"})
-	total_hours: Number
+	@Column({default: 0})
+	total_hours: number
 
-	@Column({type: "number"})
+	@Column({default: 0})
 	earnings: Number
 }
