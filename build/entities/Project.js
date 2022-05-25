@@ -22,6 +22,7 @@ const Project_File_1 = require("./Project_File");
 const Project_Note_1 = require("./Project_Note");
 const Status_1 = require("./Status");
 const Task_1 = require("./Task");
+const Time_Log_1 = require("./Time_Log");
 var enumCurrency;
 (function (enumCurrency) {
     enumCurrency["USD"] = "USD";
@@ -119,6 +120,12 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Project.prototype, "project_files", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Time_Log_1.Time_log, (time_log) => time_log.project, {
+        nullable: true,
+    }),
+    __metadata("design:type", Array)
+], Project.prototype, "time_logs", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Project_Discussion_Room_1.Project_Discussion_Room, (project_Discussion_Room) => project_Discussion_Room.project, {
         onDelete: 'SET NULL',
