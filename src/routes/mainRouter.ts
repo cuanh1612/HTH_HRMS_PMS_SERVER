@@ -16,24 +16,26 @@ import discussionRouter from './discussionRouter'
 import employeeRouter from './employeeRouter'
 import eventRouter from './eventRouter'
 import holidayRouter from './holidayRouter'
+import hourlyRateRouter from './hourlyRateRouter'
 import leaveRouter from './leaveRouter'
 import leaveTypeRouter from './leaveTypeRouter'
+import milestoneRouter from './milestoneRouter'
 import noticeBoardRouter from './noticeBoardRouter'
 import projectCategoryRouter from './projectCategoryRouter'
-import projectFileRouter from './projectFileRouter'
-import projectRouter from './projectRouter'
-import salaryRouter from './salaryRouter'
-import signRouter from './signRouter'
-import taskCategoryRouter from './taskCategoryRouter copy'
-import taskFileRouter from './taskFileRouter copy'
 import projectDiscussionCategoryRouter from './projectDiscussionCategoryRouter'
 import projectDiscussionReplyRouter from './projectDiscussionReplyRouter'
 import projectDiscussionRoomRouter from './projectDiscussionRoomRouter'
-import statusRouter from './statusRouter'
-import taskRouter from './taskRouter'
+import projectFileRouter from './projectFileRouter'
 import projectNoteRouter from './projectNoteRouter'
-import hourlyRateRouter from './hourlyRateRouter'
-import milestoneRouter from './milestoneRouter'
+import projectRouter from './projectRouter'
+import salaryRouter from './salaryRouter'
+import signRouter from './signRouter'
+import statusRouter from './statusRouter'
+import taskCategoryRouter from './taskCategoryRouter copy'
+import taskCommentRouter from './taskCommentRouter'
+import taskFileRouter from './taskFileRouter'
+import taskRouter from './taskRouter'
+import TimeLogRouter from './timeLogRouter'
 
 function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
@@ -83,7 +85,7 @@ function mainRouter(app: core.Express) {
 	app.use('/api/project-files', projectFileRouter)
 
 	app.use('/api/task-files', taskFileRouter)
-	
+
 	app.use('/api/project-discussion-categories', projectDiscussionCategoryRouter)
 
 	app.use('/api/project-discussion-replies', projectDiscussionReplyRouter)
@@ -93,7 +95,7 @@ function mainRouter(app: core.Express) {
 	app.use('/api/salaries', salaryRouter)
 
 	app.use('/api/notice-boards', noticeBoardRouter)
-	
+
 	app.use('/api/project-discussion-rooms', projectDiscussionRoomRouter)
 
 	app.use('/api/status', statusRouter)
@@ -103,7 +105,12 @@ function mainRouter(app: core.Express) {
 	app.use('/api/project-notes', projectNoteRouter)
 
 	app.use('/api/hourly-Rate', hourlyRateRouter)
+
 	app.use('/api/milestone', milestoneRouter)
+
+	app.use('/api/task-comments', taskCommentRouter)
+
+	app.use('/api/time-logs', TimeLogRouter)
 }
 
 export default mainRouter

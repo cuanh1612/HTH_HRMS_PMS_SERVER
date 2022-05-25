@@ -4,7 +4,9 @@ import { Milestone } from "./Milestone";
 import { Project } from "./Project";
 import { Status } from "./Status";
 import { Task_Category } from "./Task_Category";
+import { Task_comment } from "./Task_Comment";
 import { Task_file } from "./Task_File";
+import { Time_log } from "./Time_Log";
 
 
 
@@ -63,6 +65,9 @@ export class Task extends BaseEntity {
 
     @OneToMany(()=> Task, (task) => task.task)
     tasks: Task[]
+
+    @OneToMany(()=> Task_comment, (task_comment) => task_comment.task)
+    task_comments: Task_comment[]
     
     @ManyToOne(()=> Milestone, (milestone) => milestone.tasks,{
         onDelete: 'SET NULL',
@@ -89,6 +94,11 @@ export class Task extends BaseEntity {
     })
     @JoinColumn()
     status: Status
+
+    @OneToMany(() => Time_log, (time_log) => time_log.project, {
+		nullable: true,
+	})
+	time_logs: Time_log[]
 
     @CreateDateColumn({
 		name: 'created_at',

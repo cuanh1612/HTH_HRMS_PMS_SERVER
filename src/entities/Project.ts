@@ -22,6 +22,7 @@ import { Project_file } from './Project_File'
 import { Project_note } from './Project_Note'
 import { Status } from './Status'
 import { Task } from './Task'
+import { Time_log } from './Time_Log'
 
 export enum enumCurrency {
 	USD = 'USD',
@@ -109,6 +110,11 @@ export class Project extends BaseEntity {
 		nullable: true,
 	})
 	project_files: Project_file[]
+
+	@OneToMany(() => Time_log, (time_log) => time_log.project, {
+		nullable: true,
+	})
+	time_logs: Time_log[]
 
 	@OneToMany(() => Project_Discussion_Room, (project_Discussion_Room) => project_Discussion_Room.project, {
 		onDelete: 'SET NULL',

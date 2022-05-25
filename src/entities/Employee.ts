@@ -28,6 +28,7 @@ import { Project_Discussion_Room } from './Project_Discussion_Room'
 import { Project_note } from './Project_Note'
 import { Salary } from './Salary'
 import { Task } from './Task'
+import { Time_log } from './Time_Log'
 
 export enum enumGender {
 	MALE = 'Male',
@@ -169,6 +170,11 @@ export class Employee extends BaseEntity {
 
 	@OneToMany(()=> Hourly_rate_project, hourly_rate_project=> hourly_rate_project.employee)
 	hourly_rate_projects: Hourly_rate_project[]
+
+	@OneToMany(() => Time_log, (time_log) => time_log.employee, {
+		nullable: true,
+	})
+	time_logs: Time_log[]
 
 
 	@Column({ default: 0 })

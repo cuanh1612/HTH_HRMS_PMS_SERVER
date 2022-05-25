@@ -106,6 +106,30 @@ const createSocketServer = (httpServer) => {
         socket.on('newProjectNote', (projectId) => {
             socket.in('roomProjectNote' + projectId).emit('getNewProjectNote');
         });
+        //join room task file
+        socket.on('joinRoomTaskFile', (taskId) => {
+            socket.join('roomTaskFile' + taskId);
+        });
+        //leave room task file
+        socket.on('leaveRoomTaskFile', (taskId) => {
+            socket.leave('roomTaskFile' + taskId);
+        });
+        //emit user join room task file when have new change task file
+        socket.on('newTaskFile', (taskId) => {
+            socket.in('roomTaskFile' + taskId).emit('getNewTaskFile');
+        });
+        //join room task comment
+        socket.on('joinRoomTaskComment', (taskId) => {
+            socket.join('roomTaskComment' + taskId);
+        });
+        //leave room task comment
+        socket.on('leaveRoomTaskComment', (taskId) => {
+            socket.leave('roomTaskComment' + taskId);
+        });
+        //emit user join room task comment when have new change task comment
+        socket.on('newTaskComment', (taskId) => {
+            socket.in('roomTaskComment' + taskId).emit('getNewTaskComment');
+        });
     });
 };
 exports.default = createSocketServer;

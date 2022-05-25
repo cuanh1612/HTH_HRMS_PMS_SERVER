@@ -17,7 +17,9 @@ const Milestone_1 = require("./Milestone");
 const Project_1 = require("./Project");
 const Status_1 = require("./Status");
 const Task_Category_1 = require("./Task_Category");
+const Task_Comment_1 = require("./Task_Comment");
 const Task_File_1 = require("./Task_File");
+const Time_Log_1 = require("./Time_Log");
 var enumPriority;
 (function (enumPriority) {
     enumPriority["LOW"] = "Low";
@@ -86,6 +88,10 @@ __decorate([
     __metadata("design:type", Array)
 ], Task.prototype, "tasks", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => Task_Comment_1.Task_comment, (task_comment) => task_comment.task),
+    __metadata("design:type", Array)
+], Task.prototype, "task_comments", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Milestone_1.Milestone, (milestone) => milestone.tasks, {
         onDelete: 'SET NULL',
         nullable: true
@@ -108,6 +114,12 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Status_1.Status)
 ], Task.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Time_Log_1.Time_log, (time_log) => time_log.project, {
+        nullable: true,
+    }),
+    __metadata("design:type", Array)
+], Task.prototype, "time_logs", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

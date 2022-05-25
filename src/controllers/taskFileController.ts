@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Task } from "../entities/Task";
 import { Task_file } from "../entities/Task_File";
-import { createOrUpdatetTaskFilesPayload } from "../type/taskFilePayLoad copy";
+import { createOrUpdatetTaskFilesPayload } from "../type/taskFilePayLoad";
 import handleCatchError from "../utils/catchAsyncError";
 
 
@@ -40,7 +40,7 @@ const taskFileController = {
         })
     }),
     delete: handleCatchError(async (req: Request, res: Response) => {
-        const { taskFileID, taskId } = req.params
+        const { taskFileId, taskId } = req.params
 
         const existingTask = await Task.findOne({
             where: {
@@ -57,7 +57,7 @@ const taskFileController = {
         //check existing task file
         const existingTaskFile = await Task_file.findOne({
             where: {
-                id: Number(taskFileID),
+                id: Number(taskFileId),
                 task: {
                     id: Number(taskId),
                 }

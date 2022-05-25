@@ -84,7 +84,7 @@ const statusController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			project: existingStatus,
+			status: existingStatus,
 			message: 'Get detail of project success',
 		})
 	}),
