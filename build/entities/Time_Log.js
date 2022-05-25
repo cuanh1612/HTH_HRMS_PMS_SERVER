@@ -73,6 +73,14 @@ __decorate([
     }),
     __metadata("design:type", Date)
 ], Time_log.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: 0 }),
+    __metadata("design:type", Number)
+], Time_log.prototype, "total_hours", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: 0 }),
+    __metadata("design:type", Number)
+], Time_log.prototype, "earnings", void 0);
 Time_log = __decorate([
     (0, typeorm_1.Entity)()
 ], Time_log);

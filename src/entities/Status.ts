@@ -9,7 +9,7 @@ export class Status extends BaseEntity {
     id!: number
 
     @Column()
-    title: String
+    title: string
 
     @Column()
     index: number
@@ -22,7 +22,7 @@ export class Status extends BaseEntity {
     project: Project
 
     @Column({nullable: true})
-    color: String
+    color: string
 
     @OneToMany(() => Task, (task) => task.status,{
         onDelete: 'SET NULL',
@@ -31,7 +31,7 @@ export class Status extends BaseEntity {
     tasks: Task
 
     @Column({default: false})
-    root: Boolean
+    root: boolean
 
 
 
