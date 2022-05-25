@@ -110,6 +110,9 @@ export class Employee extends BaseEntity {
 	@OneToMany(()=> Project, (project)=> project.project_Admin)
 	projects_management: Project[]
 
+	// @OneToMany(()=> TimeLog, (timelog)=> timelog.employee)
+	// timelogs: TimeLog[]
+
 	@ManyToOne(() => Department, (department) => department.employees, {
 		onDelete: 'SET NULL',
 		eager: true,

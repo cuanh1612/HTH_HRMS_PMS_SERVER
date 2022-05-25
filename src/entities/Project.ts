@@ -130,6 +130,7 @@ export class Project extends BaseEntity {
 
 	@OneToMany(()=> Hourly_rate_project, hourly_rate_project=> hourly_rate_project.project)
 	hourly_rate_projects: Hourly_rate_project[]
+
 	@OneToMany(() => Milestone, (milestone) => milestone.project, {
 		onDelete: 'SET NULL'
 	})
@@ -139,6 +140,12 @@ export class Project extends BaseEntity {
 		onDelete: 'SET NULL',
 	})
 	project_notes: Project_note[]
+
+	// @OneToMany(() => TimeLog, (timelog) => timelog.project, {
+	// 	onDelete: 'SET NULL',
+	// 	nullable: true,
+	// })
+	// timelogs: TimeLog[]
 
 	@CreateDateColumn({
 		name: 'created_at',
