@@ -29,7 +29,7 @@ const taskController = {
     //Create new task
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewTask = req.body;
-        const { task_category, project, employees, task_files, status, milestone } = dataNewTask;
+        const { task_category, project, employees, task_files, status, milestone, assignBy } = dataNewTask;
         let taskEmployees = [];
         //check valid
         const messageValid = taskValid_1.taskValid.createOrUpdate(dataNewTask);
@@ -91,6 +91,25 @@ const taskController = {
                 });
             }
         }
+        // check employee who create task
+        if (!assignBy)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Employee who create task does not exist in the system',
+            });
+        const assignByUser = Employee_1.Employee.findOne({
+            where: {
+                id: Number(assignBy),
+            },
+        });
+        if (!assignByUser) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Employee who create task does not exist in the system',
+            });
+        }
         for (let index = 0; index < employees.length; index++) {
             const employee_id = employees[index];
             const existingEmployee = yield Employee_1.Employee.findOne({
@@ -119,7 +138,9 @@ const taskController = {
         });
         var index = lasttask ? lasttask.index + 1 : 1;
         //create task
-        const createdTask = yield Task_1.Task.create(Object.assign(Object.assign({}, dataNewTask), { employees: taskEmployees, index })).save();
+        const createdTask = yield Task_1.Task.create(Object.assign(Object.assign({}, dataNewTask), { employees: taskEmployees, index, assignBy: {
+                id: Number(assignBy)
+            } })).save();
         if (Array.isArray(task_files)) {
             //create task files
             for (let index = 0; index < task_files.length; index++) {
@@ -279,8 +300,8 @@ const taskController = {
                 task_category: true,
                 status: true,
                 employees: true,
-                milestone: true
-            }
+                milestone: true,
+            },
         });
         if (!existingtask)
             return res.status(400).json({
@@ -480,12 +501,3 @@ const taskController = {
     })),
 };
 exports.default = taskController;
-//     //Create new task
-//     create: handleCatchError(async (req: Request, res: Response) =>{
-//         const dataNewTask: createOrUpdateTaskPayload = req.body
-//         const { task_category, project, employees, task_files} = dataNewTask
-//         //check valid
-//         const messageValid = taskValid.createOrUpdate(dataNewTask)
-//     })
-// }
-// export default taskController

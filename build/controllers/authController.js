@@ -19,19 +19,22 @@ const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const google_auth_library_1 = require("google-auth-library");
 const Client_1 = require("../entities/Client");
+const sendNotice_1 = __importDefault(require("../utils/sendNotice"));
+const employeeValid_1 = require("../utils/valid/employeeValid");
 const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const authController = {
     login: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
         const existingUser = (yield Employee_1.Employee.findOne({
             where: {
-                email
-            }
-        })) || (yield Client_1.Client.findOne({
-            where: {
-                email
-            }
-        }));
+                email,
+            },
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email,
+                },
+            }));
         const existingUserPassword = (yield Employee_1.Employee.createQueryBuilder('employee')
             .where('employee.email = :email', { email: email })
             .select('employee.password')
@@ -247,6 +250,87 @@ const authController = {
             code: 200,
             success: true,
             message: 'Ask re enter password correct',
+        });
+    })),
+    recoverPass: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { email } = req.body;
+        console.log(email);
+        if (!email) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please, enter full fields',
+            });
+        }
+        const employee = yield Employee_1.Employee.findOne({
+            where: {
+                email,
+            },
+        });
+        if (!employee) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'This employee does not exist in system',
+            });
+        }
+        const activeToken = (0, auth_1.createActiveToken)(email, employee.id);
+        yield (0, sendNotice_1.default)({
+            to: email,
+            text: 'reset password',
+            subject: 'huprom-reset password',
+            html: `<a href="http://localhost:3000/reset-password/${activeToken}>link</a>`,
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Password recovery link sent to your inbox.',
+        });
+    })),
+    // reset password
+    resetPassword: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { activeToken, password, passwordConfirm } = req.body;
+        if (!(0, employeeValid_1.validatePassword)(password))
+            return res.status(400).json({
+                err: 'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+                statusCode: 400,
+            });
+        if (password != passwordConfirm)
+            return res.status(400).json({
+                err: 'Password not match',
+                statusCode: 400,
+            });
+        const passwordHash = yield argon2_1.default.hash(password);
+        const data = (0, jsonwebtoken_1.verify)(activeToken, process.env.ACTIVE_TOKEN_SECRET, {
+            ignoreExpiration: false,
+        });
+        if (new Date() >= new Date(Number(data.exp) * 1000))
+            return res.status(400).json({
+                err: 'Some thing went wrong! Please request mail reset password again at login page',
+                statusCode: 400,
+            });
+        // find user by id and update
+        const existingUser = (yield Employee_1.Employee.findOne({
+            where: {
+                email: data.email,
+            },
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email: data.email,
+                },
+            }));
+        if (!existingUser)
+            return res.status(400).json({
+                err: 'User does not exist',
+                statusCode: 400,
+            });
+        existingUser.password = passwordHash;
+        yield existingUser.save();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Reset password successfully',
         });
     })),
 };

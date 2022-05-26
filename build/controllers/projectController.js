@@ -307,6 +307,19 @@ const projectController = {
             ids: employees,
         })
             .getMany();
+        yield Promise.all(allEmployees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                resolve(yield Hourly_rate_project_1.Hourly_rate_project.insert({
+                    project: {
+                        id: existingProject.id,
+                    },
+                    employee: {
+                        id: employee.id,
+                    },
+                    hourly_rate: employee.hourly_rate,
+                }));
+            }));
+        })));
         existingProject.employees = [...existingProject.employees, ...allEmployees];
         yield existingProject.save();
         return res.status(200).json({
@@ -344,6 +357,19 @@ const projectController = {
                 success: false,
                 message: 'There are no employees left to participate in the project',
             });
+        yield Promise.all(allEmployees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                resolve(yield Hourly_rate_project_1.Hourly_rate_project.insert({
+                    project: {
+                        id: existingProject.id,
+                    },
+                    employee: {
+                        id: employee.id,
+                    },
+                    hourly_rate: employee.hourly_rate,
+                }));
+            }));
+        })));
         existingProject.employees = [...existingProject.employees, ...allEmployees];
         yield existingProject.save();
         return res.status(200).json({
@@ -622,6 +648,7 @@ const projectController = {
             });
         }
         yield manager.query(`DELETE FROM project_employee WHERE "projectId" = ${Number(projectId)} and "employeeId" = ${Number(employeeId)}`);
+        yield manager.query(`DELETE FROM hourly_rate_project WHERE "projectId" = ${Number(projectId)} and "employeeId" = ${Number(employeeId)}`);
         return res.status(200).json({
             code: 200,
             success: true,

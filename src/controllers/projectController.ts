@@ -345,6 +345,24 @@ const projectController = {
 			})
 			.getMany()
 
+		await Promise.all(
+			allEmployees.map(async (employee) => {
+				return new Promise(async (resolve) => {
+					resolve(
+						await Hourly_rate_project.insert({
+							project: {
+								id: existingProject.id,
+							},
+							employee: {
+								id: employee.id,
+							},
+							hourly_rate: employee.hourly_rate,
+						})
+					)
+				})
+			})
+		)
+
 		existingProject.employees = [...existingProject.employees, ...allEmployees]
 		await existingProject.save()
 
@@ -387,6 +405,24 @@ const projectController = {
 				success: false,
 				message: 'There are no employees left to participate in the project',
 			})
+
+		await Promise.all(
+			allEmployees.map(async (employee) => {
+				return new Promise(async (resolve) => {
+					resolve(
+						await Hourly_rate_project.insert({
+							project: {
+								id: existingProject.id,
+							},
+							employee: {
+								id: employee.id,
+							},
+							hourly_rate: employee.hourly_rate,
+						})
+					)
+				})
+			})
+		)
 
 		existingProject.employees = [...existingProject.employees, ...allEmployees]
 		await existingProject.save()
@@ -722,6 +758,12 @@ const projectController = {
 
 		await manager.query(
 			`DELETE FROM project_employee WHERE "projectId" = ${Number(
+				projectId
+			)} and "employeeId" = ${Number(employeeId)}`
+		)
+
+		await manager.query(
+			`DELETE FROM hourly_rate_project WHERE "projectId" = ${Number(
 				projectId
 			)} and "employeeId" = ${Number(employeeId)}`
 		)

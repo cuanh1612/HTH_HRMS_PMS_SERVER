@@ -125,6 +125,9 @@ export class Employee extends BaseEntity {
 	})
 	attendances: Attendance[]
 
+	@OneToMany(()=> Task, (task)=> task.assignBy)
+	tasksAssignBy: Task[]
+
 	@OneToMany(() => Conversation_reply, (conversation_reply) => conversation_reply.user)
 	conversation_replies: Conversation_reply[]
 

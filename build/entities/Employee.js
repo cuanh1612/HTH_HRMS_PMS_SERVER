@@ -146,6 +146,10 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "attendances", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => Task_1.Task, (task) => task.assignBy),
+    __metadata("design:type", Array)
+], Employee.prototype, "tasksAssignBy", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => Conversation_Reply_1.Conversation_reply, (conversation_reply) => conversation_reply.user),
     __metadata("design:type", Array)
 ], Employee.prototype, "conversation_replies", void 0);

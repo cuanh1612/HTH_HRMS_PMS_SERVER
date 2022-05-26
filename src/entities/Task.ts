@@ -77,6 +77,13 @@ export class Task extends BaseEntity {
     })
     task_files: Task_file[]
 
+    @ManyToOne(() => Employee, (employee) => employee.tasksAssignBy, {
+        onDelete: 'CASCADE',
+        nullable: true,
+    })
+    @JoinColumn()
+    assignBy: Employee
+
     @ManyToOne(() => Status, (status) => status.tasks, {
         onDelete: 'CASCADE',
         nullable: true,

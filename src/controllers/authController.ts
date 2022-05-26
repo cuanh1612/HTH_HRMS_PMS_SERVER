@@ -1,12 +1,14 @@
 import argon2 from 'argon2'
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
-import { createToken, sendRefreshToken } from '../utils/auth'
+import { createActiveToken, createToken, sendRefreshToken } from '../utils/auth'
 import handleCatchError from '../utils/catchAsyncError'
-import { Secret, verify } from 'jsonwebtoken'
+import { JwtPayload, Secret, verify } from 'jsonwebtoken'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import { OAuth2Client } from 'google-auth-library'
 import { Client } from '../entities/Client'
+import sendMail from '../utils/sendNotice'
+import { validatePassword } from '../utils/valid/employeeValid'
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
@@ -14,15 +16,17 @@ const authController = {
 	login: handleCatchError(async (req: Request, res: Response) => {
 		const { email, password } = req.body
 
-		const existingUser = await Employee.findOne({
-			where: {
-				email
-			}
-		}) || await Client.findOne({
-			where: {
-				email
-			}
-		})
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email,
+				},
+			}))
 
 		const existingUserPassword =
 			(await Employee.createQueryBuilder('employee')
@@ -285,6 +289,106 @@ const authController = {
 			code: 200,
 			success: true,
 			message: 'Ask re enter password correct',
+		})
+	}),
+
+	recoverPass: handleCatchError(async (req: Request, res: Response) => {
+		const { email } = req.body
+		console.log(email)
+		if (!email) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please, enter full fields',
+			})
+		}
+
+		const employee = await Employee.findOne({
+			where: {
+				email,
+			},
+		})
+
+		if (!employee) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'This employee does not exist in system',
+			})
+		}
+
+		const activeToken = createActiveToken(email, employee.id)
+
+		await sendMail({
+			to: email,
+			text: 'reset password',
+			subject: 'huprom-reset password',
+			html: `<a href="http://localhost:3000/reset-password/${activeToken}>link</a>`,
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Password recovery link sent to your inbox.',
+		})
+	}),
+
+	// reset password
+	resetPassword: handleCatchError(async (req, res) => {
+		const { activeToken, password, passwordConfirm } = req.body
+		if (!validatePassword(password))
+			return res.status(400).json({
+				err: 'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+				statusCode: 400,
+			})
+
+		if (password != passwordConfirm)
+			return res.status(400).json({
+				err: 'Password not match',
+				statusCode: 400,
+			})
+
+		const passwordHash = await argon2.hash(password)
+
+		const data = verify(activeToken, process.env.ACTIVE_TOKEN_SECRET as string, {
+			ignoreExpiration: false,
+		}) as JwtPayload & {
+			email: string
+			id: number
+		}
+
+		if (new Date() >= new Date(Number(data.exp) * 1000))
+			return res.status(400).json({
+				err: 'Some thing went wrong! Please request mail reset password again at login page',
+				statusCode: 400,
+			})
+
+		// find user by id and update
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: data.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: data.email,
+				},
+			}))
+
+		if (!existingUser)
+			return res.status(400).json({
+				err: 'User does not exist',
+				statusCode: 400,
+			})
+
+		existingUser.password = passwordHash
+		await existingUser.save()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Reset password successfully',
 		})
 	}),
 }

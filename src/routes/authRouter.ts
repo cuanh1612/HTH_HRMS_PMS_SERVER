@@ -12,4 +12,7 @@ authRouter.get('/me', authController.currentUser)
 
 authRouter.post('/logout', authController.logout)
 
+authRouter.post('/recover-password', authController.recoverPass)
+authRouter.post('/reset-password', authController.resetPassword)
+
 export default authRouter

@@ -101,6 +101,14 @@ __decorate([
     __metadata("design:type", Array)
 ], Task.prototype, "task_files", void 0);
 __decorate([
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.tasksAssignBy, {
+        onDelete: 'CASCADE',
+        nullable: true,
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Employee_1.Employee)
+], Task.prototype, "assignBy", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Status_1.Status, (status) => status.tasks, {
         onDelete: 'CASCADE',
         nullable: true,

@@ -12,4 +12,6 @@ authRouter.post('/ask-re-enter-password', authController_1.default.askReEnterPas
 authRouter.get('/refresh_token', authController_1.default.refreshToken);
 authRouter.get('/me', authController_1.default.currentUser);
 authRouter.post('/logout', authController_1.default.logout);
+authRouter.post('/recover-password', authController_1.default.recoverPass);
+authRouter.post('/reset-password', authController_1.default.resetPassword);
 exports.default = authRouter;

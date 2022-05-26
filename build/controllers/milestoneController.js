@@ -149,7 +149,11 @@ const mileStoneController = {
                 id: Number(id),
             },
             relations: {
-                tasks: true,
+                tasks: {
+                    employees: true,
+                    status: true,
+                    assignBy: true
+                },
             }
         });
         if (!existingMileStone)
@@ -161,7 +165,7 @@ const mileStoneController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            milestones: existingMileStone,
+            milestone: existingMileStone,
             message: 'Get milestones by project success'
         });
     })),

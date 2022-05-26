@@ -79,3 +79,9 @@ function validateEmail(email: string) {
 		/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 	return res.test(String(email).toLowerCase())
 }
+
+//Check valid password
+export const validatePassword = (password: string)=> {
+	const res = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+	return res.test(String(password).toLowerCase());
+  }
