@@ -239,7 +239,7 @@ const timeLogController = {
             message: 'Updated time log successfully',
         });
     })),
-    //update timelog
+    //delete timelog
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { timeLogId } = req.params;
         //Check existing timelog
@@ -293,5 +293,65 @@ const timeLogController = {
             message: 'Deleted time log successfully',
         });
     })),
+    Deletemany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { timelogs } = req.body;
+        //check array of timelog
+        if (!Array.isArray(timelogs) || !timelogs)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Timelog does not exist in the system',
+            });
+        for (let index = 0; index < timelogs.length; index++) {
+            const itemtimelog = timelogs[index];
+            const existingtimelog = yield Time_Log_1.Time_log.findOne({
+                where: {
+                    id: itemtimelog.id,
+                },
+            });
+            if (existingtimelog) {
+                yield existingtimelog.remove();
+            }
+        }
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Delete timelogs success',
+        });
+    })),
+    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const timelogs = yield Time_Log_1.Time_log.find();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            timelogs: timelogs,
+            message: 'Get all timelog success',
+        });
+    })),
+    getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { timelogId } = req.params;
+        const existingtimelog = yield Time_Log_1.Time_log.findOne({
+            where: {
+                id: Number(timelogId)
+            },
+            relations: {
+                project: true,
+                employee: true,
+                task: true
+            }
+        });
+        if (!existingtimelog)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Timelog does not exist in the system',
+            });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            timelog: existingtimelog,
+            message: 'Get detail of timelog success'
+        });
+    }))
 };
 exports.default = timeLogController;

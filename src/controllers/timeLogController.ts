@@ -104,13 +104,11 @@ const timeLogController = {
 		const dateOneObj = new Date(starts_on_date)
 		const dateTwoObj = new Date(ends_on_date)
 		const dateOneObjTime = new Date(
-			`${dateOneObj.getMonth() + 1}-${dateOneObj.getDate()}-${dateOneObj.getFullYear()} ${
-				createdTimeLog.starts_on_time
+			`${dateOneObj.getMonth() + 1}-${dateOneObj.getDate()}-${dateOneObj.getFullYear()} ${createdTimeLog.starts_on_time
 			}`
 		)
 		const dateTwoObjTime = new Date(
-			`${dateTwoObj.getMonth() + 1}-${dateTwoObj.getDate()}-${dateTwoObj.getFullYear()} ${
-				createdTimeLog.ends_on_time
+			`${dateTwoObj.getMonth() + 1}-${dateTwoObj.getDate()}-${dateTwoObj.getFullYear()} ${createdTimeLog.ends_on_time
 			}`
 		)
 		const milliseconds = Math.abs(dateTwoObjTime.getTime() - dateOneObjTime.getTime())
@@ -149,7 +147,7 @@ const timeLogController = {
 
 	//update timelog
 	update: handleCatchError(async (req: Request, res: Response) => {
-        const {timeLogId} = req.params
+		const { timeLogId } = req.params
 		const dataUpdateTimeLog = req.body as createOrUpdatetTimeLogPayload
 		const { project, task, employee, starts_on_date, ends_on_date, starts_on_time, ends_on_time } = dataUpdateTimeLog
 
@@ -230,18 +228,18 @@ const timeLogController = {
 			},
 		}))
 
-        if (!existingTimeLog)
+		if (!existingTimeLog)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Time log does not exist in the system',
 			})
-        
-        existingTimeLog.starts_on_time = starts_on_time
-        existingTimeLog.ends_on_time = ends_on_time
-        await existingTimeLog.save()
 
-        //Get time log after update
+		existingTimeLog.starts_on_time = starts_on_time
+		existingTimeLog.ends_on_time = ends_on_time
+		await existingTimeLog.save()
+
+		//Get time log after update
 		const updatedTimeLog = (await Time_log.findOne({
 			where: {
 				id: Number(timeLogId),
@@ -252,13 +250,11 @@ const timeLogController = {
 		const dateOneObj = new Date(starts_on_date)
 		const dateTwoObj = new Date(ends_on_date)
 		const dateOneObjTime = new Date(
-			`${dateOneObj.getMonth() + 1}-${dateOneObj.getDate()}-${dateOneObj.getFullYear()} ${
-				updatedTimeLog.starts_on_time
+			`${dateOneObj.getMonth() + 1}-${dateOneObj.getDate()}-${dateOneObj.getFullYear()} ${updatedTimeLog.starts_on_time
 			}`
 		)
 		const dateTwoObjTime = new Date(
-			`${dateTwoObj.getMonth() + 1}-${dateTwoObj.getDate()}-${dateTwoObj.getFullYear()} ${
-				updatedTimeLog.ends_on_time
+			`${dateTwoObj.getMonth() + 1}-${dateTwoObj.getDate()}-${dateTwoObj.getFullYear()} ${updatedTimeLog.ends_on_time
 			}`
 		)
 		const milliseconds = Math.abs(dateTwoObjTime.getTime() - dateOneObjTime.getTime())
@@ -282,11 +278,11 @@ const timeLogController = {
 		if (exisingHourlyrate) {
 			updatedTimeLog.earnings = exisingHourlyrate.hourly_rate * totalHours
 		}
-        
-        updatedTimeLog.project = existingproject
-        updatedTimeLog.task = task
-        updatedTimeLog.memo = dataUpdateTimeLog.memo
-        updatedTimeLog.employee = existingEmployee
+
+		updatedTimeLog.project = existingproject
+		updatedTimeLog.task = task
+		updatedTimeLog.memo = dataUpdateTimeLog.memo
+		updatedTimeLog.employee = existingEmployee
 
 		//Save update 
 		await updatedTimeLog.save()
@@ -299,68 +295,134 @@ const timeLogController = {
 		})
 	}),
 
-    //update timelog
+	//delete timelog
 	delete: handleCatchError(async (req: Request, res: Response) => {
-        const {timeLogId} = req.params
+		const { timeLogId } = req.params
 
-        //Check existing timelog
-        const existingTimeLog = await Time_log.findOne({
-            where: {
-                id: Number(timeLogId)
-            }
-        })
+		//Check existing timelog
+		const existingTimeLog = await Time_log.findOne({
+			where: {
+				id: Number(timeLogId)
+			}
+		})
 
-        if(!existingTimeLog)
-        return res.status(400).json({
-            code: 400,
-            success: false,
-            message: 'Time log does not assigned to task or project',
-        })
+		if (!existingTimeLog)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Time log does not assigned to task or project',
+			})
 
-        //Delete
-        await existingTimeLog.remove()
+		//Delete
+		await existingTimeLog.remove()
 
-        return res.status(200).json({
+		return res.status(200).json({
 			code: 200,
 			success: true,
 			message: 'Deleted time log successfully',
 		})
-    }),
+	}),
 
-    getAllByProject: handleCatchError(async (req: Request, res: Response) => {
-        const {projectId} = req.params // taik biet tieenngs
+	getAllByProject: handleCatchError(async (req: Request, res: Response) => {
+		const { projectId } = req.params // taik biet tieenngs
 
-        //Check exist project
-        const existingproject =await Project.findOne({
-            where: {
-                id: Number(projectId)
-            }
-        })
+		//Check exist project
+		const existingproject = await Project.findOne({
+			where: {
+				id: Number(projectId)
+			}
+		})
 
-        if (!existingproject)
+		if (!existingproject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Project does not exist in the system',
 			})
 
-        const timeLogs = await Time_log.find({
-            where: {
-                project: {
-                    id: existingproject.id
-                }
-            },
-            order: {
-                createdAt: "DESC"
-            }
-        })
+		const timeLogs = await Time_log.find({
+			where: {
+				project: {
+					id: existingproject.id
+				}
+			},
+			order: {
+				createdAt: "DESC"
+			}
+		})
 
-        return res.status(200).json({
+		return res.status(200).json({
 			code: 200,
 			success: true,
-            timeLogs,
+			timeLogs,
 			message: 'Deleted time log successfully',
 		})
-    }), 
+	}),
+	Deletemany: handleCatchError(async (req: Request, res: Response) => {
+		const { timelogs } = req.body
+
+		//check array of timelog
+		if (!Array.isArray(timelogs) || !timelogs)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Timelog does not exist in the system',
+			})
+		for (let index = 0; index < timelogs.length; index++) {
+			const itemtimelog = timelogs[index]
+			const existingtimelog = await Time_log.findOne({
+				where: {
+					id: itemtimelog.id,
+				},
+			})
+			if (existingtimelog) {
+				await existingtimelog.remove()
+			}
+		}
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete timelogs success',
+		})
+	}),
+
+	getAll: handleCatchError(async (_: Request, res: Response) => {
+		const timelogs = await Time_log.find()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			timelogs: timelogs,
+			message: 'Get all timelog success',
+		})
+	}),
+
+	getDetail: handleCatchError(async (req: Request, res: Response) => {
+		const { timelogId } = req.params
+
+		const existingtimelog = await Time_log.findOne({
+			where: {
+				id: Number(timelogId)
+			},
+			relations:{
+				project:true,
+				employee: true,
+				task: true
+			}
+		})
+		if (!existingtimelog)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Timelog does not exist in the system',
+			})
+		
+			return res.status(200).json({
+				code: 200,
+				success: true,
+				timelog: existingtimelog,
+				message: 'Get detail of timelog success'
+			})
+	})
 }
 export default timeLogController
