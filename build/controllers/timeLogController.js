@@ -349,7 +349,7 @@ const timeLogController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            timelog: existingtimelog,
+            timeLog: existingtimelog,
             message: 'Get detail of timelog success'
         });
     }))

@@ -20,12 +20,16 @@ __decorate([
     __metadata("design:type", Number)
 ], Hourly_rate_project.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.hourly_rate_projects),
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.hourly_rate_projects, {
+        onDelete: "CASCADE"
+    }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Employee_1.Employee)
 ], Hourly_rate_project.prototype, "employee", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Project_1.Project, (project) => project.hourly_rate_projects),
+    (0, typeorm_1.ManyToOne)(() => Project_1.Project, (project) => project.hourly_rate_projects, {
+        onDelete: "CASCADE"
+    }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Project_1.Project)
 ], Hourly_rate_project.prototype, "project", void 0);

@@ -10,4 +10,5 @@ TimeLogRouter.post('/', timeLogController_1.default.create);
 TimeLogRouter.get('/', timeLogController_1.default.getAll);
 TimeLogRouter.get('/:timelogId', timeLogController_1.default.getDetail);
 TimeLogRouter.delete('/:id', timeLogController_1.default.delete);
+TimeLogRouter.put('/:timeLogId', timeLogController_1.default.update);
 exports.default = TimeLogRouter;

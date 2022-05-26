@@ -15,11 +15,15 @@ export class Hourly_rate_project extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number
 
-    @ManyToOne(()=> Employee, (employee)=> employee.hourly_rate_projects)
+    @ManyToOne(()=> Employee, (employee)=> employee.hourly_rate_projects, {
+        onDelete: "CASCADE"
+    })
     @JoinColumn()
 	employee: Employee
 
-    @ManyToOne(()=> Project, (project)=> project.hourly_rate_projects)
+    @ManyToOne(()=> Project, (project)=> project.hourly_rate_projects, {
+        onDelete: "CASCADE"
+    })
     @JoinColumn()
 	project: Project
 

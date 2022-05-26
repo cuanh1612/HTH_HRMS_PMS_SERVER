@@ -10,6 +10,8 @@ TimeLogRouter.get('/:timelogId', timeLogController.getDetail)
 
 TimeLogRouter.delete('/:id', timeLogController.delete)
 
+TimeLogRouter.put('/:timeLogId', timeLogController.update)
+
 
 
 export default TimeLogRouter

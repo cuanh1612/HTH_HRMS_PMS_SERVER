@@ -32,6 +32,13 @@ export enum enumCurrency {
 	VND = 'VND',
 }
 
+export enum enumProjectStatus {
+	NOT_STARTED = "Not Started",
+	IN_PROGRESS = "In Progress",
+	ON_HOLD = "On Hold",
+	CANCELED = "Canceled",
+	FINISHED = "Finished"
+}
 
 
 @Entity()
@@ -147,11 +154,14 @@ export class Project extends BaseEntity {
 	})
 	project_notes: Project_note[]
 
-	// @OneToMany(() => TimeLog, (timelog) => timelog.project, {
-	// 	onDelete: 'SET NULL',
-	// 	nullable: true,
-	// })
-	// timelogs: TimeLog[]
+	@OneToMany(() => Time_log, (timelog) => timelog.project, {
+		onDelete: 'SET NULL',
+		nullable: true,
+	})
+	timelogs: Time_log[]
+
+	@Column({ type: 'enum', enum: enumProjectStatus, default: enumProjectStatus.NOT_STARTED })
+	project_status: string
 
 	@CreateDateColumn({
 		name: 'created_at',

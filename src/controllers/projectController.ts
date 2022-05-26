@@ -1,8 +1,10 @@
 import { Request, Response } from 'express'
 import { Secret, verify } from 'jsonwebtoken'
+import { getManager } from 'typeorm'
 import { Client } from '../entities/Client'
 import { Department } from '../entities/Department'
 import { Employee, enumRole } from '../entities/Employee'
+import { Hourly_rate_project } from '../entities/Hourly_rate_project'
 import { Project } from '../entities/Project'
 import { Project_Category } from '../entities/Project_Category'
 import { Project_file } from '../entities/Project_File'
@@ -12,8 +14,6 @@ import { createOrUpdateProjectPayload } from '../type/ProjectPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { projectValid } from '../utils/valid/projectValid'
-import { getManager } from 'typeorm'
-import { Hourly_rate_project } from '../entities/Hourly_rate_project'
 
 const projectController = {
 	//Create new project
@@ -254,9 +254,14 @@ const projectController = {
 			(existingproject.Added_by = existingAddedBy),
 			(existingproject.start_date = dataUpdateProject.start_date),
 			(existingproject.deadline = dataUpdateProject.deadline),
-			(existingproject.send_task_noti = true)
-
-		await existingproject.save()
+			(existingproject.send_task_noti = true),
+			(existingproject.project_summary = dataUpdateProject.project_summary),
+			(existingproject.notes = dataUpdateProject.notes),
+			(existingproject.project_status = dataUpdateProject.project_status),
+			(existingproject.currency = dataUpdateProject.currency),
+			(existingproject.project_budget = dataUpdateProject.project_budget),
+			(existingproject.hours_estimate = dataUpdateProject.hours_estimate),
+			await existingproject.save()
 
 		return res.status(200).json({
 			code: 200,
@@ -428,14 +433,19 @@ const projectController = {
 			.andWhere('status.title = :title', {
 				title: 'Complete',
 			})
-			.getRawMany()
+			.getCount()
 
-		console.log(countSuccessTasks)
+		const countTasks = await Task.createQueryBuilder('task')
+			.leftJoinAndSelect('status', 'status', 'task.statusId = status.id')
+			.where('task.projectId = :id', {
+				id: existingproject.id,
+			})
+			.getCount()
 
-		// if (countSuccessTasks !== 0 && countTasks !== 0) {
-		// 	existingproject.Progress = (countSuccessTasks / countTasks) * 100
-		// 	await existingproject.save()
-		// }
+		if (countSuccessTasks !== 0 && countTasks !== 0) {
+			existingproject.Progress = (countSuccessTasks / countTasks) * 100
+			await existingproject.save()
+		}
 
 		return res.status(200).json({
 			code: 200,

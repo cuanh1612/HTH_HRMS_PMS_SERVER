@@ -13,9 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = require("jsonwebtoken");
+const typeorm_1 = require("typeorm");
 const Client_1 = require("../entities/Client");
 const Department_1 = require("../entities/Department");
 const Employee_1 = require("../entities/Employee");
+const Hourly_rate_project_1 = require("../entities/Hourly_rate_project");
 const Project_1 = require("../entities/Project");
 const Project_Category_1 = require("../entities/Project_Category");
 const Project_File_1 = require("../entities/Project_File");
@@ -23,8 +25,6 @@ const Status_1 = require("../entities/Status");
 const Task_1 = require("../entities/Task");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const projectValid_1 = require("../utils/valid/projectValid");
-const typeorm_1 = require("typeorm");
-const Hourly_rate_project_1 = require("../entities/Hourly_rate_project");
 const projectController = {
     //Create new project
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -229,8 +229,14 @@ const projectController = {
             (existingproject.Added_by = existingAddedBy),
             (existingproject.start_date = dataUpdateProject.start_date),
             (existingproject.deadline = dataUpdateProject.deadline),
-            (existingproject.send_task_noti = true);
-        yield existingproject.save();
+            (existingproject.send_task_noti = true),
+            (existingproject.project_summary = dataUpdateProject.project_summary),
+            (existingproject.notes = dataUpdateProject.notes),
+            (existingproject.project_status = dataUpdateProject.project_status),
+            (existingproject.currency = dataUpdateProject.currency),
+            (existingproject.project_budget = dataUpdateProject.project_budget),
+            (existingproject.hours_estimate = dataUpdateProject.hours_estimate),
+            yield existingproject.save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -379,12 +385,17 @@ const projectController = {
             .andWhere('status.title = :title', {
             title: 'Complete',
         })
-            .getRawMany();
-        console.log(countSuccessTasks);
-        // if (countSuccessTasks !== 0 && countTasks !== 0) {
-        // 	existingproject.Progress = (countSuccessTasks / countTasks) * 100
-        // 	await existingproject.save()
-        // }
+            .getCount();
+        const countTasks = yield Task_1.Task.createQueryBuilder('task')
+            .leftJoinAndSelect('status', 'status', 'task.statusId = status.id')
+            .where('task.projectId = :id', {
+            id: existingproject.id,
+        })
+            .getCount();
+        if (countSuccessTasks !== 0 && countTasks !== 0) {
+            existingproject.Progress = (countSuccessTasks / countTasks) * 100;
+            yield existingproject.save();
+        }
         return res.status(200).json({
             code: 200,
             success: true,
