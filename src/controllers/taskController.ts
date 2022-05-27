@@ -144,7 +144,7 @@ const taskController = {
 			employees: taskEmployees,
 			index,
 			assignBy: {
-				id: Number(assignBy)
+				id: Number(assignBy),
 			},
 		}).save()
 
@@ -293,7 +293,11 @@ const taskController = {
 			(existingtask.task_category = dataUpdateTask.task_category),
 			(existingtask.employees = taskEmployees),
 			(existingtask.index = index),
-			(existingtask.status = existingStatus)
+			(existingtask.status = existingStatus),
+			(existingtask.description = dataUpdateTask.description
+				? dataUpdateTask.description
+				: ''),
+			(existingtask.priority = dataUpdateTask.priority)
 
 		await existingtask.save()
 
@@ -590,15 +594,15 @@ const taskController = {
 		const tasks = await Task.find({
 			select: {
 				time_logs: {
-					total_hours: true
+					total_hours: true,
 				},
 				project: {
-					name: true
+					name: true,
 				},
 				milestone: {
 					id: true,
-					title: true
-				}
+					title: true,
+				},
 			},
 			where: {
 				project: {
@@ -610,8 +614,8 @@ const taskController = {
 				project: true,
 				employees: true,
 				status: true,
-				milestone: true
-			}
+				milestone: true,
+			},
 		})
 
 		console.log(tasks)

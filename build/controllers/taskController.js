@@ -139,7 +139,7 @@ const taskController = {
         var index = lasttask ? lasttask.index + 1 : 1;
         //create task
         const createdTask = yield Task_1.Task.create(Object.assign(Object.assign({}, dataNewTask), { employees: taskEmployees, index, assignBy: {
-                id: Number(assignBy)
+                id: Number(assignBy),
             } })).save();
         if (Array.isArray(task_files)) {
             //create task files
@@ -270,7 +270,11 @@ const taskController = {
             (existingtask.task_category = dataUpdateTask.task_category),
             (existingtask.employees = taskEmployees),
             (existingtask.index = index),
-            (existingtask.status = existingStatus);
+            (existingtask.status = existingStatus),
+            (existingtask.description = dataUpdateTask.description
+                ? dataUpdateTask.description
+                : ''),
+            (existingtask.priority = dataUpdateTask.priority);
         yield existingtask.save();
         return res.status(200).json({
             code: 200,
@@ -517,15 +521,15 @@ const taskController = {
         const tasks = yield Task_1.Task.find({
             select: {
                 time_logs: {
-                    total_hours: true
+                    total_hours: true,
                 },
                 project: {
-                    name: true
+                    name: true,
                 },
                 milestone: {
                     id: true,
-                    title: true
-                }
+                    title: true,
+                },
             },
             where: {
                 project: {
@@ -537,8 +541,8 @@ const taskController = {
                 project: true,
                 employees: true,
                 status: true,
-                milestone: true
-            }
+                milestone: true,
+            },
         });
         console.log(tasks);
         return res.status(200).json({
