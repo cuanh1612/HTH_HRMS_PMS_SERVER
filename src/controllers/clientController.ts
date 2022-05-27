@@ -1,10 +1,12 @@
 import argon2 from 'argon2'
 import { Request, Response } from 'express'
+import { getManager } from 'typeorm'
 import { Avatar } from '../entities/Avatar'
 import { Client } from '../entities/Client'
 import { Client_Category } from '../entities/Client_Category'
 import { Client_Sub_Category } from '../entities/Client_Sub_Category'
 import { Employee } from '../entities/Employee'
+import { Project } from '../entities/Project'
 import { createOrUpdatetClientPayload } from '../type/ClientPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { clientValid } from '../utils/valid/clientValid'
@@ -257,37 +259,6 @@ const clientController = {
 			}
 		}
 
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-		console.log('sdfgsdfgh dfgdf dfsg')
-
 		//Update client
 		await Client.update(
 			{
@@ -376,6 +347,130 @@ const clientController = {
 			code: 200,
 			success: true,
 			message: 'Delete clients successfully',
+		})
+	}),
+
+	totalProjects: handleCatchError(async (req: Request, res: Response) => {
+		const { clientId } = req.params
+
+		//Check exist client
+		const existingClient = await Client.findOne({
+			where: {
+				id: Number(clientId),
+			},
+		})
+
+		if (!existingClient)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Client does not exist in the system',
+			})
+
+		//Get total projects by client
+		const totalProjects = await Project.createQueryBuilder('project')
+			.where('project.client = :clientId', { clientId })
+			.getCount()
+			
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			totalProjects,
+			message: 'Get total projects successfully',
+		})
+	}),
+
+	totalEarnings: handleCatchError(async (req: Request, res: Response) => {
+		const { clientId } = req.params
+
+		//Check exist client
+		const existingClient = await Client.findOne({
+			where: {
+				id: Number(clientId),
+			},
+		})
+
+		if (!existingClient)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Client does not exist in the system',
+			})
+
+		//Get total earning
+		const totalEarnings = await getManager('huprom').query(
+			`SELECT SUM(time_log.earnings) FROM time_log LEFT JOIN project on time_log."projectId" = project.id WHERE project."clientId" = ${clientId}`
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			totalEarnings: Number(totalEarnings[0].sum) || 0,
+			message: 'Get total earnings successfully',
+		})
+	}),
+
+	statusProjects: handleCatchError(async (req: Request, res: Response) => {
+		const { clientId } = req.params
+
+		//Check exist client
+		const existingClient = await Client.findOne({
+			where: {
+				id: Number(clientId),
+			},
+		})
+
+		if (!existingClient)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Client does not exist in the system',
+			})
+
+		//Get status project
+		const statusProjects = await getManager('huprom').query(
+			`SELECT project.project_status, COUNT(project.id) FROM project WHERE project."clientId" = ${clientId} GROUP BY project.project_status`
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			statusProjects,
+			message: 'Get total earnings successfully',
+		})
+	}),
+
+	projects: handleCatchError(async (req: Request, res: Response) => {
+		const { clientId } = req.params
+
+		//Check exist client
+		const existingClient = await Client.findOne({
+			where: {
+				id: Number(clientId),
+			},
+		})
+
+		if (!existingClient)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Client does not exist in the system',
+			})
+
+		//Get projects
+		const projects = await Project.find({
+			where: {
+				client: {
+					id: existingClient.id
+				}
+			}
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			projects,
+			message: 'Get projects successfully',
 		})
 	}),
 }

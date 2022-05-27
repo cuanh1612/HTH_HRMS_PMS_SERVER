@@ -82,12 +82,6 @@ export class Task extends BaseEntity {
     })
     task_files: Task_file[]
 
-    // @OneToMany(() => TimeLog, (timelog) => timelog.task,{
-    //     onDelete: 'SET NULL',
-    //     nullable: true
-    // })
-    // timelogs: TimeLog[]
-
     @ManyToOne(() => Status, (status) => status.tasks, {
         onDelete: 'CASCADE',
         nullable: true,
@@ -102,6 +96,7 @@ export class Task extends BaseEntity {
 
     @CreateDateColumn({
 		name: 'created_at',
+        
 	})
 	createdAt: Date
 

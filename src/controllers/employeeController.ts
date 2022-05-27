@@ -1,11 +1,15 @@
 import argon2 from 'argon2'
 import { Request, Response } from 'express'
 import { getManager } from 'typeorm'
+import { Attendance } from '../entities/Attendance'
 import { Avatar } from '../entities/Avatar'
 import { Department } from '../entities/Department'
 import { Designation } from '../entities/Designation'
 import { Employee } from '../entities/Employee'
+import { Leave } from '../entities/Leave'
 import { Salary } from '../entities/Salary'
+import { Task } from '../entities/Task'
+import { Time_log } from '../entities/Time_Log'
 import { createOrUpdatetEmployeePayload } from '../type/EmployeePayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { employeeValid } from '../utils/valid/employeeValid'
@@ -355,10 +359,9 @@ const employeeController = {
 			})
 
 		//Get count open task
-		const countOpentask = await getManager('huprom')
-			.query(
-				`SELECT COUNT(task_employee."employeeId") from task_employee WHERE task_employee."employeeId" = ${employeeId}`
-			)
+		const countOpentask = await getManager('huprom').query(
+			`SELECT COUNT(task_employee."employeeId") from task_employee WHERE task_employee."employeeId" = ${employeeId}`
+		)
 
 		return res.status(200).json({
 			code: 200,
@@ -367,6 +370,321 @@ const employeeController = {
 			message: 'Get count open tasks successfully',
 		})
 	}),
+
+	getCountProjects: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
+
+		//Get count project assigned
+		const countProjects = await getManager('huprom').query(
+			`SELECT  COUNT(project_employee."projectId") FROM project_employee WHERE project_employee."employeeId" = ${employeeId}`
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countProjects: Number(countProjects[0].count) || 0,
+			message: 'Get count projects successfully',
+		})
+	}),
+
+	getHoursLogged: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
+
+		//Get sum logged of employee
+		const hoursLogged = await getManager('huprom').query(
+			`SELECT  SUM(time_log.total_hours) FROM time_log WHERE time_log."employeeId" = ${employeeId}`
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			hoursLogged: Number(hoursLogged[0].sum) || 0,
+			message: 'Get hours logged successfully',
+		})
+	}),
+
+	getLateAttendance: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
+
+		//Get late attendance
+		const lateAttendance = await Attendance.createQueryBuilder('attendance')
+			.leftJoinAndSelect('attendance.employee', 'employee')
+			.where('employee.id = :employeeId', { employeeId })
+			.andWhere('attendance.late = :late', { late: true })
+			.getCount()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			lateAttendance,
+			message: 'Get late attendance successfully',
+		})
+	}),
+
+	countLeavesTaken: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
+
+		//Get countLeavesTaken
+		const countLeavesTaken = await Leave.createQueryBuilder('leave')
+			.leftJoinAndSelect('leave.employee', 'employee')
+			.where('employee.id = :employeeId', { employeeId })
+			.getCount()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countLeavesTaken,
+			message: 'Get count leaves taken successfully',
+		})
+	}),
+
+	countTasksStatus: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
+
+		//Get sum task by status task
+		const countTasksStatus = await getManager('huprom').query(
+			`SELECT status.title, COUNT(task.id) FROM status LEFT JOIN task on status.id = task."statusId" LEFT JOIN task_employee on task.id = task_employee."taskId" WHERE task_employee."employeeId" = ${employeeId} GROUP BY status.title`
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countTasksStatus,
+			message: 'Get count tasks status successfully',
+		})
+	}),
+
+	getTasks: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
+
+		//Get tasks
+		const tasks = await Task.find({
+			where: {
+				employees: {
+					id: existingEmployee.id,
+				},
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			tasks,
+			message: 'Get tasks successfully',
+		})
+	}),
+
+	getLeaves: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
+
+		//Get Leaves
+		const leaves = await Leave.find({
+			where: {
+				employee: {
+					id: existingEmployee.id,
+				},
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			leaves,
+			message: 'Get leaves successfully',
+		})
+	}),
+
+	getTimeLogs: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
+
+		//Get Time Log
+		const timeLogs = await Time_log.find({
+			where: {
+				employee: {
+					id: existingEmployee.id,
+				},
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			timeLogs,
+			message: 'Get timeLogs successfully',
+		})
+	}),
+
+	// getCountPendingTasks: handleCatchError(async (req: Request, res: Response) => {
+	// 	const { employeeId } = req.params
+
+	// 	//Check existing employee
+	// 	const existingEmployee = await Employee.findOne({
+	// 		where: {
+	// 			id: Number(employeeId),
+	// 		},
+	// 	})
+
+	// 	if (!existingEmployee)
+	// 		return res.status(400).json({
+	// 			code: 400,
+	// 			success: false,
+	// 			message: 'Please select many employees to delete',
+	// 		})
+
+	// 	//Get count pending task
+	// 	const countPendingTasks = await getManager('huprom').query(
+	// 		`SELECT COUNT(task.id) FROM task_employee LEFT JOIN task on task_employee."taskId" = task.id WHERE task_employee."employeeId" = ${employeeId} AND task.deadline >= CURRENT_DATE`
+	// 	)
+
+	// 	return res.status(200).json({
+	// 		code: 200,
+	// 		success: true,
+	// 		countPendingTasks: Number(countPendingTasks[0].count) || 0,
+	// 		message: 'Get count pending task successfully',
+	// 	})
+	// }),
+
+	// getCountOverdueTasks: handleCatchError(async (req: Request, res: Response) => {
+	// 	const { employeeId } = req.params
+
+	// 	//Check existing employee
+	// 	const existingEmployee = await Employee.findOne({
+	// 		where: {
+	// 			id: Number(employeeId),
+	// 		},
+	// 	})
+
+	// 	if (!existingEmployee)
+	// 		return res.status(400).json({
+	// 			code: 400,
+	// 			success: false,
+	// 			message: 'Please select many employees to delete',
+	// 		})
+
+	// 	//Get count overdue task
+	// 	const countOverdueTasks = await getManager('huprom').query(
+	// 		`SELECT COUNT(task.id) FROM task_employee LEFT JOIN task on task_employee."taskId" = task.id WHERE task_employee."employeeId" = ${employeeId} AND task.deadline < CURRENT_DATE`
+	// 	)
+
+	// 	return res.status(200).json({
+	// 		code: 200,
+	// 		success: true,
+	// 		countOverdueTasks: Number(countOverdueTasks[0].count) || 0,
+	// 		message: 'Get count pending task successfully',
+	// 	})
+	// }),
 }
 
 export default employeeController
