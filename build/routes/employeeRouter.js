@@ -13,5 +13,6 @@ userRouter.put('/role', (0, checkAuth_1.checkAuth)(['Admin']), employeeControlle
 userRouter.put('/:employeeId', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.update);
 userRouter.get('/', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getAll);
 userRouter.get('/:employeeId', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getDetail);
+userRouter.get('/:employeeId/getOpenTasks', employeeController_1.default.getOpenTasks);
 userRouter.delete('/:employeeId', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.delete);
 exports.default = userRouter;

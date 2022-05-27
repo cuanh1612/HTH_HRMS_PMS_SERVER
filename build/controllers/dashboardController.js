@@ -15,8 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const Attendance_1 = require("../entities/Attendance");
 const Client_1 = require("../entities/Client");
+const Contract_1 = require("../entities/Contract");
 const Employee_1 = require("../entities/Employee");
 const Leave_1 = require("../entities/Leave");
+const Milestone_1 = require("../entities/Milestone");
 const Project_1 = require("../entities/Project");
 const Task_1 = require("../entities/Task");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
@@ -105,12 +107,92 @@ const dashBoardController = {
     })),
     hoursLogged: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const manager = (0, typeorm_1.getManager)('huprom');
-        const hoursLogged = (yield manager.query('SELECT SUM(time_log.total_hours) as sum_total_hours FROM time_log')) || 0;
+        const hoursLogged = yield manager.query('SELECT SUM(time_log.total_hours) as sum_total_hours FROM time_log');
         return res.status(200).json({
             code: 200,
             success: true,
             hoursLogged: Number(hoursLogged[0].sum_total_hours) || 0,
             message: 'Get pending leaves successfully',
+        });
+    })),
+    statusWiseProjects: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const statusWiseProjects = yield manager.query('SELECT COUNT(project.id), project.project_status FROM project GROUP BY project.project_status');
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            statusWiseProjects: statusWiseProjects,
+            message: 'Get status wise projects successfully',
+        });
+    })),
+    pendingMilestone: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const statusWiseProjects = yield Milestone_1.Milestone.find({
+            where: {
+                status: false,
+            },
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            statusWiseProjects: statusWiseProjects,
+            message: 'Get status wise projects successfully',
+        });
+    })),
+    contractsGenerated: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const contractsGenerated = yield Contract_1.Contract.createQueryBuilder('contract').getCount();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            contractsGenerated: contractsGenerated,
+            message: 'Get contracts generated successfully',
+        });
+    })),
+    contractsSigned: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const contractsSigned = yield manager.query('SELECT COUNT(contract.id) FROM contract WHERE contract."signId" NOTNULL');
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            contractsSigned: Number(contractsSigned[0].count) || 0,
+            message: 'Get contracts signed successfully',
+        });
+    })),
+    clientWiseEarnings: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const clientWiseEarnings = yield manager.query('SELECT SUM(time_log.earnings) as earnings, client.name, client.id FROM time_log, project, client WHERE time_log."projectId" = project.id AND project."clientId" = client.id GROUP BY client.id');
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            clientWiseEarnings: clientWiseEarnings,
+            message: 'Get client wise earnings successfully',
+        });
+    })),
+    clientWiseTimeLogs: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const clientWiseTimeLogs = yield manager.query('SELECT SUM(time_log.total_hours) as total_hours, client.name, client.id FROM time_log, project, client WHERE time_log."projectId" = project.id AND project."clientId" = client.id GROUP BY client.id');
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            clientWiseTimeLogs: clientWiseTimeLogs,
+            message: 'Get client wise time logs successfully',
+        });
+    })),
+    lastestClients: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const lastestClients = yield Client_1.Client.createQueryBuilder("client").limit(10).getMany();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            lastestClients: lastestClients,
+            message: 'Get lastest clients successfully',
+        });
+    })),
+    lateAttendance: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const lastestClients = yield Client_1.Client.createQueryBuilder("client").limit(10).getMany();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            lastestClients: lastestClients,
+            message: 'Get lastest clients successfully',
         });
     })),
 };
