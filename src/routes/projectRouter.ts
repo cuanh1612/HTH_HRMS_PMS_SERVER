@@ -9,14 +9,17 @@ projectRouter.post('/', projectController.create)
 
 projectRouter.put('/assign-employee/:projectId', projectController.assignEmployee)
 projectRouter.put('/assign-employee/department/:projectId', projectController.assignEmployeeByDepartment)
-
 projectRouter.put('/:id', projectController.update)
+projectRouter.get('/:projectId/change-status', projectController.changeStatus)
+
 
 projectRouter.get('/get-employees-not-in-project/:projectId', projectController.getEmployeeNotIn)
 projectRouter.get('/all-employees/:idProject', projectController.allEmployees)
 projectRouter.get('/:projectId/check-asigned', projectController.checkAssigned)
 projectRouter.get('/', projectController.getAll)
 projectRouter.get('/:id', projectController.getDetail)
+projectRouter.get('/:projectId/count-status-tasks', projectController.countstatusTasks)
+projectRouter.get('/:projectId/earnings', projectController.projectHoursLogged)
 
 projectRouter.delete('/:id', projectController.delete)
 

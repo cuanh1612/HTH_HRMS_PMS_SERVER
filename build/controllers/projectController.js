@@ -666,5 +666,113 @@ const projectController = {
             message: 'Delete employee successfully',
         });
     })),
+    countstatusTasks: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { projectId } = req.params;
+        //Check exist project
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId),
+            },
+        });
+        if (!existingProject) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'This project does not exist in this project',
+            });
+        }
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const countstatusTasks = yield manager.query(`SELECT status.title, COUNT(task.id) FROM status LEFT JOIN task on task."statusId" = status.id WHERE status."projectId" = ${projectId} GROUP BY status.title`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            countstatusTasks: countstatusTasks,
+            message: 'Get count status tasks successfully',
+        });
+    })),
+    projectEarnings: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { projectId } = req.params;
+        //Check exist project
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId),
+            },
+        });
+        if (!existingProject) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'This project does not exist in this project',
+            });
+        }
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const projectEarnings = yield manager.query(`SELECT SUM(time_log.earnings) FROM time_log LEFT JOIN project on project.id = time_log."projectId" WHERE project.id = ${projectId} GROUP BY project.id`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            projectEarnings: Number(projectEarnings.count) || 0,
+            message: 'Get project earnings successfully',
+        });
+    })),
+    projectHoursLogged: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { projectId } = req.params;
+        //Check exist project
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId),
+            },
+        });
+        if (!existingProject) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'This project does not exist in this project',
+            });
+        }
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const projectHoursLogged = yield manager.query(`SELECT project.id, SUM(time_log.total_hours) FROM time_log LEFT JOIN project on project.id = time_log."projectId" WHERE project.id = ${projectId} GROUP BY project.id`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            projectHoursLogged: Number(projectHoursLogged.count) || 0,
+            message: 'Get project hours logged successfully',
+        });
+    })),
+    changeStatus: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { projectId } = req.params;
+        const { project_status } = req.body;
+        if (!project_status ||
+            project_status !== Project_1.enumProjectStatus.CANCELED ||
+            project_status !== Project_1.enumProjectStatus.FINISHED ||
+            project_status !== Project_1.enumProjectStatus.IN_PROGRESS ||
+            project_status !== Project_1.enumProjectStatus.NOT_STARTED ||
+            project_status !== Project_1.enumProjectStatus.ON_HOLD)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Input not valid',
+            });
+        //Check exist project
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId),
+            },
+        });
+        if (!existingProject) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'This project does not exist in this project',
+            });
+        }
+        //Change status
+        existingProject.project_status = project_status;
+        yield existingProject.save();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Change project status successfully',
+        });
+    })),
 };
 exports.default = projectController;

@@ -12,6 +12,7 @@ userRouter.put('/:employeeId', checkAuth(['Admin']), employeeController.update)
 
 userRouter.get('/', checkAuth([]), employeeController.getAll)
 userRouter.get('/:employeeId', checkAuth([]), employeeController.getDetail)
+userRouter.get('/:employeeId/getOpenTasks', employeeController.getOpenTasks)
 
 userRouter.delete('/:employeeId', checkAuth(['Admin']), employeeController.delete)
 

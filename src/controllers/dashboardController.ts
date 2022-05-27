@@ -2,8 +2,10 @@ import { Request, Response } from 'express'
 import { getManager } from 'typeorm'
 import { Attendance } from '../entities/Attendance'
 import { Client } from '../entities/Client'
+import { Contract } from '../entities/Contract'
 import { Employee } from '../entities/Employee'
 import { Leave } from '../entities/Leave'
+import { Milestone } from '../entities/Milestone'
 import { Project } from '../entities/Project'
 import { Task } from '../entities/Task'
 import handleCatchError from '../utils/catchAsyncError'
@@ -107,16 +109,119 @@ const dashBoardController = {
 
 	hoursLogged: handleCatchError(async (_: Request, res: Response) => {
 		const manager = getManager('huprom')
-		const hoursLogged =
-			(await manager.query(
-				'SELECT SUM(time_log.total_hours) as sum_total_hours FROM time_log'
-			)) || 0
+		const hoursLogged = await manager.query(
+			'SELECT SUM(time_log.total_hours) as sum_total_hours FROM time_log'
+		)
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
 			hoursLogged: Number(hoursLogged[0].sum_total_hours) || 0,
 			message: 'Get pending leaves successfully',
+		})
+	}),
+
+	statusWiseProjects: handleCatchError(async (_: Request, res: Response) => {
+		const manager = getManager('huprom')
+		const statusWiseProjects = await manager.query(
+			'SELECT COUNT(project.id), project.project_status FROM project GROUP BY project.project_status'
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			statusWiseProjects: statusWiseProjects,
+			message: 'Get status wise projects successfully',
+		})
+	}),
+
+	pendingMilestone: handleCatchError(async (_: Request, res: Response) => {
+		const statusWiseProjects = await Milestone.find({
+			where: {
+				status: false,
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			statusWiseProjects: statusWiseProjects,
+			message: 'Get status wise projects successfully',
+		})
+	}),
+
+	contractsGenerated: handleCatchError(async (_: Request, res: Response) => {
+		const contractsGenerated = await Contract.createQueryBuilder('contract').getCount()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			contractsGenerated: contractsGenerated,
+			message: 'Get contracts generated successfully',
+		})
+	}),
+
+	contractsSigned: handleCatchError(async (_: Request, res: Response) => {
+		const manager = getManager('huprom')
+		const contractsSigned = await manager.query(
+			'SELECT COUNT(contract.id) FROM contract WHERE contract."signId" NOTNULL'
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			contractsSigned: Number(contractsSigned[0].count) || 0,
+			message: 'Get contracts signed successfully',
+		})
+	}),
+
+	clientWiseEarnings: handleCatchError(async (_: Request, res: Response) => {
+		const manager = getManager('huprom')
+		const clientWiseEarnings = await manager.query(
+			'SELECT SUM(time_log.earnings) as earnings, client.name, client.id FROM time_log, project, client WHERE time_log."projectId" = project.id AND project."clientId" = client.id GROUP BY client.id'
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			clientWiseEarnings: clientWiseEarnings,
+			message: 'Get client wise earnings successfully',
+		})
+	}),
+
+	clientWiseTimeLogs: handleCatchError(async (_: Request, res: Response) => {
+		const manager = getManager('huprom')
+		const clientWiseTimeLogs = await manager.query(
+			'SELECT SUM(time_log.total_hours) as total_hours, client.name, client.id FROM time_log, project, client WHERE time_log."projectId" = project.id AND project."clientId" = client.id GROUP BY client.id'
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			clientWiseTimeLogs: clientWiseTimeLogs,
+			message: 'Get client wise time logs successfully',
+		})
+	}),
+
+	lastestClients: handleCatchError(async (_: Request, res: Response) => {
+		const lastestClients = await Client.createQueryBuilder("client").limit(10).getMany()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			lastestClients: lastestClients,
+			message: 'Get lastest clients successfully',
+		})
+	}),
+
+	lateAttendance: handleCatchError(async (_: Request, res: Response) => {
+		const lastestClients = await Client.createQueryBuilder("client").limit(10).getMany()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			lastestClients: lastestClients,
+			message: 'Get lastest clients successfully',
 		})
 	}),
 }

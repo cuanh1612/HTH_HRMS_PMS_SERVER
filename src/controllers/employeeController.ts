@@ -1,5 +1,6 @@
 import argon2 from 'argon2'
 import { Request, Response } from 'express'
+import { getManager } from 'typeorm'
 import { Avatar } from '../entities/Avatar'
 import { Department } from '../entities/Department'
 import { Designation } from '../entities/Designation'
@@ -333,6 +334,37 @@ const employeeController = {
 			code: 200,
 			success: true,
 			message: 'Delete employee successfully',
+		})
+	}),
+
+	getOpenTasks: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
+
+		//Get count open task
+		const countOpentask = await getManager('huprom')
+			.query(
+				`SELECT COUNT(task_employee."employeeId") from task_employee WHERE task_employee."employeeId" = ${employeeId}`
+			)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countOpentasks: Number(countOpentask[0].count) || 0,
+			message: 'Get count open tasks successfully',
 		})
 	}),
 }

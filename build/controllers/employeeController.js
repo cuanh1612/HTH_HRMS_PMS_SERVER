@@ -24,6 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
+const typeorm_1 = require("typeorm");
 const Avatar_1 = require("../entities/Avatar");
 const Department_1 = require("../entities/Department");
 const Designation_1 = require("../entities/Designation");
@@ -293,6 +294,30 @@ const employeeController = {
             code: 200,
             success: true,
             message: 'Delete employee successfully',
+        });
+    })),
+    getOpenTasks: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employeeId } = req.params;
+        //Check existing employee
+        const existingEmployee = yield Employee_1.Employee.findOne({
+            where: {
+                id: Number(employeeId),
+            },
+        });
+        if (!existingEmployee)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please select many employees to delete',
+            });
+        //Get count open task
+        const countOpentask = yield (0, typeorm_1.getManager)('huprom')
+            .query(`SELECT COUNT(task_employee."employeeId") from task_employee WHERE task_employee."employeeId" = ${employeeId}`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            countOpentasks: Number(countOpentask[0].count) || 0,
+            message: 'Get count open tasks successfully',
         });
     })),
 };

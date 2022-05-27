@@ -11,5 +11,12 @@ dashboardRouter.get('/todayAttendance', dashBoardController.todayAttendance)
 dashboardRouter.get('/pendingTasksRaw', dashBoardController.pendingTasksRaw)
 dashboardRouter.get('/pendingLeavesRaw', dashBoardController.pendingLeavesRaw)
 dashboardRouter.get('/hoursLogged', dashBoardController.hoursLogged)
+dashboardRouter.get('/statusWiseProjects', dashBoardController.statusWiseProjects)
+dashboardRouter.get('/contractsGenerated', dashBoardController.contractsGenerated)
+dashboardRouter.get('/pendingMilestone', dashBoardController.pendingMilestone)
+dashboardRouter.get('/contractsSigned', dashBoardController.contractsSigned)
+dashboardRouter.get('/clientWiseEarnings', dashBoardController.clientWiseEarnings)
+dashboardRouter.get('/clientWiseTimeLogs', dashBoardController.clientWiseTimeLogs)
+dashboardRouter.get('/lastestClients', dashBoardController.lastestClients)
 
 export default dashboardRouter
