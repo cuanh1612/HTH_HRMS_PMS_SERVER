@@ -12,7 +12,7 @@ projectRouter.put('/assign-employee/department/:projectId', projectController.as
 projectRouter.put('/:id', projectController.update)
 projectRouter.get('/:projectId/change-status', projectController.changeStatus)
 
-
+projectRouter.get('/normal', projectController.getAllNormal)
 projectRouter.get('/get-employees-not-in-project/:projectId', projectController.getEmployeeNotIn)
 projectRouter.get('/all-employees/:idProject', projectController.allEmployees)
 projectRouter.get('/:projectId/check-asigned', projectController.checkAssigned)

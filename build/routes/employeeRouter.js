@@ -13,6 +13,14 @@ userRouter.put('/role', (0, checkAuth_1.checkAuth)(['Admin']), employeeControlle
 userRouter.put('/:employeeId', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.update);
 userRouter.get('/', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getAll);
 userRouter.get('/:employeeId', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getDetail);
-userRouter.get('/:employeeId/getOpenTasks', employeeController_1.default.getOpenTasks);
+userRouter.get('/:employeeId/open-tasks', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getOpenTasks);
+userRouter.get('/:employeeId/hours-logged', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getHoursLogged);
+userRouter.get('/:employeeId/count-projects', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getCountProjects);
+userRouter.get('/:employeeId/late-attendance', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getLateAttendance);
+userRouter.get('/:employeeId/count-leaves-taken', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.countLeavesTaken);
+userRouter.get('/:employeeId/count-tasks-status', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.countTasksStatus);
+userRouter.get('/:employeeId/tasks', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getTasks);
+// userRouter.get('/:employeeId/count-pending-tasks', checkAuth([]), employeeController.getCountPendingTasks)
+// userRouter.get('/:employeeId/getCountOverdueTasks', employeeController.getCountOverdueTasks)
 userRouter.delete('/:employeeId', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.delete);
 exports.default = userRouter;

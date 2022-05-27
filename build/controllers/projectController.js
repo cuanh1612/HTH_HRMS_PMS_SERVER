@@ -243,7 +243,17 @@ const projectController = {
             message: 'Update Project successfully',
         });
     })),
-    //Get all project
+    // get all project (normal)
+    getAllNormal: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const projects = yield Project_1.Project.find({});
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            projects,
+            message: 'Get all projects success',
+        });
+    })),
+    //Get all project with info of employees and client in project 
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const projects = yield Project_1.Project.find({
             relations: {
@@ -254,7 +264,7 @@ const projectController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            projects: projects,
+            projects,
             message: 'Get all projects success',
         });
     })),

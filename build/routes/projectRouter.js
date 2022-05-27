@@ -12,6 +12,7 @@ projectRouter.put('/assign-employee/:projectId', projectController_1.default.ass
 projectRouter.put('/assign-employee/department/:projectId', projectController_1.default.assignEmployeeByDepartment);
 projectRouter.put('/:id', projectController_1.default.update);
 projectRouter.get('/:projectId/change-status', projectController_1.default.changeStatus);
+projectRouter.get('/normal', projectController_1.default.getAllNormal);
 projectRouter.get('/get-employees-not-in-project/:projectId', projectController_1.default.getEmployeeNotIn);
 projectRouter.get('/all-employees/:idProject', projectController_1.default.allEmployees);
 projectRouter.get('/:projectId/check-asigned', projectController_1.default.checkAssigned);

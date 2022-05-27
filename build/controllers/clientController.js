@@ -24,11 +24,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
+const typeorm_1 = require("typeorm");
 const Avatar_1 = require("../entities/Avatar");
 const Client_1 = require("../entities/Client");
 const Client_Category_1 = require("../entities/Client_Category");
 const Client_Sub_Category_1 = require("../entities/Client_Sub_Category");
 const Employee_1 = require("../entities/Employee");
+const Project_1 = require("../entities/Project");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const clientValid_1 = require("../utils/valid/clientValid");
 const clientController = {
@@ -234,36 +236,6 @@ const clientController = {
                 newAvatar = yield Avatar_1.Avatar.create(Object.assign({}, avatar)).save();
             }
         }
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
-        console.log('sdfgsdfgh dfgdf dfsg');
         //Update client
         yield Client_1.Client.update({
             id: existingClient.id,
@@ -331,6 +303,106 @@ const clientController = {
             code: 200,
             success: true,
             message: 'Delete clients successfully',
+        });
+    })),
+    totalProjects: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { clientId } = req.params;
+        //Check exist client
+        const existingClient = yield Client_1.Client.findOne({
+            where: {
+                id: Number(clientId),
+            },
+        });
+        if (!existingClient)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Client does not exist in the system',
+            });
+        //Get total projects by client
+        const totalProjects = yield Project_1.Project.createQueryBuilder('project')
+            .where('project.client = :clientId', { clientId })
+            .getCount();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            totalProjects,
+            message: 'Get total projects successfully',
+        });
+    })),
+    totalEarnings: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { clientId } = req.params;
+        //Check exist client
+        const existingClient = yield Client_1.Client.findOne({
+            where: {
+                id: Number(clientId),
+            },
+        });
+        if (!existingClient)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Client does not exist in the system',
+            });
+        //Get total earning
+        const totalEarnings = yield (0, typeorm_1.getManager)('huprom').query(`SELECT SUM(time_log.earnings) FROM time_log LEFT JOIN project on time_log."projectId" = project.id WHERE project."clientId" = ${clientId}`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            totalEarnings: Number(totalEarnings[0].sum) || 0,
+            message: 'Get total earnings successfully',
+        });
+    })),
+    statusProjects: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { clientId } = req.params;
+        //Check exist client
+        const existingClient = yield Client_1.Client.findOne({
+            where: {
+                id: Number(clientId),
+            },
+        });
+        if (!existingClient)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Client does not exist in the system',
+            });
+        //Get status project
+        const statusProjects = yield (0, typeorm_1.getManager)('huprom').query(`SELECT project.project_status, COUNT(project.id) FROM project WHERE project."clientId" = ${clientId} GROUP BY project.project_status`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            statusProjects,
+            message: 'Get total earnings successfully',
+        });
+    })),
+    projects: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { clientId } = req.params;
+        //Check exist client
+        const existingClient = yield Client_1.Client.findOne({
+            where: {
+                id: Number(clientId),
+            },
+        });
+        if (!existingClient)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Client does not exist in the system',
+            });
+        //Get projects
+        const projects = yield Project_1.Project.find({
+            where: {
+                client: {
+                    id: existingClient.id
+                }
+            }
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            projects,
+            message: 'Get projects successfully',
         });
     })),
 };

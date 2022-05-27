@@ -270,7 +270,18 @@ const projectController = {
 		})
 	}),
 
-	//Get all project
+	// get all project (normal)
+	getAllNormal: handleCatchError(async (_: Request, res: Response) => {
+		const projects = await Project.find({})
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			projects,
+			message: 'Get all projects success',
+		})
+	}),
+
+	//Get all project with info of employees and client in project 
 	getAll: handleCatchError(async (_: Request, res: Response) => {
 		const projects = await Project.find({
 			relations: {
@@ -281,7 +292,7 @@ const projectController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			projects: projects,
+			projects,
 			message: 'Get all projects success',
 		})
 	}),
