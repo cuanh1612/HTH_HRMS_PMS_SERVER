@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Project = exports.enumCurrency = void 0;
+exports.Project = exports.enumProjectStatus = exports.enumCurrency = void 0;
 const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const Department_1 = require("./Department");
@@ -22,6 +22,7 @@ const Project_File_1 = require("./Project_File");
 const Project_Note_1 = require("./Project_Note");
 const Status_1 = require("./Status");
 const Task_1 = require("./Task");
+const Time_Log_1 = require("./Time_Log");
 var enumCurrency;
 (function (enumCurrency) {
     enumCurrency["USD"] = "USD";
@@ -30,6 +31,14 @@ var enumCurrency;
     enumCurrency["INR"] = "INR";
     enumCurrency["VND"] = "VND";
 })(enumCurrency = exports.enumCurrency || (exports.enumCurrency = {}));
+var enumProjectStatus;
+(function (enumProjectStatus) {
+    enumProjectStatus["NOT_STARTED"] = "Not Started";
+    enumProjectStatus["IN_PROGRESS"] = "In Progress";
+    enumProjectStatus["ON_HOLD"] = "On Hold";
+    enumProjectStatus["CANCELED"] = "Canceled";
+    enumProjectStatus["FINISHED"] = "Finished";
+})(enumProjectStatus = exports.enumProjectStatus || (exports.enumProjectStatus = {}));
 let Project = class Project extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -120,6 +129,12 @@ __decorate([
     __metadata("design:type", Array)
 ], Project.prototype, "project_files", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => Time_Log_1.Time_log, (time_log) => time_log.project, {
+        nullable: true,
+    }),
+    __metadata("design:type", Array)
+], Project.prototype, "time_logs", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => Project_Discussion_Room_1.Project_Discussion_Room, (project_Discussion_Room) => project_Discussion_Room.project, {
         onDelete: 'SET NULL',
         nullable: true,
@@ -157,6 +172,17 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Project.prototype, "project_notes", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Time_Log_1.Time_log, (timelog) => timelog.project, {
+        onDelete: 'SET NULL',
+        nullable: true,
+    }),
+    __metadata("design:type", Array)
+], Project.prototype, "timelogs", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'enum', enum: enumProjectStatus, default: enumProjectStatus.NOT_STARTED }),
+    __metadata("design:type", String)
+], Project.prototype, "project_status", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

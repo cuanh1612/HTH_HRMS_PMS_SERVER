@@ -27,6 +27,7 @@ const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
 const Project_Note_1 = require("./Project_Note");
 const Salary_1 = require("./Salary");
 const Task_1 = require("./Task");
+const Time_Log_1 = require("./Time_Log");
 var enumGender;
 (function (enumGender) {
     enumGender["MALE"] = "Male";
@@ -202,6 +203,12 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Hourly_rate_project_1.Hourly_rate_project, hourly_rate_project => hourly_rate_project.employee),
     __metadata("design:type", Array)
 ], Employee.prototype, "hourly_rate_projects", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Time_Log_1.Time_log, (time_log) => time_log.employee, {
+        nullable: true,
+    }),
+    __metadata("design:type", Array)
+], Employee.prototype, "time_logs", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)

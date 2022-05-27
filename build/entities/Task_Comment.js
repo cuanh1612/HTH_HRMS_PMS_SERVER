@@ -9,49 +9,48 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Hourly_rate_project = void 0;
+exports.Task_comment = void 0;
 const typeorm_1 = require("typeorm");
 const Employee_1 = require("./Employee");
-const Project_1 = require("./Project");
-let Hourly_rate_project = class Hourly_rate_project extends typeorm_1.BaseEntity {
+const Task_1 = require("./Task");
+let Task_comment = class Task_comment extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Hourly_rate_project.prototype, "id", void 0);
+], Task_comment.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.hourly_rate_projects, {
-        onDelete: "CASCADE"
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Task_comment.prototype, "content", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.discussions, {
+        onDelete: 'SET NULL',
+        nullable: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Employee_1.Employee)
-], Hourly_rate_project.prototype, "employee", void 0);
+], Task_comment.prototype, "employee", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Project_1.Project, (project) => project.hourly_rate_projects, {
-        onDelete: "CASCADE"
+    (0, typeorm_1.ManyToOne)(() => Task_1.Task, (task) => task.task_comments, {
+        onDelete: 'SET NULL',
     }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", Project_1.Project)
-], Hourly_rate_project.prototype, "project", void 0);
-__decorate([
-    (0, typeorm_1.Column)('float', {
-        nullable: true
-    }),
-    __metadata("design:type", Number)
-], Hourly_rate_project.prototype, "hourly_rate", void 0);
+    __metadata("design:type", Task_1.Task)
+], Task_comment.prototype, "task", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], Hourly_rate_project.prototype, "createdAt", void 0);
+], Task_comment.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], Hourly_rate_project.prototype, "updatedAt", void 0);
-Hourly_rate_project = __decorate([
+], Task_comment.prototype, "updatedAt", void 0);
+Task_comment = __decorate([
     (0, typeorm_1.Entity)()
-], Hourly_rate_project);
-exports.Hourly_rate_project = Hourly_rate_project;
+], Task_comment);
+exports.Task_comment = Task_comment;

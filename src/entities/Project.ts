@@ -22,6 +22,7 @@ import { Project_file } from './Project_File'
 import { Project_note } from './Project_Note'
 import { Status } from './Status'
 import { Task } from './Task'
+import { Time_log } from './Time_Log'
 
 export enum enumCurrency {
 	USD = 'USD',
@@ -31,6 +32,13 @@ export enum enumCurrency {
 	VND = 'VND',
 }
 
+export enum enumProjectStatus {
+	NOT_STARTED = "Not Started",
+	IN_PROGRESS = "In Progress",
+	ON_HOLD = "On Hold",
+	CANCELED = "Canceled",
+	FINISHED = "Finished"
+}
 
 
 @Entity()
@@ -110,6 +118,11 @@ export class Project extends BaseEntity {
 	})
 	project_files: Project_file[]
 
+	@OneToMany(() => Time_log, (time_log) => time_log.project, {
+		nullable: true,
+	})
+	time_logs: Time_log[]
+
 	@OneToMany(() => Project_Discussion_Room, (project_Discussion_Room) => project_Discussion_Room.project, {
 		onDelete: 'SET NULL',
 		nullable: true,
@@ -130,6 +143,7 @@ export class Project extends BaseEntity {
 
 	@OneToMany(()=> Hourly_rate_project, hourly_rate_project=> hourly_rate_project.project)
 	hourly_rate_projects: Hourly_rate_project[]
+
 	@OneToMany(() => Milestone, (milestone) => milestone.project, {
 		onDelete: 'SET NULL'
 	})
@@ -139,6 +153,15 @@ export class Project extends BaseEntity {
 		onDelete: 'SET NULL',
 	})
 	project_notes: Project_note[]
+
+	@OneToMany(() => Time_log, (timelog) => timelog.project, {
+		onDelete: 'SET NULL',
+		nullable: true,
+	})
+	timelogs: Time_log[]
+
+	@Column({ type: 'enum', enum: enumProjectStatus, default: enumProjectStatus.NOT_STARTED })
+	project_status: string
 
 	@CreateDateColumn({
 		name: 'created_at',

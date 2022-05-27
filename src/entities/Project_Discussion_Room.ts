@@ -60,7 +60,7 @@ export class Project_Discussion_Room extends BaseEntity {
 	project: Project
 
 	@Column()
-	title: String
+	title: string
 
 	@CreateDateColumn({
 		name: 'created_at',

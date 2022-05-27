@@ -568,6 +568,61 @@ const taskController = {
 			})
 		}
 	}),
+
+	getByProject: handleCatchError(async (req: Request, res: Response) => {
+		const { projectId } = req.params
+
+		//Check exist project
+		const exisitingProject = await Project.findOne({
+			where: {
+				id: Number(projectId),
+			},
+		})
+
+		if (!exisitingProject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+
+		//Get tasks by project
+		const tasks = await Task.find({
+			select: {
+				time_logs: {
+					total_hours: true
+				},
+				project: {
+					name: true
+				},
+				milestone: {
+					id: true,
+					title: true
+				}
+			},
+			where: {
+				project: {
+					id: exisitingProject.id,
+				},
+			},
+			relations: {
+				time_logs: true,
+				project: true,
+				employees: true,
+				status: true,
+				milestone: true
+			}
+		})
+
+		console.log(tasks)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			tasks,
+			message: 'Get tasks by projects successfully',
+		})
+	}),
 }
 
 export default taskController
