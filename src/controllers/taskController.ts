@@ -172,7 +172,7 @@ const taskController = {
 		const { id } = req.params
 		const dataUpdateTask: createOrUpdateTaskPayload = req.body
 		// const { task_category, project, employees} = dataUpdateTask
-		const { employees, status, project, task_category, milestone } = dataUpdateTask
+		const { employees, status, project, milestone } = dataUpdateTask
 		let taskEmployees: Employee[] = []
 
 		const existingtask = await Task.findOne({
@@ -210,20 +210,6 @@ const taskController = {
 			},
 		})
 		var index = lasttask ? lasttask.index + 1 : 1
-
-		//check exist task category
-		const existingtaskcategory = await Task_Category.findOne({
-			where: {
-				id: Number(task_category),
-			},
-		})
-
-		if (!existingtaskcategory)
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'Task category does not exist in the system',
-			})
 
 		//check exist project
 		const existingproject = await Project.findOne({
@@ -310,11 +296,33 @@ const taskController = {
 
 	//Get all task
 	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const tasks = await Task.find()
+		const tasks = await Task.find({
+			select: {
+				time_logs: {
+					total_hours: true,
+				},
+				project: {
+					name: true,
+					id: true
+				},
+				milestone: {
+					id: true,
+					title: true,
+				},
+			},
+			relations: {
+				time_logs: true,
+				project: true,
+				employees: true,
+				status: true,
+				milestone: true,
+			},
+		})
+		
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			projects: tasks,
+			tasks,
 			message: 'Get all projects success',
 		})
 	}),
@@ -617,8 +625,6 @@ const taskController = {
 				milestone: true,
 			},
 		})
-
-		console.log(tasks)
 
 		return res.status(200).json({
 			code: 200,

@@ -160,7 +160,7 @@ const taskController = {
         const { id } = req.params;
         const dataUpdateTask = req.body;
         // const { task_category, project, employees} = dataUpdateTask
-        const { employees, status, project, task_category, milestone } = dataUpdateTask;
+        const { employees, status, project, milestone } = dataUpdateTask;
         let taskEmployees = [];
         const existingtask = yield Task_1.Task.findOne({
             where: {
@@ -195,18 +195,6 @@ const taskController = {
             },
         });
         var index = lasttask ? lasttask.index + 1 : 1;
-        //check exist task category
-        const existingtaskcategory = yield Task_Category_1.Task_Category.findOne({
-            where: {
-                id: Number(task_category),
-            },
-        });
-        if (!existingtaskcategory)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Task category does not exist in the system',
-            });
         //check exist project
         const existingproject = yield Project_1.Project.findOne({
             where: {
@@ -284,11 +272,32 @@ const taskController = {
     })),
     //Get all task
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const tasks = yield Task_1.Task.find();
+        const tasks = yield Task_1.Task.find({
+            select: {
+                time_logs: {
+                    total_hours: true,
+                },
+                project: {
+                    name: true,
+                    id: true
+                },
+                milestone: {
+                    id: true,
+                    title: true,
+                },
+            },
+            relations: {
+                time_logs: true,
+                project: true,
+                employees: true,
+                status: true,
+                milestone: true,
+            },
+        });
         return res.status(200).json({
             code: 200,
             success: true,
-            projects: tasks,
+            tasks,
             message: 'Get all projects success',
         });
     })),
@@ -544,7 +553,6 @@ const taskController = {
                 milestone: true,
             },
         });
-        console.log(tasks);
         return res.status(200).json({
             code: 200,
             success: true,

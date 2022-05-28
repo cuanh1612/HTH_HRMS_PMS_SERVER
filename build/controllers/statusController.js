@@ -71,8 +71,8 @@ const statusController = {
         const { id } = req.params;
         const existingStatus = yield Status_1.Status.findOne({
             where: {
-                id: Number(id)
-            }
+                id: Number(id),
+            },
         });
         if (!existingStatus)
             return res.status(400).json({
@@ -88,7 +88,7 @@ const statusController = {
         });
     })),
     //get all status by project
-    getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    getAllPj: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { projectId } = req.params;
         const findbyproject = yield Status_1.Status.find({
             where: {
@@ -121,7 +121,7 @@ const statusController = {
             },
             relations: {
                 tasks: {
-                    employees: true
+                    employees: true,
                 },
             },
             order: {

@@ -10,7 +10,7 @@ const statusController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const { project, title, color } = req.body
 
-		if( !project || !title || !color) {
+		if (!project || !title || !color) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -55,8 +55,6 @@ const statusController = {
 			index: laststatus.index + 1,
 		}).save()
 
-	
-
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -66,20 +64,20 @@ const statusController = {
 	}),
 
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
-		const { id } = req.params	
+		const { id } = req.params
 
 		const existingStatus = await Status.findOne({
 			where: {
-				id: Number(id)
-			}
+				id: Number(id),
+			},
 		})
 
-		if(!existingStatus)
-		return res.status(400).json({
-			code: 400,
-			success: false,
-			message: 'Status does not exist in the system',
-		})
+		if (!existingStatus)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Status does not exist in the system',
+			})
 
 		return res.status(200).json({
 			code: 200,
@@ -88,9 +86,9 @@ const statusController = {
 			message: 'Get detail of project success',
 		})
 	}),
-
+	
 	//get all status by project
-	getAll: handleCatchError(async (req: Request, res: Response) => {
+	getAllPj: handleCatchError(async (req: Request, res: Response) => {
 		const { projectId } = req.params
 
 		const findbyproject = await Status.find({
@@ -99,7 +97,6 @@ const statusController = {
 					id: Number(projectId),
 				},
 			},
-			
 		})
 
 		if (!findbyproject)
@@ -129,7 +126,7 @@ const statusController = {
 			},
 			relations: {
 				tasks: {
-					employees: true
+					employees: true,
 				},
 			},
 			order: {

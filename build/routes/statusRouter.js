@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const statusController_1 = __importDefault(require("../controllers/statusController"));
 const statusRouter = express_1.default.Router();
 statusRouter.post('/', statusController_1.default.create);
-statusRouter.get('/normal/:projectId', statusController_1.default.getAll);
+statusRouter.get('/normal/:projectId', statusController_1.default.getAllPj);
 statusRouter.get('/detail/:id', statusController_1.default.getDetail);
 statusRouter.get('/:projectId', statusController_1.default.getAllWithTask);
 statusRouter.put('/position', statusController_1.default.changeposition);
