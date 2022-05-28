@@ -81,7 +81,7 @@ const timeLogController = {
             });
         }
         //Create time log
-        const newTimeLog = yield Time_Log_1.Time_log.create(Object.assign(Object.assign({}, dataNewTimeLog), { project: existingproject, task: existingTask, employee: existingEmployee })).save();
+        const newTimeLog = yield Time_Log_1.Time_log.create(Object.assign(Object.assign({}, dataNewTimeLog), { starts_on_date: new Date(new Date(dataNewTimeLog.starts_on_date).toLocaleDateString()), ends_on_date: new Date(new Date(dataNewTimeLog.ends_on_date).toLocaleDateString()), project: existingproject, task: existingTask, employee: existingEmployee })).save();
         //Get time log created
         const createdTimeLog = (yield Time_Log_1.Time_log.findOne({
             where: {
@@ -196,22 +196,15 @@ const timeLogController = {
             });
         existingTimeLog.starts_on_time = starts_on_time;
         existingTimeLog.ends_on_time = ends_on_time;
-        yield existingTimeLog.save();
-        //Get time log after update
-        const updatedTimeLog = (yield Time_Log_1.Time_log.findOne({
-            where: {
-                id: Number(timeLogId),
-            },
-        }));
         //Get total hourse
         const dateOneObj = new Date(starts_on_date);
         const dateTwoObj = new Date(ends_on_date);
-        const dateOneObjTime = new Date(`${dateOneObj.getMonth() + 1}-${dateOneObj.getDate()}-${dateOneObj.getFullYear()} ${updatedTimeLog.starts_on_time}`);
-        const dateTwoObjTime = new Date(`${dateTwoObj.getMonth() + 1}-${dateTwoObj.getDate()}-${dateTwoObj.getFullYear()} ${updatedTimeLog.ends_on_time}`);
+        const dateOneObjTime = new Date(`${dateOneObj.getMonth() + 1}-${dateOneObj.getDate()}-${dateOneObj.getFullYear()} ${existingTimeLog.starts_on_time}`);
+        const dateTwoObjTime = new Date(`${dateTwoObj.getMonth() + 1}-${dateTwoObj.getDate()}-${dateTwoObj.getFullYear()} ${existingTimeLog.ends_on_time}`);
         const milliseconds = Math.abs(dateTwoObjTime.getTime() - dateOneObjTime.getTime());
         const totalHours = Math.round(milliseconds / 1000 / 3600);
         //Update total hours
-        updatedTimeLog.total_hours = totalHours;
+        existingTimeLog.total_hours = totalHours;
         //Get total earning
         const exisingHourlyrate = yield Hourly_rate_project_1.Hourly_rate_project.findOne({
             where: {
@@ -224,14 +217,16 @@ const timeLogController = {
             },
         });
         if (exisingHourlyrate) {
-            updatedTimeLog.earnings = exisingHourlyrate.hourly_rate * totalHours;
+            existingTimeLog.earnings = exisingHourlyrate.hourly_rate * totalHours;
         }
-        updatedTimeLog.project = existingproject;
-        updatedTimeLog.task = task;
-        updatedTimeLog.memo = dataUpdateTimeLog.memo;
-        updatedTimeLog.employee = existingEmployee;
+        existingTimeLog.project = existingproject;
+        existingTimeLog.task = task;
+        existingTimeLog.memo = dataUpdateTimeLog.memo;
+        existingTimeLog.employee = existingEmployee;
+        existingTimeLog.starts_on_date = new Date(new Date(dataUpdateTimeLog.starts_on_date).toLocaleDateString());
+        existingTimeLog.ends_on_date = new Date(new Date(dataUpdateTimeLog.ends_on_date).toLocaleDateString());
         //Save update
-        yield updatedTimeLog.save();
+        yield existingTimeLog.save();
         //Check existing project
         return res.status(200).json({
             code: 200,
@@ -287,7 +282,7 @@ const timeLogController = {
             },
             relations: {
                 task: {
-                    status: true
+                    status: true,
                 },
                 employee: true,
             },
@@ -325,12 +320,54 @@ const timeLogController = {
             message: 'Delete timelogs success',
         });
     })),
-    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const timelogs = yield Time_Log_1.Time_log.find();
+    // get all time logs and show in calendar
+    calendar: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employee, client, project } = req.query;
+        var filter = {};
+        if (employee)
+            filter.task = {
+                employees: {
+                    id: Number(employee),
+                }
+            };
+        if (project)
+            filter.project = Object.assign(Object.assign({}, filter.project), { id: project });
+        if (client)
+            filter.project = Object.assign(Object.assign({}, filter.project), { client: {
+                    id: client,
+                } });
+        const timeLogs = yield Time_Log_1.Time_log.find({
+            where: filter,
+            relations: {
+                task: {
+                    status: true,
+                },
+            },
+        });
         return res.status(200).json({
             code: 200,
             success: true,
-            timelogs: timelogs,
+            timeLogs,
+            message: 'Get all projects success',
+        });
+    })),
+    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const timeLogs = yield Time_Log_1.Time_log.find({
+            order: {
+                createdAt: 'DESC',
+            },
+            relations: {
+                task: {
+                    status: true,
+                },
+                employee: true,
+                project: true,
+            },
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            timeLogs,
             message: 'Get all timelog success',
         });
     })),

@@ -110,12 +110,25 @@ const projectController = {
 		//create project file
 		const createdProject = await Project.create({
 			...dataNewProject,
+			start_date: new Date(new Date(dataNewProject.start_date).toLocaleDateString()),
+			deadline: new Date(new Date(dataNewProject.deadline).toLocaleDateString()),
 			employees: projectEmployees,
 		}).save()
 
 		await Promise.all(
 			projectEmployees.map(async (employee) => {
 				return new Promise(async (resolve) => {
+					const hourlyRateExist = await Hourly_rate_project.findOne({
+						where: {
+							project: {
+								id: createdProject.id,
+							},
+							employee: {
+								id: employee.id,
+							},
+						}
+					})
+					if(hourlyRateExist) return resolve(true)
 					resolve(
 						await Hourly_rate_project.insert({
 							project: {
@@ -147,7 +160,7 @@ const projectController = {
 			root: true,
 			project: createdProject,
 			index: 0,
-			color: 'red',
+			color: '#ff0000',
 		}).save()
 
 		await Status.create({
@@ -155,7 +168,7 @@ const projectController = {
 			root: true,
 			project: createdProject,
 			index: 1,
-			color: 'green',
+			color: '#00ff14',
 		}).save()
 
 		return res.status(200).json({
@@ -364,6 +377,17 @@ const projectController = {
 		await Promise.all(
 			allEmployees.map(async (employee) => {
 				return new Promise(async (resolve) => {
+					const hourlyRateExist = await Hourly_rate_project.findOne({
+						where: {
+							project: {
+								id: existingProject.id,
+							},
+							employee: {
+								id: employee.id,
+							},
+						}
+					})
+					if(hourlyRateExist) return resolve(true)
 					resolve(
 						await Hourly_rate_project.insert({
 							project: {
@@ -779,12 +803,6 @@ const projectController = {
 
 		await manager.query(
 			`DELETE FROM project_employee WHERE "projectId" = ${Number(
-				projectId
-			)} and "employeeId" = ${Number(employeeId)}`
-		)
-
-		await manager.query(
-			`DELETE FROM hourly_rate_project WHERE "projectId" = ${Number(
 				projectId
 			)} and "employeeId" = ${Number(employeeId)}`
 		)

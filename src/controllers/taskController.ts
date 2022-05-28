@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { Like } from 'typeorm'
 import { Employee } from '../entities/Employee'
 import { Milestone } from '../entities/Milestone'
 import { Project } from '../entities/Project'
@@ -9,10 +10,6 @@ import { Task_file } from '../entities/Task_File'
 import { createOrUpdateTaskPayload } from '../type/taskPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { taskValid } from '../utils/valid/taskValid'
-// import { Request, Response } from 'express'
-// import { createOrUpdateTaskPayload } from '../type/taskPayload copy'
-// import handleCatchError from '../utils/catchAsyncError'
-// import { taskValid } from '../utils/valid/taskValid copy'
 
 const taskController = {
 	//Create new task
@@ -274,8 +271,12 @@ const taskController = {
 		//update task
 		;(existingtask.name = dataUpdateTask.name),
 			(existingtask.project = dataUpdateTask.project),
-			(existingtask.start_date = dataUpdateTask.start_date),
-			(existingtask.deadline = dataUpdateTask.deadline),
+			(existingtask.start_date = new Date(
+				new Date(dataUpdateTask.start_date).toLocaleDateString()
+			)),
+			(existingtask.deadline = new Date(
+				new Date(dataUpdateTask.deadline).toLocaleDateString()
+			)),
 			(existingtask.task_category = dataUpdateTask.task_category),
 			(existingtask.employees = taskEmployees),
 			(existingtask.index = index),
@@ -294,6 +295,56 @@ const taskController = {
 		})
 	}),
 
+	// get all task and show in calendar
+	calendar: handleCatchError(async (req: Request, res: Response) => {
+		const { employee, client, name, project }: any = req.query
+		console.log('hoang nguyen dsf d s sse ', req.query)
+		var filter: {
+			name?: any
+			employees?: {
+				id: number
+			}
+			project?: {
+				id?: number
+				client?: {
+					id: number
+				}
+			}
+		} = {}
+		if (name) filter.name = Like(String(name))
+		if (employee)
+			filter.employees = {
+				id: Number(employee),
+			}
+		if (project)
+			filter.project = {
+				...filter.project,
+				id: project,
+			}
+
+		if (client)
+			filter.project = {
+				...filter.project,
+				client: {
+					id: client,
+				},
+			}
+
+		const tasks = await Task.find({
+			where: filter,
+			relations: {
+				status: true,
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			tasks,
+			message: 'Get all projects success',
+		})
+	}),
+
 	//Get all task
 	getAll: handleCatchError(async (_: Request, res: Response) => {
 		const tasks = await Task.find({
@@ -303,7 +354,7 @@ const taskController = {
 				},
 				project: {
 					name: true,
-					id: true
+					id: true,
 				},
 				milestone: {
 					id: true,
@@ -316,9 +367,11 @@ const taskController = {
 				employees: true,
 				status: true,
 				milestone: true,
+				assignBy: true,
+				task_category: true,
 			},
 		})
-		
+
 		return res.status(200).json({
 			code: 200,
 			success: true,

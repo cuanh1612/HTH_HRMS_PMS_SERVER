@@ -43,6 +43,23 @@ const clientController = {
             message: 'Get all clients successfully',
         });
     })),
+    getNormal: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const clients = yield Client_1.Client.find({
+            select: {
+                id: true,
+                name: true,
+                avatar: {
+                    url: true
+                }
+            }
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            clients,
+            message: 'Get all employees successfully',
+        });
+    })),
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { clientId } = req.params;
         //Check existing client
@@ -394,9 +411,9 @@ const clientController = {
         const projects = yield Project_1.Project.find({
             where: {
                 client: {
-                    id: existingClient.id
-                }
-            }
+                    id: existingClient.id,
+                },
+            },
         });
         return res.status(200).json({
             code: 200,

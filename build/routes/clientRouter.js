@@ -10,6 +10,7 @@ const clientRouter = express_1.default.Router();
 clientRouter.post('/', (0, checkAuth_1.checkAuth)(['Admin']), clientController_1.default.create);
 clientRouter.post('/delete-many', (0, checkAuth_1.checkAuth)(['Admin']), clientController_1.default.deleteMany);
 clientRouter.put('/:clientId', (0, checkAuth_1.checkAuth)(['Admin']), clientController_1.default.update);
+clientRouter.get('/normal', clientController_1.default.getNormal);
 clientRouter.get('/', clientController_1.default.getAll);
 clientRouter.get('/:clientId', (0, checkAuth_1.checkAuth)([]), clientController_1.default.getDetail);
 clientRouter.get('/:clientId/total-projects', (0, checkAuth_1.checkAuth)([]), clientController_1.default.totalProjects);

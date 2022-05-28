@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { Like } from 'typeorm'
 import { Employee } from '../entities/Employee'
 import { Hourly_rate_project } from '../entities/Hourly_rate_project'
 import { Project } from '../entities/Project'
@@ -88,6 +89,8 @@ const timeLogController = {
 		//Create time log
 		const newTimeLog = await Time_log.create({
 			...dataNewTimeLog,
+			starts_on_date: new Date(new Date(dataNewTimeLog.starts_on_date).toLocaleDateString()),
+			ends_on_date: new Date(new Date(dataNewTimeLog.ends_on_date).toLocaleDateString()),
 			project: existingproject,
 			task: existingTask,
 			employee: existingEmployee,
@@ -247,33 +250,25 @@ const timeLogController = {
 
 		existingTimeLog.starts_on_time = starts_on_time
 		existingTimeLog.ends_on_time = ends_on_time
-		await existingTimeLog.save()
-
-		//Get time log after update
-		const updatedTimeLog = (await Time_log.findOne({
-			where: {
-				id: Number(timeLogId),
-			},
-		})) as Time_log
 
 		//Get total hourse
 		const dateOneObj = new Date(starts_on_date)
 		const dateTwoObj = new Date(ends_on_date)
 		const dateOneObjTime = new Date(
 			`${dateOneObj.getMonth() + 1}-${dateOneObj.getDate()}-${dateOneObj.getFullYear()} ${
-				updatedTimeLog.starts_on_time
+				existingTimeLog.starts_on_time
 			}`
 		)
 		const dateTwoObjTime = new Date(
 			`${dateTwoObj.getMonth() + 1}-${dateTwoObj.getDate()}-${dateTwoObj.getFullYear()} ${
-				updatedTimeLog.ends_on_time
+				existingTimeLog.ends_on_time
 			}`
 		)
 		const milliseconds = Math.abs(dateTwoObjTime.getTime() - dateOneObjTime.getTime())
 		const totalHours = Math.round(milliseconds / 1000 / 3600)
 
 		//Update total hours
-		updatedTimeLog.total_hours = totalHours
+		existingTimeLog.total_hours = totalHours
 
 		//Get total earning
 		const exisingHourlyrate = await Hourly_rate_project.findOne({
@@ -288,16 +283,22 @@ const timeLogController = {
 		})
 
 		if (exisingHourlyrate) {
-			updatedTimeLog.earnings = exisingHourlyrate.hourly_rate * totalHours
+			existingTimeLog.earnings = exisingHourlyrate.hourly_rate * totalHours
 		}
 
-		updatedTimeLog.project = existingproject
-		updatedTimeLog.task = task
-		updatedTimeLog.memo = dataUpdateTimeLog.memo
-		updatedTimeLog.employee = existingEmployee
+		existingTimeLog.project = existingproject
+		existingTimeLog.task = task
+		existingTimeLog.memo = dataUpdateTimeLog.memo
+		existingTimeLog.employee = existingEmployee
+		existingTimeLog.starts_on_date = new Date(
+			new Date(dataUpdateTimeLog.starts_on_date).toLocaleDateString()
+		)
+		existingTimeLog.ends_on_date = new Date(
+			new Date(dataUpdateTimeLog.ends_on_date).toLocaleDateString()
+		)
 
 		//Save update
-		await updatedTimeLog.save()
+		await existingTimeLog.save()
 
 		//Check existing project
 		return res.status(200).json({
@@ -363,7 +364,7 @@ const timeLogController = {
 			},
 			relations: {
 				task: {
-					status: true
+					status: true,
 				},
 				employee: true,
 			},
@@ -376,7 +377,7 @@ const timeLogController = {
 			message: 'Deleted time log successfully',
 		})
 	}),
-	
+
 	Deletemany: handleCatchError(async (req: Request, res: Response) => {
 		const { timelogs } = req.body
 
@@ -405,13 +406,77 @@ const timeLogController = {
 		})
 	}),
 
-	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const timelogs = await Time_log.find()
+	// get all time logs and show in calendar
+	calendar: handleCatchError(async (req: Request, res: Response) => {
+		const { employee, client, project }: any = req.query
+		var filter: {
+			task?: {
+				employees?: {
+					id: number
+				}
+			},
+			project?: {
+				id?: number
+				client?: {
+					id: number
+				}
+			}
+		} = {}
+		if (employee)
+			filter.task = {
+				employees: {
+					id: Number(employee),
+				}
+			}
+		if (project)
+			filter.project = {
+				...filter.project,
+				id: project,
+			}
+
+		if (client)
+			filter.project = {
+				...filter.project,
+				client: {
+					id: client,
+				},
+			}
+
+		const timeLogs = await Time_log.find({
+			where: filter,
+			relations: {
+				task: {
+					status: true,
+				},
+			},
+		})
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			timelogs: timelogs,
+			timeLogs,
+			message: 'Get all projects success',
+		})
+	}),
+
+	getAll: handleCatchError(async (_: Request, res: Response) => {
+		const timeLogs = await Time_log.find({
+			order: {
+				createdAt: 'DESC',
+			},
+			relations: {
+				task: {
+					status: true,
+				},
+				employee: true,
+				project: true,
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			timeLogs,
 			message: 'Get all timelog success',
 		})
 	}),

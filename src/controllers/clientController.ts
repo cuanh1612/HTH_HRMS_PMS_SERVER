@@ -22,6 +22,24 @@ const clientController = {
 		})
 	}),
 
+	getNormal: handleCatchError(async (_: Request, res: Response) => {
+		const clients = await Client.find({
+			select: {
+				id: true,
+				name: true,
+				avatar: {
+					url: true
+				}
+			}
+		})
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			clients,
+			message: 'Get all employees successfully',
+		})
+	}),
+
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { clientId } = req.params
 
@@ -371,7 +389,7 @@ const clientController = {
 		const totalProjects = await Project.createQueryBuilder('project')
 			.where('project.client = :clientId', { clientId })
 			.getCount()
-			
+
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -461,9 +479,9 @@ const clientController = {
 		const projects = await Project.find({
 			where: {
 				client: {
-					id: existingClient.id
-				}
-			}
+					id: existingClient.id,
+				},
+			},
 		})
 
 		return res.status(200).json({

@@ -107,9 +107,21 @@ const projectController = {
             projectEmployees.push(existingEmployee);
         }
         //create project file
-        const createdProject = yield Project_1.Project.create(Object.assign(Object.assign({}, dataNewProject), { employees: projectEmployees })).save();
+        const createdProject = yield Project_1.Project.create(Object.assign(Object.assign({}, dataNewProject), { start_date: new Date(new Date(dataNewProject.start_date).toLocaleDateString()), deadline: new Date(new Date(dataNewProject.deadline).toLocaleDateString()), employees: projectEmployees })).save();
         yield Promise.all(projectEmployees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
             return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const hourlyRateExist = yield Hourly_rate_project_1.Hourly_rate_project.findOne({
+                    where: {
+                        project: {
+                            id: createdProject.id,
+                        },
+                        employee: {
+                            id: employee.id,
+                        },
+                    }
+                });
+                if (hourlyRateExist)
+                    return resolve(true);
                 resolve(yield Hourly_rate_project_1.Hourly_rate_project.insert({
                     project: {
                         id: createdProject.id,
@@ -133,14 +145,14 @@ const projectController = {
             root: true,
             project: createdProject,
             index: 0,
-            color: 'red',
+            color: '#ff0000',
         }).save();
         yield Status_1.Status.create({
             title: 'Complete',
             root: true,
             project: createdProject,
             index: 1,
-            color: 'green',
+            color: '#00ff14',
         }).save();
         return res.status(200).json({
             code: 200,
@@ -325,6 +337,18 @@ const projectController = {
             .getMany();
         yield Promise.all(allEmployees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
             return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const hourlyRateExist = yield Hourly_rate_project_1.Hourly_rate_project.findOne({
+                    where: {
+                        project: {
+                            id: existingProject.id,
+                        },
+                        employee: {
+                            id: employee.id,
+                        },
+                    }
+                });
+                if (hourlyRateExist)
+                    return resolve(true);
                 resolve(yield Hourly_rate_project_1.Hourly_rate_project.insert({
                     project: {
                         id: existingProject.id,
@@ -669,7 +693,6 @@ const projectController = {
             });
         }
         yield manager.query(`DELETE FROM project_employee WHERE "projectId" = ${Number(projectId)} and "employeeId" = ${Number(employeeId)}`);
-        yield manager.query(`DELETE FROM hourly_rate_project WHERE "projectId" = ${Number(projectId)} and "employeeId" = ${Number(employeeId)}`);
         return res.status(200).json({
             code: 200,
             success: true,

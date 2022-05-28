@@ -11,6 +11,7 @@ userRouter.post('/', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1
 userRouter.post('/delete-many', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.deleteMany);
 userRouter.put('/role', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.changeRole);
 userRouter.put('/:employeeId', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.update);
+userRouter.get('/normal', employeeController_1.default.getNormal);
 userRouter.get('/', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getAll);
 userRouter.get('/:employeeId', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getDetail);
 userRouter.get('/:employeeId/open-tasks', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getOpenTasks);

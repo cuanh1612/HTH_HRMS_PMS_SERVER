@@ -46,6 +46,23 @@ const employeeController = {
             message: 'Get all employees successfully',
         });
     })),
+    getNormal: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const employees = yield Employee_1.Employee.find({
+            select: {
+                id: true,
+                name: true,
+                avatar: {
+                    url: true
+                }
+            }
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            employees: employees,
+            message: 'Get all employees successfully',
+        });
+    })),
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { employeeId } = req.params;
         //Check existing employee

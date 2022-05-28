@@ -5,6 +5,8 @@ const TimeLogRouter = express.Router()
 
 TimeLogRouter.post('/delete-many', timeLogController.Deletemany)
 
+TimeLogRouter.get('/calendar', timeLogController.calendar)
+
 TimeLogRouter.post('/', timeLogController.create)
 
 TimeLogRouter.get('/by-project/:projectId', timeLogController.getAllByProject)

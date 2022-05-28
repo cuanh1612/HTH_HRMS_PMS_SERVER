@@ -24,6 +24,23 @@ const employeeController = {
 			message: 'Get all employees successfully',
 		})
 	}),
+	getNormal: handleCatchError(async (_: Request, res: Response) => {
+		const employees = await Employee.find({
+			select: {
+				id: true,
+				name: true,
+				avatar: {
+					url: true
+				}
+			}
+		})
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			employees: employees,
+			message: 'Get all employees successfully',
+		})
+	}),
 
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { employeeId } = req.params

@@ -9,6 +9,7 @@ clientRouter.post('/delete-many', checkAuth(['Admin']), clientController.deleteM
 
 clientRouter.put('/:clientId', checkAuth(['Admin']), clientController.update)
 
+clientRouter.get('/normal', clientController.getNormal)
 clientRouter.get('/', clientController.getAll)
 clientRouter.get('/:clientId', checkAuth([]), clientController.getDetail)
 clientRouter.get('/:clientId/total-projects', checkAuth([]), clientController.totalProjects)

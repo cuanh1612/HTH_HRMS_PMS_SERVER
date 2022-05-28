@@ -6,6 +6,7 @@ const taskRouter = express.Router()
 
 taskRouter.post('/', taskController.create)
 
+taskRouter.get('/calendar', taskController.calendar)
 taskRouter.get('/', taskController.getAll)
 taskRouter.get('/:id', taskController.getDetail)
 taskRouter.get('/project/:projectId', taskController.getByProject)

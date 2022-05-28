@@ -47,6 +47,15 @@ const mileStoneController = {
             message: 'Create milestone success'
         });
     })),
+    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const milestones = yield Milestone_1.Milestone.find({});
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            milestones,
+            message: 'Get milestones by project success'
+        });
+    })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const dataUpdateMileStone = req.body;

@@ -40,6 +40,15 @@ const mileStoneController = {
             message: 'Create milestone success'
         })
     }),
+    getAll: handleCatchError(async (_: Request, res: Response) => {
+        const milestones = await Milestone.find({})
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            milestones,
+            message: 'Get milestones by project success'
+        })
+    }),
     update: handleCatchError(async (req: Request, res: Response) => {
         const { id } = req.params
         const dataUpdateMileStone: Milestone = req.body

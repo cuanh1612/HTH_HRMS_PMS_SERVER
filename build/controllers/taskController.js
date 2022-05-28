@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const typeorm_1 = require("typeorm");
 const Employee_1 = require("../entities/Employee");
 const Milestone_1 = require("../entities/Milestone");
 const Project_1 = require("../entities/Project");
@@ -21,10 +22,6 @@ const Task_Category_1 = require("../entities/Task_Category");
 const Task_File_1 = require("../entities/Task_File");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const taskValid_1 = require("../utils/valid/taskValid");
-// import { Request, Response } from 'express'
-// import { createOrUpdateTaskPayload } from '../type/taskPayload copy'
-// import handleCatchError from '../utils/catchAsyncError'
-// import { taskValid } from '../utils/valid/taskValid copy'
 const taskController = {
     //Create new task
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -253,8 +250,8 @@ const taskController = {
         ;
         (existingtask.name = dataUpdateTask.name),
             (existingtask.project = dataUpdateTask.project),
-            (existingtask.start_date = dataUpdateTask.start_date),
-            (existingtask.deadline = dataUpdateTask.deadline),
+            (existingtask.start_date = new Date(new Date(dataUpdateTask.start_date).toLocaleDateString())),
+            (existingtask.deadline = new Date(new Date(dataUpdateTask.deadline).toLocaleDateString())),
             (existingtask.task_category = dataUpdateTask.task_category),
             (existingtask.employees = taskEmployees),
             (existingtask.index = index),
@@ -270,6 +267,36 @@ const taskController = {
             message: 'Update Task success',
         });
     })),
+    // get all task and show in calendar
+    calendar: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employee, client, name, project } = req.query;
+        console.log('hoang nguyen dsf d s sse ', req.query);
+        var filter = {};
+        if (name)
+            filter.name = (0, typeorm_1.Like)(String(name));
+        if (employee)
+            filter.employees = {
+                id: Number(employee),
+            };
+        if (project)
+            filter.project = Object.assign(Object.assign({}, filter.project), { id: project });
+        if (client)
+            filter.project = Object.assign(Object.assign({}, filter.project), { client: {
+                    id: client,
+                } });
+        const tasks = yield Task_1.Task.find({
+            where: filter,
+            relations: {
+                status: true,
+            },
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            tasks,
+            message: 'Get all projects success',
+        });
+    })),
     //Get all task
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const tasks = yield Task_1.Task.find({
@@ -279,7 +306,7 @@ const taskController = {
                 },
                 project: {
                     name: true,
-                    id: true
+                    id: true,
                 },
                 milestone: {
                     id: true,
@@ -292,6 +319,8 @@ const taskController = {
                 employees: true,
                 status: true,
                 milestone: true,
+                assignBy: true,
+                task_category: true,
             },
         });
         return res.status(200).json({

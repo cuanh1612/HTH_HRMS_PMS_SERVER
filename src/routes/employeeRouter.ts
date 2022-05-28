@@ -10,6 +10,7 @@ userRouter.post('/delete-many', checkAuth(['Admin']), employeeController.deleteM
 userRouter.put('/role', checkAuth(['Admin']), employeeController.changeRole)
 userRouter.put('/:employeeId', checkAuth(['Admin']), employeeController.update)
 
+userRouter.get('/normal', employeeController.getNormal)
 userRouter.get('/', checkAuth([]), employeeController.getAll)
 userRouter.get('/:employeeId', checkAuth([]), employeeController.getDetail)
 userRouter.get('/:employeeId/open-tasks', checkAuth([]), employeeController.getOpenTasks)
