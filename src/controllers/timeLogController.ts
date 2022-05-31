@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import { Like } from 'typeorm'
 import { Employee } from '../entities/Employee'
 import { Hourly_rate_project } from '../entities/Hourly_rate_project'
 import { Project } from '../entities/Project'
