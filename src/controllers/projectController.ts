@@ -904,7 +904,7 @@ const projectController = {
 
 		const manager = getManager('huprom')
 		const countstatusTasks = await manager.query(
-			`SELECT status.title, COUNT(task.id) FROM status LEFT JOIN task on task."statusId" = status.id WHERE status."projectId" = ${projectId} GROUP BY status.title`
+			`SELECT status.title, status.color, COUNT(task.id) FROM status LEFT JOIN task on task."statusId" = status.id WHERE status."projectId" = ${projectId} GROUP BY status.title`
 		)
 
 		return res.status(200).json({
