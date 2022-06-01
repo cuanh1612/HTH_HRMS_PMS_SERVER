@@ -17,11 +17,12 @@ projectRouter.get('/normal/employee/:employeeId', projectController.getAllNormal
 projectRouter.get('/employee/:employeeId', projectController.getAllByEmployee)
 projectRouter.get('/get-employees-not-in-project/:projectId', projectController.getEmployeeNotIn)
 projectRouter.get('/all-employees/:idProject', projectController.allEmployees)
-projectRouter.get('/:projectId/check-asigned', projectController.checkAssigned)
+projectRouter.get('/:projectId/check-assigned', projectController.checkAssigned)
 projectRouter.get('/', projectController.getAll)
 projectRouter.get('/:id', projectController.getDetail)
 projectRouter.get('/:projectId/count-status-tasks', projectController.countstatusTasks)
-projectRouter.get('/:projectId/earnings', projectController.projectHoursLogged)
+projectRouter.get('/:projectId/earnings', projectController.projectEarnings)
+projectRouter.get('/:projectId/Hours-logged', projectController.projectHoursLogged)
 
 projectRouter.delete('/:id', projectController.delete)
 
