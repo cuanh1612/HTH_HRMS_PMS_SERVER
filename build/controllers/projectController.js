@@ -265,6 +265,35 @@ const projectController = {
             message: 'Get all projects success',
         });
     })),
+    // get all project (normal) by employee
+    getAllNormalByEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employeeId } = req.params;
+        //Check existing employee
+        const existingEmployee = yield Employee_1.Employee.findOne({
+            where: {
+                id: Number(employeeId)
+            }
+        });
+        if (!existingEmployee)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Employee does not exist in the system',
+            });
+        const projects = yield Project_1.Project.find({
+            where: {
+                employees: {
+                    id: existingEmployee.id
+                }
+            }
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            projects,
+            message: 'Get all projects success',
+        });
+    })),
     //Get all project with info of employees and client in project 
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const projects = yield Project_1.Project.find({
@@ -278,6 +307,40 @@ const projectController = {
             success: true,
             projects,
             message: 'Get all projects success',
+        });
+    })),
+    //Get all project by employee
+    getAllByEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employeeId } = req.params;
+        //Check existing employee
+        const existingEmployee = yield Employee_1.Employee.findOne({
+            where: {
+                id: Number(employeeId)
+            }
+        });
+        if (!existingEmployee)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Employee does not exist in the system',
+            });
+        //Get project by employee
+        const projects = yield Project_1.Project.find({
+            relations: {
+                employees: true,
+                client: true,
+            },
+            where: {
+                employees: {
+                    id: existingEmployee.id
+                }
+            }
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            projects,
+            message: 'Get all projects by employee success',
         });
     })),
     //Get employee not in the projet

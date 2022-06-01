@@ -11,6 +11,7 @@ taskRouter.get('/calendar', taskController_1.default.calendar);
 taskRouter.get('/', taskController_1.default.getAll);
 taskRouter.get('/:id', taskController_1.default.getDetail);
 taskRouter.get('/project/:projectId', taskController_1.default.getByProject);
+taskRouter.get('/employee/:employeeId', taskController_1.default.getByEmployee);
 taskRouter.delete('/:id', taskController_1.default.delete);
 taskRouter.post('/delete-many', taskController_1.default.deletemany);
 taskRouter.put('/position', taskController_1.default.changeposition);

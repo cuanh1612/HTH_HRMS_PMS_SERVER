@@ -393,6 +393,7 @@ const taskController = {
 				status: true,
 				employees: true,
 				milestone: true,
+				assignBy: true,
 			},
 		})
 
@@ -684,6 +685,104 @@ const taskController = {
 			success: true,
 			tasks,
 			message: 'Get tasks by projects successfully',
+		})
+	}),
+
+	//huy
+	getByEmployee: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check exist employee
+		const exisitingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!exisitingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Employee does not exist in the system',
+			})
+
+		//Get tasks by employee
+		const tasksAssigned = await Task.find({
+			select: {
+				time_logs: {
+					total_hours: true,
+				},
+				project: {
+					name: true,
+				},
+				milestone: {
+					id: true,
+					title: true,
+				},
+			},
+			where: {
+				employees: {
+					id: exisitingEmployee.id,
+				},
+			},
+			relations: {
+				time_logs: true,
+				project: true,
+				employees: true,
+				status: true,
+				milestone: true,
+				assignBy: true
+			},
+		})
+
+		//Task was creted by current user
+		const tasksWasCreated = await Task.find({
+			select: {
+				time_logs: {
+					total_hours: true,
+				},
+				project: {
+					name: true,
+				},
+				milestone: {
+					id: true,
+					title: true,
+				},
+			},
+			where: {
+				assignBy: {
+					id: exisitingEmployee.id,
+				},
+			},
+			relations: {
+				time_logs: true,
+				project: true,
+				employees: true,
+				status: true,
+				milestone: true,
+				assignBy: true
+			},
+		})
+
+		// merge arrays
+		// using the concat() method
+		// concat() method returns a new array
+		const tasksMerge = tasksAssigned.concat(tasksWasCreated)
+
+		// use Set() constructor function
+		// to remove duplicate or repaeted elements
+		const uniqueTasks = new Set(tasksMerge)
+
+		// use the spread operator ...
+		// to extract values from Set collection
+		// to an array
+		const tasks = [...uniqueTasks]
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			tasks,
+			message: 'Get tasks by employee successfully',
 		})
 	}),
 }

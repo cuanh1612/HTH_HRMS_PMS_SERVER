@@ -157,6 +157,7 @@ const holidayController = {
 				await existingholiday.remove()
 			}
 		}
+		
 		return res.status(200).json({
 			code: 200,
 			success: true,

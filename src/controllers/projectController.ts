@@ -294,6 +294,39 @@ const projectController = {
 		})
 	}),
 
+	// get all project (normal) by employee
+	getAllNormalByEmployee: handleCatchError(async (req: Request, res: Response) => {
+		const {employeeId} = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId)
+			}
+		})
+
+		if(!existingEmployee) return res.status(400).json({
+			code: 400,
+			success: false,
+			message: 'Employee does not exist in the system',
+		})
+
+		const projects = await Project.find({
+			where: {
+				employees: {
+					id: existingEmployee.id
+				}
+			}
+		})
+		
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			projects,
+			message: 'Get all projects success',
+		})
+	}),
+
 	//Get all project with info of employees and client in project 
 	getAll: handleCatchError(async (_: Request, res: Response) => {
 		const projects = await Project.find({
@@ -307,6 +340,43 @@ const projectController = {
 			success: true,
 			projects,
 			message: 'Get all projects success',
+		})
+	}),
+
+	//Get all project by employee
+	getAllByEmployee: handleCatchError(async (req: Request, res: Response) => {
+		const {employeeId} = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId)
+			}
+		})
+
+		if(!existingEmployee) return res.status(400).json({
+			code: 400,
+			success: false,
+			message: 'Employee does not exist in the system',
+		})
+
+		//Get project by employee
+		const projects = await Project.find({
+			relations: {
+				employees: true,
+				client: true,
+			},
+			where: {
+				employees: {
+					id: existingEmployee.id
+				}
+			}
+		})
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			projects,
+			message: 'Get all projects by employee success',
 		})
 	}),
 
