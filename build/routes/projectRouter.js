@@ -15,11 +15,12 @@ projectRouter.get('/:projectId/change-status', projectController_1.default.chang
 projectRouter.get('/normal', projectController_1.default.getAllNormal);
 projectRouter.get('/get-employees-not-in-project/:projectId', projectController_1.default.getEmployeeNotIn);
 projectRouter.get('/all-employees/:idProject', projectController_1.default.allEmployees);
-projectRouter.get('/:projectId/check-asigned', projectController_1.default.checkAssigned);
+projectRouter.get('/:projectId/check-assigned', projectController_1.default.checkAssigned);
 projectRouter.get('/', projectController_1.default.getAll);
 projectRouter.get('/:id', projectController_1.default.getDetail);
 projectRouter.get('/:projectId/count-status-tasks', projectController_1.default.countstatusTasks);
-projectRouter.get('/:projectId/earnings', projectController_1.default.projectHoursLogged);
+projectRouter.get('/:projectId/earnings', projectController_1.default.projectEarnings);
+projectRouter.get('/:projectId/Hours-logged', projectController_1.default.projectHoursLogged);
 projectRouter.delete('/:id', projectController_1.default.delete);
 projectRouter.post('/delete-many', projectController_1.default.deletemany);
 projectRouter.post('/project-admin', projectController_1.default.setProjectAdmin);

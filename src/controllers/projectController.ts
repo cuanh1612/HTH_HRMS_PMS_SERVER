@@ -871,7 +871,7 @@ const projectController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			projectEarnings: Number(projectEarnings.count) || 0,
+			projectEarnings: Number(projectEarnings[0].sum) || 0,
 			message: 'Get project earnings successfully',
 		})
 	}),
@@ -902,7 +902,7 @@ const projectController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			projectHoursLogged: Number(projectHoursLogged.count) || 0,
+			projectHoursLogged: Number(projectHoursLogged[0].sum) || 0,
 			message: 'Get project hours logged successfully',
 		})
 	}),
