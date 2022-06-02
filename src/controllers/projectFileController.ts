@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { Employee } from '../entities/Employee'
 import { Project } from '../entities/Project'
 import { Project_file } from '../entities/Project_File'
 import { createOrUpdatetProjectFilesPayload } from '../type/projectFilePayLoad'
@@ -6,7 +7,7 @@ import handleCatchError from '../utils/catchAsyncError'
 
 const projectFileController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const { files, project } = req.body as createOrUpdatetProjectFilesPayload
+		const { files, project, assignBy } = req.body as createOrUpdatetProjectFilesPayload
 
 		//Check exist Project
 		const existingProject = await Project.findOne({
@@ -22,12 +23,29 @@ const projectFileController = {
 				message: 'Project does not exist in the system',
 			})
 
+		//Check exist assign by
+		if (assignBy) {
+			const existingAssignBy = await Employee.findOne({
+				where: {
+					id: assignBy,
+				},
+			})
+
+			if (!existingAssignBy)
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Employee assign not exist in the system',
+				})
+		}
+
 		//Create new project file
 		if (Array.isArray(files)) {
 			files.map(async (file) => {
 				await Project_file.create({
+					...(assignBy ? { assignBy: assignBy } : {}),
 					...file,
-                    project: existingProject
+					project: existingProject,
 				}).save()
 			})
 		}
@@ -41,7 +59,6 @@ const projectFileController = {
 
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { projectFileId, projectId } = req.params
-		
 
 		//Check exist project
 		const existingProject = await Project.findOne({
@@ -56,7 +73,6 @@ const projectFileController = {
 				success: false,
 				message: 'Project does not exist in the system',
 			})
-
 
 		//Check exist Project file
 		const existingProjectFile = await Project_file.findOne({
@@ -88,7 +104,7 @@ const projectFileController = {
 	getAll: handleCatchError(async (req: Request, res: Response) => {
 		const { projectId } = req.params
 
-        //Check exist Project
+		//Check exist Project
 		const existingProject = await Project.findOne({
 			where: {
 				id: Number(projectId),
@@ -102,22 +118,25 @@ const projectFileController = {
 				message: 'Project does not exist in the system',
 			})
 
-        //Get all project file 
-        const projectFiles = await Project_file.find({
-            where: {
-                project: {
-                    id: Number(projectId)
-                }
-            },
-            order: {
-                createdAt: "DESC"
-            }
-        })
+		//Get all project file
+		const projectFiles = await Project_file.find({
+			where: {
+				project: {
+					id: Number(projectId),
+				},
+			},
+			order: {
+				createdAt: 'DESC',
+			},
+			relations: {
+				assignBy: true
+			}
+		})
 
-        return res.status(200).json({
+		return res.status(200).json({
 			code: 200,
 			success: true,
-            projectFiles,
+			projectFiles,
 			message: 'Get all project files success successfully',
 		})
 	}),

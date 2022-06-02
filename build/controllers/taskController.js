@@ -630,7 +630,7 @@ const taskController = {
                 employees: true,
                 status: true,
                 milestone: true,
-                assignBy: true
+                assignBy: true,
             },
         });
         //Task was creted by current user
@@ -658,24 +658,130 @@ const taskController = {
                 employees: true,
                 status: true,
                 milestone: true,
-                assignBy: true
+                assignBy: true,
             },
         });
         // merge arrays
         // using the concat() method
         // concat() method returns a new array
         const tasksMerge = tasksAssigned.concat(tasksWasCreated);
-        // use Set() constructor function
-        // to remove duplicate or repaeted elements
-        const uniqueTasks = new Set(tasksMerge);
-        // use the spread operator ...
-        // to extract values from Set collection
-        // to an array
-        const tasks = [...uniqueTasks];
+        // use for loop to remove duplicate items
+        for (var i = 0; i < tasksMerge.length; ++i) {
+            for (var j = i + 1; j < tasksMerge.length; ++j) {
+                if (tasksMerge[i].id === tasksMerge[j].id)
+                    tasksMerge.splice(j--, 1);
+            }
+        }
         return res.status(200).json({
             code: 200,
             success: true,
-            tasks,
+            tasks: tasksMerge,
+            message: 'Get tasks by employee successfully',
+        });
+    })),
+    getByEmployeeAndProject: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employeeId, projectId } = req.params;
+        //Check exist employee
+        const exisitingEmployee = yield Employee_1.Employee.findOne({
+            where: {
+                id: Number(employeeId),
+            },
+        });
+        if (!exisitingEmployee)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Employee does not exist in the system',
+            });
+        //Check exist project
+        const exisitingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId),
+            },
+        });
+        if (!exisitingProject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not exist in the system',
+            });
+        //Get tasks by employee
+        const tasksAssigned = yield Task_1.Task.find({
+            select: {
+                time_logs: {
+                    total_hours: true,
+                },
+                project: {
+                    name: true,
+                },
+                milestone: {
+                    id: true,
+                    title: true,
+                },
+            },
+            where: {
+                employees: {
+                    id: exisitingEmployee.id,
+                },
+                project: {
+                    id: exisitingProject.id,
+                },
+            },
+            relations: {
+                time_logs: true,
+                project: true,
+                employees: true,
+                status: true,
+                milestone: true,
+                assignBy: true,
+            },
+        });
+        //Task was creted by current user
+        const tasksWasCreated = yield Task_1.Task.find({
+            select: {
+                time_logs: {
+                    total_hours: true,
+                },
+                project: {
+                    name: true,
+                },
+                milestone: {
+                    id: true,
+                    title: true,
+                },
+            },
+            where: {
+                assignBy: {
+                    id: exisitingEmployee.id,
+                },
+                project: {
+                    id: exisitingProject.id,
+                },
+            },
+            relations: {
+                time_logs: true,
+                project: true,
+                employees: true,
+                status: true,
+                milestone: true,
+                assignBy: true,
+            },
+        });
+        // merge arrays
+        // using the concat() method
+        // concat() method returns a new array
+        const tasksMerge = tasksAssigned.concat(tasksWasCreated);
+        // use for loop to remove duplicate items
+        for (var i = 0; i < tasksMerge.length; ++i) {
+            for (var j = i + 1; j < tasksMerge.length; ++j) {
+                if (tasksMerge[i].id === tasksMerge[j].id)
+                    tasksMerge.splice(j--, 1);
+            }
+        }
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            tasks: tasksMerge,
             message: 'Get tasks by employee successfully',
         });
     })),

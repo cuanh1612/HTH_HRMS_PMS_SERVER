@@ -24,6 +24,7 @@ const Leave_1 = require("./Leave");
 const Project_1 = require("./Project");
 const Project_Discussion_Reply_1 = require("./Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
+const Project_File_1 = require("./Project_File");
 const Project_Note_1 = require("./Project_Note");
 const Salary_1 = require("./Salary");
 const Task_1 = require("./Task");
@@ -128,6 +129,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Project_1.Project, (project) => project.project_Admin),
     __metadata("design:type", Array)
 ], Employee.prototype, "projects_management", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Project_File_1.Project_file, (project) => project.assignBy),
+    __metadata("design:type", Array)
+], Employee.prototype, "project_file", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.employees, {
         onDelete: 'SET NULL',

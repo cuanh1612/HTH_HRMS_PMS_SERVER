@@ -8,6 +8,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm'
+import { Employee } from './Employee'
 import { Project } from './Project'
 
 @Entity()
@@ -23,6 +24,13 @@ export class Project_file extends BaseEntity {
 
     @Column()
 	name: string
+
+    @ManyToOne(() => Employee, (employee) => employee.tasksAssignBy, {
+        onDelete: 'CASCADE',
+        nullable: true,
+    })
+    @JoinColumn()
+    assignBy: Employee
 
     @ManyToOne(() => Project, (project) => project.project_files, {
 		onDelete: 'CASCADE',

@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Project_file = void 0;
 const typeorm_1 = require("typeorm");
+const Employee_1 = require("./Employee");
 const Project_1 = require("./Project");
 let Project_file = class Project_file extends typeorm_1.BaseEntity {
 };
@@ -30,6 +31,14 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Project_file.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.tasksAssignBy, {
+        onDelete: 'CASCADE',
+        nullable: true,
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Employee_1.Employee)
+], Project_file.prototype, "assignBy", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Project_1.Project, (project) => project.project_files, {
         onDelete: 'CASCADE',
