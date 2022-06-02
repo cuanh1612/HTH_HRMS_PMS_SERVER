@@ -778,7 +778,7 @@ const projectController = {
             });
         }
         const manager = (0, typeorm_1.getManager)('huprom');
-        const countstatusTasks = yield manager.query(`SELECT status.title, status.color, COUNT(task.id) FROM status LEFT JOIN task on task."statusId" = status.id WHERE status."projectId" = ${projectId} GROUP BY status.title`);
+        const countstatusTasks = yield manager.query(`SELECT status.title, status.color, COUNT(task.id) FROM status LEFT JOIN task on task."statusId" = status.id WHERE status."projectId" = ${projectId} GROUP BY (status.title, status.color)`);
         return res.status(200).json({
             code: 200,
             success: true,
