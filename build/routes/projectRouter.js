@@ -13,13 +13,13 @@ projectRouter.put('/assign-employee/department/:projectId', projectController_1.
 projectRouter.put('/:id', projectController_1.default.update);
 projectRouter.get('/:projectId/change-status', projectController_1.default.changeStatus);
 projectRouter.get('/normal', projectController_1.default.getAllNormal);
+projectRouter.get('/:id', projectController_1.default.getDetail);
 projectRouter.get('/normal/employee/:employeeId', projectController_1.default.getAllNormalByEmployee);
 projectRouter.get('/employee/:employeeId', projectController_1.default.getAllByEmployee);
 projectRouter.get('/get-employees-not-in-project/:projectId', projectController_1.default.getEmployeeNotIn);
 projectRouter.get('/all-employees/:idProject', projectController_1.default.allEmployees);
 projectRouter.get('/:projectId/check-assigned', projectController_1.default.checkAssigned);
 projectRouter.get('/', projectController_1.default.getAll);
-projectRouter.get('/:id', projectController_1.default.getDetail);
 projectRouter.get('/:projectId/count-status-tasks', projectController_1.default.countstatusTasks);
 projectRouter.get('/:projectId/earnings', projectController_1.default.projectEarnings);
 projectRouter.get('/:projectId/Hours-logged', projectController_1.default.projectHoursLogged);

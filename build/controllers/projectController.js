@@ -118,7 +118,7 @@ const projectController = {
                         employee: {
                             id: employee.id,
                         },
-                    }
+                    },
                 });
                 if (hourlyRateExist)
                     return resolve(true);
@@ -271,8 +271,8 @@ const projectController = {
         //Check existing employee
         const existingEmployee = yield Employee_1.Employee.findOne({
             where: {
-                id: Number(employeeId)
-            }
+                id: Number(employeeId),
+            },
         });
         if (!existingEmployee)
             return res.status(400).json({
@@ -283,9 +283,9 @@ const projectController = {
         const projects = yield Project_1.Project.find({
             where: {
                 employees: {
-                    id: existingEmployee.id
-                }
-            }
+                    id: existingEmployee.id,
+                },
+            },
         });
         return res.status(200).json({
             code: 200,
@@ -294,7 +294,7 @@ const projectController = {
             message: 'Get all projects success',
         });
     })),
-    //Get all project with info of employees and client in project 
+    //Get all project with info of employees and client in project
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const projects = yield Project_1.Project.find({
             relations: {
@@ -315,8 +315,8 @@ const projectController = {
         //Check existing employee
         const existingEmployee = yield Employee_1.Employee.findOne({
             where: {
-                id: Number(employeeId)
-            }
+                id: Number(employeeId),
+            },
         });
         if (!existingEmployee)
             return res.status(400).json({
@@ -332,9 +332,9 @@ const projectController = {
             },
             where: {
                 employees: {
-                    id: existingEmployee.id
-                }
-            }
+                    id: existingEmployee.id,
+                },
+            },
         });
         return res.status(200).json({
             code: 200,
@@ -408,7 +408,7 @@ const projectController = {
                         employee: {
                             id: employee.id,
                         },
-                    }
+                    },
                 });
                 if (hourlyRateExist)
                     return resolve(true);
@@ -516,7 +516,7 @@ const projectController = {
         })
             .getCount();
         if (countSuccessTasks !== 0 && countTasks !== 0) {
-            existingproject.Progress = (countSuccessTasks / countTasks) * 100;
+            existingproject.Progress = Math.round((countSuccessTasks / countTasks) * 100);
             yield existingproject.save();
         }
         return res.status(200).json({
@@ -787,6 +787,7 @@ const projectController = {
         });
     })),
     projectEarnings: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _b;
         const { projectId } = req.params;
         //Check exist project
         const existingProject = yield Project_1.Project.findOne({
@@ -806,11 +807,12 @@ const projectController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            projectEarnings: Number(projectEarnings[0].sum) || 0,
+            projectEarnings: ((_b = projectEarnings[0]) === null || _b === void 0 ? void 0 : _b.sum) ? Number(projectEarnings[0].sum) : 0,
             message: 'Get project earnings successfully',
         });
     })),
     projectHoursLogged: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _c;
         const { projectId } = req.params;
         //Check exist project
         const existingProject = yield Project_1.Project.findOne({
@@ -830,7 +832,7 @@ const projectController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            projectHoursLogged: Number(projectHoursLogged[0].sum) || 0,
+            projectHoursLogged: ((_c = projectHoursLogged[0]) === null || _c === void 0 ? void 0 : _c.sum) ? Number(projectHoursLogged[0].sum) : 0,
             message: 'Get project hours logged successfully',
         });
     })),
