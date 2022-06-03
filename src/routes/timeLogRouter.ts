@@ -9,6 +9,8 @@ TimeLogRouter.get('/calendar', timeLogController.calendar)
 
 TimeLogRouter.post('/', timeLogController.create)
 
+TimeLogRouter.get('/current-user', timeLogController.getByCurrentUser)
+
 TimeLogRouter.get('/by-project/:projectId', timeLogController.getAllByProject)
 
 TimeLogRouter.get('/:timelogId', timeLogController.getDetail)

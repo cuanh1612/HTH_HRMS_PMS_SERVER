@@ -127,6 +127,7 @@ const statusController = {
 			relations: {
 				tasks: {
 					employees: true,
+					assignBy: true
 				},
 			},
 			order: {

@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = require("jsonwebtoken");
 const Employee_1 = require("../entities/Employee");
 const Hourly_rate_project_1 = require("../entities/Hourly_rate_project");
 const Project_1 = require("../entities/Project");
@@ -328,7 +329,7 @@ const timeLogController = {
             filter.task = {
                 employees: {
                     id: Number(employee),
-                }
+                },
             };
         if (project)
             filter.project = Object.assign(Object.assign({}, filter.project), { id: project });
@@ -394,6 +395,53 @@ const timeLogController = {
             success: true,
             timeLog: existingtimelog,
             message: 'Get detail of timelog success',
+        });
+    })),
+    getByCurrentUser: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        //check exist current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
+        const timeLogs = yield Time_Log_1.Time_log.find({
+            order: {
+                createdAt: 'DESC',
+            },
+            relations: {
+                task: {
+                    status: true,
+                },
+                employee: true,
+                project: true,
+            },
+            where: {
+                employee: {
+                    id: existingUser.id
+                }
+            }
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            timeLogs,
+            message: 'Get all timelog success',
         });
     })),
 };

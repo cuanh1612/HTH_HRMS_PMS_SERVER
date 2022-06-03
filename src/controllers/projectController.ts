@@ -126,9 +126,9 @@ const projectController = {
 							employee: {
 								id: employee.id,
 							},
-						}
+						},
 					})
-					if(hourlyRateExist) return resolve(true)
+					if (hourlyRateExist) return resolve(true)
 					resolve(
 						await Hourly_rate_project.insert({
 							project: {
@@ -296,29 +296,30 @@ const projectController = {
 
 	// get all project (normal) by employee
 	getAllNormalByEmployee: handleCatchError(async (req: Request, res: Response) => {
-		const {employeeId} = req.params
+		const { employeeId } = req.params
 
 		//Check existing employee
 		const existingEmployee = await Employee.findOne({
 			where: {
-				id: Number(employeeId)
-			}
+				id: Number(employeeId),
+			},
 		})
 
-		if(!existingEmployee) return res.status(400).json({
-			code: 400,
-			success: false,
-			message: 'Employee does not exist in the system',
-		})
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Employee does not exist in the system',
+			})
 
 		const projects = await Project.find({
 			where: {
 				employees: {
-					id: existingEmployee.id
-				}
-			}
+					id: existingEmployee.id,
+				},
+			},
 		})
-		
+
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -327,7 +328,7 @@ const projectController = {
 		})
 	}),
 
-	//Get all project with info of employees and client in project 
+	//Get all project with info of employees and client in project
 	getAll: handleCatchError(async (_: Request, res: Response) => {
 		const projects = await Project.find({
 			relations: {
@@ -345,20 +346,21 @@ const projectController = {
 
 	//Get all project by employee
 	getAllByEmployee: handleCatchError(async (req: Request, res: Response) => {
-		const {employeeId} = req.params
+		const { employeeId } = req.params
 
 		//Check existing employee
 		const existingEmployee = await Employee.findOne({
 			where: {
-				id: Number(employeeId)
-			}
+				id: Number(employeeId),
+			},
 		})
 
-		if(!existingEmployee) return res.status(400).json({
-			code: 400,
-			success: false,
-			message: 'Employee does not exist in the system',
-		})
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Employee does not exist in the system',
+			})
 
 		//Get project by employee
 		const projects = await Project.find({
@@ -368,9 +370,9 @@ const projectController = {
 			},
 			where: {
 				employees: {
-					id: existingEmployee.id
-				}
-			}
+					id: existingEmployee.id,
+				},
+			},
 		})
 		return res.status(200).json({
 			code: 200,
@@ -455,9 +457,9 @@ const projectController = {
 							employee: {
 								id: employee.id,
 							},
-						}
+						},
 					})
-					if(hourlyRateExist) return resolve(true)
+					if (hourlyRateExist) return resolve(true)
 					resolve(
 						await Hourly_rate_project.insert({
 							project: {
@@ -584,7 +586,7 @@ const projectController = {
 			.getCount()
 
 		if (countSuccessTasks !== 0 && countTasks !== 0) {
-			existingproject.Progress = (countSuccessTasks / countTasks) * 100
+			existingproject.Progress = Math.round((countSuccessTasks / countTasks) * 100)
 			await existingproject.save()
 		}
 
@@ -885,7 +887,7 @@ const projectController = {
 	}),
 
 	countstatusTasks: handleCatchError(async (req: Request, res: Response) => {
-		const {projectId} = req.params
+		const { projectId } = req.params
 
 		//Check exist project
 		const existingProject = await Project.findOne({
@@ -916,7 +918,7 @@ const projectController = {
 	}),
 
 	projectEarnings: handleCatchError(async (req: Request, res: Response) => {
-		const {projectId} = req.params
+		const { projectId } = req.params
 
 		//Check exist project
 		const existingProject = await Project.findOne({
@@ -934,6 +936,7 @@ const projectController = {
 		}
 
 		const manager = getManager('huprom')
+
 		const projectEarnings = await manager.query(
 			`SELECT SUM(time_log.earnings) FROM time_log LEFT JOIN project on project.id = time_log."projectId" WHERE project.id = ${projectId} GROUP BY project.id`
 		)
@@ -941,13 +944,13 @@ const projectController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			projectEarnings: Number(projectEarnings[0].sum) || 0,
+			projectEarnings: projectEarnings[0]?.sum ? Number(projectEarnings[0].sum) : 0,
 			message: 'Get project earnings successfully',
 		})
 	}),
 
 	projectHoursLogged: handleCatchError(async (req: Request, res: Response) => {
-		const {projectId} = req.params
+		const { projectId } = req.params
 
 		//Check exist project
 		const existingProject = await Project.findOne({
@@ -972,13 +975,13 @@ const projectController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			projectHoursLogged: Number(projectHoursLogged[0].sum) || 0,
+			projectHoursLogged: projectHoursLogged[0]?.sum ? Number(projectHoursLogged[0].sum) : 0,
 			message: 'Get project hours logged successfully',
 		})
 	}),
 
 	changeStatus: handleCatchError(async (req: Request, res: Response) => {
-		const {projectId} = req.params
+		const { projectId } = req.params
 		const { project_status } = req.body
 
 		if (
