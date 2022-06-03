@@ -31,6 +31,7 @@ import projectRouter from './projectRouter'
 import salaryRouter from './salaryRouter'
 import signRouter from './signRouter'
 import statusRouter from './statusRouter'
+import stickyNoteRouter from './stickyNoteRouter'
 import taskCategoryRouter from './taskCategoryRouter copy'
 import taskCommentRouter from './taskCommentRouter'
 import taskFileRouter from './taskFileRouter'
@@ -111,6 +112,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/task-comments', taskCommentRouter)
 
 	app.use('/api/time-logs', TimeLogRouter)
+
+	app.use('/api/sticky-notes', stickyNoteRouter)
 }
 
 export default mainRouter

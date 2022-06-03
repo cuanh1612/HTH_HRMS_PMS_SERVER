@@ -32,9 +32,4 @@ export class Status extends BaseEntity {
 
     @Column({default: false})
     root: boolean
-
-
-
-
-
 }

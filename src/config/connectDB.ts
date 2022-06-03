@@ -36,6 +36,7 @@ import { Hourly_rate_project } from '../entities/Hourly_rate_project'
 import { Milestone } from '../entities/Milestone'
 import { Task_comment } from '../entities/Task_Comment'
 import { Time_log } from '../entities/Time_Log'
+import { StickyNote } from '../entities/StickyNote'
 
 const connectDB = () => {
 	createConnection({
@@ -84,7 +85,8 @@ const connectDB = () => {
 			Hourly_rate_project,
 			Milestone,
 			Task_comment, 
-			Time_log
+			Time_log,
+			StickyNote
 		],
 	})
 		.then(() => {
