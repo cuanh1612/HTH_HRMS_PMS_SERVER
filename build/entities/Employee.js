@@ -27,6 +27,7 @@ const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
 const Project_File_1 = require("./Project_File");
 const Project_Note_1 = require("./Project_Note");
 const Salary_1 = require("./Salary");
+const StickyNote_1 = require("./StickyNote");
 const Task_1 = require("./Task");
 const Time_Log_1 = require("./Time_Log");
 var enumGender;
@@ -133,6 +134,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Project_File_1.Project_file, (project) => project.assignBy),
     __metadata("design:type", Array)
 ], Employee.prototype, "project_file", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => StickyNote_1.StickyNote, (stickyNote) => stickyNote.employee),
+    __metadata("design:type", Array)
+], Employee.prototype, "stickyNotes", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.employees, {
         onDelete: 'SET NULL',
