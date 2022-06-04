@@ -9,6 +9,7 @@ const noticeBoardRouter = express_1.default.Router();
 noticeBoardRouter.post('/', noticeBoardController_1.default.create);
 noticeBoardRouter.get('/', noticeBoardController_1.default.getAll);
 noticeBoardRouter.get('/:noticeBoardId', noticeBoardController_1.default.getDetail);
+noticeBoardRouter.get('/notice-to/:noticeTo', noticeBoardController_1.default.getAllByNoticeTo);
 noticeBoardRouter.put('/:noticeBoardId', noticeBoardController_1.default.update);
 noticeBoardRouter.delete('/:noticeBoardId', noticeBoardController_1.default.delete);
 noticeBoardRouter.post('/delete-many', noticeBoardController_1.default.deleteMany);

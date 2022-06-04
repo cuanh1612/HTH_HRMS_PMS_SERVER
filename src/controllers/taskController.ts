@@ -298,7 +298,6 @@ const taskController = {
 	// get all task and show in calendar
 	calendar: handleCatchError(async (req: Request, res: Response) => {
 		const { employee, client, name, project }: any = req.query
-		console.log('hoang nguyen dsf d s sse ', req.query)
 		var filter: {
 			name?: any
 			employees?: {
@@ -316,6 +315,71 @@ const taskController = {
 			filter.employees = {
 				id: Number(employee),
 			}
+		if (project)
+			filter.project = {
+				...filter.project,
+				id: project,
+			}
+
+		if (client)
+			filter.project = {
+				...filter.project,
+				client: {
+					id: client,
+				},
+			}
+
+		const tasks = await Task.find({
+			where: filter,
+			relations: {
+				status: true,
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			tasks,
+			message: 'Get all projects success',
+		})
+	}),
+
+	// get all task and show in calendar
+	calendarByEmployee: handleCatchError(async (req: Request, res: Response) => {
+		const { client, name, project }: any = req.query
+		const { employeeId } = req.params
+
+		//Check exist employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Employee does not exist in the system',
+			})
+
+		var filter: {
+			name?: any
+			employees?: {
+				id: number
+			}
+			project?: {
+				id?: number
+				client?: {
+					id: number
+				}
+			}
+		} = {}
+
+		filter.employees = {
+			id: existingEmployee.id,
+		}
+		if (name) filter.name = Like(String(name))
 		if (project)
 			filter.project = {
 				...filter.project,

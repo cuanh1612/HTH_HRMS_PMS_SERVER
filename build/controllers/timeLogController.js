@@ -259,6 +259,22 @@ const timeLogController = {
         });
     })),
     getAllByProject: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        //check exist current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        if (!decode)
+            return res.status(400).json({
+                code: 401,
+                success: false,
+                message: 'Please login first',
+            });
         const { projectId } = req.params; // taik biet tieenngs
         //Check exist project
         const existingproject = yield Project_1.Project.findOne({
@@ -272,12 +288,18 @@ const timeLogController = {
                 success: false,
                 message: 'Project does not exist in the system',
             });
+        //Create filter
+        var filter = {};
+        if (existingproject)
+            filter.project = {
+                id: Number(existingproject.id),
+            };
+        if (decode.role === 'Employee')
+            filter.employee = {
+                id: Number(decode.userId),
+            };
         const timeLogs = yield Time_Log_1.Time_log.find({
-            where: {
-                project: {
-                    id: existingproject.id,
-                },
-            },
+            where: filter,
             order: {
                 createdAt: 'DESC',
             },
@@ -352,6 +374,48 @@ const timeLogController = {
             message: 'Get all projects success',
         });
     })),
+    // get all time logs and show in calendar
+    calendarByEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { client, project } = req.query;
+        const { employeeId } = req.params;
+        //Check exist employee
+        const exisitingEmployee = yield Employee_1.Employee.findOne({
+            where: {
+                id: Number(employeeId),
+            },
+        });
+        if (!exisitingEmployee)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Employee does not exist in the system',
+            });
+        //Check exisit employee
+        var filter = {};
+        filter.employee = {
+            id: Number(exisitingEmployee.id),
+        };
+        if (project)
+            filter.project = Object.assign(Object.assign({}, filter.project), { id: project });
+        if (client)
+            filter.project = Object.assign(Object.assign({}, filter.project), { client: {
+                    id: client,
+                } });
+        const timeLogs = yield Time_Log_1.Time_log.find({
+            where: filter,
+            relations: {
+                task: {
+                    status: true,
+                },
+            },
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            timeLogs,
+            message: 'Get all projects success',
+        });
+    })),
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const timeLogs = yield Time_Log_1.Time_log.find({
             order: {
@@ -398,9 +462,9 @@ const timeLogController = {
         });
     })),
     getByCurrentUser: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a;
+        var _b;
         //check exist current user
-        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
         if (!token)
             return res.status(401).json({
                 code: 400,
@@ -408,18 +472,18 @@ const timeLogController = {
                 message: 'Please login first',
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
-        //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
-            where: {
-                id: decode.userId,
-            },
-        });
-        if (!existingUser)
+        if (!decode)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'User does not exist in the system',
+                message: 'Please login first',
             });
+        var filter = {};
+        if (decode.role === 'Employee') {
+            filter.employee = {
+                id: decode.userId,
+            };
+        }
         const timeLogs = yield Time_Log_1.Time_log.find({
             order: {
                 createdAt: 'DESC',
@@ -431,11 +495,7 @@ const timeLogController = {
                 employee: true,
                 project: true,
             },
-            where: {
-                employee: {
-                    id: existingUser.id
-                }
-            }
+            where: filter,
         });
         return res.status(200).json({
             code: 200,
