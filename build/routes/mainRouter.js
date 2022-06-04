@@ -35,6 +35,7 @@ const projectRouter_1 = __importDefault(require("./projectRouter"));
 const salaryRouter_1 = __importDefault(require("./salaryRouter"));
 const signRouter_1 = __importDefault(require("./signRouter"));
 const statusRouter_1 = __importDefault(require("./statusRouter"));
+const stickyNoteRouter_1 = __importDefault(require("./stickyNoteRouter"));
 const taskCategoryRouter_copy_1 = __importDefault(require("./taskCategoryRouter copy"));
 const taskCommentRouter_1 = __importDefault(require("./taskCommentRouter"));
 const taskFileRouter_1 = __importDefault(require("./taskFileRouter"));
@@ -78,5 +79,6 @@ function mainRouter(app) {
     app.use('/api/milestone', milestoneRouter_1.default);
     app.use('/api/task-comments', taskCommentRouter_1.default);
     app.use('/api/time-logs', timeLogRouter_1.default);
+    app.use('/api/sticky-notes', stickyNoteRouter_1.default);
 }
 exports.default = mainRouter;
