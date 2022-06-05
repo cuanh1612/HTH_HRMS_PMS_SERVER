@@ -18,6 +18,7 @@ import { Client_Sub_Category } from './Client_Sub_Category'
 import { Contract } from './Contract'
 import { Discussion } from './Discussion'
 import { Event } from './Event'
+import { Notification } from './Notification'
 import { Project } from './Project'
 import { Room } from './Room'
 
@@ -148,6 +149,9 @@ export class Client extends BaseEntity {
 	@ManyToMany(() => Room)
 	@JoinTable({ name: 'room_client' })
 	rooms: Room[]
+
+	@OneToMany(()=> Notification, (Notification)=> Notification.client)
+	notifications: Notification[]
 
 	@CreateDateColumn({
 		name: 'created_at',

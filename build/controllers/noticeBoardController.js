@@ -12,7 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const Client_1 = require("../entities/Client");
+const Employee_1 = require("../entities/Employee");
 const Notice_Board_1 = require("../entities/Notice_Board");
+const Notification_1 = require("../entities/Notification");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const noticeBoardValid_1 = require("../utils/valid/noticeBoardValid");
 const noticeBoardController = {
@@ -33,6 +36,37 @@ const noticeBoardController = {
             heading,
             details,
         }).save();
+        //Create notification for employees or clients
+        if (notice_to === Notice_Board_1.enumNoticeTo.CLIENTS) {
+            //Get all clients
+            const clients = yield Client_1.Client.find({});
+            yield Promise.all(clients.map((client) => __awaiter(void 0, void 0, void 0, function* () {
+                return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                    //Create note for client
+                    yield Notification_1.Notification.create({
+                        content: 'There is a notice board just posted',
+                        client: client,
+                        url: '/notice-boards',
+                    }).save();
+                    resolve(true);
+                }));
+            })));
+        }
+        else if (notice_to === Notice_Board_1.enumNoticeTo.EMPLOYEES) {
+            //Get all employees
+            const employees = yield Employee_1.Employee.find({});
+            yield Promise.all(employees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
+                return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                    //Create note for client
+                    yield Notification_1.Notification.create({
+                        content: 'There is a notice board just posted',
+                        employee: employee,
+                        url: '/notice-boards',
+                    }).save();
+                    resolve(true);
+                }));
+            })));
+        }
         return res.status(200).json({
             code: 200,
             success: true,
@@ -182,7 +216,7 @@ const noticeBoardController = {
         //get all notice
         const noticeBoards = yield Notice_Board_1.Notice_board.find({
             where: {
-                notice_to: noticeTo
+                notice_to: noticeTo,
             },
         });
         return res.status(200).json({
