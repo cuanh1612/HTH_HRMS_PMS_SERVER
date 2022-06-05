@@ -27,6 +27,7 @@ import { Project_discussion_reply } from './Project_Discussion_Reply'
 import { Project_Discussion_Room } from './Project_Discussion_Room'
 import { Project_file } from './Project_File'
 import { Project_note } from './Project_Note'
+import { Room } from './Room'
 import { Salary } from './Salary'
 import { StickyNote } from './StickyNote'
 
@@ -110,6 +111,9 @@ export class Employee extends BaseEntity {
 	})
 	@JoinColumn()
 	designation: Designation
+
+	@OneToMany(()=> Room, (room)=> room.empl_create)
+	rooms: Room[]
 
 	@OneToMany(()=> Project, (project)=> project.project_Admin)
 	projects_management: Project[]
