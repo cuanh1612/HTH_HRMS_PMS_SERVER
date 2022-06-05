@@ -40,7 +40,7 @@ export class Room extends BaseEntity {
 	@JoinTable({ name: 'room_employee' })
 	employees: Employee[];
 
-	@ManyToMany(() => Employee)
+	@ManyToMany(() => Client)
 	@JoinTable({ name: 'room_client' })
 	clients: Client[];
 

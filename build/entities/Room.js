@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Room = void 0;
 const typeorm_1 = require("typeorm");
+const Client_1 = require("./Client");
 const Employee_1 = require("./Employee");
 let Room = class Room extends typeorm_1.BaseEntity {
 };
@@ -47,7 +48,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Room.prototype, "employees", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee),
+    (0, typeorm_1.ManyToMany)(() => Client_1.Client),
     (0, typeorm_1.JoinTable)({ name: 'room_client' }),
     __metadata("design:type", Array)
 ], Room.prototype, "clients", void 0);
