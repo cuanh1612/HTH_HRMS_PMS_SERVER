@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Sticky_note = exports.enumColor = void 0;
 const typeorm_1 = require("typeorm");
+const Client_1 = require("./Client");
 const Employee_1 = require("./Employee");
 var enumColor;
 (function (enumColor) {
@@ -39,6 +40,11 @@ __decorate([
     (0, typeorm_1.JoinTable)({ name: 'employee' }),
     __metadata("design:type", Employee_1.Employee)
 ], Sticky_note.prototype, "employee", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Client_1.Client, { onDelete: "CASCADE", nullable: true }),
+    (0, typeorm_1.JoinTable)({ name: 'client' }),
+    __metadata("design:type", Client_1.Client)
+], StickyNote.prototype, "client", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

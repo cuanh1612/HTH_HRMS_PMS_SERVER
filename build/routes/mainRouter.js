@@ -82,7 +82,13 @@ function mainRouter(app) {
     app.use('/api/task-comments', taskCommentRouter_1.default);
     app.use('/api/time-logs', timeLogRouter_1.default);
     app.use('/api/sticky-notes', stickyNoteRouter_1.default);
+<<<<<<< HEAD
+=======
     app.use('/api/rooms', roomRouter_1.default);
+<<<<<<< HEAD
     app.use('/api/notifications', notificationRouter_1.default);
+=======
+>>>>>>> 90d4c00e7f45b3d8435ed972de31b5d43d918012
+>>>>>>> f18329177005013d7fddaae6c0adb5542bb75cac
 }
 exports.default = mainRouter;
