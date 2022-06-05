@@ -7,6 +7,8 @@ TimeLogRouter.post('/delete-many', timeLogController.Deletemany)
 
 TimeLogRouter.get('/calendar', timeLogController.calendar)
 
+TimeLogRouter.get('/calendar-employee/:employeeId', timeLogController.calendarByEmployee)
+
 TimeLogRouter.post('/', timeLogController.create)
 
 TimeLogRouter.get('/current-user', timeLogController.getByCurrentUser)

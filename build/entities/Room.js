@@ -9,55 +9,62 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Sticky_note = exports.enumColor = void 0;
+exports.Room = void 0;
 const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const Employee_1 = require("./Employee");
-var enumColor;
-(function (enumColor) {
-    enumColor["RED"] = "#FF0000";
-    enumColor["BLUE"] = "#0000FF";
-    enumColor["GRAY"] = "#808080";
-    enumColor["GREEN"] = "#008000";
-    enumColor["PURPLE"] = "#800080";
-})(enumColor = exports.enumColor || (exports.enumColor = {}));
-let Sticky_note = class Sticky_note extends typeorm_1.BaseEntity {
+let Room = class Room extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Sticky_note.prototype, "id", void 0);
+], Room.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: enumColor, default: enumColor.BLUE }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Sticky_note.prototype, "color", void 0);
+], Room.prototype, "title", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Sticky_note.prototype, "note", void 0);
+], Room.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, { onDelete: 'CASCADE' }),
-    (0, typeorm_1.JoinTable)({ name: 'employee' }),
+    (0, typeorm_1.Column)('time'),
+    __metadata("design:type", String)
+], Room.prototype, "start_time", void 0);
+__decorate([
+    (0, typeorm_1.Column)('date'),
+    __metadata("design:type", Date)
+], Room.prototype, "date", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.rooms, {
+        onDelete: 'CASCADE'
+    }),
+    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Employee_1.Employee)
-], Sticky_note.prototype, "employee", void 0);
+], Room.prototype, "empl_create", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Client_1.Client, { onDelete: "CASCADE", nullable: true }),
-    (0, typeorm_1.JoinTable)({ name: 'client' }),
-    __metadata("design:type", Client_1.Client)
-], StickyNote.prototype, "client", void 0);
+    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee),
+    (0, typeorm_1.JoinTable)({ name: 'room_employee' }),
+    __metadata("design:type", Array)
+], Room.prototype, "employees", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Client_1.Client),
+    (0, typeorm_1.JoinTable)({ name: 'room_client' }),
+    __metadata("design:type", Array)
+], Room.prototype, "clients", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], Sticky_note.prototype, "createdAt", void 0);
+], Room.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], Sticky_note.prototype, "updatedAt", void 0);
-Sticky_note = __decorate([
+], Room.prototype, "updatedAt", void 0);
+Room = __decorate([
     (0, typeorm_1.Entity)()
-], Sticky_note);
-exports.Sticky_note = Sticky_note;
+], Room);
+exports.Room = Room;

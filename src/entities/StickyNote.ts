@@ -12,7 +12,7 @@ export enum enumColor {
 
 
 @Entity()
-export class StickyNote extends BaseEntity {
+export class Sticky_note extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number
     

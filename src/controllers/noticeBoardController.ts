@@ -197,6 +197,25 @@ const noticeBoardController = {
 			message: 'Get detail notice board successfully',
 		})
 	}),
+
+	getAllByNoticeTo: handleCatchError(async (req: Request, res: Response) => {
+		const { noticeTo } = req.params
+
+		//get all notice
+		const noticeBoards = await Notice_board.find({
+			where: {
+				notice_to: noticeTo
+			},
+		})
+
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			noticeBoards: noticeBoards,
+			message: 'Get notice boards by notice to successfully',
+		})
+	}),
 }
 
 export default noticeBoardController

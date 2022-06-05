@@ -10,16 +10,17 @@ import {
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn,
+	UpdateDateColumn
 } from 'typeorm'
 import { Avatar } from './Avatar'
 import { Client_Category } from './Client_Category'
 import { Client_Sub_Category } from './Client_Sub_Category'
 import { Contract } from './Contract'
-import { Project } from './Project'
 import { Discussion } from './Discussion'
 import { Event } from './Event'
-import { StickyNote } from './StickyNote'
+import { Sticky_note } from './StickyNote'
+import { Project } from './Project'
+import { Room } from './Room'
 
 export enum enumSalutation {
 	MR = 'Mr',
@@ -135,8 +136,8 @@ export class Client extends BaseEntity {
 	@JoinColumn()
 	projects: Project[]
 
-	@OneToMany(() => StickyNote, (stickyNote) => stickyNote.client)
-	sticky_notes: StickyNote[]
+	@OneToMany(() => Sticky_note, (stickyNote) => stickyNote.client)
+	sticky_notes: Sticky_note[]
 
 
 	@OneToMany(() => Contract, (contract) => contract.client)
@@ -148,6 +149,10 @@ export class Client extends BaseEntity {
 
 	@OneToMany(() => Discussion, (discussion) => discussion.client)
 	discussions: Discussion[]
+
+	@ManyToMany(() => Room)
+	@JoinTable({ name: 'room_client' })
+	rooms: Room[]
 
 	@CreateDateColumn({
 		name: 'created_at',

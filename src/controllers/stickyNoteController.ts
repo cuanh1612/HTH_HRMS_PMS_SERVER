@@ -2,15 +2,16 @@ import { Request, Response } from 'express';
 import { Secret, verify } from "jsonwebtoken";
 import { Client } from '../entities/Client';
 import { Employee } from "../entities/Employee";
-import { StickyNote } from '../entities/StickyNote';
+import { Sticky_note } from '../entities/StickyNote';
+
 import { UserAuthPayload } from "../type/UserAuthPayload";
 import handleCatchError from "../utils/catchAsyncError";
 
 
 const stickyNoteController = {
     //create note:
-    create: handleCatchError(async (req: Request, res: Response) => {
-        const dataNote: StickyNote = req.body
+    create: handleCatchError(async (req: Request, res: Response) =>{
+        const dataNote: Sticky_note = req.body
         const { note } = dataNote
 
 
@@ -50,8 +51,8 @@ const stickyNoteController = {
                 success: false,
                 message: 'User does not exist in the system'
             })
-
-        const createNote = await StickyNote.create({
+        
+        const createNote = await Sticky_note.create({
             ...dataNote,
             ...(existingUser.role === "Client" ? { client: existingUser } : { employee: existingUser }),
         }).save()
@@ -67,12 +68,15 @@ const stickyNoteController = {
     //update note
     update: handleCatchError(async (req: Request, res: Response) => {
         const { id } = req.params
-        const dataUpdate: StickyNote = req.body
-        const { note } = dataUpdate
+        const dataUpdate :Sticky_note = req.body
+        const {note} = dataUpdate
 
-        const existingNote = await StickyNote.findOne({
-            where: {
+        const existingNote = await Sticky_note.findOne({
+            where:{
                 id: Number(id)
+            },
+            relations: {
+                employee: true
             }
         })
 
@@ -136,9 +140,12 @@ const stickyNoteController = {
     delete: handleCatchError(async (req: Request, res: Response) => {
         const { id } = req.params
 
-        const existingNote = await StickyNote.findOne({
-            where: {
+        const existingNote = await Sticky_note.findOne({
+            where:{
                 id: Number(id)
+            },
+            relations: {
+                employee: true
             }
         })
 
@@ -191,9 +198,12 @@ const stickyNoteController = {
     getDetail: handleCatchError(async (req: Request, res: Response) => {
         const { id } = req.params
 
-        const existingNote = await StickyNote.findOne({
-            where: {
+        const existingNote = await Sticky_note.findOne({
+            where:{
                 id: Number(id)
+            },
+            relations: {
+                employee: true
             }
         })
 
@@ -270,7 +280,7 @@ const stickyNoteController = {
             
         })
 
-        const stickyNotes =  decode.role === "Client" ? await StickyNote.find({
+        const stickyNotes =  decode.role === "Client" ? await Sticky_note.find({
             where: {
                 client: {
                     id: existingUser?.id
@@ -279,7 +289,7 @@ const stickyNoteController = {
             order: {
                 createdAt: "DESC"
             }
-        }) : await StickyNote.find({
+        }) : await Sticky_note.find({
             where: {
                 employee: {
                     id: existingUser?.id

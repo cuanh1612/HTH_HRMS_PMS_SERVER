@@ -27,8 +27,9 @@ import { Project_discussion_reply } from './Project_Discussion_Reply'
 import { Project_Discussion_Room } from './Project_Discussion_Room'
 import { Project_file } from './Project_File'
 import { Project_note } from './Project_Note'
+import { Room } from './Room'
 import { Salary } from './Salary'
-import { StickyNote } from './StickyNote'
+import { Sticky_note } from './StickyNote'
 
 import { Task } from './Task'
 import { Time_log } from './Time_Log'
@@ -111,14 +112,17 @@ export class Employee extends BaseEntity {
 	@JoinColumn()
 	designation: Designation
 
+	@OneToMany(()=> Room, (room)=> room.empl_create)
+	rooms: Room[]
+
 	@OneToMany(()=> Project, (project)=> project.project_Admin)
 	projects_management: Project[]
 
 	@OneToMany(()=> Project_file, (project)=> project.assignBy)
 	project_file: Project_file[]
 
-	@OneToMany(()=> StickyNote, (stickyNote)=> stickyNote.employee)
-	stickyNotes: StickyNote[]
+	@OneToMany(()=> Sticky_note, (Sticky_note)=> Sticky_note.employee)
+	stickyNotes: Sticky_note[]
 
 	// @OneToMany(()=> TimeLog, (timelog)=> timelog.employee)
 	// timelogs: TimeLog[]
@@ -188,6 +192,9 @@ export class Employee extends BaseEntity {
 	})
 	time_logs: Time_log[]
 
+	@ManyToMany(() => Room)
+	@JoinTable({ name: 'room_employee' })
+	meeting_rooms: Room[];
 
 	@Column({ default: 0 })
 	token_version: number

@@ -8,6 +8,7 @@ const timeLogController_1 = __importDefault(require("../controllers/timeLogContr
 const TimeLogRouter = express_1.default.Router();
 TimeLogRouter.post('/delete-many', timeLogController_1.default.Deletemany);
 TimeLogRouter.get('/calendar', timeLogController_1.default.calendar);
+TimeLogRouter.get('/calendar-employee/:employeeId', timeLogController_1.default.calendarByEmployee);
 TimeLogRouter.post('/', timeLogController_1.default.create);
 TimeLogRouter.get('/current-user', timeLogController_1.default.getByCurrentUser);
 TimeLogRouter.get('/by-project/:projectId', timeLogController_1.default.getAllByProject);

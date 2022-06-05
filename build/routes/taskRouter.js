@@ -8,6 +8,7 @@ const taskController_1 = __importDefault(require("../controllers/taskController"
 const taskRouter = express_1.default.Router();
 taskRouter.post('/', taskController_1.default.create);
 taskRouter.get('/calendar', taskController_1.default.calendar);
+taskRouter.get('/calendar-employee/:employeeId', taskController_1.default.calendarByEmployee);
 taskRouter.get('/', taskController_1.default.getAll);
 taskRouter.get('/:id', taskController_1.default.getDetail);
 taskRouter.get('/project/:projectId', taskController_1.default.getByProject);

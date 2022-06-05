@@ -344,41 +344,58 @@ const projectController = {
 		})
 	}),
 
-	//Get all project by employee
-	getAllByEmployee: handleCatchError(async (req: Request, res: Response) => {
-		const { employeeId } = req.params
+	//Get all project with info of employees and client in project
+	getAllByCurrentUser: handleCatchError(async (req: Request, res: Response) => {
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
 
-		//Check existing employee
-		const existingEmployee = await Employee.findOne({
-			where: {
-				id: Number(employeeId),
-			},
-		})
-
-		if (!existingEmployee)
-			return res.status(400).json({
+		if (!token)
+			return res.status(401).json({
 				code: 400,
 				success: false,
-				message: 'Employee does not exist in the system',
+				message: 'Please login first',
 			})
 
-		//Get project by employee
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		if (!decode)
+			return res.status(400).json({
+				code: 401,
+				success: false,
+				message: 'Please login first',
+			})
+
+		//Create filter
+		var filter: {
+			employees?: {
+				id: number
+			}
+			client?: {
+				id: number
+			}
+		} = {}
+		if (decode.role === 'Employee')
+			filter.employees = {
+				id: Number(decode.userId),
+			}
+
+		if (decode.role === 'Client')
+			filter.client = {
+				id: Number(decode.userId),
+			}
+
 		const projects = await Project.find({
 			relations: {
 				employees: true,
 				client: true,
 			},
-			where: {
-				employees: {
-					id: existingEmployee.id,
-				},
-			},
+			where: filter,
 		})
 		return res.status(200).json({
 			code: 200,
 			success: true,
 			projects,
-			message: 'Get all projects by employee success',
+			message: 'Get all projects success',
 		})
 	}),
 

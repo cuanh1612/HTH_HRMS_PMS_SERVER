@@ -1,9 +1,11 @@
 import { Request, Response } from 'express'
+import { Secret, verify } from 'jsonwebtoken'
 import { Like } from 'typeorm'
 import { Client } from '../entities/Client'
 import { Employee } from '../entities/Employee'
 import { Event } from '../entities/Event'
 import { createOrUpdateEventPayload } from '../type/EventPayload'
+import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { eventValid } from '../utils/valid/eventValid'
 
@@ -74,12 +76,12 @@ const eventController = {
 			eventEmployees.push(existEmployee)
 		}
 
+		//Get time start and end event
+		const startEventTime = new Date(starts_on_date)
+		const endEventTime = new Date(ends_on_date)
+
 		//Repeat event
 		if (isRepeat) {
-			//Get time start and end event
-			const startEventTime = new Date(starts_on_date)
-			const endEventTime = new Date(ends_on_date)
-
 			//Create event
 			for (let index = 0; index < cycles; index++) {
 				if (index != 0) {
@@ -114,8 +116,8 @@ const eventController = {
 					...dataNewEvent,
 					clients: [...eventClients],
 					employees: [...eventEmployees],
-					starts_on_date: startEventTime,
-					ends_on_date: endEventTime,
+					starts_on_date: new Date(startEventTime.toLocaleDateString()),
+					ends_on_date: new Date(endEventTime.toLocaleDateString()),
 				}).save()
 			}
 		} else {
@@ -124,6 +126,8 @@ const eventController = {
 				...dataNewEvent,
 				clients: [...eventClients],
 				employees: [...eventEmployees],
+				starts_on_date: new Date(startEventTime.toLocaleDateString()),
+				ends_on_date: new Date(endEventTime.toLocaleDateString()),
 			}).save()
 		}
 
@@ -135,6 +139,25 @@ const eventController = {
 	}),
 
 	getAll: handleCatchError(async (req: Request, res: Response) => {
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		if (!decode)
+			return res.status(400).json({
+				code: 401,
+				success: false,
+				message: 'Please login first',
+			})
+
 		const { employee, client, name } = req.query
 		var filter: {
 			name?: any
@@ -151,9 +174,19 @@ const eventController = {
 				id: Number(employee),
 			}
 
+		if (decode.role === 'Employee')
+			filter.employees = {
+				id: Number(decode.userId),
+			}
+
 		if (client)
 			filter.clients = {
 				id: Number(client),
+			}
+
+		if (decode.role === 'Client')
+			filter.clients = {
+				id: Number(decode.userId),
 			}
 
 		const allEvent = await Event.find({
@@ -300,9 +333,13 @@ const eventController = {
 			(existingEvent.where = dataUpdateEvent.where),
 			(existingEvent.color = dataUpdateEvent.color),
 			(existingEvent.description = dataUpdateEvent.description),
-			(existingEvent.starts_on_date = dataUpdateEvent.starts_on_date),
+			(existingEvent.starts_on_date = new Date(
+				new Date(dataUpdateEvent.starts_on_date).toLocaleDateString()
+			)),
 			(existingEvent.starts_on_time = dataUpdateEvent.starts_on_time),
-			(existingEvent.ends_on_date = dataUpdateEvent.ends_on_date),
+			(existingEvent.ends_on_date = new Date(
+				new Date(dataUpdateEvent.ends_on_date).toLocaleDateString()
+			)),
 			(existingEvent.ends_on_time = dataUpdateEvent.ends_on_time),
 			(existingEvent.employees = eventEmployees),
 			(existingEvent.clients = eventClients),

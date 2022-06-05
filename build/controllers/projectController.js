@@ -309,38 +309,46 @@ const projectController = {
             message: 'Get all projects success',
         });
     })),
-    //Get all project by employee
-    getAllByEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { employeeId } = req.params;
-        //Check existing employee
-        const existingEmployee = yield Employee_1.Employee.findOne({
-            where: {
-                id: Number(employeeId),
-            },
-        });
-        if (!existingEmployee)
-            return res.status(400).json({
+    //Get all project with info of employees and client in project
+    getAllByCurrentUser: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        //check exist current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
                 code: 400,
                 success: false,
-                message: 'Employee does not exist in the system',
+                message: 'Please login first',
             });
-        //Get project by employee
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        if (!decode)
+            return res.status(400).json({
+                code: 401,
+                success: false,
+                message: 'Please login first',
+            });
+        //Create filter
+        var filter = {};
+        if (decode.role === 'Employee')
+            filter.employees = {
+                id: Number(decode.userId),
+            };
+        if (decode.role === 'Client')
+            filter.client = {
+                id: Number(decode.userId),
+            };
         const projects = yield Project_1.Project.find({
             relations: {
                 employees: true,
                 client: true,
             },
-            where: {
-                employees: {
-                    id: existingEmployee.id,
-                },
-            },
+            where: filter,
         });
         return res.status(200).json({
             code: 200,
             success: true,
             projects,
-            message: 'Get all projects by employee success',
+            message: 'Get all projects success',
         });
     })),
     //Get employee not in the projet
@@ -575,7 +583,7 @@ const projectController = {
     })),
     //member huy
     checkAssigned: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a;
+        var _b;
         const { projectId } = req.params;
         //Check exist project
         const existingProject = yield Project_1.Project.findOne({
@@ -593,7 +601,7 @@ const projectController = {
                 message: 'Project does not exist in the system',
             });
         //check exist current user
-        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
         if (!token)
             return res.status(401).json({
                 code: 400,
@@ -787,7 +795,7 @@ const projectController = {
         });
     })),
     projectEarnings: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        var _b;
+        var _c;
         const { projectId } = req.params;
         //Check exist project
         const existingProject = yield Project_1.Project.findOne({
@@ -807,12 +815,12 @@ const projectController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            projectEarnings: ((_b = projectEarnings[0]) === null || _b === void 0 ? void 0 : _b.sum) ? Number(projectEarnings[0].sum) : 0,
+            projectEarnings: ((_c = projectEarnings[0]) === null || _c === void 0 ? void 0 : _c.sum) ? Number(projectEarnings[0].sum) : 0,
             message: 'Get project earnings successfully',
         });
     })),
     projectHoursLogged: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        var _c;
+        var _d;
         const { projectId } = req.params;
         //Check exist project
         const existingProject = yield Project_1.Project.findOne({
@@ -832,7 +840,7 @@ const projectController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            projectHoursLogged: ((_c = projectHoursLogged[0]) === null || _c === void 0 ? void 0 : _c.sum) ? Number(projectHoursLogged[0].sum) : 0,
+            projectHoursLogged: ((_d = projectHoursLogged[0]) === null || _d === void 0 ? void 0 : _d.sum) ? Number(projectHoursLogged[0].sum) : 0,
             message: 'Get project hours logged successfully',
         });
     })),

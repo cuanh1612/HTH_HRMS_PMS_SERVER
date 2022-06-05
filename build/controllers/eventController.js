@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = require("jsonwebtoken");
 const typeorm_1 = require("typeorm");
 const Client_1 = require("../entities/Client");
 const Employee_1 = require("../entities/Employee");
@@ -65,11 +66,11 @@ const eventController = {
                 });
             eventEmployees.push(existEmployee);
         }
+        //Get time start and end event
+        const startEventTime = new Date(starts_on_date);
+        const endEventTime = new Date(ends_on_date);
         //Repeat event
         if (isRepeat) {
-            //Get time start and end event
-            const startEventTime = new Date(starts_on_date);
-            const endEventTime = new Date(ends_on_date);
             //Create event
             for (let index = 0; index < cycles; index++) {
                 if (index != 0) {
@@ -95,12 +96,12 @@ const eventController = {
                     }
                 }
                 //Create new event
-                yield Event_1.Event.create(Object.assign(Object.assign({}, dataNewEvent), { clients: [...eventClients], employees: [...eventEmployees], starts_on_date: startEventTime, ends_on_date: endEventTime })).save();
+                yield Event_1.Event.create(Object.assign(Object.assign({}, dataNewEvent), { clients: [...eventClients], employees: [...eventEmployees], starts_on_date: new Date(startEventTime.toLocaleDateString()), ends_on_date: new Date(endEventTime.toLocaleDateString()) })).save();
             }
         }
         else {
             //Create new event
-            yield Event_1.Event.create(Object.assign(Object.assign({}, dataNewEvent), { clients: [...eventClients], employees: [...eventEmployees] })).save();
+            yield Event_1.Event.create(Object.assign(Object.assign({}, dataNewEvent), { clients: [...eventClients], employees: [...eventEmployees], starts_on_date: new Date(startEventTime.toLocaleDateString()), ends_on_date: new Date(endEventTime.toLocaleDateString()) })).save();
         }
         return res.status(200).json({
             code: 200,
@@ -109,6 +110,22 @@ const eventController = {
         });
     })),
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        //check exist current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        if (!decode)
+            return res.status(400).json({
+                code: 401,
+                success: false,
+                message: 'Please login first',
+            });
         const { employee, client, name } = req.query;
         var filter = {};
         if (name)
@@ -117,9 +134,17 @@ const eventController = {
             filter.employees = {
                 id: Number(employee),
             };
+        if (decode.role === 'Employee')
+            filter.employees = {
+                id: Number(decode.userId),
+            };
         if (client)
             filter.clients = {
                 id: Number(client),
+            };
+        if (decode.role === 'Client')
+            filter.clients = {
+                id: Number(decode.userId),
             };
         const allEvent = yield Event_1.Event.find({
             where: filter,
@@ -240,9 +265,9 @@ const eventController = {
             (existingEvent.where = dataUpdateEvent.where),
             (existingEvent.color = dataUpdateEvent.color),
             (existingEvent.description = dataUpdateEvent.description),
-            (existingEvent.starts_on_date = dataUpdateEvent.starts_on_date),
+            (existingEvent.starts_on_date = new Date(new Date(dataUpdateEvent.starts_on_date).toLocaleDateString())),
             (existingEvent.starts_on_time = dataUpdateEvent.starts_on_time),
-            (existingEvent.ends_on_date = dataUpdateEvent.ends_on_date),
+            (existingEvent.ends_on_date = new Date(new Date(dataUpdateEvent.ends_on_date).toLocaleDateString())),
             (existingEvent.ends_on_time = dataUpdateEvent.ends_on_time),
             (existingEvent.employees = eventEmployees),
             (existingEvent.clients = eventClients),

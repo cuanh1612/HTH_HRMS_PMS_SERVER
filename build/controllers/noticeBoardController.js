@@ -177,5 +177,20 @@ const noticeBoardController = {
             message: 'Get detail notice board successfully',
         });
     })),
+    getAllByNoticeTo: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { noticeTo } = req.params;
+        //get all notice
+        const noticeBoards = yield Notice_Board_1.Notice_board.find({
+            where: {
+                notice_to: noticeTo
+            },
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            noticeBoards: noticeBoards,
+            message: 'Get notice boards by notice to successfully',
+        });
+    })),
 };
 exports.default = noticeBoardController;
