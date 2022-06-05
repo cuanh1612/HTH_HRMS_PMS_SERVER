@@ -28,7 +28,7 @@ import { Project_Discussion_Room } from './Project_Discussion_Room'
 import { Project_file } from './Project_File'
 import { Project_note } from './Project_Note'
 import { Salary } from './Salary'
-import { StickyNote } from './StickyNote'
+import { Sticky_note } from './StickyNote'
 
 import { Task } from './Task'
 import { Time_log } from './Time_Log'
@@ -117,8 +117,8 @@ export class Employee extends BaseEntity {
 	@OneToMany(()=> Project_file, (project)=> project.assignBy)
 	project_file: Project_file[]
 
-	@OneToMany(()=> StickyNote, (stickyNote)=> stickyNote.employee)
-	stickyNotes: StickyNote[]
+	@OneToMany(()=> Sticky_note, (Sticky_note)=> Sticky_note.employee)
+	stickyNotes: Sticky_note[]
 
 	// @OneToMany(()=> TimeLog, (timelog)=> timelog.employee)
 	// timelogs: TimeLog[]

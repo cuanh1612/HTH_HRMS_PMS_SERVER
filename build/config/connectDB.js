@@ -87,7 +87,7 @@ const connectDB = () => {
             Milestone_1.Milestone,
             Task_Comment_1.Task_comment,
             Time_Log_1.Time_log,
-            StickyNote_1.StickyNote
+            StickyNote_1.Sticky_note
         ],
     })
         .then(() => {
