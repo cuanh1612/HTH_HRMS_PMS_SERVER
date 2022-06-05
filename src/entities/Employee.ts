@@ -192,6 +192,9 @@ export class Employee extends BaseEntity {
 	})
 	time_logs: Time_log[]
 
+	@ManyToMany(() => Room)
+	@JoinTable({ name: 'room_employee' })
+	meeting_rooms: Room[];
 
 	@Column({ default: 0 })
 	token_version: number

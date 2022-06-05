@@ -51,6 +51,7 @@ const employeeController = {
             select: {
                 id: true,
                 name: true,
+                email: true,
                 avatar: {
                     url: true
                 }

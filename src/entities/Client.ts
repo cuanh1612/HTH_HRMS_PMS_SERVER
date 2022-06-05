@@ -10,15 +10,16 @@ import {
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn,
+	UpdateDateColumn
 } from 'typeorm'
 import { Avatar } from './Avatar'
 import { Client_Category } from './Client_Category'
 import { Client_Sub_Category } from './Client_Sub_Category'
 import { Contract } from './Contract'
-import { Project } from './Project'
 import { Discussion } from './Discussion'
 import { Event } from './Event'
+import { Project } from './Project'
+import { Room } from './Room'
 
 export enum enumSalutation {
 	MR = 'Mr',
@@ -143,6 +144,10 @@ export class Client extends BaseEntity {
 
 	@OneToMany(() => Discussion, (discussion) => discussion.client)
 	discussions: Discussion[]
+
+	@ManyToMany(() => Room)
+	@JoinTable({ name: 'room_client' })
+	rooms: Room[]
 
 	@CreateDateColumn({
 		name: 'created_at',

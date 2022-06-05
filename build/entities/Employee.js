@@ -225,6 +225,11 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "time_logs", void 0);
 __decorate([
+    (0, typeorm_1.ManyToMany)(() => Room_1.Room),
+    (0, typeorm_1.JoinTable)({ name: 'room_employee' }),
+    __metadata("design:type", Array)
+], Employee.prototype, "meeting_rooms", void 0);
+__decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)
 ], Employee.prototype, "token_version", void 0);

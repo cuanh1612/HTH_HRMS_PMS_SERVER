@@ -95,7 +95,7 @@ const roomControler = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			your_room: existRoom,
+			room: existRoom,
 			message: 'Create new Project files successfully',
 		})
 
@@ -186,7 +186,7 @@ const roomControler = {
 				})
 			})
 		)
-
+		
 		await Room.create({
 			title,
 			date: new Date(new Date(date).toLocaleDateString()),
