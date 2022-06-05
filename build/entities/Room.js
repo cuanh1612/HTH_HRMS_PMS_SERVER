@@ -20,13 +20,19 @@ __decorate([
     __metadata("design:type", Number)
 ], Room.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({
+        unique: true
+    }),
     __metadata("design:type", String)
 ], Room.prototype, "title", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Room.prototype, "description", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Room.prototype, "link", void 0);
 __decorate([
     (0, typeorm_1.Column)('time'),
     __metadata("design:type", String)

@@ -18,11 +18,16 @@ export class Room extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id!: number
 
-	@Column()
+	@Column({
+		unique: true
+	})
 	title!: string
 
     @Column()
 	description: string
+
+	@Column()
+	link: string
 
 	@Column('time')
 	start_time!: string
