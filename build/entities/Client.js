@@ -18,6 +18,7 @@ const Contract_1 = require("./Contract");
 const Project_1 = require("./Project");
 const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
+const StickyNote_1 = require("./StickyNote");
 var enumSalutation;
 (function (enumSalutation) {
     enumSalutation["MR"] = "Mr";
@@ -158,6 +159,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)
 ], Client.prototype, "projects", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => StickyNote_1.StickyNote, (stickyNote) => stickyNote.client),
+    __metadata("design:type", Array)
+], Client.prototype, "sticky_notes", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Contract_1.Contract, (contract) => contract.client),
     __metadata("design:type", Array)

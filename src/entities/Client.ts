@@ -19,6 +19,7 @@ import { Contract } from './Contract'
 import { Project } from './Project'
 import { Discussion } from './Discussion'
 import { Event } from './Event'
+import { StickyNote } from './StickyNote'
 
 export enum enumSalutation {
 	MR = 'Mr',
@@ -133,6 +134,10 @@ export class Client extends BaseEntity {
 	@OneToMany(() => Project, (project) => project.client)
 	@JoinColumn()
 	projects: Project[]
+
+	@OneToMany(() => StickyNote, (stickyNote) => stickyNote.client)
+	sticky_notes: StickyNote[]
+
 
 	@OneToMany(() => Contract, (contract) => contract.client)
 	contracts: Contract[]
