@@ -26,6 +26,7 @@ const Project_Discussion_Reply_1 = require("./Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
 const Project_File_1 = require("./Project_File");
 const Project_Note_1 = require("./Project_Note");
+const Room_1 = require("./Room");
 const Salary_1 = require("./Salary");
 const StickyNote_1 = require("./StickyNote");
 const Task_1 = require("./Task");
@@ -126,6 +127,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Designation_1.Designation)
 ], Employee.prototype, "designation", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Room_1.Room, (room) => room.empl_create),
+    __metadata("design:type", Array)
+], Employee.prototype, "rooms", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Project_1.Project, (project) => project.project_Admin),
     __metadata("design:type", Array)

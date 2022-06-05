@@ -37,6 +37,7 @@ import taskCommentRouter from './taskCommentRouter'
 import taskFileRouter from './taskFileRouter'
 import taskRouter from './taskRouter'
 import TimeLogRouter from './timeLogRouter'
+import roomRouter from './roomRouter'
 
 function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
@@ -114,6 +115,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/time-logs', TimeLogRouter)
 
 	app.use('/api/sticky-notes', stickyNoteRouter)
+
+	app.use('/api/rooms', roomRouter)
 }
 
 export default mainRouter
