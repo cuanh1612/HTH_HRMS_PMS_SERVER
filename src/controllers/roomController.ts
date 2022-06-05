@@ -153,7 +153,7 @@ const roomControler = {
 				message: 'Employee does not exist in system',
 			})
 
-		const clientsInfo: Client[] = []
+		const clientsInfo: Client[] = [] 
 		await Promise.all(
 			clients.map(async (id: number) => {
 				return new Promise(async (resolve) => {
