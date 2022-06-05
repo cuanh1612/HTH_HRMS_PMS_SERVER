@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StickyNote = exports.enumColor = void 0;
+exports.Sticky_note = exports.enumColor = void 0;
 const typeorm_1 = require("typeorm");
 const Employee_1 = require("./Employee");
 var enumColor;
@@ -20,38 +20,38 @@ var enumColor;
     enumColor["GREEN"] = "#008000";
     enumColor["PURPLE"] = "#800080";
 })(enumColor = exports.enumColor || (exports.enumColor = {}));
-let StickyNote = class StickyNote extends typeorm_1.BaseEntity {
+let Sticky_note = class Sticky_note extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], StickyNote.prototype, "id", void 0);
+], Sticky_note.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: enumColor, default: enumColor.BLUE }),
     __metadata("design:type", String)
-], StickyNote.prototype, "color", void 0);
+], Sticky_note.prototype, "color", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
-], StickyNote.prototype, "note", void 0);
+], Sticky_note.prototype, "note", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, { onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinTable)({ name: 'employee' }),
     __metadata("design:type", Employee_1.Employee)
-], StickyNote.prototype, "employee", void 0);
+], Sticky_note.prototype, "employee", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], StickyNote.prototype, "createdAt", void 0);
+], Sticky_note.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], StickyNote.prototype, "updatedAt", void 0);
-StickyNote = __decorate([
+], Sticky_note.prototype, "updatedAt", void 0);
+Sticky_note = __decorate([
     (0, typeorm_1.Entity)()
-], StickyNote);
-exports.StickyNote = StickyNote;
+], Sticky_note);
+exports.Sticky_note = Sticky_note;

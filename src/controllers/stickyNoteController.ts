@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Secret, verify } from "jsonwebtoken";
 import { Employee } from "../entities/Employee";
-import { StickyNote } from '../entities/StickyNote';
+import { Sticky_note } from '../entities/StickyNote';
 
 import { UserAuthPayload } from "../type/UserAuthPayload";
 import handleCatchError from "../utils/catchAsyncError";
@@ -11,7 +11,7 @@ import handleCatchError from "../utils/catchAsyncError";
 const stickyNoteController = {
     //create note:
     create: handleCatchError(async (req: Request, res: Response) =>{
-        const dataNote: StickyNote = req.body
+        const dataNote: Sticky_note = req.body
         const { note } = dataNote
 
         
@@ -48,7 +48,7 @@ const stickyNoteController = {
                 message: 'User does not exist in the system'
             })
         
-        const createNote = await StickyNote.create({
+        const createNote = await Sticky_note.create({
             ...dataNote,
             employee: existingUser,
         }).save()       
@@ -64,12 +64,15 @@ const stickyNoteController = {
     //update note
     update: handleCatchError(async (req: Request, res: Response) => {
         const { id } = req.params
-        const dataUpdate :StickyNote = req.body
+        const dataUpdate :Sticky_note = req.body
         const {note} = dataUpdate
 
-        const existingNote = await StickyNote.findOne({
+        const existingNote = await Sticky_note.findOne({
             where:{
                 id: Number(id)
+            },
+            relations: {
+                employee: true
             }
         })
 
@@ -128,9 +131,12 @@ const stickyNoteController = {
     delete: handleCatchError(async (req: Request, res: Response) =>{
         const {id} = req.params
 
-        const existingNote = await StickyNote.findOne({
+        const existingNote = await Sticky_note.findOne({
             where:{
                 id: Number(id)
+            },
+            relations: {
+                employee: true
             }
         })
 
@@ -179,9 +185,12 @@ const stickyNoteController = {
     getDetail: handleCatchError( async (req: Request , res: Response) => {
         const {id} = req.params
 
-        const existingNote = await StickyNote.findOne({
+        const existingNote = await Sticky_note.findOne({
             where:{
                 id: Number(id)
+            },
+            relations: {
+                employee: true
             }
         })
 
@@ -211,7 +220,7 @@ const stickyNoteController = {
             },
         })
  
-        if (!existingUser || existingUser.id != existingNote.employee.id)
+        if (!existingUser || existingUser.id !== existingNote.employee.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -221,7 +230,7 @@ const stickyNoteController = {
          return res.status(200).json({
                 code: 200,
                 success: true,
-                stickynote: existingNote,
+                stickyNote: existingNote,
                 Message: 'Get detail sticky note success'
             })
     }),
@@ -247,7 +256,7 @@ const stickyNoteController = {
             },
         })
 
-        const stickyNotes = await StickyNote.find({
+        const stickyNotes = await Sticky_note.find({
             where:{
                 employee: {
                     id: existingUser?.id

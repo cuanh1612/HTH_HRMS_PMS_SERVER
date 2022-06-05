@@ -49,7 +49,7 @@ const stickyNoteController = {
                 success: false,
                 message: 'User does not exist in the system'
             });
-        const createNote = yield StickyNote_1.StickyNote.create(Object.assign(Object.assign({}, dataNote), { employee: existingUser })).save();
+        const createNote = yield StickyNote_1.Sticky_note.create(Object.assign(Object.assign({}, dataNote), { employee: existingUser })).save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -63,9 +63,12 @@ const stickyNoteController = {
         const { id } = req.params;
         const dataUpdate = req.body;
         const { note } = dataUpdate;
-        const existingNote = yield StickyNote_1.StickyNote.findOne({
+        const existingNote = yield StickyNote_1.Sticky_note.findOne({
             where: {
                 id: Number(id)
+            },
+            relations: {
+                employee: true
             }
         });
         if (!existingNote)
@@ -113,9 +116,12 @@ const stickyNoteController = {
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         var _c;
         const { id } = req.params;
-        const existingNote = yield StickyNote_1.StickyNote.findOne({
+        const existingNote = yield StickyNote_1.Sticky_note.findOne({
             where: {
                 id: Number(id)
+            },
+            relations: {
+                employee: true
             }
         });
         if (!existingNote)
@@ -155,9 +161,12 @@ const stickyNoteController = {
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         var _d;
         const { id } = req.params;
-        const existingNote = yield StickyNote_1.StickyNote.findOne({
+        const existingNote = yield StickyNote_1.Sticky_note.findOne({
             where: {
                 id: Number(id)
+            },
+            relations: {
+                employee: true
             }
         });
         if (!existingNote)
@@ -181,7 +190,7 @@ const stickyNoteController = {
                 id: decode.userId,
             },
         });
-        if (!existingUser || existingUser.id != existingNote.employee.id)
+        if (!existingUser || existingUser.id !== existingNote.employee.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -190,7 +199,7 @@ const stickyNoteController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            stickynote: existingNote,
+            stickyNote: existingNote,
             Message: 'Get detail sticky note success'
         });
     })),
@@ -211,7 +220,7 @@ const stickyNoteController = {
                 id: decode.userId,
             },
         });
-        const stickyNotes = yield StickyNote_1.StickyNote.find({
+        const stickyNotes = yield StickyNote_1.Sticky_note.find({
             where: {
                 employee: {
                     id: existingUser === null || existingUser === void 0 ? void 0 : existingUser.id

@@ -140,7 +140,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "project_file", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => StickyNote_1.StickyNote, (stickyNote) => stickyNote.employee),
+    (0, typeorm_1.OneToMany)(() => StickyNote_1.Sticky_note, (Sticky_note) => Sticky_note.employee),
     __metadata("design:type", Array)
 ], Employee.prototype, "stickyNotes", void 0);
 __decorate([
