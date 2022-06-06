@@ -38,6 +38,7 @@ import taskFileRouter from './taskFileRouter'
 import taskRouter from './taskRouter'
 import TimeLogRouter from './timeLogRouter'
 import roomRouter from './roomRouter'
+import NotificationRouter from './notificationRouter'
 
 function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
@@ -117,6 +118,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/sticky-notes', stickyNoteRouter)
 
 	app.use('/api/rooms', roomRouter)
+
+	app.use('/api/notifications', NotificationRouter)
 }
 
 export default mainRouter

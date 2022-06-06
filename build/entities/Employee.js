@@ -21,6 +21,7 @@ const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
 const Hourly_rate_project_1 = require("./Hourly_rate_project");
 const Leave_1 = require("./Leave");
+const Notification_1 = require("./Notification");
 const Project_1 = require("./Project");
 const Project_Discussion_Reply_1 = require("./Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
@@ -229,6 +230,10 @@ __decorate([
     (0, typeorm_1.JoinTable)({ name: 'room_employee' }),
     __metadata("design:type", Array)
 ], Employee.prototype, "meeting_rooms", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Notification_1.Notification, (Notification) => Notification.employee),
+    __metadata("design:type", Array)
+], Employee.prototype, "notifications", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)

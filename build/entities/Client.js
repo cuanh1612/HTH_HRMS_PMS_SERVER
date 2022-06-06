@@ -17,7 +17,17 @@ const Client_Sub_Category_1 = require("./Client_Sub_Category");
 const Contract_1 = require("./Contract");
 const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
+<<<<<<< HEAD
 const StickyNote_1 = require("./StickyNote");
+=======
+<<<<<<< HEAD
+const Notification_1 = require("./Notification");
+=======
+<<<<<<< HEAD
+const StickyNote_1 = require("./StickyNote");
+=======
+>>>>>>> f18329177005013d7fddaae6c0adb5542bb75cac
+>>>>>>> 4ccfadb082fe497695391570897e8bbbd5e5feea
 const Project_1 = require("./Project");
 const Room_1 = require("./Room");
 var enumSalutation;
@@ -182,6 +192,10 @@ __decorate([
     (0, typeorm_1.JoinTable)({ name: 'room_client' }),
     __metadata("design:type", Array)
 ], Client.prototype, "rooms", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Notification_1.Notification, (Notification) => Notification.client),
+    __metadata("design:type", Array)
+], Client.prototype, "notifications", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

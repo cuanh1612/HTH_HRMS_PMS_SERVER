@@ -42,6 +42,7 @@ const taskFileRouter_1 = __importDefault(require("./taskFileRouter"));
 const taskRouter_1 = __importDefault(require("./taskRouter"));
 const timeLogRouter_1 = __importDefault(require("./timeLogRouter"));
 const roomRouter_1 = __importDefault(require("./roomRouter"));
+const notificationRouter_1 = __importDefault(require("./notificationRouter"));
 function mainRouter(app) {
     app.use('/api/auth', authRouter_1.default);
     app.use('/api/employees', employeeRouter_1.default);
@@ -82,5 +83,13 @@ function mainRouter(app) {
     app.use('/api/time-logs', timeLogRouter_1.default);
     app.use('/api/sticky-notes', stickyNoteRouter_1.default);
     app.use('/api/rooms', roomRouter_1.default);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    app.use('/api/notifications', notificationRouter_1.default);
+=======
+>>>>>>> 90d4c00e7f45b3d8435ed972de31b5d43d918012
+>>>>>>> f18329177005013d7fddaae6c0adb5542bb75cac
+>>>>>>> 4ccfadb082fe497695391570897e8bbbd5e5feea
 }
 exports.default = mainRouter;
