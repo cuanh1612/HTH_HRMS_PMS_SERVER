@@ -44,7 +44,7 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Client_1.Client, { onDelete: "CASCADE", nullable: true }),
     (0, typeorm_1.JoinTable)({ name: 'client' }),
     __metadata("design:type", Client_1.Client)
-], StickyNote.prototype, "client", void 0);
+], Sticky_note.prototype, "client", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

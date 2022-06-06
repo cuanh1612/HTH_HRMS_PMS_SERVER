@@ -54,11 +54,7 @@ const stickyNoteController = {
                 success: false,
                 message: 'User does not exist in the system'
             });
-<<<<<<< HEAD
-        const createNote = yield StickyNote_1.StickyNote.create(Object.assign(Object.assign({}, dataNote), (existingUser.role === "Client" ? { client: existingUser } : { employee: existingUser }))).save();
-=======
-        const createNote = yield StickyNote_1.Sticky_note.create(Object.assign(Object.assign({}, dataNote), { employee: existingUser })).save();
->>>>>>> 90d4c00e7f45b3d8435ed972de31b5d43d918012
+        const createNote = yield StickyNote_1.Sticky_note.create(Object.assign(Object.assign({}, dataNote), (existingUser.role === "Client" ? { client: existingUser } : { employee: existingUser }))).save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -102,12 +98,16 @@ const stickyNoteController = {
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        const existingUser = decode.role === "Client" ? yield Client_1.Client.findOne({
+            where: {
+                id: decode.userId
+            }
+        }) : yield Employee_1.Employee.findOne({
             where: {
                 id: decode.userId,
             },
         });
-        if (!existingUser || existingUser.id != existingNote.employee.id)
+        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -125,18 +125,12 @@ const stickyNoteController = {
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         var _c;
         const { id } = req.params;
-<<<<<<< HEAD
-        const existingNote = yield StickyNote_1.StickyNote.findOne({
-            where: {
-                id: Number(id)
-=======
         const existingNote = yield StickyNote_1.Sticky_note.findOne({
             where: {
                 id: Number(id)
             },
             relations: {
                 employee: true
->>>>>>> 90d4c00e7f45b3d8435ed972de31b5d43d918012
             }
         });
         if (!existingNote)
@@ -155,12 +149,16 @@ const stickyNoteController = {
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        const existingUser = decode.role === "Client" ? yield Client_1.Client.findOne({
+            where: {
+                id: decode.userId
+            }
+        }) : yield Employee_1.Employee.findOne({
             where: {
                 id: decode.userId,
             },
         });
-        if (!existingUser || existingUser.id != existingNote.employee.id)
+        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -176,18 +174,12 @@ const stickyNoteController = {
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         var _d;
         const { id } = req.params;
-<<<<<<< HEAD
-        const existingNote = yield StickyNote_1.StickyNote.findOne({
-            where: {
-                id: Number(id)
-=======
         const existingNote = yield StickyNote_1.Sticky_note.findOne({
             where: {
                 id: Number(id)
             },
             relations: {
                 employee: true
->>>>>>> 90d4c00e7f45b3d8435ed972de31b5d43d918012
             }
         });
         if (!existingNote)
@@ -205,17 +197,17 @@ const stickyNoteController = {
                 message: 'Please login first',
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
-        //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        ///Get data user
+        const existingUser = decode.role === "Client" ? yield Client_1.Client.findOne({
+            where: {
+                id: decode.userId
+            }
+        }) : yield Employee_1.Employee.findOne({
             where: {
                 id: decode.userId,
             },
         });
-<<<<<<< HEAD
-        if (!existingUser || existingUser.id != existingNote.employee.id)
-=======
-        if (!existingUser || existingUser.id !== existingNote.employee.id)
->>>>>>> 90d4c00e7f45b3d8435ed972de31b5d43d918012
+        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -224,11 +216,7 @@ const stickyNoteController = {
         return res.status(200).json({
             code: 200,
             success: true,
-<<<<<<< HEAD
             stickynote: existingNote,
-=======
-            stickyNote: existingNote,
->>>>>>> 90d4c00e7f45b3d8435ed972de31b5d43d918012
             Message: 'Get detail sticky note success'
         });
     })),
@@ -244,16 +232,26 @@ const stickyNoteController = {
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        //Get data user
+        const existingUser = decode.role === "Client" ? yield Client_1.Client.findOne({
+            where: {
+                id: decode.userId
+            }
+        }) : yield Employee_1.Employee.findOne({
             where: {
                 id: decode.userId,
             },
         });
-<<<<<<< HEAD
-        const stickyNotes = yield StickyNote_1.StickyNote.find({
-=======
-        const stickyNotes = yield StickyNote_1.Sticky_note.find({
->>>>>>> 90d4c00e7f45b3d8435ed972de31b5d43d918012
+        const stickyNotes = decode.role === "Client" ? yield StickyNote_1.Sticky_note.find({
+            where: {
+                client: {
+                    id: existingUser === null || existingUser === void 0 ? void 0 : existingUser.id
+                }
+            },
+            order: {
+                createdAt: "DESC"
+            }
+        }) : yield StickyNote_1.Sticky_note.find({
             where: {
                 employee: {
                     id: existingUser === null || existingUser === void 0 ? void 0 : existingUser.id

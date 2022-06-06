@@ -105,23 +105,24 @@ const taskController = {
 			})
 		}
 
-		for (let index = 0; index < employees.length; index++) {
-			const employee_id = employees[index]
-			const existingEmployee = await Employee.findOne({
-				where: {
-					id: employee_id,
-				},
-			})
-			if (!existingEmployee)
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Employees does not exist in the system',
-				})
+		await Promise.all(
+			employees.map(async (employee_id: number) => {
+				return new Promise(async (resolve) => {
+					const existingEmployee = await Employee.findOne({
+						where: {
+							id: employee_id,
+						},
+					})
 
-			//check role employee
-			taskEmployees.push(existingEmployee)
-		}
+					if (existingEmployee)
+						//check role employee
+						taskEmployees.push(existingEmployee)
+					resolve(true)
+				})
+			})
+		)
+		
+
 
 		const lasttask = await Task.findOne({
 			where: {
@@ -147,6 +148,7 @@ const taskController = {
 
 		if (Array.isArray(task_files)) {
 			//create task files
+			
 			for (let index = 0; index < task_files.length; index++) {
 				const task_file = task_files[index]
 				await Task_file.create({
@@ -233,23 +235,23 @@ const taskController = {
 				message: messageValid,
 			})
 
-		for (let index = 0; index < employees.length; index++) {
-			const employee_id = employees[index]
-			const existingEmployee = await Employee.findOne({
-				where: {
-					id: employee_id,
-				},
-			})
-			if (!existingEmployee)
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Employees does not exist in the system',
+			await Promise.all(
+				employees.map(async (employee_id: number) => {
+					return new Promise(async (resolve) => {
+						const existingEmployee = await Employee.findOne({
+							where: {
+								id: employee_id,
+							},
+						})
+	
+						if (existingEmployee)
+							//check role employee
+							taskEmployees.push(existingEmployee)
+						resolve(true)
+					})
 				})
-
-			taskEmployees.push(existingEmployee)
-		}
-
+			)
+			
 		//Check exist milestone
 		if (milestone) {
 			const existingMilestone = await Milestone.findOne({
@@ -512,17 +514,23 @@ const taskController = {
 				success: false,
 				message: 'Project does not exist in the system',
 			})
-		for (let index = 0; index < tasks.length; index++) {
-			const itemtask = tasks[index]
-			const existingtask = await Task.findOne({
-				where: {
-					id: itemtask.id,
-				},
-			})
-			if (existingtask) {
-				await existingtask.remove()
-			}
-		}
+			await Promise.all(
+				tasks.map(async (id: number) => {
+					return new Promise(async (resolve) => {
+						const existingtask = await Task.findOne({
+							where: {
+								id: id,
+							},
+						})
+	
+						if (existingtask)
+							await Task.remove(existingtask)
+						resolve(true)
+					})
+				})
+			)
+
+		
 		return res.status(200).json({
 			code: 200,
 			success: true,
