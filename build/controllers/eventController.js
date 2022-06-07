@@ -17,6 +17,7 @@ const typeorm_1 = require("typeorm");
 const Client_1 = require("../entities/Client");
 const Employee_1 = require("../entities/Employee");
 const Event_1 = require("../entities/Event");
+const Notification_1 = require("../entities/Notification");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const eventValid_1 = require("../utils/valid/eventValid");
 const eventController = {
@@ -35,37 +36,31 @@ const eventController = {
                 message: messageValid,
             });
         //Check exist clients
-        for (let index = 0; index < clientEmails.length; index++) {
-            const clientEmail = clientEmails[index];
-            const existingClient = yield Client_1.Client.findOne({
-                where: {
-                    email: clientEmail,
-                },
-            });
-            if (!existingClient)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Client doest not exist in the system',
+        yield Promise.all(clientEmails.map((clientEmail) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const existingClient = yield Client_1.Client.findOne({
+                    where: {
+                        email: clientEmail,
+                    },
                 });
-            eventClients.push(existingClient);
-        }
+                if (existingClient)
+                    eventClients.push(existingClient);
+                resolve(true);
+            }));
+        })));
         //Check exist employee
-        for (let index = 0; index < employeeEmails.length; index++) {
-            const employeeEmail = employeeEmails[index];
-            const existEmployee = yield Employee_1.Employee.findOne({
-                where: {
-                    email: employeeEmail,
-                },
-            });
-            if (!existEmployee)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Employee doest not exist in the system',
+        yield Promise.all(employeeEmails.map((employeeEmail) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const existingEmployee = yield Employee_1.Employee.findOne({
+                    where: {
+                        email: employeeEmail,
+                    },
                 });
-            eventEmployees.push(existEmployee);
-        }
+                if (existingEmployee)
+                    eventEmployees.push(existingEmployee);
+                resolve(true);
+            }));
+        })));
         //Get time start and end event
         const startEventTime = new Date(starts_on_date);
         const endEventTime = new Date(ends_on_date);
@@ -103,6 +98,31 @@ const eventController = {
             //Create new event
             yield Event_1.Event.create(Object.assign(Object.assign({}, dataNewEvent), { clients: [...eventClients], employees: [...eventEmployees], starts_on_date: new Date(startEventTime.toLocaleDateString()), ends_on_date: new Date(endEventTime.toLocaleDateString()) })).save();
         }
+        //Create note for employees or clients
+        //Notification for employee
+        yield Promise.all(eventEmployees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //create new notification
+                yield Notification_1.Notification.create({
+                    employee,
+                    url: '/events',
+                    content: 'You have been assigned to a new event',
+                }).save();
+                resolve(true);
+            }));
+        })));
+        //Notification for client
+        yield Promise.all(eventClients.map((client) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //create new notification
+                yield Notification_1.Notification.create({
+                    client,
+                    url: '/events',
+                    content: 'You have been assigned to a new event',
+                }).save();
+                resolve(true);
+            }));
+        })));
         return res.status(200).json({
             code: 200,
             success: true,

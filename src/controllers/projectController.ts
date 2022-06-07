@@ -5,6 +5,7 @@ import { Client } from '../entities/Client'
 import { Department } from '../entities/Department'
 import { Employee, enumRole } from '../entities/Employee'
 import { Hourly_rate_project } from '../entities/Hourly_rate_project'
+import { Notification } from '../entities/Notification'
 import { enumProjectStatus, Project } from '../entities/Project'
 import { Project_Category } from '../entities/Project_Category'
 import { Project_file } from '../entities/Project_File'
@@ -88,24 +89,22 @@ const projectController = {
 				message: 'Category does not exist in the system',
 			})
 
-		for (let index = 0; index < employees.length; index++) {
-			const employee_id = employees[index]
-			const existingEmployee = await Employee.findOne({
-				where: {
-					id: employee_id,
-				},
-			})
+		await Promise.all(
+			employees.map(async (employee_id: number) => {
+				return new Promise(async (resolve) => {
+					const existingEmployee = await Employee.findOne({
+						where: {
+							id: employee_id,
+						},
+					})
 
-			if (!existingEmployee)
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Employees does not exist in the system',
+					if (existingEmployee)
+						//check role employee
+						projectEmployees.push(existingEmployee)
+					resolve(true)
 				})
-
-			//check role employee
-			projectEmployees.push(existingEmployee)
-		}
+			})
+		)
 
 		//create project file
 		const createdProject = await Project.create({
@@ -169,6 +168,30 @@ const projectController = {
 			project: createdProject,
 			index: 1,
 			color: '#00ff14',
+		}).save()
+
+		//Huy lam
+		await Promise.all(
+			projectEmployees.map(async (employee) => {
+				return new Promise(async (resolve) => {
+					//create notification
+					await Notification.create({
+						employee,
+						url: '/projects',
+						content: 'You have just been assigned to a new project',
+					}).save()
+
+					resolve(true)
+				})
+			})
+		)
+
+		//huy lam
+		//create note for client
+		await Notification.create({
+			client: existingClient,
+			url: '/projects',
+			content: 'You have just been assigned to a new project',
 		}).save()
 
 		return res.status(200).json({

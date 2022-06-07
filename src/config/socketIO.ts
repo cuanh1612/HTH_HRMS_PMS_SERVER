@@ -1,5 +1,7 @@
 import { Server } from 'http'
 import { Server as ServerSocket } from 'socket.io'
+import { Client } from '../entities/Client'
+import { Employee } from '../entities/Employee'
 import { userSocket } from '../type/SocketPayload'
 
 const createSocketServer = (httpServer: Server) => {
@@ -165,6 +167,152 @@ const createSocketServer = (httpServer: Server) => {
 		//emit user join room task comment when have new change task comment
 		socket.on('newTaskComment', (taskId: string) => {
 			socket.in('roomTaskComment' + taskId).emit('getNewTaskComment')
+		})
+
+		//join room project task
+		socket.on('joinRoomProjectTask', (projectId: string | number) => {
+			socket.join('roomProjectTask' + projectId)
+		})
+
+		//leave room project task
+		socket.on('leaveRoomProjectTask', (projectId: string | number) => {
+			socket.leave('roomProjectTask' + projectId)
+		})
+
+		//emit user join room project when have new task
+		socket.on('newProjectTask', (projectId: string | number) => {
+			socket.in('roomProjectTask' + projectId).emit('getNewProjectTask')
+		})
+
+		//join room project TimeLog
+		socket.on('joinRoomProjectTimeLog', (projectId: string | number) => {
+			socket.join('roomProjectTimeLog' + projectId)
+		})
+
+		//leave room project TimeLog
+		socket.on('leaveRoomProjectTimeLog', (projectId: string | number) => {
+			socket.leave('roomProjectTimeLog' + projectId)
+		})
+
+		//emit user join room project when have new TimeLog
+		socket.on('newProjectTimeLog', (projectId: string | number) => {
+			socket.in('roomProjectTimeLog' + projectId).emit('getNewProjectTimeLog')
+		})
+
+		//join room project TaskBoard
+		socket.on('joinRoomProjectTaskBoard', (projectId: string | number) => {
+			socket.join('roomProjectTaskBoard' + projectId)
+		})
+
+		//leave room project TaskBoard
+		socket.on('leaveRoomProjectTaskBoard', (projectId: string | number) => {
+			socket.leave('roomProjectTaskBoard' + projectId)
+		})
+
+		//emit user join room project when have new TaskBoard
+		socket.on('newProjectTaskBoard', (projectId: string | number) => {
+			socket.in('roomProjectTaskBoard' + projectId).emit('getNewProjectTaskBoard')
+		})
+
+		//emit user when admin created new noticeboard
+		socket.on('newNoticeBoard', () => {
+			io.emit('getNewNotifications')
+		})
+
+		//emit user when admin created new event
+		socket.on('newEvent', () => {
+			io.emit('getNewNotifications')
+		})
+
+		//emit user when assigned project
+		socket.on('newProjectNotification', async (clientId: number, employeeIds: number[]) => {
+			//get new notification for client
+			//Get email client
+			const existingClient = await Client.findOne({
+				where: {
+					id: clientId,
+				},
+			})
+
+			if (existingClient) {
+				const clientSocket = onlineUsers.find((user) => {
+					return user.email === existingClient.email
+				})
+
+				if (clientSocket?.socketId) {
+					socket.to(clientSocket.socketId).emit('getNewNotifications')
+				}
+			}
+
+			//get new notification for employee
+			await Promise.all(
+				employeeIds.map(async (employeeId) => {
+					//Get email employee
+					const existingEmployee = await Employee.findOne({
+						where: {
+							id: employeeId,
+						},
+					})
+
+					if (existingEmployee) {
+						const employeeSocket = onlineUsers.find((user) => {
+							return user.email === existingEmployee.email
+						})
+
+						if (employeeSocket?.socketId) {
+							socket.to(employeeSocket.socketId).emit('getNewNotifications')
+						}
+					}
+				})
+			)
+		})
+
+		//emit user when assigned task
+		socket.on('newTaskNotification', async (employeeIds: number[]) => {
+			//get new notification for client
+			//get new notification for employee
+			await Promise.all(
+				employeeIds.map(async (employeeId) => {
+					//Get email employee
+					const existingEmployee = await Employee.findOne({
+						where: {
+							id: employeeId,
+						},
+					})
+
+					if (existingEmployee) {
+						const employeeSocket = onlineUsers.find((user) => {
+							return user.email === existingEmployee.email
+						})
+
+						if (employeeSocket?.socketId) {
+							socket.to(employeeSocket.socketId).emit('getNewNotifications')
+						}
+					}
+				})
+			)
+		})
+
+		//emit user when assigned timelog
+		socket.on('newTimeLogNotification', async (employeeId: number) => {
+			//get new notification for employee
+
+			//Get email employee
+			const existingEmployee = await Employee.findOne({
+				where: {
+					id: employeeId,
+				},
+			})
+
+			if (existingEmployee) {
+				const employeeSocket = onlineUsers.find((user) => {
+					return user.email === existingEmployee.email
+				})
+
+				if (employeeSocket?.socketId) {
+					socket.to(employeeSocket.socketId).emit('getNewNotifications')
+				}
+			}
 		})
 	})
 }

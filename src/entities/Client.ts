@@ -18,11 +18,8 @@ import { Client_Sub_Category } from './Client_Sub_Category'
 import { Contract } from './Contract'
 import { Discussion } from './Discussion'
 import { Event } from './Event'
-<<<<<<< HEAD
 import { Notification } from './Notification'
-=======
 import { Sticky_note } from './StickyNote'
->>>>>>> f18329177005013d7fddaae6c0adb5542bb75cac
 import { Project } from './Project'
 import { Room } from './Room'
 

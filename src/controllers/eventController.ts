@@ -4,6 +4,7 @@ import { Like } from 'typeorm'
 import { Client } from '../entities/Client'
 import { Employee } from '../entities/Employee'
 import { Event } from '../entities/Event'
+import { Notification } from '../entities/Notification'
 import { createOrUpdateEventPayload } from '../type/EventPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
@@ -37,44 +38,36 @@ const eventController = {
 			})
 
 		//Check exist clients
-		for (let index = 0; index < clientEmails.length; index++) {
-			const clientEmail = clientEmails[index]
+		await Promise.all(
+			clientEmails.map(async (clientEmail) => {
+				return new Promise(async (resolve) => {
+					const existingClient = await Client.findOne({
+						where: {
+							email: clientEmail,
+						},
+					})
 
-			const existingClient = await Client.findOne({
-				where: {
-					email: clientEmail,
-				},
-			})
-
-			if (!existingClient)
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Client doest not exist in the system',
+					if (existingClient) eventClients.push(existingClient)
+					resolve(true)
 				})
-
-			eventClients.push(existingClient)
-		}
+			})
+		)
 
 		//Check exist employee
-		for (let index = 0; index < employeeEmails.length; index++) {
-			const employeeEmail = employeeEmails[index]
+		await Promise.all(
+			employeeEmails.map(async (employeeEmail) => {
+				return new Promise(async (resolve) => {
+					const existingEmployee = await Employee.findOne({
+						where: {
+							email: employeeEmail,
+						},
+					})
 
-			const existEmployee = await Employee.findOne({
-				where: {
-					email: employeeEmail,
-				},
-			})
-
-			if (!existEmployee)
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Employee doest not exist in the system',
+					if (existingEmployee) eventEmployees.push(existingEmployee)
+					resolve(true)
 				})
-
-			eventEmployees.push(existEmployee)
-		}
+			})
+		)
 
 		//Get time start and end event
 		const startEventTime = new Date(starts_on_date)
@@ -130,6 +123,39 @@ const eventController = {
 				ends_on_date: new Date(endEventTime.toLocaleDateString()),
 			}).save()
 		}
+
+		//Create note for employees or clients
+		//Notification for employee
+		await Promise.all(
+			eventEmployees.map(async (employee) => {
+				return new Promise(async (resolve) => {
+					//create new notification
+					await Notification.create({
+						employee,
+						url: '/events',
+						content: 'You have been assigned to a new event',
+					}).save()
+
+					resolve(true)
+				})
+			})
+		)
+
+		//Notification for client
+		await Promise.all(
+			eventClients.map(async (client) => {
+				return new Promise(async (resolve) => {
+					//create new notification
+					await Notification.create({
+						client,
+						url: '/events',
+						content: 'You have been assigned to a new event',
+					}).save()
+
+					resolve(true)
+				})
+			})
+		)
 
 		return res.status(200).json({
 			code: 200,

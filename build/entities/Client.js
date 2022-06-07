@@ -17,16 +17,10 @@ const Client_Sub_Category_1 = require("./Client_Sub_Category");
 const Contract_1 = require("./Contract");
 const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
-<<<<<<< HEAD
 const Notification_1 = require("./Notification");
-=======
-<<<<<<< HEAD
 const StickyNote_1 = require("./StickyNote");
-=======
->>>>>>> f18329177005013d7fddaae6c0adb5542bb75cac
 const Project_1 = require("./Project");
 const Room_1 = require("./Room");
->>>>>>> 90d4c00e7f45b3d8435ed972de31b5d43d918012
 var enumSalutation;
 (function (enumSalutation) {
     enumSalutation["MR"] = "Mr";
@@ -168,7 +162,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Client.prototype, "projects", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => StickyNote_1.StickyNote, (stickyNote) => stickyNote.client),
+    (0, typeorm_1.OneToMany)(() => StickyNote_1.Sticky_note, (stickyNote) => stickyNote.client),
     __metadata("design:type", Array)
 ], Client.prototype, "sticky_notes", void 0);
 __decorate([
