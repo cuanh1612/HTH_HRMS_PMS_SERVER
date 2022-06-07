@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { Secret, verify } from 'jsonwebtoken'
 import { Employee } from '../entities/Employee'
 import { Hourly_rate_project } from '../entities/Hourly_rate_project'
+import { Notification } from '../entities/Notification'
 import { Project } from '../entities/Project'
 import { Task } from '../entities/Task'
 import { Time_log } from '../entities/Time_Log'
@@ -141,6 +142,13 @@ const timeLogController = {
 
 		//Save update earning
 		await createdTimeLog.save()
+
+		//Create notification
+		await Notification.create({
+			employee: existingEmployee,
+			url: `/projects/${existingproject.id}/time-logs-table`,
+			content: 'You have just been assigned to a new time log',
+		}).save()
 
 		//Check existing project
 		return res.status(200).json({

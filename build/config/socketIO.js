@@ -259,6 +259,54 @@ const createSocketServer = (httpServer) => {
                 }
             }
         }));
+        //join room Task
+        socket.on('joinRoomTask', () => {
+            socket.join('roomTask');
+        });
+        //leave room project TaskBoard
+        socket.on('leaveRoomTask', () => {
+            socket.leave('roomTask');
+        });
+        //emit user join room project when have new TaskBoard
+        socket.on('newTask', () => {
+            socket.in('roomTask').emit('getNewTask');
+        });
+        //join room TimeLog
+        socket.on('joinRoomTimeLog', () => {
+            socket.join('roomTimeLog');
+        });
+        //leave room project TimeLog
+        socket.on('leaveRoomTimeLog', () => {
+            socket.leave('roomTimeLog');
+        });
+        //emit user join room project when have new TimeLog
+        socket.on('newTimeLog', () => {
+            socket.in('roomTimeLog').emit('getNewTimeLog');
+        });
+        //join room Event
+        socket.on('joinRoomEvent', () => {
+            socket.join('roomEvent');
+        });
+        //leave room project Event
+        socket.on('leaveRoomEvent', () => {
+            socket.leave('roomEvent');
+        });
+        //emit user join room project when have new Event
+        socket.on('newEvent', () => {
+            socket.in('roomEvent').emit('getNewEvent');
+        });
+        //join room NoticeBoard
+        socket.on('joinRoomNoticeBoard', () => {
+            socket.join('roomNoticeBoard');
+        });
+        //leave room project NoticeBoard
+        socket.on('leaveRoomNoticeBoard', () => {
+            socket.leave('roomNoticeBoard');
+        });
+        //emit user join room project when have new NoticeBoard
+        socket.on('newNoticeBoard', () => {
+            socket.in('roomNoticeBoard').emit('getNewNoticeBoard');
+        });
     });
 };
 exports.default = createSocketServer;
