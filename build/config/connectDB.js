@@ -47,9 +47,14 @@ const connectDB = () => {
         database: process.env.DB_DATABASE,
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
+        host: process.env.DB_HOST,
         name: 'huprom',
         logging: true,
         synchronize: true,
+        port: 5432,
+        ssl: {
+            rejectUnauthorized: false
+        },
         entities: [
             Employee_1.Employee,
             Avatar_1.Avatar,
