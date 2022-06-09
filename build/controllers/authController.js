@@ -24,9 +24,7 @@ const employeeValid_1 = require("../utils/valid/employeeValid");
 const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const authController = {
     login: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(1);
         const { email, password } = req.body;
-        console.log(2);
         const existingUser = (yield Employee_1.Employee.findOne({
             where: {
                 email,
@@ -37,7 +35,6 @@ const authController = {
                     email,
                 },
             }));
-        console.log(3);
         const existingUserPassword = (yield Employee_1.Employee.createQueryBuilder('employee')
             .where('employee.email = :email', { email: email })
             .select('employee.password')
@@ -46,28 +43,24 @@ const authController = {
                 .where('client.email = :email', { email: email })
                 .select('client.password')
                 .getOne());
-        console.log(4);
         if (!existingUser)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Incorrect email or password',
             });
-        console.log(5);
         if (!existingUser || !(existingUserPassword === null || existingUserPassword === void 0 ? void 0 : existingUserPassword.password))
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Incorrect email or password',
             });
-        console.log(6);
         if (!existingUser.can_login)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: "You can't login to the system",
             });
-        console.log(7);
         const isPasswordValid = yield argon2_1.default.verify(existingUserPassword.password, password);
         if (!isPasswordValid)
             return res.status(400).json({
@@ -75,10 +68,8 @@ const authController = {
                 success: false,
                 message: 'Incorrect email or password',
             });
-        console.log(8);
         //Save cookie refresh token
         (0, auth_1.sendRefreshToken)(res, existingUser);
-        console.log(9);
         return res.status(200).json({
             code: 200,
             success: true,
@@ -130,6 +121,11 @@ const authController = {
     })),
     refreshToken: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const refreshToken = req.cookies[process.env.REFRESH_TOKEN_COOKIE_NAME];
+        console.log(refreshToken);
+        console.log(refreshToken);
+        console.log(refreshToken);
+        console.log(refreshToken);
+        console.log(refreshToken);
         if (!refreshToken)
             return res.status(401).json({
                 code: 401,
@@ -263,7 +259,6 @@ const authController = {
     })),
     recoverPass: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email } = req.body;
-        console.log(email);
         if (!email) {
             return res.status(400).json({
                 code: 400,
