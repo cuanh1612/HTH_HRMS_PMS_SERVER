@@ -54,6 +54,8 @@ export const sendRefreshToken = (res: Response, user: Employee | Client) => {
 		httpOnly: true,
 		sameSite: 'lax',
 		expires: new Date(new Date().getTime() + (7 * 60 * 60 * 1000)),
+		maxAge: new Date().getTime() + (7 * 60 * 60 * 1000),
+		domain: 'huprom-hrms-pms-client.vercel.app',
 		path: '/',
 	})
 }
