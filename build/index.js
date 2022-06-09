@@ -24,7 +24,7 @@ app.use((0, cors_1.default)({
     origin: 'https://huprom-hrms-pms-client.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'x-auth-token']
+    allowedHeaders: '*'
 }));
 //Routes
 (0, mainRouter_1.default)(app);
