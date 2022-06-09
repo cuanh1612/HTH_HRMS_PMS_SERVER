@@ -44,13 +44,10 @@ const Notification_1 = require("../entities/Notification");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
-        database: process.env.DB_DATABASE,
-        username: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        host: process.env.DB_HOST,
         name: 'huprom',
         logging: true,
         synchronize: true,
+        url: 'postgres://rolsvfrghljqgx:923226cf35e1aed81f8fa3300de528d0cbf4e145ce736cc0fd427d416a98f53f@ec2-54-76-43-89.eu-west-1.compute.amazonaws.com:5432/dbj2954fbb99p2',
         port: 5432,
         ssl: {
             rejectUnauthorized: false
