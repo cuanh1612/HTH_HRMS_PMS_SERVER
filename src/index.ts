@@ -24,7 +24,6 @@ app.use(
 		origin: `${process.env.URL_CLIENT}`,
 		credentials: true,
 		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-		preflightContinue: false
 	})
 )
 
@@ -36,5 +35,5 @@ createSocketServer(httpServer)
 
 //Server listen PORT
 httpServer.listen(PORT, () => {
-	console.log(`Server listen at http://localhost:${PORT}`)
+	console.log(`Server listen at http://localhost:${PORT}, ${process.env.URL_CLIENT}`)
 })
