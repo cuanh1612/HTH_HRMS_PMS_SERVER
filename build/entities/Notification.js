@@ -9,55 +9,53 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Sticky_note = exports.enumColor = void 0;
+exports.Notification = void 0;
 const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const Employee_1 = require("./Employee");
-var enumColor;
-(function (enumColor) {
-    enumColor["RED"] = "#FF0000";
-    enumColor["BLUE"] = "#0000FF";
-    enumColor["GRAY"] = "#808080";
-    enumColor["GREEN"] = "#008000";
-    enumColor["PURPLE"] = "#800080";
-})(enumColor = exports.enumColor || (exports.enumColor = {}));
-let Sticky_note = class Sticky_note extends typeorm_1.BaseEntity {
+let Notification = class Notification extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Sticky_note.prototype, "id", void 0);
+], Notification.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: enumColor, default: enumColor.BLUE }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Sticky_note.prototype, "color", void 0);
+], Notification.prototype, "content", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Sticky_note.prototype, "note", void 0);
+], Notification.prototype, "url", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, { onDelete: 'CASCADE' }),
-    (0, typeorm_1.JoinTable)({ name: 'employee' }),
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (Employee) => Employee.notifications, {
+        onDelete: 'CASCADE',
+        nullable: true
+    }),
+    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Employee_1.Employee)
-], Sticky_note.prototype, "employee", void 0);
+], Notification.prototype, "employee", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Client_1.Client, { onDelete: "CASCADE", nullable: true }),
-    (0, typeorm_1.JoinTable)({ name: 'client' }),
+    (0, typeorm_1.ManyToOne)(() => Client_1.Client, (Client) => Client.notifications, {
+        onDelete: 'CASCADE',
+        nullable: true
+    }),
+    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Client_1.Client)
-], Sticky_note.prototype, "client", void 0);
+], Notification.prototype, "client", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], Sticky_note.prototype, "createdAt", void 0);
+], Notification.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], Sticky_note.prototype, "updatedAt", void 0);
-Sticky_note = __decorate([
+], Notification.prototype, "updatedAt", void 0);
+Notification = __decorate([
     (0, typeorm_1.Entity)()
-], Sticky_note);
-exports.Sticky_note = Sticky_note;
+], Notification);
+exports.Notification = Notification;

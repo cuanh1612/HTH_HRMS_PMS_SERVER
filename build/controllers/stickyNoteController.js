@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = require("jsonwebtoken");
+const Client_1 = require("../entities/Client");
 const Employee_1 = require("../entities/Employee");
 const StickyNote_1 = require("../entities/StickyNote");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
@@ -38,7 +39,11 @@ const stickyNoteController = {
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        const existingUser = decode.role === "Client" ? yield Client_1.Client.findOne({
+            where: {
+                id: decode.userId
+            }
+        }) : yield Employee_1.Employee.findOne({
             where: {
                 id: decode.userId,
             },
@@ -49,7 +54,7 @@ const stickyNoteController = {
                 success: false,
                 message: 'User does not exist in the system'
             });
-        const createNote = yield StickyNote_1.Sticky_note.create(Object.assign(Object.assign({}, dataNote), { employee: existingUser })).save();
+        const createNote = yield StickyNote_1.Sticky_note.create(Object.assign(Object.assign({}, dataNote), (existingUser.role === "Client" ? { client: existingUser } : { employee: existingUser }))).save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -93,12 +98,16 @@ const stickyNoteController = {
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        const existingUser = decode.role === "Client" ? yield Client_1.Client.findOne({
+            where: {
+                id: decode.userId
+            }
+        }) : yield Employee_1.Employee.findOne({
             where: {
                 id: decode.userId,
             },
         });
-        if (!existingUser || existingUser.id != existingNote.employee.id)
+        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -140,12 +149,16 @@ const stickyNoteController = {
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        const existingUser = decode.role === "Client" ? yield Client_1.Client.findOne({
+            where: {
+                id: decode.userId
+            }
+        }) : yield Employee_1.Employee.findOne({
             where: {
                 id: decode.userId,
             },
         });
-        if (!existingUser || existingUser.id != existingNote.employee.id)
+        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -184,13 +197,17 @@ const stickyNoteController = {
                 message: 'Please login first',
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
-        //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        ///Get data user
+        const existingUser = decode.role === "Client" ? yield Client_1.Client.findOne({
+            where: {
+                id: decode.userId
+            }
+        }) : yield Employee_1.Employee.findOne({
             where: {
                 id: decode.userId,
             },
         });
-        if (!existingUser || existingUser.id !== existingNote.employee.id)
+        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -199,7 +216,7 @@ const stickyNoteController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            stickyNote: existingNote,
+            stickynote: existingNote,
             Message: 'Get detail sticky note success'
         });
     })),
@@ -215,12 +232,26 @@ const stickyNoteController = {
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         //Get data user
-        const existingUser = yield Employee_1.Employee.findOne({
+        //Get data user
+        const existingUser = decode.role === "Client" ? yield Client_1.Client.findOne({
+            where: {
+                id: decode.userId
+            }
+        }) : yield Employee_1.Employee.findOne({
             where: {
                 id: decode.userId,
             },
         });
-        const stickyNotes = yield StickyNote_1.Sticky_note.find({
+        const stickyNotes = decode.role === "Client" ? yield StickyNote_1.Sticky_note.find({
+            where: {
+                client: {
+                    id: existingUser === null || existingUser === void 0 ? void 0 : existingUser.id
+                }
+            },
+            order: {
+                createdAt: "DESC"
+            }
+        }) : yield StickyNote_1.Sticky_note.find({
             where: {
                 employee: {
                     id: existingUser === null || existingUser === void 0 ? void 0 : existingUser.id

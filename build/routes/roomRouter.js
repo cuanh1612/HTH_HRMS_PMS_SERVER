@@ -10,5 +10,6 @@ projectRouter.get('/', roomController_1.default.getAll);
 projectRouter.post('/', roomController_1.default.create);
 projectRouter.delete('/:id', roomController_1.default.delete);
 projectRouter.put('/:id', roomController_1.default.update);
+projectRouter.get('/title/:title', roomController_1.default.getByTitle);
 projectRouter.get('/:id', roomController_1.default.getDetail);
 exports.default = projectRouter;

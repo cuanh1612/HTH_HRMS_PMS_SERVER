@@ -8,7 +8,34 @@ import fetch from 'node-fetch'
 import { Secret, verify } from 'jsonwebtoken'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 
-const roomControler = {
+const roomController = {
+	getByTitle: handleCatchError(async (req: Request, res: Response) => {
+		const { title } = req.params
+		const room = await Room.findOne({
+			where: {
+				title,
+			},
+			relations: {
+				empl_create: true,
+				employees: true,
+				clients: true,
+			},
+		})
+
+		if (!room)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Room does not exist in system',
+			})
+		
+			return res.status(200).json({
+				code: 200,
+				success: true,
+				room,
+				message: 'Get room by title successfully',
+			})	
+	}),
 	getAll: handleCatchError(async (req: Request, res: Response) => {
 		const { employee, client }: any = req.query
 		const existEmployee = await Employee.findOne({
@@ -70,7 +97,7 @@ const roomControler = {
 			success: true,
 			rooms: yourRooms,
 			another_rooms: anotherRooms,
-			message: 'Create new Project files successfully',
+			message: 'get all rooms successfully',
 		})
 	}),
 
@@ -139,7 +166,7 @@ const roomControler = {
 	}),
 
 	update: handleCatchError(async (req: Request, res: Response) => {
-		const {id} = req.params
+		const { id } = req.params
 		const {
 			clients,
 			employees,
@@ -163,23 +190,22 @@ const roomControler = {
 
 		const existRoom = await Room.findOne({
 			where: {
-				id: Number(id)
+				id: Number(id),
 			},
 			relations: {
-				empl_create: true
-			}
+				empl_create: true,
+			},
 		})
 
-		if(!existRoom) {
+		if (!existRoom) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Room does not exist in system',
 			})
-				
 		}
 
-		if(existRoom.empl_create.id != decode.userId) {
+		if (existRoom.empl_create.id != decode.userId) {
 			return res.status(400).json({
 				code: 403,
 				success: false,
@@ -221,27 +247,45 @@ const roomControler = {
 			})
 		)
 
-		await fetch(`${process.env.ZOOM_URL_API}/${existRoom.title}`, {
-			method: 'POST',
-			body: JSON.stringify({
-				name: title.replace(/ /g, '-'),
-			}),
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${process.env.ZOOM_URL_KEY}`,
-				Accept: 'application/json',
-			},
-		}).then((e) => e.json())
+		const oldTitle = existRoom.title
+		existRoom.title = title.replace(/ /g, '-')
+		existRoom.date = new Date(new Date(date).toLocaleDateString())
+		existRoom.description = description
+		existRoom.start_time = start_time
+		existRoom.clients = clientsInfo
+		existRoom.employees = employeesInfo
+		existRoom.link = `${process.env.URL_CLIENT}/meeting/${title.replace(/ /g, '-')}`
+		await existRoom.save()
 
-		await Room.update({id: existRoom.id}, {
-			title: title.replace(/ /g, '-'),
-			date: new Date(new Date(date).toLocaleDateString()),
-			description,
-			start_time,
-			clients: clientsInfo,
-			employees: employeesInfo,
-			link: `${process.env.URL_CLIENT}/rooms/${title.replace(/ /g, '-')}`,
-		})
+		if (oldTitle != title.replace(/ /g, '-')) {
+			await fetch(`${process.env.ZOOM_URL_API}/${oldTitle}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${process.env.ZOOM_URL_KEY}`,
+					Accept: 'application/json',
+				},
+			}).then((e) => e.json())
+
+			await fetch(`${process.env.ZOOM_URL_API}`, {
+				method: 'POST',
+				body: JSON.stringify({
+					name: title.replace(/ /g, '-'),
+					properties: {
+						lang: 'env',
+						enable_screenshare: true,
+						enable_chat: true,
+						start_video_off: true,
+						start_audio_off: false,
+					},
+				}),
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${process.env.ZOOM_URL_KEY}`,
+					Accept: 'application/json',
+				},
+			}).then((e) => e.json())
+		}
 
 		return res.status(200).json({
 			code: 200,
@@ -316,7 +360,7 @@ const roomControler = {
 			clients: clientsInfo,
 			employees: employeesInfo,
 			empl_create: existEmployee,
-			link: `${process.env.URL_CLIENT}/rooms/${title.replace(/ /g, '-')}`,
+			link: `${process.env.URL_CLIENT}/meeting/${title.replace(/ /g, '-')}`,
 		}).save()
 
 		await fetch(`${process.env.ZOOM_URL_API}`, {
@@ -346,4 +390,4 @@ const roomControler = {
 	}),
 }
 
-export default roomControler
+export default roomController

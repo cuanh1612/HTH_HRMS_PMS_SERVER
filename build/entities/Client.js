@@ -17,6 +17,8 @@ const Client_Sub_Category_1 = require("./Client_Sub_Category");
 const Contract_1 = require("./Contract");
 const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
+const Notification_1 = require("./Notification");
+const StickyNote_1 = require("./StickyNote");
 const Project_1 = require("./Project");
 const Room_1 = require("./Room");
 var enumSalutation;
@@ -160,6 +162,10 @@ __decorate([
     __metadata("design:type", Array)
 ], Client.prototype, "projects", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => StickyNote_1.Sticky_note, (stickyNote) => stickyNote.client),
+    __metadata("design:type", Array)
+], Client.prototype, "sticky_notes", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => Contract_1.Contract, (contract) => contract.client),
     __metadata("design:type", Array)
 ], Client.prototype, "contracts", void 0);
@@ -177,6 +183,10 @@ __decorate([
     (0, typeorm_1.JoinTable)({ name: 'room_client' }),
     __metadata("design:type", Array)
 ], Client.prototype, "rooms", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Notification_1.Notification, (Notification) => Notification.client),
+    __metadata("design:type", Array)
+], Client.prototype, "notifications", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

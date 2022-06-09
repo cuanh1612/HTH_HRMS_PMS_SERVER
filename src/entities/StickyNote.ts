@@ -1,4 +1,5 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Client } from "./Client";
 import { Employee } from "./Employee";
 
 export enum enumColor {
@@ -25,6 +26,10 @@ export class Sticky_note extends BaseEntity {
     @ManyToOne(() => Employee, { onDelete: 'CASCADE'})
     @JoinTable({ name: 'employee'})
     employee: Employee
+
+    @ManyToOne(() => Client, { onDelete: "CASCADE", nullable: true})
+    @JoinTable({ name: 'client'})
+    client: Client
 
     @CreateDateColumn({
 		name: 'created_at',

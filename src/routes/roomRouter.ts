@@ -11,6 +11,9 @@ projectRouter.delete('/:id', roomController.delete)
 
 projectRouter.put('/:id', roomController.update)
 
+projectRouter.get('/title/:title', roomController.getByTitle)
+
 projectRouter.get('/:id', roomController.getDetail)
+
 
 export default projectRouter

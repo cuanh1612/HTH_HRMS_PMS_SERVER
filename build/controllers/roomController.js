@@ -18,7 +18,32 @@ const Room_1 = require("../entities/Room");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const jsonwebtoken_1 = require("jsonwebtoken");
-const roomControler = {
+const roomController = {
+    getByTitle: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { title } = req.params;
+        const room = yield Room_1.Room.findOne({
+            where: {
+                title,
+            },
+            relations: {
+                empl_create: true,
+                employees: true,
+                clients: true,
+            },
+        });
+        if (!room)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Room does not exist in system',
+            });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            room,
+            message: 'Get room by title successfully',
+        });
+    })),
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { employee, client } = req.query;
         const existEmployee = yield Employee_1.Employee.findOne({
@@ -75,7 +100,7 @@ const roomControler = {
             success: true,
             rooms: yourRooms,
             another_rooms: anotherRooms,
-            message: 'Create new Project files successfully',
+            message: 'get all rooms successfully',
         });
     })),
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -150,11 +175,11 @@ const roomControler = {
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         const existRoom = yield Room_1.Room.findOne({
             where: {
-                id: Number(id)
+                id: Number(id),
             },
             relations: {
-                empl_create: true
-            }
+                empl_create: true,
+            },
         });
         if (!existRoom) {
             return res.status(400).json({
@@ -198,26 +223,43 @@ const roomControler = {
                 resolve(true);
             }));
         })));
-        yield (0, node_fetch_1.default)(`${process.env.ZOOM_URL_API}/${existRoom.title}`, {
-            method: 'POST',
-            body: JSON.stringify({
-                name: title.replace(/ /g, '-'),
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.ZOOM_URL_KEY}`,
-                Accept: 'application/json',
-            },
-        }).then((e) => e.json());
-        yield Room_1.Room.update({ id: existRoom.id }, {
-            title: title.replace(/ /g, '-'),
-            date: new Date(new Date(date).toLocaleDateString()),
-            description,
-            start_time,
-            clients: clientsInfo,
-            employees: employeesInfo,
-            link: `${process.env.URL_CLIENT}/rooms/${title.replace(/ /g, '-')}`,
-        });
+        const oldTitle = existRoom.title;
+        existRoom.title = title.replace(/ /g, '-');
+        existRoom.date = new Date(new Date(date).toLocaleDateString());
+        existRoom.description = description;
+        existRoom.start_time = start_time;
+        existRoom.clients = clientsInfo;
+        existRoom.employees = employeesInfo;
+        existRoom.link = `${process.env.URL_CLIENT}/meeting/${title.replace(/ /g, '-')}`;
+        yield existRoom.save();
+        if (oldTitle != title.replace(/ /g, '-')) {
+            yield (0, node_fetch_1.default)(`${process.env.ZOOM_URL_API}/${oldTitle}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.ZOOM_URL_KEY}`,
+                    Accept: 'application/json',
+                },
+            }).then((e) => e.json());
+            yield (0, node_fetch_1.default)(`${process.env.ZOOM_URL_API}`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: title.replace(/ /g, '-'),
+                    properties: {
+                        lang: 'env',
+                        enable_screenshare: true,
+                        enable_chat: true,
+                        start_video_off: true,
+                        start_audio_off: false,
+                    },
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.ZOOM_URL_KEY}`,
+                    Accept: 'application/json',
+                },
+            }).then((e) => e.json());
+        }
         return res.status(200).json({
             code: 200,
             success: true,
@@ -273,7 +315,7 @@ const roomControler = {
             clients: clientsInfo,
             employees: employeesInfo,
             empl_create: existEmployee,
-            link: `${process.env.URL_CLIENT}/rooms/${title.replace(/ /g, '-')}`,
+            link: `${process.env.URL_CLIENT}/meeting/${title.replace(/ /g, '-')}`,
         }).save();
         yield (0, node_fetch_1.default)(`${process.env.ZOOM_URL_API}`, {
             method: 'POST',
@@ -300,4 +342,4 @@ const roomControler = {
         });
     })),
 };
-exports.default = roomControler;
+exports.default = roomController;

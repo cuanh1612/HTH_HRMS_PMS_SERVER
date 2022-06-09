@@ -22,6 +22,7 @@ import { Discussion } from './Discussion'
 import { Event } from './Event'
 import { Hourly_rate_project } from './Hourly_rate_project'
 import { Leave } from './Leave'
+import { Notification } from './Notification'
 import { Project } from './Project'
 import { Project_discussion_reply } from './Project_Discussion_Reply'
 import { Project_Discussion_Room } from './Project_Discussion_Room'
@@ -195,6 +196,9 @@ export class Employee extends BaseEntity {
 	@ManyToMany(() => Room)
 	@JoinTable({ name: 'room_employee' })
 	meeting_rooms: Room[];
+
+	@OneToMany(()=> Notification, (Notification)=> Notification.employee)
+	notifications: Notification[]
 
 	@Column({ default: 0 })
 	token_version: number

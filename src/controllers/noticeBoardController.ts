@@ -1,5 +1,8 @@
 import { Request, Response } from 'express'
-import { Notice_board } from '../entities/Notice_Board'
+import { Client } from '../entities/Client'
+import { Employee } from '../entities/Employee'
+import { enumNoticeTo, Notice_board } from '../entities/Notice_Board'
+import { Notification } from '../entities/Notification'
 import handleCatchError from '../utils/catchAsyncError'
 import { noticeBoardValid } from '../utils/valid/noticeBoardValid'
 
@@ -24,6 +27,45 @@ const noticeBoardController = {
 			heading,
 			details,
 		}).save()
+
+		//Create notification for employees or clients
+		if (notice_to === enumNoticeTo.CLIENTS) {
+			//Get all clients
+			const clients = await Client.find({})
+
+			await Promise.all(
+				clients.map(async (client) => {
+					return new Promise(async (resolve) => {
+						//Create note for client
+						await Notification.create({
+							content: 'There is a notice board just posted',
+							client: client,
+							url: '/notice-boards',
+						}).save()
+
+						resolve(true)
+					})
+				})
+			)
+		} else if (notice_to === enumNoticeTo.EMPLOYEES) {
+			//Get all employees
+			const employees = await Employee.find({})
+
+			await Promise.all(
+				employees.map(async (employee) => {
+					return new Promise(async (resolve) => {
+						//Create note for client
+						await Notification.create({
+							content: 'There is a notice board just posted',
+							employee: employee,
+							url: '/notice-boards',
+						}).save()
+
+						resolve(true)
+					})
+				})
+			)
+		}
 
 		return res.status(200).json({
 			code: 200,
@@ -204,10 +246,9 @@ const noticeBoardController = {
 		//get all notice
 		const noticeBoards = await Notice_board.find({
 			where: {
-				notice_to: noticeTo
+				notice_to: noticeTo,
 			},
 		})
-
 
 		return res.status(200).json({
 			code: 200,

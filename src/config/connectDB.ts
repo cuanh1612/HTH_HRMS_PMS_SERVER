@@ -38,6 +38,7 @@ import { Task_comment } from '../entities/Task_Comment'
 import { Time_log } from '../entities/Time_Log'
 import { Room } from '../entities/Room'
 import { Sticky_note } from '../entities/StickyNote'
+import { Notification } from '../entities/Notification'
 
 const connectDB = () => {
 	createConnection({
@@ -88,7 +89,8 @@ const connectDB = () => {
 			Task_comment, 
 			Time_log,
 			Room,
-			Sticky_note
+			Sticky_note, 
+			Notification
 		],
 	})
 		.then(() => {
