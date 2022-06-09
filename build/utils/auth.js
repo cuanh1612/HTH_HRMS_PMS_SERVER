@@ -25,9 +25,9 @@ const sendRefreshToken = (res, user) => {
     console.log(res, user);
     res.cookie(process.env.REFRESH_TOKEN_COOKIE_NAME, (0, exports.createToken)('refreshToken', user), {
         httpOnly: true,
-        secure: true,
-        sameSite: 'none',
+        sameSite: 'lax',
         expires: new Date(new Date().getTime() + (7 * 60 * 60 * 1000)),
+        path: '/',
     });
 };
 exports.sendRefreshToken = sendRefreshToken;
