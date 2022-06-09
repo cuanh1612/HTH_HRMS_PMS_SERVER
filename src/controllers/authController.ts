@@ -26,7 +26,9 @@ const authController = {
 					email,
 				},
 			}))
-		
+
+		console.log(2)
+
 		const existingUserPassword =
 			(await Employee.createQueryBuilder('employee')
 				.where('employee.email = :email', { email: email })
@@ -37,6 +39,7 @@ const authController = {
 				.select('client.password')
 				.getOne())
 
+		console.log(3)
 		if (!existingUser)
 			return res.status(400).json({
 				code: 400,
@@ -44,6 +47,7 @@ const authController = {
 				message: 'Incorrect email or password',
 			})
 
+		console.log(4)
 		if (!existingUser || !existingUserPassword?.password)
 			return res.status(400).json({
 				code: 400,
@@ -51,7 +55,7 @@ const authController = {
 				message: 'Incorrect email or password',
 			})
 
-
+		console.log(5)	
 		if (!existingUser.can_login)
 			return res.status(400).json({
 				code: 400,
@@ -59,8 +63,10 @@ const authController = {
 				message: "You can't login to the system",
 			})
 
+		console.log(6)
 		const isPasswordValid = await argon2.verify(existingUserPassword.password, password)
 
+		console.log(7)	
 		if (!isPasswordValid)
 			return res.status(400).json({
 				code: 400,
@@ -68,6 +74,7 @@ const authController = {
 				message: 'Incorrect email or password',
 			})
 
+		console.log(8)	
 		//Save cookie refresh token
 		sendRefreshToken(res, existingUser)
 
@@ -131,7 +138,7 @@ const authController = {
 
 	refreshToken: handleCatchError(async (req: Request, res: Response) => {
 		const refreshToken = req.cookies[process.env.REFRESH_TOKEN_COOKIE_NAME as string]
-		
+
 		if (!refreshToken)
 			return res.status(401).json({
 				code: 401,

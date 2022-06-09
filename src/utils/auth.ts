@@ -53,7 +53,7 @@ export const sendRefreshToken = (res: Response, user: Employee | Client) => {
 	res.cookie(process.env.REFRESH_TOKEN_COOKIE_NAME as string, createToken('refreshToken', user), {
 		httpOnly: true,
 		sameSite: 'lax',
-		secure: true,
+		expires: new Date(new Date().getTime() + (7 * 60 * 60 * 1000)),
 		path: '/',
 	})
 }
