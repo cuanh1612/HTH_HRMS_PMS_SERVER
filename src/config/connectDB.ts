@@ -49,7 +49,7 @@ const connectDB = () => {
 		host: process.env.DB_HOST,
 		name: 'huprom',
 		logging: true,
-		synchronize: true,
+		synchronize: false,
 		port: 5432,
 		ssl: {
 			rejectUnauthorized: false
