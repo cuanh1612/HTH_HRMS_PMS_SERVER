@@ -18,12 +18,22 @@ const PORT = process.env.PORT || 4000;
 //Creae and setup express app
 const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);
+console.log(process.env.URL_CLIENT);
+console.log(process.env.URL_CLIENT);
+console.log(process.env.URL_CLIENT);
+console.log(process.env.URL_CLIENT);
+console.log(process.env.URL_CLIENT);
+console.log(process.env.URL_CLIENT);
+console.log(process.env.URL_CLIENT);
+console.log(process.env.URL_CLIENT);
+console.log(process.env.URL_CLIENT);
+console.log(process.env.URL_CLIENT);
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)({
-    origin: `${process.env.URL_CLIENT}`,
+    origin: 'https://huprom-hrms-pms-client.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 }));
 //Routes
 (0, mainRouter_1.default)(app);
