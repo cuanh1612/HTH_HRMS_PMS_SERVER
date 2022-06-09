@@ -293,6 +293,27 @@ const createSocketServer = (httpServer: Server) => {
 			)
 		})
 
+		//emit client when assigned contract
+		socket.on('newContractNotification', async (clientId: number) => {
+			//get new notification for client
+			//Get email client
+			const existingClient = await Client.findOne({
+				where: {
+					id: clientId,
+				},
+			})
+
+			if (existingClient) {
+				const clientSocket = onlineUsers.find((user) => {
+					return user.email === existingClient.email
+				})
+
+				if (clientSocket?.socketId) {
+					socket.to(clientSocket.socketId).emit('getNewNotifications')
+				}
+			}
+		})
+
 		//emit user when assigned timelog
 		socket.on('newTimeLogNotification', async (employeeId: number) => {
 			//get new notification for employee

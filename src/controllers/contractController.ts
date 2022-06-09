@@ -7,6 +7,7 @@ import { createOrUpdatetContractPayload } from '../type/ContractPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { contractValid } from '../utils/valid/contractValid'
 import { sign, verify } from 'jsonwebtoken'
+import { Notification } from '../entities/Notification'
 
 const contractController = {
 	getAll: handleCatchError(async (_: Request, res: Response) => {
@@ -166,6 +167,13 @@ const contractController = {
 		//Create new contract
 		const newContract = await Contract.create({
 			...dataNewContract,
+		}).save()
+
+		//create new note for client
+		await Notification.create({
+			client: existingClient,
+			url: "/contracts",
+			content: "There is a new contract you have just been assigned"
 		}).save()
 
 		return res.status(200).json({
