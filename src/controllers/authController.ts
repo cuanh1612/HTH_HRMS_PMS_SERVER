@@ -131,12 +131,7 @@ const authController = {
 
 	refreshToken: handleCatchError(async (req: Request, res: Response) => {
 		const refreshToken = req.cookies[process.env.REFRESH_TOKEN_COOKIE_NAME as string]
-		console.log(refreshToken)
-		console.log(refreshToken)
-		console.log(refreshToken)
-		console.log(refreshToken)
-		console.log(refreshToken)
-
+		
 		if (!refreshToken)
 			return res.status(401).json({
 				code: 401,
