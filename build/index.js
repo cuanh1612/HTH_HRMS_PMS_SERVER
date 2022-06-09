@@ -24,7 +24,6 @@ app.use((0, cors_1.default)({
     origin: `${process.env.URL_CLIENT}`,
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    preflightContinue: false
 }));
 //Routes
 (0, mainRouter_1.default)(app);
@@ -32,5 +31,5 @@ app.use((0, cors_1.default)({
 (0, socketIO_1.default)(httpServer);
 //Server listen PORT
 httpServer.listen(PORT, () => {
-    console.log(`Server listen at http://localhost:${PORT}`);
+    console.log(`Server listen at http://localhost:${PORT}, ${process.env.URL_CLIENT}`);
 });
