@@ -18,6 +18,7 @@ const Client_1 = require("../entities/Client");
 const Department_1 = require("../entities/Department");
 const Employee_1 = require("../entities/Employee");
 const Hourly_rate_project_1 = require("../entities/Hourly_rate_project");
+const Notification_1 = require("../entities/Notification");
 const Project_1 = require("../entities/Project");
 const Project_Category_1 = require("../entities/Project_Category");
 const Project_File_1 = require("../entities/Project_File");
@@ -90,22 +91,19 @@ const projectController = {
                 success: false,
                 message: 'Category does not exist in the system',
             });
-        for (let index = 0; index < employees.length; index++) {
-            const employee_id = employees[index];
-            const existingEmployee = yield Employee_1.Employee.findOne({
-                where: {
-                    id: employee_id,
-                },
-            });
-            if (!existingEmployee)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Employees does not exist in the system',
+        yield Promise.all(employees.map((employee_id) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const existingEmployee = yield Employee_1.Employee.findOne({
+                    where: {
+                        id: employee_id,
+                    },
                 });
-            //check role employee
-            projectEmployees.push(existingEmployee);
-        }
+                if (existingEmployee)
+                    //check role employee
+                    projectEmployees.push(existingEmployee);
+                resolve(true);
+            }));
+        })));
         //create project file
         const createdProject = yield Project_1.Project.create(Object.assign(Object.assign({}, dataNewProject), { start_date: new Date(new Date(dataNewProject.start_date).toLocaleDateString()), deadline: new Date(new Date(dataNewProject.deadline).toLocaleDateString()), employees: projectEmployees })).save();
         yield Promise.all(projectEmployees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
@@ -153,6 +151,25 @@ const projectController = {
             project: createdProject,
             index: 1,
             color: '#00ff14',
+        }).save();
+        //Huy lam
+        yield Promise.all(projectEmployees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //create notification
+                yield Notification_1.Notification.create({
+                    employee,
+                    url: '/projects',
+                    content: 'You have just been assigned to a new project',
+                }).save();
+                resolve(true);
+            }));
+        })));
+        //huy lam
+        //create note for client
+        yield Notification_1.Notification.create({
+            client: existingClient,
+            url: '/projects',
+            content: 'You have just been assigned to a new project',
         }).save();
         return res.status(200).json({
             code: 200,

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = require("jsonwebtoken");
 const Employee_1 = require("../entities/Employee");
 const Hourly_rate_project_1 = require("../entities/Hourly_rate_project");
+const Notification_1 = require("../entities/Notification");
 const Project_1 = require("../entities/Project");
 const Task_1 = require("../entities/Task");
 const Time_Log_1 = require("../entities/Time_Log");
@@ -114,6 +115,12 @@ const timeLogController = {
         }
         //Save update earning
         yield createdTimeLog.save();
+        //Create notification
+        yield Notification_1.Notification.create({
+            employee: existingEmployee,
+            url: `/projects/${existingproject.id}/time-logs-table`,
+            content: 'You have just been assigned to a new time log',
+        }).save();
         //Check existing project
         return res.status(200).json({
             code: 200,

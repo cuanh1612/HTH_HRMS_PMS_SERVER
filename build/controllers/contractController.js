@@ -30,6 +30,7 @@ const Contract_Type_1 = require("../entities/Contract_Type");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const contractValid_1 = require("../utils/valid/contractValid");
 const jsonwebtoken_1 = require("jsonwebtoken");
+const Notification_1 = require("../entities/Notification");
 const contractController = {
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const contracts = yield Contract_1.Contract.find();
@@ -161,6 +162,12 @@ const contractController = {
         }
         //Create new contract
         const newContract = yield Contract_1.Contract.create(Object.assign({}, dataNewContract)).save();
+        //create new note for client
+        yield Notification_1.Notification.create({
+            client: existingClient,
+            url: "/contracts",
+            content: "There is a new contract you have just been assigned"
+        }).save();
         return res.status(200).json({
             code: 200,
             success: true,

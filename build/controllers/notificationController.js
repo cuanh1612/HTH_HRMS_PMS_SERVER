@@ -102,6 +102,9 @@ const notificationController = {
             where: Object.assign({}, (existingUser.role === 'Client'
                 ? { client: { id: existingUser.id } }
                 : { employee: { id: existingUser.id } })),
+            order: {
+                createdAt: "DESC"
+            }
         });
         return res.status(200).json({
             code: 200,
@@ -144,6 +147,10 @@ const notificationController = {
             where: {
                 id: Number(notificationId),
             },
+            relations: {
+                employee: true,
+                client: true
+            }
         });
         if (!exisingNotification)
             return res.status(400).json({
@@ -152,12 +159,12 @@ const notificationController = {
                 message: 'Notification does not exist in the system',
             });
         //Check author
-        if (!(existingUser.role === 'Client' && existingUser.id === exisingNotification.client.id) ||
+        if (!(existingUser.role === 'Client' && existingUser.id === exisingNotification.client.id) &&
             !(existingUser.id === exisingNotification.employee.id))
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'ou are not authorized to perform this action',
+                message: 'You are not authorized to perform this action',
             });
         //Remove notification
         yield exisingNotification.remove();

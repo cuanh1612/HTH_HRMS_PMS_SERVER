@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const Employee_1 = require("../entities/Employee");
 const Milestone_1 = require("../entities/Milestone");
+const Notification_1 = require("../entities/Notification");
 const Project_1 = require("../entities/Project");
 const Status_1 = require("../entities/Status");
 const Task_1 = require("../entities/Task");
@@ -107,22 +108,19 @@ const taskController = {
                 message: 'Employee who create task does not exist in the system',
             });
         }
-        for (let index = 0; index < employees.length; index++) {
-            const employee_id = employees[index];
-            const existingEmployee = yield Employee_1.Employee.findOne({
-                where: {
-                    id: employee_id,
-                },
-            });
-            if (!existingEmployee)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Employees does not exist in the system',
+        yield Promise.all(employees.map((employee_id) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const existingEmployee = yield Employee_1.Employee.findOne({
+                    where: {
+                        id: employee_id,
+                    },
                 });
-            //check role employee
-            taskEmployees.push(existingEmployee);
-        }
+                if (existingEmployee)
+                    //check role employee
+                    taskEmployees.push(existingEmployee);
+                resolve(true);
+            }));
+        })));
         const lasttask = yield Task_1.Task.findOne({
             where: {
                 status: {
@@ -145,6 +143,18 @@ const taskController = {
                 yield Task_File_1.Task_file.create(Object.assign(Object.assign({}, task_file), { task: task_file })).save();
             }
         }
+        //Huy lam - create notification for employee
+        yield Promise.all(taskEmployees.map((employee) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //create notification
+                yield Notification_1.Notification.create({
+                    employee,
+                    url: `/projects/${existingproject.id}/tasks-table`,
+                    content: 'You have just been assigned to a new task',
+                }).save();
+                resolve(true);
+            }));
+        })));
         return res.status(200).json({
             code: 200,
             success: true,
@@ -213,21 +223,19 @@ const taskController = {
                 success: false,
                 message: messageValid,
             });
-        for (let index = 0; index < employees.length; index++) {
-            const employee_id = employees[index];
-            const existingEmployee = yield Employee_1.Employee.findOne({
-                where: {
-                    id: employee_id,
-                },
-            });
-            if (!existingEmployee)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Employees does not exist in the system',
+        yield Promise.all(employees.map((employee_id) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const existingEmployee = yield Employee_1.Employee.findOne({
+                    where: {
+                        id: employee_id,
+                    },
                 });
-            taskEmployees.push(existingEmployee);
-        }
+                if (existingEmployee)
+                    //check role employee
+                    taskEmployees.push(existingEmployee);
+                resolve(true);
+            }));
+        })));
         //Check exist milestone
         if (milestone) {
             const existingMilestone = yield Milestone_1.Milestone.findOne({
@@ -429,17 +437,18 @@ const taskController = {
                 success: false,
                 message: 'Project does not exist in the system',
             });
-        for (let index = 0; index < tasks.length; index++) {
-            const itemtask = tasks[index];
-            const existingtask = yield Task_1.Task.findOne({
-                where: {
-                    id: itemtask.id,
-                },
-            });
-            if (existingtask) {
-                yield existingtask.remove();
-            }
-        }
+        yield Promise.all(tasks.map((id) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const existingtask = yield Task_1.Task.findOne({
+                    where: {
+                        id: id,
+                    },
+                });
+                if (existingtask)
+                    yield Task_1.Task.remove(existingtask);
+                resolve(true);
+            }));
+        })));
         return res.status(200).json({
             code: 200,
             success: true,

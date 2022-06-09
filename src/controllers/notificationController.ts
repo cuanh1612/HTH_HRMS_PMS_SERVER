@@ -112,6 +112,9 @@ const notificationController = {
 					? { client: { id: existingUser.id } }
 					: { employee: { id: existingUser.id } }),
 			},
+			order: {
+				createdAt: "DESC"
+			}
 		})
 
 		return res.status(200).json({
@@ -162,6 +165,10 @@ const notificationController = {
 			where: {
 				id: Number(notificationId),
 			},
+			relations: {
+				employee: true,
+				client: true
+			}
 		})
 
 		if (!exisingNotification)
@@ -175,13 +182,13 @@ const notificationController = {
 		if (
 			!(
 				existingUser.role === 'Client' && existingUser.id === exisingNotification.client.id
-			) ||
+			) &&
 			!(existingUser.id === exisingNotification.employee.id)
 		)
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'ou are not authorized to perform this action',
+				message: 'You are not authorized to perform this action',
 			})
 
 		//Remove notification

@@ -21,8 +21,10 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(
 	cors({
-		origin: process.env.URL_CLIENT,
+		origin: [`${process.env.URL_CLIENT}`],
 		credentials: true,
+		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+		preflightContinue: false
 	})
 )
 
