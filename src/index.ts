@@ -16,7 +16,16 @@ connectDB()
 //Creae and setup express app
 const app = express()
 const httpServer = createServer(app)
-
+console.log(process.env.URL_CLIENT)
+console.log(process.env.URL_CLIENT)
+console.log(process.env.URL_CLIENT)
+console.log(process.env.URL_CLIENT)
+console.log(process.env.URL_CLIENT)
+console.log(process.env.URL_CLIENT)
+console.log(process.env.URL_CLIENT)
+console.log(process.env.URL_CLIENT)
+console.log(process.env.URL_CLIENT)
+console.log(process.env.URL_CLIENT)
 app.use(express.json())
 app.use(cookieParser())
 app.use(
