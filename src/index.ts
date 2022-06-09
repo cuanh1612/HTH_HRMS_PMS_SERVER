@@ -22,8 +22,7 @@ app.use(
 	cors({
 		origin: 'https://huprom-hrms-pms-client.vercel.app',
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-		credentials: true,
-		allowedHeaders: '*'
+		credentials: true
 	})
 )
 
