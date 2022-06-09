@@ -30,7 +30,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(
 	cors({
-		origin: process.env.URL_CLIENT,
+		origin: 'https://huprom-hrms-pms-client.vercel.app',
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 		credentials: true,
 	})
