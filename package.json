@@ -28,6 +28,7 @@
   "scripts": {
     "start": "node build/index.js",
     "dev": "yarn build && nodemon build/index.js",
+    "build": "rimraf ./build && tsc",
     "watch": "npx tsc --watch"
   },
   "devDependencies": {
