@@ -49,11 +49,11 @@ export const createToken = (type: 'accessToken' | 'refreshToken', user: Employee
 
 
 export const sendRefreshToken = (res: Response, user: Employee | Client) => {
-	console.log(res, user)
 	res.cookie(process.env.REFRESH_TOKEN_COOKIE_NAME as string, createToken('refreshToken', user), {
 		httpOnly: true,
 		sameSite: 'lax',
 		expires: new Date(new Date().getTime() + (7 * 60 * 60 * 1000)),
 		path: '/',
+		secure: true,
 	})
 }

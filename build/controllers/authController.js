@@ -35,7 +35,6 @@ const authController = {
                     email,
                 },
             }));
-        console.log(2);
         const existingUserPassword = (yield Employee_1.Employee.createQueryBuilder('employee')
             .where('employee.email = :email', { email: email })
             .select('employee.password')
@@ -44,37 +43,31 @@ const authController = {
                 .where('client.email = :email', { email: email })
                 .select('client.password')
                 .getOne());
-        console.log(3);
         if (!existingUser)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Incorrect email or password',
             });
-        console.log(4);
         if (!existingUser || !(existingUserPassword === null || existingUserPassword === void 0 ? void 0 : existingUserPassword.password))
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Incorrect email or password',
             });
-        console.log(5);
         if (!existingUser.can_login)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: "You can't login to the system",
             });
-        console.log(6);
         const isPasswordValid = yield argon2_1.default.verify(existingUserPassword.password, password);
-        console.log(7);
         if (!isPasswordValid)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Incorrect email or password',
             });
-        console.log(8);
         //Save cookie refresh token
         (0, auth_1.sendRefreshToken)(res, existingUser);
         return res.status(200).json({

@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 4000;
 (0, connectDB_1.default)();
 //Creae and setup express app
 const app = (0, express_1.default)();
-app.set('trust proxy', 1);
+app.enable('trust proxy');
 const httpServer = (0, http_1.createServer)(app);
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
