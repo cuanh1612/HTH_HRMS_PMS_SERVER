@@ -15,12 +15,13 @@ connectDB()
 
 //Creae and setup express app
 const app = express()
+app.set('trust proxy', 1)
 const httpServer = createServer(app)
 app.use(express.json())
 app.use(cookieParser())
 app.use(
 	cors({
-		origin: 'http://localhost:3000',
+		origin: 'https://huprom-hrms-pms-client.vercel.app',
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 		credentials: true
 	})
