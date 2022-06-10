@@ -68,7 +68,7 @@ const authController = {
 			})
 
 		//Save cookie refresh token
-		sendRefreshToken(res, existingUser)
+		sendRefreshToken(req, existingUser)
 
 		return res.status(200).json({
 			code: 200,
@@ -128,8 +128,8 @@ const authController = {
 		})
 	}),
 
-	refreshToken: handleCatchError(async (req: Request, res: Response) => {
-		const refreshToken = req.cookies[process.env.REFRESH_TOKEN_COOKIE_NAME as string]
+	refreshToken: handleCatchError(async (req: any, res: Response) => {
+		const refreshToken = req.session.refresh
 
 		if (!refreshToken)
 			return res.status(401).json({

@@ -21,13 +21,7 @@ const createAc = (type, user) => (0, jsonwebtoken_1.sign)(Object.assign({ userId
     expiresIn: type === 'accessToken' ? '5m' : '7h',
 });
 exports.createAc = createAc;
-const sendRefreshToken = (res, user) => {
-    res.cookie(process.env.REFRESH_TOKEN_COOKIE_NAME, (0, exports.createToken)('refreshToken', user), {
-        httpOnly: true,
-        sameSite: 'lax',
-        expires: new Date(new Date().getTime() + (7 * 60 * 60 * 1000)),
-        path: '/',
-        secure: true,
-    });
+const sendRefreshToken = (req, user) => {
+    req.session.refresh = (0, exports.createToken)('refreshToken', user);
 };
 exports.sendRefreshToken = sendRefreshToken;
