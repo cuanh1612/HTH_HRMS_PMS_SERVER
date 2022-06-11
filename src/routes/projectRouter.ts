@@ -23,6 +23,7 @@ projectRouter.get('/:projectId/check-assigned', projectController.checkAssigned)
 projectRouter.get('/:projectId/count-status-tasks', projectController.countstatusTasks)
 projectRouter.get('/:projectId/earnings', projectController.projectEarnings)
 projectRouter.get('/:projectId/Hours-logged', projectController.projectHoursLogged)
+projectRouter.get('/client/:clientId/project-status', projectController.projectStatusByClient)
 
 projectRouter.delete('/:id', projectController.delete)
 

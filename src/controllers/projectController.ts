@@ -1063,6 +1063,38 @@ const projectController = {
 			message: 'Change project status successfully',
 		})
 	}),
+
+	//Count project status by client
+	projectStatusByClient: handleCatchError(async (req: Request, res: Response) => {
+		const { clientId } = req.params
+
+		//Check existing client 
+		const exisitingClient = await Client.findOne({
+			where: {
+				id: Number(clientId)
+			}
+		})
+
+		if (!exisitingClient) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Client does not exist in this project',
+			})
+		}
+
+		const manager = getManager('huprom')
+		const projectStatus = await manager.query(
+			`SELECT project.project_status, COUNT(project.id) from project WHERE project."clientId" = ${exisitingClient.id} GROUP BY project.project_status`
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countProjectStatus: projectStatus,
+			message: 'Get count project status by client successfully',
+		})
+	}),
 }
 
 export default projectController
