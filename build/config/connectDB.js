@@ -47,7 +47,7 @@ const connectDB = () => {
         name: 'huprom',
         logging: false,
         synchronize: false,
-        url: 'postgres://rolsvfrghljqgx:923226cf35e1aed81f8fa3300de528d0cbf4e145ce736cc0fd427d416a98f53f@ec2-54-76-43-89.eu-west-1.compute.amazonaws.com:5432/dbj2954fbb99p2',
+        url: `${process.env.DB_URL}`,
         port: 5432,
         ssl: {
             rejectUnauthorized: false

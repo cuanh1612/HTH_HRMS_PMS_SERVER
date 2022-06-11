@@ -286,7 +286,7 @@ const authController = {
             to: email,
             text: 'reset password',
             subject: 'huprom-reset password',
-            html: `<a href="http://localhost:3000/reset-password/${activeToken}>link</a>`,
+            html: `<a href="${process.env.URL_CLIENT}/reset-password/${activeToken}>link</a>`,
         });
         return res.status(200).json({
             code: 200,
