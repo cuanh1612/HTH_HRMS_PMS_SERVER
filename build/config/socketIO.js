@@ -25,7 +25,7 @@ const createSocketServer = (httpServer) => {
     };
     const io = new socket_io_1.Server(httpServer, {
         cors: {
-            origin: `${process.env.URL_CLIENT}`,
+            origin: process.env.URL_CLIENT,
             methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
             credentials: true,
         },

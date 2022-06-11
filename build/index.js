@@ -21,7 +21,7 @@ const httpServer = (0, http_1.createServer)(app);
 app.use(express_1.default.json());
 app.set('trust proxy', 1);
 app.use((0, cors_1.default)({
-    origin: `${process.env.URL_CLIENT}`,
+    origin: process.env.URL_CLIENT,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
 }));
