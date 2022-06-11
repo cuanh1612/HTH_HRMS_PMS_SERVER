@@ -68,8 +68,13 @@ const authController = {
                 success: false,
                 message: 'Incorrect email or password',
             });
+        console.log(email, password);
+        console.log(email, password);
+        console.log(email, password);
+        console.log(email, password);
+        console.log(email, password, existingUser);
         //Save cookie refresh token
-        (0, auth_1.sendRefreshToken)(req, existingUser);
+        (0, auth_1.sendRefreshToken)(res, existingUser);
         return res.status(200).json({
             code: 200,
             success: true,
@@ -120,7 +125,7 @@ const authController = {
         });
     })),
     refreshToken: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const refreshToken = req.session.refresh;
+        const refreshToken = req.cookies[process.env.REFRESH_TOKEN_COOKIE_NAME];
         if (!refreshToken)
             return res.status(401).json({
                 code: 401,
