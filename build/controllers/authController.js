@@ -77,7 +77,7 @@ const authController = {
             message: 'Logged in successfully',
             user: existingUser,
             accessToken: (0, auth_1.createToken)('accessToken', existingUser),
-            refreshToken
+            refreshToken,
         });
     })),
     googleLogin: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -120,7 +120,7 @@ const authController = {
             success: true,
             message: 'Logged in successfully',
             accessToken: (0, auth_1.createToken)('accessToken', existingUser),
-            refreshToken
+            refreshToken,
         });
     })),
     refreshToken: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -150,12 +150,15 @@ const authController = {
                     success: false,
                     message: 'You must login 1first',
                 });
-            (0, auth_1.sendRefreshToken)(res, existingUser);
+            //Save cookie refresh token
+            // sendRefreshToken(res, existingUser)
+            const createdRefreshToken = (0, auth_1.createToken)('refreshToken', existingUser);
             return res.status(200).json({
                 code: 200,
                 success: true,
                 message: 'Refresh token success',
                 accessToken: (0, auth_1.createToken)('accessToken', existingUser),
+                refreshToken: createdRefreshToken
             });
         }
         catch (error) {

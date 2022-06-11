@@ -27,8 +27,6 @@ const authController = {
 				},
 			}))
 
-
-
 		const existingUserPassword =
 			(await Employee.createQueryBuilder('employee')
 				.where('employee.email = :email', { email: email })
@@ -39,7 +37,7 @@ const authController = {
 				.select('client.password')
 				.getOne())
 
-		if (!existingUser) 
+		if (!existingUser)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -79,7 +77,7 @@ const authController = {
 			message: 'Logged in successfully',
 			user: existingUser,
 			accessToken: createToken('accessToken', existingUser),
-			refreshToken
+			refreshToken,
 		})
 	}),
 
@@ -130,7 +128,7 @@ const authController = {
 			success: true,
 			message: 'Logged in successfully',
 			accessToken: createToken('accessToken', existingUser),
-			refreshToken
+			refreshToken,
 		})
 	}),
 
@@ -170,13 +168,16 @@ const authController = {
 					message: 'You must login 1first',
 				})
 
-			sendRefreshToken(res, existingUser)
+			//Save cookie refresh token
+			// sendRefreshToken(res, existingUser)
+			const createdRefreshToken = createToken('refreshToken', existingUser)
 
 			return res.status(200).json({
 				code: 200,
 				success: true,
 				message: 'Refresh token success',
 				accessToken: createToken('accessToken', existingUser),
+				refreshToken: createdRefreshToken
 			})
 		} catch (error) {
 			return res.status(403).json({
@@ -223,7 +224,7 @@ const authController = {
 
 	currentUser: handleCatchError(async (req: Request, res: Response) => {
 		const token = req.headers.authorization?.split(' ')[1]
-		
+
 		if (!token)
 			return res.status(401).json({
 				code: 400,
