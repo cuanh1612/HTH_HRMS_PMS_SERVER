@@ -23,7 +23,7 @@ app.use(
 		origin: 'https://huprom-hrms-pms-client.vercel.app',
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 		credentials: true,
-		allowedHeaders: '*'
+		preflightContinue: true
 	})
 )
 app.use(cookieParser())
