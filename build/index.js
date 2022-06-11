@@ -17,15 +17,16 @@ const PORT = process.env.PORT || 4000;
 (0, connectDB_1.default)();
 //Creae and setup express app
 const app = (0, express_1.default)();
-app.enable('trust proxy');
 const httpServer = (0, http_1.createServer)(app);
 app.use(express_1.default.json());
-app.use((0, cookie_parser_1.default)());
+app.set('trust proxy', 1);
 app.use((0, cors_1.default)({
     origin: 'https://huprom-hrms-pms-client.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    credentials: true
+    credentials: true,
+    allowedHeaders: '*'
 }));
+app.use((0, cookie_parser_1.default)());
 //Routes
 (0, mainRouter_1.default)(app);
 //Setting socket server
