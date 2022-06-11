@@ -254,7 +254,7 @@ const roomController = {
 		existRoom.start_time = start_time
 		existRoom.clients = clientsInfo
 		existRoom.employees = employeesInfo
-		existRoom.link = `${process.env.URL_CLIENT}/meeting/${title.replace(/ /g, '-')}`
+		existRoom.link = `${process.env.CLIENT_URL}/meeting/${title.replace(/ /g, '-')}`
 		await existRoom.save()
 
 		if (oldTitle != title.replace(/ /g, '-')) {
@@ -351,7 +351,7 @@ const roomController = {
 				})
 			})
 		)
-		
+
 
 		await Room.create({
 			title: title.replace(/ /g, '-'),
@@ -361,7 +361,7 @@ const roomController = {
 			clients: clientsInfo,
 			employees: employeesInfo,
 			empl_create: existEmployee,
-			link: `${process.env.URL_CLIENT}/meeting/${title.replace(/ /g, '-')}`,
+			link: `${process.env.CLIENT_URL}/meeting/${title.replace(/ /g, '-')}`,
 		}).save()
 
 		await fetch(`${process.env.ZOOM_URL_API}`, {
