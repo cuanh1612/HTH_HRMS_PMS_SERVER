@@ -1,7 +1,7 @@
 import argon2 from 'argon2'
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
-import { createActiveToken, createToken, sendRefreshToken } from '../utils/auth'
+import { createActiveToken, createToken } from '../utils/auth'
 import handleCatchError from '../utils/catchAsyncError'
 import { JwtPayload, Secret, verify } from 'jsonwebtoken'
 import { UserAuthPayload } from '../type/UserAuthPayload'
