@@ -125,11 +125,6 @@ const authController = {
     })),
     refreshToken: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const refreshToken = req.cookies[`jwt-auth-cookie`];
-        console.log(refreshToken);
-        console.log(req.cookies);
-        console.log(process.env.REFRESH_TOKEN_COOKIE_NAME);
-        console.log(refreshToken);
-        console.log(refreshToken);
         if (!refreshToken)
             return res.status(401).json({
                 code: 401,
