@@ -351,6 +351,7 @@ const roomController = {
 				})
 			})
 		)
+		
 
 		await Room.create({
 			title: title.replace(/ /g, '-'),
