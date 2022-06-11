@@ -27,6 +27,8 @@ const authController = {
 				},
 			}))
 
+
+
 		const existingUserPassword =
 			(await Employee.createQueryBuilder('employee')
 				.where('employee.email = :email', { email: email })
@@ -37,7 +39,7 @@ const authController = {
 				.select('client.password')
 				.getOne())
 
-		if (!existingUser)
+		if (!existingUser) 
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -68,7 +70,7 @@ const authController = {
 			})
 
 		//Save cookie refresh token
-		sendRefreshToken(req, existingUser)
+		sendRefreshToken(res, existingUser)
 
 		return res.status(200).json({
 			code: 200,
@@ -128,8 +130,8 @@ const authController = {
 		})
 	}),
 
-	refreshToken: handleCatchError(async (req: any, res: Response) => {
-		const refreshToken = req.session.refresh
+	refreshToken: handleCatchError(async (req: Request, res: Response) => {
+		const refreshToken = req.cookies[process.env.REFRESH_TOKEN_COOKIE_NAME as string]
 
 		if (!refreshToken)
 			return res.status(401).json({
