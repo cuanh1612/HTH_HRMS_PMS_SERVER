@@ -68,6 +68,11 @@ const authController = {
 				success: false,
 				message: 'Incorrect email or password',
 			})
+			console.log(email, password)
+			console.log(email, password)
+			console.log(email, password)
+			console.log(email, password)
+			console.log(email, password, existingUser)
 
 		//Save cookie refresh token
 		sendRefreshToken(res, existingUser)
