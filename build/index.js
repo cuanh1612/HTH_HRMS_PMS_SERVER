@@ -19,16 +19,18 @@ const PORT = process.env.PORT || 4000;
 const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);
 app.use(express_1.default.json());
-app.use((0, cookie_parser_1.default)());
+app.set('trust proxy', 1);
 app.use((0, cors_1.default)({
-    origin: process.env.URL_CLIENT,
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
 }));
+app.use((0, cookie_parser_1.default)());
 //Routes
 (0, mainRouter_1.default)(app);
 //Setting socket server
 (0, socketIO_1.default)(httpServer);
 //Server listen PORT
 httpServer.listen(PORT, () => {
-    console.log(`Server listen at http://localhost:${PORT}`);
+    console.log(`Server listen at http://localhost:${PORT}, ${process.env.URL_CLIENT}`);
 });

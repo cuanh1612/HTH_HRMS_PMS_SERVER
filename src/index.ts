@@ -16,15 +16,16 @@ connectDB()
 //Creae and setup express app
 const app = express()
 const httpServer = createServer(app)
-
 app.use(express.json())
-app.use(cookieParser())
+app.set('trust proxy', 1)
 app.use(
 	cors({
-		origin: process.env.URL_CLIENT,
+		origin: 'http://localhost:3000',
+		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 		credentials: true,
 	})
 )
+app.use(cookieParser())
 
 //Routes
 mainRouter(app)
@@ -34,5 +35,5 @@ createSocketServer(httpServer)
 
 //Server listen PORT
 httpServer.listen(PORT, () => {
-	console.log(`Server listen at http://localhost:${PORT}`)
+	console.log(`Server listen at http://localhost:${PORT}, ${process.env.URL_CLIENT}`)
 })

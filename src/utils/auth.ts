@@ -19,19 +19,19 @@ export const createToken = (type: 'accessToken' | 'refreshToken', user: Employee
 		}
 	)
 
-	export const createActiveToken = (email: string, id: number) =>
+export const createActiveToken = (email: string, id: number) =>
 	sign(
 		{
 			email,
-			id
+			id,
 		},
 		process.env.ACTIVE_TOKEN_SECRET as Secret,
 		{
-			expiresIn: '10m'
+			expiresIn: '10m',
 		}
 	)
 
-	export const createAc = (type: 'accessToken' | 'refreshToken', user: Employee | Client) =>
+export const createAc = (type: 'accessToken' | 'refreshToken', user: Employee | Client) =>
 	sign(
 		{
 			userId: user.id,
@@ -47,12 +47,42 @@ export const createToken = (type: 'accessToken' | 'refreshToken', user: Employee
 		}
 	)
 
-
 export const sendRefreshToken = (res: Response, user: Employee | Client) => {
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
+	console.log(res, user)
 	res.cookie(process.env.REFRESH_TOKEN_COOKIE_NAME as string, createToken('refreshToken', user), {
 		httpOnly: true,
 		sameSite: 'lax',
-		secure: true,
+		expires: new Date(new Date().getTime() + 7 * 60 * 60 * 1000),
 		path: '/',
+		secure: true,
 	})
 }

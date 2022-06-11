@@ -15,7 +15,6 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 const authController = {
 	login: handleCatchError(async (req: Request, res: Response) => {
 		const { email, password } = req.body
-
 		const existingUser =
 			(await Employee.findOne({
 				where: {
@@ -28,6 +27,8 @@ const authController = {
 				},
 			}))
 
+
+
 		const existingUserPassword =
 			(await Employee.createQueryBuilder('employee')
 				.where('employee.email = :email', { email: email })
@@ -38,7 +39,7 @@ const authController = {
 				.select('client.password')
 				.getOne())
 
-		if (!existingUser)
+		if (!existingUser) 
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -69,7 +70,8 @@ const authController = {
 			})
 
 		//Save cookie refresh token
-		sendRefreshToken(res, existingUser)
+		// sendRefreshToken(res, existingUser)
+		const refreshToken = createToken('refreshToken', existingUser)
 
 		return res.status(200).json({
 			code: 200,
@@ -77,6 +79,7 @@ const authController = {
 			message: 'Logged in successfully',
 			user: existingUser,
 			accessToken: createToken('accessToken', existingUser),
+			refreshToken
 		})
 	}),
 
@@ -119,13 +122,15 @@ const authController = {
 			})
 
 		//Save cookie refresh token
-		sendRefreshToken(res, existingUser)
+		// sendRefreshToken(res, existingUser)
+		const refreshToken = createToken('refreshToken', existingUser)
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
 			message: 'Logged in successfully',
 			accessToken: createToken('accessToken', existingUser),
+			refreshToken
 		})
 	}),
 
@@ -202,12 +207,12 @@ const authController = {
 
 		await existingUser.save()
 
-		res.clearCookie(process.env.REFRESH_TOKEN_COOKIE_NAME as string, {
-			httpOnly: true,
-			sameSite: 'lax',
-			secure: true,
-			path: '/',
-		})
+		// res.clearCookie(process.env.REFRESH_TOKEN_COOKIE_NAME as string, {
+		// 	httpOnly: true,
+		// 	sameSite: 'lax',
+		// 	secure: true,
+		// 	path: '/',
+		// })
 
 		return res.status(200).json({
 			code: 200,
@@ -218,7 +223,7 @@ const authController = {
 
 	currentUser: handleCatchError(async (req: Request, res: Response) => {
 		const token = req.headers.authorization?.split(' ')[1]
-
+		
 		if (!token)
 			return res.status(401).json({
 				code: 400,
@@ -294,7 +299,6 @@ const authController = {
 
 	recoverPass: handleCatchError(async (req: Request, res: Response) => {
 		const { email } = req.body
-		console.log(email)
 		if (!email) {
 			return res.status(400).json({
 				code: 400,

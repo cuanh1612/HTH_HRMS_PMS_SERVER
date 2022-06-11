@@ -69,13 +69,15 @@ const authController = {
                 message: 'Incorrect email or password',
             });
         //Save cookie refresh token
-        (0, auth_1.sendRefreshToken)(res, existingUser);
+        // sendRefreshToken(res, existingUser)
+        const refreshToken = (0, auth_1.createToken)('refreshToken', existingUser);
         return res.status(200).json({
             code: 200,
             success: true,
             message: 'Logged in successfully',
             user: existingUser,
             accessToken: (0, auth_1.createToken)('accessToken', existingUser),
+            refreshToken
         });
     })),
     googleLogin: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -111,12 +113,14 @@ const authController = {
                 message: "You can't login to the system",
             });
         //Save cookie refresh token
-        (0, auth_1.sendRefreshToken)(res, existingUser);
+        // sendRefreshToken(res, existingUser)
+        const refreshToken = (0, auth_1.createToken)('refreshToken', existingUser);
         return res.status(200).json({
             code: 200,
             success: true,
             message: 'Logged in successfully',
             accessToken: (0, auth_1.createToken)('accessToken', existingUser),
+            refreshToken
         });
     })),
     refreshToken: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -177,12 +181,12 @@ const authController = {
             });
         existingUser.token_version += 1;
         yield existingUser.save();
-        res.clearCookie(process.env.REFRESH_TOKEN_COOKIE_NAME, {
-            httpOnly: true,
-            sameSite: 'lax',
-            secure: true,
-            path: '/',
-        });
+        // res.clearCookie(process.env.REFRESH_TOKEN_COOKIE_NAME as string, {
+        // 	httpOnly: true,
+        // 	sameSite: 'lax',
+        // 	secure: true,
+        // 	path: '/',
+        // })
         return res.status(200).json({
             code: 200,
             success: true,
@@ -254,7 +258,6 @@ const authController = {
     })),
     recoverPass: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email } = req.body;
-        console.log(email);
         if (!email) {
             return res.status(400).json({
                 code: 400,

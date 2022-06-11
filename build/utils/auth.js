@@ -10,9 +10,9 @@ const createToken = (type, user) => (0, jsonwebtoken_1.sign)(Object.assign({ use
 exports.createToken = createToken;
 const createActiveToken = (email, id) => (0, jsonwebtoken_1.sign)({
     email,
-    id
+    id,
 }, process.env.ACTIVE_TOKEN_SECRET, {
-    expiresIn: '10m'
+    expiresIn: '10m',
 });
 exports.createActiveToken = createActiveToken;
 const createAc = (type, user) => (0, jsonwebtoken_1.sign)(Object.assign({ userId: user.id, role: user.role, email: user.email }, (type === 'refreshToken' ? { tokenVersion: user.token_version } : {})), type === 'accessToken'
@@ -22,11 +22,42 @@ const createAc = (type, user) => (0, jsonwebtoken_1.sign)(Object.assign({ userId
 });
 exports.createAc = createAc;
 const sendRefreshToken = (res, user) => {
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
+    console.log(res, user);
     res.cookie(process.env.REFRESH_TOKEN_COOKIE_NAME, (0, exports.createToken)('refreshToken', user), {
         httpOnly: true,
         sameSite: 'lax',
-        secure: true,
+        expires: new Date(new Date().getTime() + 7 * 60 * 60 * 1000),
         path: '/',
+        secure: true,
     });
 };
 exports.sendRefreshToken = sendRefreshToken;

@@ -7,8 +7,13 @@ projectRouter.get('/', roomController.getAll)
 
 projectRouter.post('/', roomController.create)
 
-projectRouter.delete('/', roomController.delete)
+projectRouter.delete('/:id', roomController.delete)
+
+projectRouter.put('/:id', roomController.update)
+
+projectRouter.get('/title/:title', roomController.getByTitle)
 
 projectRouter.get('/:id', roomController.getDetail)
+
 
 export default projectRouter

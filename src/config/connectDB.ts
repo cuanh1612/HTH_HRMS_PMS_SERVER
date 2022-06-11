@@ -43,12 +43,15 @@ import { Notification } from '../entities/Notification'
 const connectDB = () => {
 	createConnection({
 		type: 'postgres',
-		database:  process.env.DB_DATABASE,
-		username: process.env.DB_USER,
-		password: process.env.DB_PASSWORD,
+		
 		name: 'huprom',
-		logging: true,
-		synchronize: true,
+		logging: false,
+		synchronize: false,
+		url: 'postgres://postgres:161201@127.0.0.1:5432/HTH_HRMS_PMS',
+		port: 5432,
+		// ssl: {
+		// 	rejectUnauthorized: false
+		// },
 		entities: [
 			Employee,
 			Avatar,
