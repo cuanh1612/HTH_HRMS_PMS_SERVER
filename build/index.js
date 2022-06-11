@@ -24,7 +24,6 @@ app.use((0, cors_1.default)({
     origin: 'https://huprom-hrms-pms-client.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
-    preflightContinue: true
 }));
 app.use((0, cookie_parser_1.default)());
 //Routes
