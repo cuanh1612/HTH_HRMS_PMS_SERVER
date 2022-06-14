@@ -334,7 +334,9 @@ const roomController = {
                 Authorization: `Bearer ${process.env.ZOOM_URL_KEY}`,
                 Accept: 'application/json',
             },
-        }).then((e) => e.json());
+        }).then((e) => e.json()).catch(e => {
+            console.log(e);
+        });
         return res.status(200).json({
             code: 200,
             success: true,

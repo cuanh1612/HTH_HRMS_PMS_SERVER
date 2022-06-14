@@ -45,13 +45,16 @@ const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
         name: 'huprom',
-        logging: false,
-        synchronize: false,
-        url: `${process.env.DB_URL}`,
+        logging: true,
+        database: 'hth_hrms_pms',
+        password: 'kingspear1999',
+        username: 'postgres',
+        synchronize: true,
         port: 5432,
-        ssl: {
-            rejectUnauthorized: false
-        },
+        // url: `${process.env.DB_URL}`,
+        // ssl: {
+        // 	rejectUnauthorized: false
+        // },
         entities: [
             Employee_1.Employee,
             Avatar_1.Avatar,
