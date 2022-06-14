@@ -230,7 +230,7 @@ const roomController = {
         existRoom.start_time = start_time;
         existRoom.clients = clientsInfo;
         existRoom.employees = employeesInfo;
-        existRoom.link = `${process.env.URL_CLIENT}/meeting/${title.replace(/ /g, '-')}`;
+        existRoom.link = `${process.env.CLIENT_URL}/meeting/${title.replace(/ /g, '-')}`;
         yield existRoom.save();
         if (oldTitle != title.replace(/ /g, '-')) {
             yield (0, node_fetch_1.default)(`${process.env.ZOOM_URL_API}/${oldTitle}`, {
@@ -315,7 +315,7 @@ const roomController = {
             clients: clientsInfo,
             employees: employeesInfo,
             empl_create: existEmployee,
-            link: `${process.env.URL_CLIENT}/meeting/${title.replace(/ /g, '-')}`,
+            link: `${process.env.CLIENT_URL}/meeting/${title.replace(/ /g, '-')}`,
         }).save();
         yield (0, node_fetch_1.default)(`${process.env.ZOOM_URL_API}`, {
             method: 'POST',

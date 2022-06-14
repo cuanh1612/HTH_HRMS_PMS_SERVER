@@ -48,11 +48,11 @@ const connectDB = () => {
         name: 'huprom',
         logging: false,
         synchronize: false,
-        url: 'postgres://postgres:161201@127.0.0.1:5432/HTH_HRMS_PMS',
+        url: `${process.env.DB_URL}`,
         port: 5432,
-        // ssl: {
-        // 	rejectUnauthorized: false
-        // },
+        ssl: {
+            rejectUnauthorized: false
+        },
         entities: [
             Employee_1.Employee,
             Avatar_1.Avatar,

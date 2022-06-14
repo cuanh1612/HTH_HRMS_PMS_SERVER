@@ -22,36 +22,6 @@ const createAc = (type, user) => (0, jsonwebtoken_1.sign)(Object.assign({ userId
 });
 exports.createAc = createAc;
 const sendRefreshToken = (res, user) => {
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
-    console.log(res, user);
     res.cookie(process.env.REFRESH_TOKEN_COOKIE_NAME, (0, exports.createToken)('refreshToken', user), {
         httpOnly: true,
         sameSite: 'lax',

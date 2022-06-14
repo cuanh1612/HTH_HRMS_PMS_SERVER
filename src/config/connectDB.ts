@@ -44,15 +44,14 @@ import { Company_Info } from '../entities/Company_Info'
 const connectDB = () => {
 	createConnection({
 		type: 'postgres',
-		
 		name: 'huprom',
 		logging: false,
 		synchronize: false,
-		url: 'postgres://postgres:161201@127.0.0.1:5432/HTH_HRMS_PMS',
+		url: `${process.env.DB_URL}`,
 		port: 5432,
-		// ssl: {
-		// 	rejectUnauthorized: false
-		// },
+		ssl: {
+			rejectUnauthorized: false
+		},
 		entities: [
 			Employee,
 			Avatar,

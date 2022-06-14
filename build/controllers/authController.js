@@ -124,12 +124,13 @@ const authController = {
         });
     })),
     refreshToken: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const refreshToken = req.cookies[process.env.REFRESH_TOKEN_COOKIE_NAME];
+        const refreshToken = req.cookies[`jwt-auth-cookie`];
         if (!refreshToken)
             return res.status(401).json({
                 code: 401,
                 success: false,
                 message: 'You must login first',
+                refreshToken
             });
         //Check decode
         try {
@@ -285,7 +286,7 @@ const authController = {
             to: email,
             text: 'reset password',
             subject: 'huprom-reset password',
-            html: `<a href="http://localhost:3000/reset-password/${activeToken}>link</a>`,
+            html: `<a href="${process.env.CLIENT_URL}/reset-password/${activeToken}>link</a>`,
         });
         return res.status(200).json({
             code: 200,
