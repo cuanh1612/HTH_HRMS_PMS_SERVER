@@ -39,6 +39,7 @@ import { Time_log } from '../entities/Time_Log'
 import { Room } from '../entities/Room'
 import { Sticky_note } from '../entities/StickyNote'
 import { Notification } from '../entities/Notification'
+import { Company_Info } from '../entities/Company_Info'
 
 const connectDB = () => {
 	createConnection({
@@ -95,7 +96,8 @@ const connectDB = () => {
 			Time_log,
 			Room,
 			Sticky_note, 
-			Notification
+			Notification,
+			Company_Info
 		],
 	})
 		.then(() => {

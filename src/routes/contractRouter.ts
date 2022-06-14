@@ -20,4 +20,6 @@ contractRouter.delete('/:contractId', checkAuth(['Admin']), contractController.d
 
 contractRouter.put('/:contractId', checkAuth(['Admin']), contractController.update)
 
+contractRouter.post('/csv', checkAuth(['Admin']), contractController.importCSV)
+
 export default contractRouter

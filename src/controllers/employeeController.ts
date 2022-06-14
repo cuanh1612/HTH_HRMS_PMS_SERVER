@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import { getManager } from 'typeorm'
 import { Attendance } from '../entities/Attendance'
 import { Avatar } from '../entities/Avatar'
+import { Client } from '../entities/Client'
 import { Department } from '../entities/Department'
 import { Designation } from '../entities/Designation'
 import { Employee } from '../entities/Employee'
@@ -31,9 +32,9 @@ const employeeController = {
 				name: true,
 				email: true,
 				avatar: {
-					url: true
-				}
-			}
+					url: true,
+				},
+			},
 		})
 		return res.status(200).json({
 			code: 200,
@@ -83,11 +84,17 @@ const employeeController = {
 			})
 
 		//Check existing email
-		const existingEmployee = await Employee.findOne({
-			where: {
-				email: dataNewEmployee.email,
-			},
-		})
+		const existingEmployee =
+			(await Employee.findOne({
+				where: {
+					email: dataNewEmployee.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: dataNewEmployee.email,
+				},
+			}))
 
 		if (existingEmployee)
 			return res.status(400).json({
@@ -150,6 +157,101 @@ const employeeController = {
 			success: true,
 			employee: createdEmployee,
 			message: 'Created new Employee successfully',
+		})
+	}),
+
+	importCSV: handleCatchError(async (req: Request, res: Response) => {
+		const { employees }: { employees: createOrUpdatetEmployeePayload[] } = req.body
+
+		let employeeNotValid: number[] = []
+		let employeeExistingEmailOrID: number[] = []
+		//employee not have department or designation
+		let employeeNotExistDPDS: number[] = []
+
+		await Promise.all(
+			employees.map((employee) => {
+				return new Promise(async (resolve) => {
+					//Check valid
+					const messageValid = employeeValid.createOrUpdate(employee, 'create')
+
+					if (messageValid && employee.index) {
+						employeeNotValid.push(employee.index)
+					} else {
+						//Check existing email
+						const existingEmployee =
+							(await Employee.findOne({
+								where: {
+									email: employee.email,
+								},
+							})) ||
+							(await Client.findOne({
+								where: {
+									email: employee.email,
+								},
+							}))
+
+						//Check existing employee-id
+						const existingEmployeeID = await Employee.findOne({
+							where: {
+								employeeId: employee.employeeId,
+							},
+						})
+
+						//Check existing department
+						const existingDepartment = await Department.findOne({
+							where: {
+								id: employee.department,
+							},
+						})
+
+						//Check existing designation
+						const existingDesignation = await Designation.findOne({
+							where: {
+								id: employee.designation,
+							},
+						})
+
+						if ((existingEmployee || existingEmployeeID) && employee.index) {
+							employeeExistingEmailOrID.push(employee.index)
+						} else if (
+							(!existingDepartment || !existingDesignation) &&
+							employee.index
+						) {
+							employeeNotExistDPDS.push(employee.index)
+						} else {
+							const hashPassword = await argon2.hash(employee.password)
+
+							//Create new employee
+							await Employee.create({
+								...employee,
+								can_receive_email: true,
+								can_login: true,
+								password: hashPassword,
+							}).save()
+						}
+					}
+
+					resolve(true)
+				})
+			})
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: `Create employees by import csv successfully${
+				employeeNotValid.length > 0
+					? `. Incorrect lines of data that are not added to the server include index ${employeeNotValid.toString()}`
+					: ''
+			}${
+				employeeExistingEmailOrID.length > 0
+					? `. Employee existing email or employeeID lines of data that are not added to the server include index ${employeeExistingEmailOrID.toString()}`
+					: ''
+			}${
+				employeeNotExistDPDS.length > 0
+					? `. Employee not existing department or designation lines of data that are not added to the server include index ${employeeNotExistDPDS.toString()}`
+					: ''
+			}`,
 		})
 	}),
 

@@ -15,4 +15,5 @@ contractRouter.get('/', contractController_1.default.getAll);
 contractRouter.get('/:contractId', (0, checkAuth_1.checkAuth)(['Admin', 'Client']), contractController_1.default.getDetail);
 contractRouter.delete('/:contractId', (0, checkAuth_1.checkAuth)(['Admin']), contractController_1.default.delete);
 contractRouter.put('/:contractId', (0, checkAuth_1.checkAuth)(['Admin']), contractController_1.default.update);
+contractRouter.post('/csv', (0, checkAuth_1.checkAuth)(['Admin']), contractController_1.default.importCSV);
 exports.default = contractRouter;

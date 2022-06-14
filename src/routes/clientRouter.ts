@@ -16,7 +16,7 @@ clientRouter.get('/:clientId/total-projects', checkAuth([]), clientController.to
 clientRouter.get('/:clientId/total-earnings',  checkAuth([]), clientController.totalEarnings)
 clientRouter.get('/:clientId/status-projects',  checkAuth([]), clientController.statusProjects)
 clientRouter.get('/:clientId/projects', checkAuth([]), clientController.projects)
-
+clientRouter.post('/csv', checkAuth([]), clientController.importCSV)
 clientRouter.delete('/:clientId', checkAuth(['Admin']), clientController.delete)
 
 export default clientRouter

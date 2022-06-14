@@ -21,7 +21,6 @@ userRouter.get('/:employeeId/late-attendance', (0, checkAuth_1.checkAuth)([]), e
 userRouter.get('/:employeeId/count-leaves-taken', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.countLeavesTaken);
 userRouter.get('/:employeeId/count-tasks-status', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.countTasksStatus);
 userRouter.get('/:employeeId/tasks', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.getTasks);
-// userRouter.get('/:employeeId/count-pending-tasks', checkAuth([]), employeeController.getCountPendingTasks)
-// userRouter.get('/:employeeId/getCountOverdueTasks', employeeController.getCountOverdueTasks)
+userRouter.post('/csv', (0, checkAuth_1.checkAuth)([]), employeeController_1.default.importCSV);
 userRouter.delete('/:employeeId', (0, checkAuth_1.checkAuth)(['Admin']), employeeController_1.default.delete);
 exports.default = userRouter;
