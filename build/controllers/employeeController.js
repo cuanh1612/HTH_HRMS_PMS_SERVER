@@ -27,6 +27,7 @@ const argon2_1 = __importDefault(require("argon2"));
 const typeorm_1 = require("typeorm");
 const Attendance_1 = require("../entities/Attendance");
 const Avatar_1 = require("../entities/Avatar");
+const Client_1 = require("../entities/Client");
 const Department_1 = require("../entities/Department");
 const Designation_1 = require("../entities/Designation");
 const Employee_1 = require("../entities/Employee");
@@ -53,9 +54,9 @@ const employeeController = {
                 name: true,
                 email: true,
                 avatar: {
-                    url: true
-                }
-            }
+                    url: true,
+                },
+            },
         });
         return res.status(200).json({
             code: 200,
@@ -97,11 +98,16 @@ const employeeController = {
                 message: messageValid,
             });
         //Check existing email
-        const existingEmployee = yield Employee_1.Employee.findOne({
+        const existingEmployee = (yield Employee_1.Employee.findOne({
             where: {
                 email: dataNewEmployee.email,
             },
-        });
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email: dataNewEmployee.email,
+                },
+            }));
         if (existingEmployee)
             return res.status(400).json({
                 code: 400,
@@ -151,6 +157,77 @@ const employeeController = {
             success: true,
             employee: createdEmployee,
             message: 'Created new Employee successfully',
+        });
+    })),
+    importCSV: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employees } = req.body;
+        let employeeNotValid = [];
+        let employeeExistingEmailOrID = [];
+        //employee not have department or designation
+        let employeeNotExistDPDS = [];
+        yield Promise.all(employees.map((employee) => {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //Check valid
+                const messageValid = employeeValid_1.employeeValid.createOrUpdate(employee, 'create');
+                if (messageValid && employee.index) {
+                    employeeNotValid.push(employee.index);
+                }
+                else {
+                    //Check existing email
+                    const existingEmployee = (yield Employee_1.Employee.findOne({
+                        where: {
+                            email: employee.email,
+                        },
+                    })) ||
+                        (yield Client_1.Client.findOne({
+                            where: {
+                                email: employee.email,
+                            },
+                        }));
+                    //Check existing employee-id
+                    const existingEmployeeID = yield Employee_1.Employee.findOne({
+                        where: {
+                            employeeId: employee.employeeId,
+                        },
+                    });
+                    //Check existing department
+                    const existingDepartment = yield Department_1.Department.findOne({
+                        where: {
+                            id: employee.department,
+                        },
+                    });
+                    //Check existing designation
+                    const existingDesignation = yield Designation_1.Designation.findOne({
+                        where: {
+                            id: employee.designation,
+                        },
+                    });
+                    if ((existingEmployee || existingEmployeeID) && employee.index) {
+                        employeeExistingEmailOrID.push(employee.index);
+                    }
+                    else if ((!existingDepartment || !existingDesignation) &&
+                        employee.index) {
+                        employeeNotExistDPDS.push(employee.index);
+                    }
+                    else {
+                        const hashPassword = yield argon2_1.default.hash(employee.password);
+                        //Create new employee
+                        yield Employee_1.Employee.create(Object.assign(Object.assign({}, employee), { can_receive_email: true, can_login: true, password: hashPassword })).save();
+                    }
+                }
+                resolve(true);
+            }));
+        }));
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: `Create employees by import csv successfully${employeeNotValid.length > 0
+                ? `. Incorrect lines of data that are not added to the server include index ${employeeNotValid.toString()}`
+                : ''}${employeeExistingEmailOrID.length > 0
+                ? `. Employee existing email or employeeID lines of data that are not added to the server include index ${employeeExistingEmailOrID.toString()}`
+                : ''}${employeeNotExistDPDS.length > 0
+                ? `. Employee not existing department or designation lines of data that are not added to the server include index ${employeeNotExistDPDS.toString()}`
+                : ''}`,
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

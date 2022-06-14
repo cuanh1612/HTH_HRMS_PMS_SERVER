@@ -50,9 +50,9 @@ const clientController = {
                 name: true,
                 email: true,
                 avatar: {
-                    url: true
-                }
-            }
+                    url: true,
+                },
+            },
         });
         return res.status(200).json({
             code: 200,
@@ -157,6 +157,51 @@ const clientController = {
             success: true,
             client: createdClient,
             message: 'Created new client successfully',
+        });
+    })),
+    importCSV: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { clients } = req.body;
+        let clientsNotValid = [];
+        let clientsExistingEmail = [];
+        yield Promise.all(clients.map((client) => {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //Check valid
+                const messageValid = clientValid_1.clientValid.createOrUpdate(client, 'create');
+                if (messageValid && client.index) {
+                    clientsNotValid.push(client.index);
+                }
+                else {
+                    //Check existing email
+                    const existingEmployee = yield Employee_1.Employee.findOne({
+                        where: {
+                            email: client.email,
+                        },
+                    });
+                    const existingClient = yield Client_1.Client.findOne({
+                        where: {
+                            email: client.email,
+                        },
+                    });
+                    if ((existingEmployee || existingClient) && client.index) {
+                        clientsExistingEmail.push(client.index);
+                    }
+                    else {
+                        const hashPassword = yield argon2_1.default.hash(client.password);
+                        //Create new client
+                        yield Client_1.Client.create(Object.assign(Object.assign({}, client), { password: hashPassword, can_login: true, can_receive_email: true })).save();
+                    }
+                }
+                resolve(true);
+            }));
+        }));
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: `Create clients by import csv successfully${clientsNotValid.length > 0
+                ? `. Incorrect lines of data that are not added to the server include index ${clientsNotValid.toString()}`
+                : ''}${clientsExistingEmail.length > 0
+                ? `. Clients whose email already existing email in the system include index ${clientsExistingEmail.toString()}`
+                : ``}`,
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

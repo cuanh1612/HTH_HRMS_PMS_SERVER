@@ -20,9 +20,7 @@ userRouter.get('/:employeeId/late-attendance', checkAuth([]), employeeController
 userRouter.get('/:employeeId/count-leaves-taken', checkAuth([]), employeeController.countLeavesTaken)
 userRouter.get('/:employeeId/count-tasks-status',checkAuth([]), employeeController.countTasksStatus)
 userRouter.get('/:employeeId/tasks', checkAuth([]), employeeController.getTasks)
-// userRouter.get('/:employeeId/count-pending-tasks', checkAuth([]), employeeController.getCountPendingTasks)
-// userRouter.get('/:employeeId/getCountOverdueTasks', employeeController.getCountOverdueTasks)
-
+userRouter.post('/csv', checkAuth([]), employeeController.importCSV)
 userRouter.delete('/:employeeId', checkAuth(['Admin']), employeeController.delete)
 
 export default userRouter

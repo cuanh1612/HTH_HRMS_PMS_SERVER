@@ -29,9 +29,9 @@ const clientController = {
 				name: true,
 				email: true,
 				avatar: {
-					url: true
-				}
-			}
+					url: true,
+				},
+			},
 		})
 		return res.status(200).json({
 			code: 200,
@@ -161,6 +161,68 @@ const clientController = {
 			success: true,
 			client: createdClient,
 			message: 'Created new client successfully',
+		})
+	}),
+
+	importCSV: handleCatchError(async (req: Request, res: Response) => {
+		const { clients }: { clients: createOrUpdatetClientPayload[] } = req.body
+
+		let clientsNotValid: number[] = []
+		let clientsExistingEmail: number[] = []
+
+		await Promise.all(
+			clients.map((client) => {
+				return new Promise(async (resolve) => {
+					//Check valid
+					const messageValid = clientValid.createOrUpdate(client, 'create')
+
+					if (messageValid && client.index) {
+						clientsNotValid.push(client.index)
+					} else {
+						//Check existing email
+						const existingEmployee = await Employee.findOne({
+							where: {
+								email: client.email,
+							},
+						})
+
+						const existingClient = await Client.findOne({
+							where: {
+								email: client.email,
+							},
+						})
+
+						if ((existingEmployee || existingClient) && client.index) {
+							clientsExistingEmail.push(client.index)
+						} else {
+							const hashPassword = await argon2.hash(client.password)
+
+							//Create new client
+							await Client.create({
+								...client,
+								password: hashPassword,
+								can_login: true,
+								can_receive_email: true
+							}).save()
+						}
+					}
+					resolve(true)
+				})
+			})
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: `Create clients by import csv successfully${
+				clientsNotValid.length > 0
+					? `. Incorrect lines of data that are not added to the server include index ${clientsNotValid.toString()}`
+					: ''
+			}${
+				clientsExistingEmail.length > 0
+					? `. Clients whose email already existing email in the system include index ${clientsExistingEmail.toString()}`
+					: ``
+			}`,
 		})
 	}),
 

@@ -150,7 +150,7 @@ const contractController = {
         if (dataNewContract.contract_type) {
             const existingContractType = yield Contract_Type_1.Contract_type.findOne({
                 where: {
-                    id: dataNewContract.contract_type.id,
+                    id: dataNewContract.contract_type,
                 },
             });
             if (!existingContractType)
@@ -165,14 +165,83 @@ const contractController = {
         //create new note for client
         yield Notification_1.Notification.create({
             client: existingClient,
-            url: "/contracts",
-            content: "There is a new contract you have just been assigned"
+            url: '/contracts',
+            content: 'There is a new contract you have just been assigned',
         }).save();
         return res.status(200).json({
             code: 200,
             success: true,
             contract: newContract,
             message: 'Created new contract successfully',
+        });
+    })),
+    importCSV: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { contracts } = req.body;
+        let contractNotValid = [];
+        //contract not have client or client category
+        let contractNotCLCA = [];
+        yield Promise.all(contracts.map((contract) => {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //Check valid
+                const messageValid = contractValid_1.contractValid.createOrUpdate(contract);
+                if (messageValid && contract.index) {
+                    contractNotValid.push(contract.index);
+                }
+                else {
+                    //Check existing client
+                    const existingClient = yield Client_1.Client.findOne({
+                        where: {
+                            id: contract.client,
+                        },
+                    });
+                    const existingContractType = yield Contract_Type_1.Contract_type.findOne({
+                        where: {
+                            id: contract.contract_type,
+                        },
+                    });
+                    if (!existingClient || !existingContractType) {
+                        if (contract.index)
+                            contractNotCLCA.push(contract.index);
+                    }
+                    else {
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        console.log(contract.subject);
+                        //Create new contract
+                        yield Contract_1.Contract.create(Object.assign(Object.assign({}, contract), { subject: contract.subject })).save();
+                        //create new note for client
+                        yield Notification_1.Notification.create({
+                            client: existingClient,
+                            url: '/contracts',
+                            content: 'There is a new contract you have just been assigned',
+                        }).save();
+                    }
+                }
+                resolve(true);
+            }));
+        }));
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: `Create contracts by import csv successfully${contractNotValid.length > 0
+                ? `. Incorrect lines of data that are not added to the server include index ${contractNotValid.toString()}`
+                : ''}${contractNotCLCA.length > 0
+                ? `. Contract data not existing client or client category include index ${contractNotCLCA.toString()}`
+                : ``}`,
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

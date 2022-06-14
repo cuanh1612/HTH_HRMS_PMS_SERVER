@@ -39,6 +39,7 @@ import taskRouter from './taskRouter'
 import TimeLogRouter from './timeLogRouter'
 import roomRouter from './roomRouter'
 import NotificationRouter from './notificationRouter'
+import companyInfoRouter from './companyInfoRouter'
 
 function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
@@ -120,6 +121,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/rooms', roomRouter)
 
 	app.use('/api/notifications', NotificationRouter)
+
+	app.use('/api/company-info', companyInfoRouter)
 }
 
 export default mainRouter
