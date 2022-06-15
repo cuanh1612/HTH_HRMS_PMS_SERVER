@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { Company_Info } from '../entities/Company_Info'
 import handleCatchError from '../utils/catchAsyncError'
+import { companyInfoValid } from '../utils/valid/companyInfoValid'
 
 const companyInfoController = {
     //Get info company 
@@ -35,7 +36,18 @@ const companyInfoController = {
 
 	//update companyInfo
 	update: handleCatchError(async (req: Request, res: Response) => {
-		const {email, website, name, phone}: Company_Info = req.body
+		const dataUpdateCompanyInfo: Company_Info = req.body
+        const {email, website, name, phone} = dataUpdateCompanyInfo
+
+        //Check valid
+		const messageValid = companyInfoValid.createOrUpdate(dataUpdateCompanyInfo)
+
+		if (messageValid)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: messageValid,
+			})
 
 		const companyInfo = (await Company_Info.find({}))[0]
 
