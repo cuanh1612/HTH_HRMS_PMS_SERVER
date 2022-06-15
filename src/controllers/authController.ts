@@ -189,13 +189,47 @@ const authController = {
 	}),
 
 	logout: handleCatchError(async (req: Request, res: Response) => {
-		const { userId } = req.body
+		//check exist current user
+        const token = req.headers.authorization?.split(' ')[1]
+
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            })
+
+        const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
 
 		const existingUser = await Employee.findOne({
 			where: {
-				id: userId,
+				id: decode.userId,
 			},
 		})
+
+
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		console.log(existingUser);
+		
 
 		if (!existingUser)
 			return res.status(400).json({
