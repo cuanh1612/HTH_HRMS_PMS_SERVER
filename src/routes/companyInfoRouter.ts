@@ -6,6 +6,6 @@ const companyInfoRouter = express.Router()
 
 companyInfoRouter.put('/', checkAuth(['Admin']), companyInfoController.update)
 
-companyInfoRouter.get('/contract/:contractId', checkAuth(['Admin']), companyInfoController.getInfo)
+companyInfoRouter.get('/', checkAuth([]), companyInfoController.getInfo)
 
 export default companyInfoRouter
