@@ -50,15 +50,26 @@ const dashBoardController = {
             message: 'Get total projects successfully',
         });
     })),
-    // hoursLogged: handleCatchError(async (_: Request, res: Response) => {
-    // 	const hoursLogged = await Project.createQueryBuilder('project').getCount()
-    // 	return res.status(200).json({
-    // 		code: 200,
-    // 		success: true,
-    // 		hoursLogged,
-    // 		message: 'Get hours logged successfully',
-    // 	})
-    // }),
+    sumHoursLoggedProjects: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const sumHoursLoggedProjects = yield manager.query('SELECT "project"."id", "project"."name", SUM("time_log"."total_hours") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id"');
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            sumHoursLoggedProjects: sumHoursLoggedProjects,
+            message: 'Get sum Hours Logged Projects successfully',
+        });
+    })),
+    sumEarningLoggedProjects: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const sumHoursLoggedProjects = yield manager.query('SELECT "project"."id", "project"."name", SUM("time_log"."earnings") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id"');
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            sumHoursLoggedProjects: sumHoursLoggedProjects,
+            message: 'Get sum Hours Logged Projects successfully',
+        });
+    })),
     pendingTasks: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const pendingTasks = yield Task_1.Task.createQueryBuilder('task')
             .leftJoinAndSelect('task.status', 'status')

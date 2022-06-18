@@ -42,16 +42,33 @@ const dashBoardController = {
 		})
 	}),
 
-	// hoursLogged: handleCatchError(async (_: Request, res: Response) => {
-	// 	const hoursLogged = await Project.createQueryBuilder('project').getCount()
+	sumHoursLoggedProjects: handleCatchError(async (_: Request, res: Response) => {
+		const manager = getManager('huprom')
+		const sumHoursLoggedProjects = await manager.query(
+			'SELECT "project"."id", "project"."name", SUM("time_log"."total_hours") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id"'
+		)
 
-	// 	return res.status(200).json({
-	// 		code: 200,
-	// 		success: true,
-	// 		hoursLogged,
-	// 		message: 'Get hours logged successfully',
-	// 	})
-	// }),
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			sumHoursLoggedProjects: sumHoursLoggedProjects,
+			message: 'Get sum Hours Logged Projects successfully',
+		})
+	}),
+
+	sumEarningLoggedProjects: handleCatchError(async (_: Request, res: Response) => {
+		const manager = getManager('huprom')
+		const sumHoursLoggedProjects = await manager.query(
+			'SELECT "project"."id", "project"."name", SUM("time_log"."earnings") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id"'
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			sumHoursLoggedProjects: sumHoursLoggedProjects,
+			message: 'Get sum Hours Logged Projects successfully',
+		})
+	}),
 
 	pendingTasks: handleCatchError(async (_: Request, res: Response) => {
 		const pendingTasks = await Task.createQueryBuilder('task')
