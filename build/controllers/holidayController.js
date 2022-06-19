@@ -78,12 +78,24 @@ const holidayController = {
         });
     })),
     //Get all holiday
-    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+    getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { month, year } = req.query;
         const holidays = yield Holiday_1.Holiday.find();
+        var data = holidays;
+        if (month) {
+            data = holidays.filter(e => {
+                return new Date(e.holiday_date).getMonth() + 1 >= Number(month);
+            });
+        }
+        if (year) {
+            data = holidays.filter(e => {
+                return new Date(e.holiday_date).getFullYear() >= Number(year);
+            });
+        }
         return res.status(200).json({
             code: 200,
             success: true,
-            holidays: holidays,
+            holidays: data,
             message: 'Get all holiday successfully',
         });
     })),

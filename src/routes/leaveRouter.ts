@@ -5,7 +5,7 @@ import { checkAuth } from '../utils/middleware/checkAuth'
 const leaveRouter = express.Router()
 
 leaveRouter.post('/', checkAuth(['Admin']), leaveController.create)
-leaveRouter.post('/delete_many', checkAuth(['Admin']), leaveController.deleteMany)
+leaveRouter.post('/delete-many', checkAuth(['Admin']), leaveController.deleteMany)
 
 leaveRouter.get('/', leaveController.getAll)
 leaveRouter.get('/:leaveId', leaveController.getDetail)
