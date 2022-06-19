@@ -475,7 +475,7 @@ const employeeController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Please select many employees to delete',
+				message: 'Not found employee',
 			})
 
 		//Get count open task
@@ -505,7 +505,7 @@ const employeeController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Please select many employees to delete',
+				message: 'Not found employee',
 			})
 
 		//Get count project assigned
@@ -535,7 +535,7 @@ const employeeController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Please select many employees to delete',
+				message: 'Not found employee',
 			})
 
 		//Get sum logged of employee
@@ -565,7 +565,7 @@ const employeeController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Please select many employees to delete',
+				message: 'Not found employee',
 			})
 
 		//Get late attendance
@@ -597,7 +597,7 @@ const employeeController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Please select many employees to delete',
+				message: 'Not found employee',
 			})
 
 		//Get countLeavesTaken
@@ -628,7 +628,7 @@ const employeeController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Please select many employees to delete',
+				message: 'Not found employee',
 			})
 
 		//Get sum task by status task
@@ -658,7 +658,7 @@ const employeeController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Please select many employees to delete',
+				message: 'Not found employee',
 			})
 
 		//Get tasks
@@ -692,7 +692,7 @@ const employeeController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Please select many employees to delete',
+				message: 'Not found employee',
 			})
 
 		//Get Leaves
@@ -726,7 +726,7 @@ const employeeController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Please select many employees to delete',
+				message: 'Not found employee',
 			})
 
 		//Get Time Log
@@ -752,6 +752,37 @@ const employeeController = {
 		//Check existing employee
 		const existingEmployee = await Employee.findOne({
 			where: {
+				id: 6,
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Not found employee',
+			})
+
+		//Get count pending task
+		const countPendingTasks = await getManager('huprom').query(
+			`SELECT COUNT("public"."task"."id") FROM "public"."task_employee" LEFT JOIN "public"."task" on "public"."task_employee"."taskId" = "public"."task"."id" LEFT JOIN "public"."status" ON "public"."status"."id" = "public"."task"."statusId" WHERE "public"."task_employee"."employeeId" = ${employeeId} AND "public"."status"."title" = 'Incomplete' GROUP BY "public"."status"."title"`
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countPendingTasks:
+				countPendingTasks && countPendingTasks[0] ? Number(countPendingTasks[0].count) : 0,
+			message: 'Get count pending task successfully',
+		})
+		
+	}),
+	getCountCompleteTasks: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
 				id: Number(employeeId),
 			},
 		})
@@ -763,20 +794,23 @@ const employeeController = {
 				message: 'Please select many employees to delete',
 			})
 
-		//Get count pending task
-		const countPendingTasks = await getManager('huprom').query(
-			`SELECT COUNT("public"."task"."id") FROM "public"."task_employee" LEFT JOIN "public"."task" on "public"."task_employee"."taskId" = "public"."task"."id" LEFT JOIN "public"."status" ON "public"."status"."id" = "public"."task"."statusId" WHERE "public"."task_employee"."employeeId" = ${employeeId} AND "public"."status"."title" = 'Incomplete' GROUP BY "public"."status"."title"`
+		//Get count complete task
+		const countCompleteTasks = await getManager('huprom').query(
+			`SELECT COUNT("public"."task"."id") FROM "public"."task_employee" LEFT JOIN "public"."task" on "public"."task_employee"."taskId" = "public"."task"."id" LEFT JOIN "public"."status" ON "public"."status"."id" = "public"."task"."statusId" WHERE "public"."task_employee"."employeeId" = ${employeeId} AND "public"."status"."title" = 'Complete' GROUP BY "public"."status"."title"`
 		)
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			countPendingTasks: Number(countPendingTasks[0].count) || 0,
-			message: 'Get count pending task successfully',
+			countCompleteTasks:
+				countCompleteTasks && countCompleteTasks[0]
+					? Number(countCompleteTasks[0].count)
+					: 0,
+			message: 'Get count complete task successfully',
 		})
 	}),
 
-	getCountCompleteTasks: handleCatchError(async (req: Request, res: Response) => {
+	getProject: handleCatchError(async (req: Request, res: Response) => {
 		const { employeeId } = req.params
 
 		//Check existing employee
@@ -803,6 +837,36 @@ const employeeController = {
 			success: true,
 			countCompleteTasks: Number(countCompleteTasks[0].count) || 0,
 			message: 'Get count complete task successfully',
+		})
+	}),
+
+	CountStatusProjects: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
+
+		//Get count status Projects
+		const countStatusProjects = await getManager('huprom').query(
+			`SELECT "project"."project_status", COUNT("project"."id") FROM "project_employee" LEFT JOIN "project" ON "project"."id" = "project_employee"."projectId" WHERE "project_employee"."employeeId" = ${employeeId} GROUP BY "project"."project_status"`
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countStatusProjects: countStatusProjects,
+			message: 'Get count status projects successfully',
 		})
 	}),
 }

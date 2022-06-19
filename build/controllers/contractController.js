@@ -31,6 +31,7 @@ const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const contractValid_1 = require("../utils/valid/contractValid");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const Notification_1 = require("../entities/Notification");
+const typeorm_1 = require("typeorm");
 const contractController = {
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const contracts = yield Contract_1.Contract.find();
@@ -374,6 +375,29 @@ const contractController = {
             code: 200,
             success: true,
             message: 'Delete contracts successfully',
+        });
+    })),
+    countContractSignedEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { clientId } = req.params;
+        //Check exisitng client
+        const existingClient = yield Client_1.Client.findOne({
+            where: {
+                id: Number(clientId),
+            },
+        });
+        if (!existingClient)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Not Found Client',
+            });
+        //Get count contrat signed 
+        const countContractSigned = yield (0, typeorm_1.getManager)('huprom').query(`SELECT COUNT("public"."contract"."id") FROM "public"."contract" LEFT JOIN "public"."client" ON "public"."contract"."clientId" = "public"."client"."id" WHERE "public"."contract"."signId" IS NOT NULL AND "public"."client"."id" = ${existingClient.id}`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            countStatusProjects: Number(countContractSigned[0].count) || 0,
+            message: 'Get count contract assigned successfully',
         });
     })),
 };

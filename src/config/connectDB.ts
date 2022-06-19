@@ -52,10 +52,10 @@ const connectDB = () => {
 		synchronize: true,
 		port: 5432,
 
-		url: `${process.env.DB_URL}`,
-		ssl: {
-			rejectUnauthorized: false
-		},
+		// url: `${process.env.DB_URL}`,
+		// ssl: {
+		// 	rejectUnauthorized: false
+		// },
 
 		entities: [
 			Employee,

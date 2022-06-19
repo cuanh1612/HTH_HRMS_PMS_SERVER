@@ -407,7 +407,7 @@ const employeeController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please select many employees to delete',
+                message: 'Not found employee',
             });
         //Get count open task
         const countOpentask = yield (0, typeorm_1.getManager)('huprom').query(`SELECT COUNT(task_employee."employeeId") from task_employee WHERE task_employee."employeeId" = ${employeeId}`);
@@ -430,7 +430,7 @@ const employeeController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please select many employees to delete',
+                message: 'Not found employee',
             });
         //Get count project assigned
         const countProjects = yield (0, typeorm_1.getManager)('huprom').query(`SELECT  COUNT(project_employee."projectId") FROM project_employee WHERE project_employee."employeeId" = ${employeeId}`);
@@ -453,7 +453,7 @@ const employeeController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please select many employees to delete',
+                message: 'Not found employee',
             });
         //Get sum logged of employee
         const hoursLogged = yield (0, typeorm_1.getManager)('huprom').query(`SELECT  SUM(time_log.total_hours) FROM time_log WHERE time_log."employeeId" = ${employeeId}`);
@@ -476,7 +476,7 @@ const employeeController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please select many employees to delete',
+                message: 'Not found employee',
             });
         //Get late attendance
         const lateAttendance = yield Attendance_1.Attendance.createQueryBuilder('attendance')
@@ -503,7 +503,7 @@ const employeeController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please select many employees to delete',
+                message: 'Not found employee',
             });
         //Get countLeavesTaken
         const countLeavesTaken = yield Leave_1.Leave.createQueryBuilder('leave')
@@ -529,7 +529,7 @@ const employeeController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please select many employees to delete',
+                message: 'Not found employee',
             });
         //Get sum task by status task
         const countTasksStatus = yield (0, typeorm_1.getManager)('huprom').query(`SELECT status.title, COUNT(task.id) FROM status LEFT JOIN task on status.id = task."statusId" LEFT JOIN task_employee on task.id = task_employee."taskId" WHERE task_employee."employeeId" = ${employeeId} GROUP BY status.title`);
@@ -552,7 +552,7 @@ const employeeController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please select many employees to delete',
+                message: 'Not found employee',
             });
         //Get tasks
         const tasks = yield Task_1.Task.find({
@@ -581,7 +581,7 @@ const employeeController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please select many employees to delete',
+                message: 'Not found employee',
             });
         //Get Leaves
         const leaves = yield Leave_1.Leave.find({
@@ -610,7 +610,7 @@ const employeeController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please select many employees to delete',
+                message: 'Not found employee',
             });
         //Get Time Log
         const timeLogs = yield Time_Log_1.Time_log.find({
@@ -632,21 +632,21 @@ const employeeController = {
         //Check existing employee
         const existingEmployee = yield Employee_1.Employee.findOne({
             where: {
-                id: Number(employeeId),
+                id: 6,
             },
         });
         if (!existingEmployee)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please select many employees to delete',
+                message: 'Not found employee',
             });
         //Get count pending task
         const countPendingTasks = yield (0, typeorm_1.getManager)('huprom').query(`SELECT COUNT("public"."task"."id") FROM "public"."task_employee" LEFT JOIN "public"."task" on "public"."task_employee"."taskId" = "public"."task"."id" LEFT JOIN "public"."status" ON "public"."status"."id" = "public"."task"."statusId" WHERE "public"."task_employee"."employeeId" = ${employeeId} AND "public"."status"."title" = 'Incomplete' GROUP BY "public"."status"."title"`);
         return res.status(200).json({
             code: 200,
             success: true,
-            countPendingTasks: Number(countPendingTasks[0].count) || 0,
+            countPendingTasks: countPendingTasks && countPendingTasks[0] ? Number(countPendingTasks[0].count) : 0,
             message: 'Get count pending task successfully',
         });
     })),
@@ -669,8 +669,56 @@ const employeeController = {
         return res.status(200).json({
             code: 200,
             success: true,
+            countCompleteTasks: countCompleteTasks && countCompleteTasks[0]
+                ? Number(countCompleteTasks[0].count)
+                : 0,
+            message: 'Get count complete task successfully',
+        });
+    })),
+    getProject: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employeeId } = req.params;
+        //Check existing employee
+        const existingEmployee = yield Employee_1.Employee.findOne({
+            where: {
+                id: Number(employeeId),
+            },
+        });
+        if (!existingEmployee)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please select many employees to delete',
+            });
+        //Get count complete task
+        const countCompleteTasks = yield (0, typeorm_1.getManager)('huprom').query(`SELECT COUNT("public"."task"."id") FROM "public"."task_employee" LEFT JOIN "public"."task" on "public"."task_employee"."taskId" = "public"."task"."id" LEFT JOIN "public"."status" ON "public"."status"."id" = "public"."task"."statusId" WHERE "public"."task_employee"."employeeId" = ${employeeId} AND "public"."status"."title" = 'Complete' GROUP BY "public"."status"."title"`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
             countCompleteTasks: Number(countCompleteTasks[0].count) || 0,
             message: 'Get count complete task successfully',
+        });
+    })),
+    CountStatusProjects: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employeeId } = req.params;
+        //Check existing employee
+        const existingEmployee = yield Employee_1.Employee.findOne({
+            where: {
+                id: Number(employeeId),
+            },
+        });
+        if (!existingEmployee)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please select many employees to delete',
+            });
+        //Get count status Projects
+        const countStatusProjects = yield (0, typeorm_1.getManager)('huprom').query(`SELECT "project"."project_status", COUNT("project"."id") FROM "project_employee" LEFT JOIN "project" ON "project"."id" = "project_employee"."projectId" WHERE "project_employee"."employeeId" = ${employeeId} GROUP BY "project"."project_status"`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            countStatusProjects: countStatusProjects,
+            message: 'Get count status projects successfully',
         });
     })),
 };

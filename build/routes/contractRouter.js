@@ -16,4 +16,5 @@ contractRouter.get('/:contractId', (0, checkAuth_1.checkAuth)(['Admin', 'Client'
 contractRouter.delete('/:contractId', (0, checkAuth_1.checkAuth)(['Admin']), contractController_1.default.delete);
 contractRouter.put('/:contractId', (0, checkAuth_1.checkAuth)(['Admin']), contractController_1.default.update);
 contractRouter.post('/csv', (0, checkAuth_1.checkAuth)(['Admin']), contractController_1.default.importCSV);
+contractRouter.get('/client/:clientId/count-contracts-assigned', contractController_1.default.countContractSignedEmployee);
 exports.default = contractRouter;

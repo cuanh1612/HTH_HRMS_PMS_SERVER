@@ -6,6 +6,7 @@ const eventRouter = express.Router()
 eventRouter.post('/', eventController.create)
 
 eventRouter.get('/', eventController.getAll)
+eventRouter.get('/employee/:employeeId', eventController.getByEmployee)
 eventRouter.get('/:enventId', eventController.getDetail)
 
 eventRouter.delete('/:enventId', eventController.delete)

@@ -52,10 +52,10 @@ const connectDB = () => {
         username: 'postgres',
         synchronize: true,
         port: 5432,
-        url: `${process.env.DB_URL}`,
-        ssl: {
-            rejectUnauthorized: false
-        },
+        // url: `${process.env.DB_URL}`,
+        // ssl: {
+        // 	rejectUnauthorized: false
+        // },
         entities: [
             Employee_1.Employee,
             Avatar_1.Avatar,

@@ -8,6 +8,7 @@ const eventController_1 = __importDefault(require("../controllers/eventControlle
 const eventRouter = express_1.default.Router();
 eventRouter.post('/', eventController_1.default.create);
 eventRouter.get('/', eventController_1.default.getAll);
+eventRouter.get('/employee/:employeeId', eventController_1.default.getByEmployee);
 eventRouter.get('/:enventId', eventController_1.default.getDetail);
 eventRouter.delete('/:enventId', eventController_1.default.delete);
 eventRouter.put('/:enventId', eventController_1.default.update);

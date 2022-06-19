@@ -8,6 +8,7 @@ import handleCatchError from '../utils/catchAsyncError'
 import { contractValid } from '../utils/valid/contractValid'
 import { sign, verify } from 'jsonwebtoken'
 import { Notification } from '../entities/Notification'
+import { getManager } from 'typeorm'
 
 const contractController = {
 	getAll: handleCatchError(async (_: Request, res: Response) => {
@@ -200,47 +201,46 @@ const contractController = {
 					if (messageValid && contract.index) {
 						contractNotValid.push(contract.index)
 					} else {
-
 						//Check existing client
 						const existingClient = await Client.findOne({
 							where: {
 								id: contract.client,
 							},
 						})
-	
+
 						const existingContractType = await Contract_type.findOne({
 							where: {
 								id: contract.contract_type,
 							},
 						})
-	
+
 						if (!existingClient || !existingContractType) {
 							if (contract.index) contractNotCLCA.push(contract.index)
 						} else {
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							console.log(contract.subject);
-							
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+							console.log(contract.subject)
+
 							//Create new contract
 							await Contract.create({
 								...contract,
-								subject: contract.subject
+								subject: contract.subject,
 							}).save()
-	
+
 							//create new note for client
 							await Notification.create({
 								client: existingClient,
@@ -432,6 +432,36 @@ const contractController = {
 			code: 200,
 			success: true,
 			message: 'Delete contracts successfully',
+		})
+	}),
+
+	countContractSignedEmployee: handleCatchError(async (req: Request, res: Response) => {
+		const { clientId } = req.params
+
+		//Check exisitng client
+		const existingClient = await Client.findOne({
+			where: {
+				id: Number(clientId),
+			},
+		})
+
+		if (!existingClient)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Not Found Client',
+			})
+
+		//Get count contrat signed 
+		const countContractSigned = await getManager('huprom').query(
+			`SELECT COUNT("public"."contract"."id") FROM "public"."contract" LEFT JOIN "public"."client" ON "public"."contract"."clientId" = "public"."client"."id" WHERE "public"."contract"."signId" IS NOT NULL AND "public"."client"."id" = ${existingClient.id}`
+		)
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countStatusProjects: Number(countContractSigned[0].count) || 0,
+			message: 'Get count contract assigned successfully',
 		})
 	}),
 }
