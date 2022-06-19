@@ -746,65 +746,65 @@ const employeeController = {
 		})
 	}),
 
-	// getCountPendingTasks: handleCatchError(async (req: Request, res: Response) => {
-	// 	const { employeeId } = req.params
+	getCountPendingTasks: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
 
-	// 	//Check existing employee
-	// 	const existingEmployee = await Employee.findOne({
-	// 		where: {
-	// 			id: Number(employeeId),
-	// 		},
-	// 	})
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
 
-	// 	if (!existingEmployee)
-	// 		return res.status(400).json({
-	// 			code: 400,
-	// 			success: false,
-	// 			message: 'Please select many employees to delete',
-	// 		})
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
 
-	// 	//Get count pending task
-	// 	const countPendingTasks = await getManager('huprom').query(
-	// 		`SELECT COUNT(task.id) FROM task_employee LEFT JOIN task on task_employee."taskId" = task.id WHERE task_employee."employeeId" = ${employeeId} AND task.deadline >= CURRENT_DATE`
-	// 	)
+		//Get count pending task
+		const countPendingTasks = await getManager('huprom').query(
+			`SELECT COUNT("public"."task"."id") FROM "public"."task_employee" LEFT JOIN "public"."task" on "public"."task_employee"."taskId" = "public"."task"."id" LEFT JOIN "public"."status" ON "public"."status"."id" = "public"."task"."statusId" WHERE "public"."task_employee"."employeeId" = ${employeeId} AND "public"."status"."title" = 'Incomplete' GROUP BY "public"."status"."title"`
+		)
 
-	// 	return res.status(200).json({
-	// 		code: 200,
-	// 		success: true,
-	// 		countPendingTasks: Number(countPendingTasks[0].count) || 0,
-	// 		message: 'Get count pending task successfully',
-	// 	})
-	// }),
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countPendingTasks: Number(countPendingTasks[0].count) || 0,
+			message: 'Get count pending task successfully',
+		})
+	}),
 
-	// getCountOverdueTasks: handleCatchError(async (req: Request, res: Response) => {
-	// 	const { employeeId } = req.params
+	getCountCompleteTasks: handleCatchError(async (req: Request, res: Response) => {
+		const { employeeId } = req.params
 
-	// 	//Check existing employee
-	// 	const existingEmployee = await Employee.findOne({
-	// 		where: {
-	// 			id: Number(employeeId),
-	// 		},
-	// 	})
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId),
+			},
+		})
 
-	// 	if (!existingEmployee)
-	// 		return res.status(400).json({
-	// 			code: 400,
-	// 			success: false,
-	// 			message: 'Please select many employees to delete',
-	// 		})
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select many employees to delete',
+			})
 
-	// 	//Get count overdue task
-	// 	const countOverdueTasks = await getManager('huprom').query(
-	// 		`SELECT COUNT(task.id) FROM task_employee LEFT JOIN task on task_employee."taskId" = task.id WHERE task_employee."employeeId" = ${employeeId} AND task.deadline < CURRENT_DATE`
-	// 	)
+		//Get count complete task
+		const countCompleteTasks = await getManager('huprom').query(
+			`SELECT COUNT("public"."task"."id") FROM "public"."task_employee" LEFT JOIN "public"."task" on "public"."task_employee"."taskId" = "public"."task"."id" LEFT JOIN "public"."status" ON "public"."status"."id" = "public"."task"."statusId" WHERE "public"."task_employee"."employeeId" = ${employeeId} AND "public"."status"."title" = 'Complete' GROUP BY "public"."status"."title"`
+		)
 
-	// 	return res.status(200).json({
-	// 		code: 200,
-	// 		success: true,
-	// 		countOverdueTasks: Number(countOverdueTasks[0].count) || 0,
-	// 		message: 'Get count pending task successfully',
-	// 	})
-	// }),
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countCompleteTasks: Number(countCompleteTasks[0].count) || 0,
+			message: 'Get count complete task successfully',
+		})
+	}),
 }
 
 export default employeeController
