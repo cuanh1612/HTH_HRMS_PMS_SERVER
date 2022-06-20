@@ -436,7 +436,30 @@ const clientController = {
             code: 200,
             success: true,
             statusProjects,
-            message: 'Get total earnings successfully',
+            message: 'Get status Projects successfully',
+        });
+    })),
+    pendingMilestone: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { clientId } = req.params;
+        //Check exist client
+        const existingClient = yield Client_1.Client.findOne({
+            where: {
+                id: Number(clientId),
+            },
+        });
+        if (!existingClient)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Client does not exist in the system',
+            });
+        //Get pending milestones
+        const pendingMilestone = yield (0, typeorm_1.getManager)('huprom').query(`SELECT * FROM  "milestone" LEFT JOIN "project" ON "milestone"."projectId" = "project"."id" WHERE "milestone"."status" IS FALSE AND "project"."clientId" = ${existingClient.id}`);
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            pendingMilestone,
+            message: 'Get pending milestones successfully',
         });
     })),
     projects: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

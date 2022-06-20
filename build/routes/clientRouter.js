@@ -17,6 +17,7 @@ clientRouter.get('/:clientId/total-projects', (0, checkAuth_1.checkAuth)([]), cl
 clientRouter.get('/:clientId/total-earnings', (0, checkAuth_1.checkAuth)([]), clientController_1.default.totalEarnings);
 clientRouter.get('/:clientId/status-projects', (0, checkAuth_1.checkAuth)([]), clientController_1.default.statusProjects);
 clientRouter.get('/:clientId/projects', (0, checkAuth_1.checkAuth)([]), clientController_1.default.projects);
+clientRouter.get('/:clientId/pending-milestone', (0, checkAuth_1.checkAuth)([]), clientController_1.default.pendingMilestone);
 clientRouter.post('/csv', (0, checkAuth_1.checkAuth)([]), clientController_1.default.importCSV);
 clientRouter.delete('/:clientId', (0, checkAuth_1.checkAuth)(['Admin']), clientController_1.default.delete);
 exports.default = clientRouter;
