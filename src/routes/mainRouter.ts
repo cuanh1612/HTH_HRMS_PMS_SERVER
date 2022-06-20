@@ -40,6 +40,7 @@ import TimeLogRouter from './timeLogRouter'
 import roomRouter from './roomRouter'
 import NotificationRouter from './notificationRouter'
 import companyInfoRouter from './companyInfoRouter'
+import skillRouter from './skillRouter'
 
 function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
@@ -123,6 +124,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/notifications', NotificationRouter)
 
 	app.use('/api/company-info', companyInfoRouter)
+
+	app.use('/api/skill', skillRouter)
 }
 
 export default mainRouter

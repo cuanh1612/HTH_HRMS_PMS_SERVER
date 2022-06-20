@@ -16,3 +16,5 @@ skillRouter.delete('/delete-many', skillController.deletemany)
 skillRouter.get('/', skillController.getAll)
 
 skillRouter.put('/:id', skillController.update)
+
+export default skillRouter
