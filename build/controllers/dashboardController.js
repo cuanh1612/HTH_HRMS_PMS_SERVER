@@ -117,7 +117,7 @@ const dashBoardController = {
         dateLastMonth.setDate(1);
         dateLastMonth.setDate(dateLastMonth.getDate() - 1);
         const manager = (0, typeorm_1.getManager)('huprom');
-        const pendingLeavesRaw = yield manager.query(`SELECT *, *, "leave_type"."name" as leave_type_name, "employee"."name" as employee_name, "avatar"."name" as avatar_name from "public"."leave" LEFT JOIN "public"."employee" ON "public"."leave"."employeeId" = "public"."employee"."id" LEFT JOIN "public"."avatar" ON "public"."employee"."avatarId" = "public"."avatar"."id" WHERE "public"."leave"."status" = 'Pending' AND "public"."leave"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`);
+        const pendingLeavesRaw = yield manager.query(`SELECT *,"public"."leave_type"."name" as leave_type_name, "public"."employee"."name" as employee_name, "public"."avatar"."name" as avatar_name from "public"."leave" LEFT JOIN "public"."leave_type" ON "public"."leave"."leaveTypeId" = "public"."leave_type"."id" LEFT JOIN "public"."employee" ON "public"."leave"."employeeId" = "public"."employee"."id" LEFT JOIN "public"."avatar" ON "public"."employee"."avatarId" = "public"."avatar"."id" WHERE "public"."leave"."status" = 'Pending' AND "public"."leave"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`);
         return res.status(200).json({
             code: 200,
             success: true,
