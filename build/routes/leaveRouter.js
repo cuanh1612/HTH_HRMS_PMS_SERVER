@@ -8,7 +8,7 @@ const leaveController_1 = __importDefault(require("../controllers/leaveControlle
 const checkAuth_1 = require("../utils/middleware/checkAuth");
 const leaveRouter = express_1.default.Router();
 leaveRouter.post('/', (0, checkAuth_1.checkAuth)(['Admin']), leaveController_1.default.create);
-leaveRouter.post('/delete_many', (0, checkAuth_1.checkAuth)(['Admin']), leaveController_1.default.deleteMany);
+leaveRouter.post('/delete-many', (0, checkAuth_1.checkAuth)(['Admin']), leaveController_1.default.deleteMany);
 leaveRouter.get('/', leaveController_1.default.getAll);
 leaveRouter.get('/:leaveId', leaveController_1.default.getDetail);
 leaveRouter.delete('/:leaveId', (0, checkAuth_1.checkAuth)(['Admin']), leaveController_1.default.delete);

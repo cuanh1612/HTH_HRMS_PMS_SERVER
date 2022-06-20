@@ -77,12 +77,25 @@ const holidayController = {
 		})
 	}),
 	//Get all holiday
-	getAll: handleCatchError(async (_: Request, res: Response) => {
+	getAll: handleCatchError(async (req: Request, res: Response) => {
+		const { month, year } = req.query
+
 		const holidays = await Holiday.find()
+		var data: Holiday[] = holidays
+		if(month) {
+			data = holidays.filter(e=> {
+				return new Date(e.holiday_date).getMonth() + 1 >= Number(month)
+			})
+		}
+		if(year) {
+			data = holidays.filter(e=> {
+				return new Date(e.holiday_date).getFullYear()  >= Number(year)
+			})
+		}
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			holidays: holidays,
+			holidays: data,
 			message: 'Get all holiday successfully',
 		})
 	}),

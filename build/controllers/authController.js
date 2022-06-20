@@ -171,12 +171,42 @@ const authController = {
         }
     })),
     logout: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { userId } = req.body;
+        var _b;
+        //check exist current user
+        const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         const existingUser = yield Employee_1.Employee.findOne({
             where: {
-                id: userId,
+                id: decode.userId,
             },
         });
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
+        console.log(existingUser);
         if (!existingUser)
             return res.status(400).json({
                 code: 400,
@@ -198,8 +228,8 @@ const authController = {
         });
     })),
     currentUser: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        var _b;
-        const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
+        var _c;
+        const token = (_c = req.headers.authorization) === null || _c === void 0 ? void 0 : _c.split(' ')[1];
         if (!token)
             return res.status(401).json({
                 code: 400,

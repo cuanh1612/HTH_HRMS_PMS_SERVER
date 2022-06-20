@@ -46,9 +46,11 @@ const connectDB = () => {
 		type: 'postgres',
 		name: 'huprom',
 		logging: true,
-		database: 'HTH_HRMS_PMS',
-		password: '161201',
+
+		database: 'hth_hrms_pms',
+		password: 'kingspear1999',
 		username: 'postgres',
+
 		synchronize: true,
 		port: 5432,
 
