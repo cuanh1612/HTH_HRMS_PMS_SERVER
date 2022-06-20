@@ -117,7 +117,7 @@ const dashBoardController = {
         dateLastMonth.setDate(1);
         dateLastMonth.setDate(dateLastMonth.getDate() - 1);
         const manager = (0, typeorm_1.getManager)('huprom');
-        const pendingLeavesRaw = yield manager.query(`SELECT *,"public"."leave_type"."name" as leave_type_name, "public"."employee"."name" as employee_name, "public"."avatar"."name" as avatar_name from "public"."leave" LEFT JOIN "public"."leave_type" ON "public"."leave"."leaveTypeId" = "public"."leave_type"."id" LEFT JOIN "public"."employee" ON "public"."leave"."employeeId" = "public"."employee"."id" LEFT JOIN "public"."avatar" ON "public"."employee"."avatarId" = "public"."avatar"."id" WHERE "public"."leave"."status" = 'Pending' AND "public"."leave"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`);
+        const pendingLeavesRaw = yield manager.query(`SELECT *,"leave_type"."name" as leave_type_name, "leave"."id" as leave_id, "employee"."name" as employee_name, "avatar"."name" as avatar_name from "leave" LEFT JOIN "leave_type" ON "leave"."leaveTypeId" = "leave_type"."id" LEFT JOIN "employee" ON "leave"."employeeId" = "employee"."id" LEFT JOIN "avatar" ON "employee"."avatarId" = "avatar"."id" WHERE "leave"."status" = 'Pending' AND "leave"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`);
         return res.status(200).json({
             code: 200,
             success: true,
@@ -213,6 +213,68 @@ const dashBoardController = {
             success: true,
             lastestClients: lastestClients,
             message: 'Get lastest clients successfully',
+        });
+    })),
+    countBydateAttendance: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        //Get end date last month
+        const dateLastMonth = new Date();
+        dateLastMonth.setDate(1);
+        dateLastMonth.setDate(dateLastMonth.getDate() - 1);
+        //get current date
+        let dateCurrentMonth = (new Date()).getDate();
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const currentMonthAttendance = (yield manager.query(`SELECT * FROM "attendance" WHERE "attendance"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`)) || [];
+        let countBydateAttendance = [];
+        //Count attendance by date
+        for (let index = 1; index <= dateCurrentMonth; index++) {
+            let countAttendance = 0;
+            currentMonthAttendance.map(attendance => {
+                const dateAttendance = (new Date(attendance.date)).getDate();
+                if (dateAttendance === index) {
+                    countAttendance++;
+                }
+            });
+            countBydateAttendance.push({
+                count: countAttendance,
+                date: index
+            });
+        }
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            countBydateAttendance: countBydateAttendance,
+            message: 'Get count by date attendance successfully',
+        });
+    })),
+    countBydateLeave: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        //Get end date last month
+        const dateLastMonth = new Date();
+        dateLastMonth.setDate(1);
+        dateLastMonth.setDate(dateLastMonth.getDate() - 1);
+        //get current date
+        let dateCurrentMonth = (new Date()).getDate();
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const currentMonthLeave = (yield manager.query(`SELECT * FROM "leave" WHERE "leave"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`)) || [];
+        let countByLeaveAttendance = [];
+        //Count attendance by date
+        for (let index = 1; index <= dateCurrentMonth; index++) {
+            let countAttendance = 0;
+            currentMonthLeave.map(leave => {
+                const dateLeave = (new Date(leave.date)).getDate();
+                if (dateLeave === index) {
+                    countAttendance++;
+                }
+            });
+            countByLeaveAttendance.push({
+                count: countAttendance,
+                date: index
+            });
+        }
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            countByLeaveAttendance: countByLeaveAttendance,
+            message: 'Get count by date leave successfully',
         });
     })),
 };

@@ -20,5 +20,7 @@ dashboardRouter.get('/client-wise-time-logs', dashBoardController.clientWiseTime
 dashboardRouter.get('/lastest-clients', dashBoardController.lastestClients)
 dashboardRouter.get('/projects-earning', dashBoardController.sumEarningLoggedProjects)
 dashboardRouter.get('/projects-hours-logged', dashBoardController.sumHoursLoggedProjects)
+dashboardRouter.get('/count-by-date-attendance', dashBoardController.countBydateAttendance)
+dashboardRouter.get('/count-by-date-leave', dashBoardController.countBydateLeave)
 
 export default dashboardRouter
