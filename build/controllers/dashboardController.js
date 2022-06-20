@@ -51,7 +51,7 @@ const dashBoardController = {
     })),
     sumHoursLoggedProjects: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const manager = (0, typeorm_1.getManager)('huprom');
-        const sumHoursLoggedProjects = yield manager.query('SELECT "project"."id", "project"."name", SUM("time_log"."total_hours") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id"');
+        const sumHoursLoggedProjects = yield manager.query('SELECT "project"."id", "project"."name", SUM("time_log"."total_hours") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id" LIMIT 10');
         return res.status(200).json({
             code: 200,
             success: true,
@@ -61,7 +61,7 @@ const dashBoardController = {
     })),
     sumEarningLoggedProjects: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const manager = (0, typeorm_1.getManager)('huprom');
-        const sumEarningLoggedProjects = yield manager.query('SELECT "project"."id", "project"."name", SUM("time_log"."earnings") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id"');
+        const sumEarningLoggedProjects = yield manager.query('SELECT "project"."id", "project"."name", SUM("time_log"."earnings") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id" LIMIT 10');
         return res.status(200).json({
             code: 200,
             success: true,

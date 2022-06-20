@@ -45,7 +45,7 @@ const dashBoardController = {
 	sumHoursLoggedProjects: handleCatchError(async (_: Request, res: Response) => {
 		const manager = getManager('huprom')
 		const sumHoursLoggedProjects = await manager.query(
-			'SELECT "project"."id", "project"."name", SUM("time_log"."total_hours") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id"'
+			'SELECT "project"."id", "project"."name", SUM("time_log"."total_hours") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id" LIMIT 10'
 		)
 
 		return res.status(200).json({
@@ -59,7 +59,7 @@ const dashBoardController = {
 	sumEarningLoggedProjects: handleCatchError(async (_: Request, res: Response) => {
 		const manager = getManager('huprom')
 		const sumEarningLoggedProjects = await manager.query(
-			'SELECT "project"."id", "project"."name", SUM("time_log"."earnings") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id"'
+			'SELECT "project"."id", "project"."name", SUM("time_log"."earnings") from "time_log" LEFT JOIN "project" on "time_log"."projectId" = "project"."id" GROUP BY "project"."id" LIMIT 10'
 		)
 
 		return res.status(200).json({
