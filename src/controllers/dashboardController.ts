@@ -4,7 +4,6 @@ import { Attendance } from '../entities/Attendance'
 import { Client } from '../entities/Client'
 import { Contract } from '../entities/Contract'
 import { Employee } from '../entities/Employee'
-import { Leave } from '../entities/Leave'
 import { Milestone } from '../entities/Milestone'
 import { Project } from '../entities/Project'
 import { Task } from '../entities/Task'
@@ -103,10 +102,13 @@ const dashBoardController = {
 		dateLastMonth.setDate(1)
 		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
 
-		const manager = getManager('huprom')
-		const pendingTasksRaw = await manager.query(
-			`SELECT * FROM "task" LEFT JOIN "status" ON "task"."statusId" = "status"."id" LEFT JOIN "task_employee" ON "task"."id" = "task_employee"."taskId" LEFT JOIN "employee" ON "task_employee"."employeeId" = "employee"."id" LEFT JOIN "avatar" ON "employee"."avatarId" = "avatar"."id" WHERE "status"."title" != 'Complete'`
-		)
+		const pendingTasksRaw = await Task.createQueryBuilder('task')
+			.leftJoinAndSelect('task.status', 'status')
+			.leftJoinAndSelect('task.assignBy', 'emlpoyee')
+			.leftJoinAndSelect('task.project', 'project')
+			.where('status.title != :title', { title: 'Complete' })
+			.andWhere('task.start_date > :date', { date: dateLastMonth })
+			.getMany()
 
 		return res.status(200).json({
 			code: 200,
@@ -122,10 +124,10 @@ const dashBoardController = {
 		dateLastMonth.setDate(1)
 		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
 
-		const pendingLeavesRaw = await Leave.createQueryBuilder('leave')
-			.where('leave.status = :status', { status: 'Pending' })
-			.andWhere('leave.date > :date', { date: dateLastMonth })
-			.getMany()
+		const manager = getManager('huprom')
+		const pendingLeavesRaw = await manager.query(
+			`SELECT * from "public"."leave" LEFT JOIN "public"."employee" ON "public"."leave"."employeeId" = "public"."employee"."id" LEFT JOIN "public"."avatar" ON "public"."employee"."avatarId" = "public"."avatar"."id" WHERE "public"."leave"."status" = 'Pending' AND "public"."leave"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`
+		)
 
 		return res.status(200).json({
 			code: 200,
