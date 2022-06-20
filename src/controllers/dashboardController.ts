@@ -105,7 +105,7 @@ const dashBoardController = {
 
 		const manager = getManager('huprom')
 		const pendingTasksRaw = await manager.query(
-			'SELECT * FROM "task" LEFT JOIN "status" ON "task"."statusId" = "status"."id" LEFT JOIN "task_employee" ON "task"."id" = "task_employee"."taskId" LEFT JOIN "employee" ON "task_employee"."employeeId" = "employee"."id" LEFT JOIN "avatar" ON "employee"."avatarId" = "avatar"."id" WHERE "status"."title" != "Complete"'
+			`SELECT * FROM "task" LEFT JOIN "status" ON "task"."statusId" = "status"."id" LEFT JOIN "task_employee" ON "task"."id" = "task_employee"."taskId" LEFT JOIN "employee" ON "task_employee"."employeeId" = "employee"."id" LEFT JOIN "avatar" ON "employee"."avatarId" = "avatar"."id" WHERE "status"."title" != 'Complete'`
 		)
 
 		return res.status(200).json({
