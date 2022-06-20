@@ -21,7 +21,7 @@ export class Task extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number
 
-    @Column({unique: true})
+    @Column()
     name!: string
 
     @Column({ type: 'date' })

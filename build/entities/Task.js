@@ -33,7 +33,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Task.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Task.prototype, "name", void 0);
 __decorate([

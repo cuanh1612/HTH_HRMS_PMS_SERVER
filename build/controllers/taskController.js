@@ -27,7 +27,7 @@ const taskController = {
     //Create new task
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewTask = req.body;
-        const { task_category, project, employees, task_files, status, milestone, assignBy } = dataNewTask;
+        const { task_category, project, employees, task_files, status, milestone, assignBy, name } = dataNewTask;
         let taskEmployees = [];
         //check valid
         const messageValid = taskValid_1.taskValid.createOrUpdate(dataNewTask);
@@ -60,6 +60,21 @@ const taskController = {
                 code: 400,
                 success: false,
                 message: 'Project does not exist in the system',
+            });
+        //Check existing name
+        const existingTaskName = yield Task_1.Task.findOne({
+            where: {
+                project: {
+                    id: existingproject.id,
+                },
+                name: name,
+            },
+        });
+        if (existingTaskName)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Task name already existing in this project',
             });
         //Check exist task category
         const existingCategories = yield Task_Category_1.Task_Category.findOne({
@@ -167,7 +182,7 @@ const taskController = {
         const { id } = req.params;
         const dataUpdateTask = req.body;
         // const { task_category, project, employees} = dataUpdateTask
-        const { employees, status, project, milestone } = dataUpdateTask;
+        const { employees, status, project, milestone, name } = dataUpdateTask;
         let taskEmployees = [];
         const existingtask = yield Task_1.Task.findOne({
             where: {
@@ -213,6 +228,21 @@ const taskController = {
                 code: 400,
                 success: false,
                 message: 'Project does not exist in the system',
+            });
+        //Check existing name
+        const existingTaskName = yield Task_1.Task.findOne({
+            where: {
+                project: {
+                    id: existingproject.id,
+                },
+                name: name,
+            },
+        });
+        if (existingTaskName && (existingTaskName === null || existingTaskName === void 0 ? void 0 : existingTaskName.id) !== existingtask.id)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Task name already existing in this project',
             });
         //Check valid input create new task
         //Check valid

@@ -98,9 +98,15 @@ const dashBoardController = {
 	}),
 
 	pendingTasksRaw: handleCatchError(async (_: Request, res: Response) => {
+		//Get end date last month
+		const dateLastMonth = new Date()
+		dateLastMonth.setDate(1)
+		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
+
 		const pendingTasksRaw = await Task.createQueryBuilder('task')
 			.leftJoinAndSelect('task.status', 'status')
 			.where('status.title != :title', { title: 'Complete' })
+			.andWhere('task.start_date > :date', { date: dateLastMonth })
 			.getMany()
 
 		return res.status(200).json({
@@ -112,8 +118,14 @@ const dashBoardController = {
 	}),
 
 	pendingLeavesRaw: handleCatchError(async (_: Request, res: Response) => {
+		//Get end date last month
+		const dateLastMonth = new Date()
+		dateLastMonth.setDate(1)
+		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
+
 		const pendingLeavesRaw = await Leave.createQueryBuilder('leave')
-			.where('leave.status != :status', { status: 'Pending' })
+			.where('leave.status = :status', { status: 'Pending' })
+			.andWhere('leave.date > :date', { date: dateLastMonth })
 			.getMany()
 
 		return res.status(200).json({
@@ -221,7 +233,7 @@ const dashBoardController = {
 	}),
 
 	lastestClients: handleCatchError(async (_: Request, res: Response) => {
-		const lastestClients = await Client.createQueryBuilder("client").limit(10).getMany()
+		const lastestClients = await Client.createQueryBuilder('client').limit(10).getMany()
 
 		return res.status(200).json({
 			code: 200,
@@ -232,7 +244,7 @@ const dashBoardController = {
 	}),
 
 	lateAttendance: handleCatchError(async (_: Request, res: Response) => {
-		const lastestClients = await Client.createQueryBuilder("client").limit(10).getMany()
+		const lastestClients = await Client.createQueryBuilder('client').limit(10).getMany()
 
 		return res.status(200).json({
 			code: 200,

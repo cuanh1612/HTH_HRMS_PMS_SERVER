@@ -94,9 +94,14 @@ const dashBoardController = {
         });
     })),
     pendingTasksRaw: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        //Get end date last month
+        const dateLastMonth = new Date();
+        dateLastMonth.setDate(1);
+        dateLastMonth.setDate(dateLastMonth.getDate() - 1);
         const pendingTasksRaw = yield Task_1.Task.createQueryBuilder('task')
             .leftJoinAndSelect('task.status', 'status')
             .where('status.title != :title', { title: 'Complete' })
+            .andWhere('task.start_date > :date', { date: dateLastMonth })
             .getMany();
         return res.status(200).json({
             code: 200,
@@ -106,8 +111,13 @@ const dashBoardController = {
         });
     })),
     pendingLeavesRaw: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        //Get end date last month
+        const dateLastMonth = new Date();
+        dateLastMonth.setDate(1);
+        dateLastMonth.setDate(dateLastMonth.getDate() - 1);
         const pendingLeavesRaw = yield Leave_1.Leave.createQueryBuilder('leave')
-            .where('leave.status != :status', { status: 'Pending' })
+            .where('leave.status = :status', { status: 'Pending' })
+            .andWhere('leave.date > :date', { date: dateLastMonth })
             .getMany();
         return res.status(200).json({
             code: 200,
@@ -189,7 +199,7 @@ const dashBoardController = {
         });
     })),
     lastestClients: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const lastestClients = yield Client_1.Client.createQueryBuilder("client").limit(10).getMany();
+        const lastestClients = yield Client_1.Client.createQueryBuilder('client').limit(10).getMany();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -198,7 +208,7 @@ const dashBoardController = {
         });
     })),
     lateAttendance: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const lastestClients = yield Client_1.Client.createQueryBuilder("client").limit(10).getMany();
+        const lastestClients = yield Client_1.Client.createQueryBuilder('client').limit(10).getMany();
         return res.status(200).json({
             code: 200,
             success: true,

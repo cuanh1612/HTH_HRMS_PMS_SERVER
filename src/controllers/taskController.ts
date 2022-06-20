@@ -16,7 +16,7 @@ const taskController = {
 	//Create new task
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewTask: createOrUpdateTaskPayload = req.body
-		const { task_category, project, employees, task_files, status, milestone, assignBy } =
+		const { task_category, project, employees, task_files, status, milestone, assignBy, name } =
 			dataNewTask
 		let taskEmployees: Employee[] = []
 
@@ -29,6 +29,7 @@ const taskController = {
 				success: false,
 				message: messageValid,
 			})
+
 		//check exist status
 		const existingStatus = await Status.findOne({
 			where: {
@@ -54,6 +55,23 @@ const taskController = {
 				code: 400,
 				success: false,
 				message: 'Project does not exist in the system',
+			})
+
+		//Check existing name
+		const existingTaskName = await Task.findOne({
+			where: {
+				project: {
+					id: existingproject.id,
+				},
+				name: name,
+			},
+		})
+
+		if (existingTaskName)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Task name already existing in this project',
 			})
 
 		//Check exist task category
@@ -122,8 +140,6 @@ const taskController = {
 				})
 			})
 		)
-		
-
 
 		const lasttask = await Task.findOne({
 			where: {
@@ -149,7 +165,7 @@ const taskController = {
 
 		if (Array.isArray(task_files)) {
 			//create task files
-			
+
 			for (let index = 0; index < task_files.length; index++) {
 				const task_file = task_files[index]
 				await Task_file.create({
@@ -188,7 +204,7 @@ const taskController = {
 		const { id } = req.params
 		const dataUpdateTask: createOrUpdateTaskPayload = req.body
 		// const { task_category, project, employees} = dataUpdateTask
-		const { employees, status, project, milestone } = dataUpdateTask
+		const { employees, status, project, milestone, name } = dataUpdateTask
 		let taskEmployees: Employee[] = []
 
 		const existingtask = await Task.findOne({
@@ -241,6 +257,23 @@ const taskController = {
 				message: 'Project does not exist in the system',
 			})
 
+		//Check existing name
+		const existingTaskName = await Task.findOne({
+			where: {
+				project: {
+					id: existingproject.id,
+				},
+				name: name,
+			},
+		})
+
+		if (existingTaskName && existingTaskName?.id !== existingtask.id)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Task name already existing in this project',
+			})
+
 		//Check valid input create new task
 		//Check valid
 		const messageValid = taskValid.createOrUpdate(dataUpdateTask)
@@ -252,23 +285,23 @@ const taskController = {
 				message: messageValid,
 			})
 
-			await Promise.all(
-				employees.map(async (employee_id: number) => {
-					return new Promise(async (resolve) => {
-						const existingEmployee = await Employee.findOne({
-							where: {
-								id: employee_id,
-							},
-						})
-	
-						if (existingEmployee)
-							//check role employee
-							taskEmployees.push(existingEmployee)
-						resolve(true)
+		await Promise.all(
+			employees.map(async (employee_id: number) => {
+				return new Promise(async (resolve) => {
+					const existingEmployee = await Employee.findOne({
+						where: {
+							id: employee_id,
+						},
 					})
+
+					if (existingEmployee)
+						//check role employee
+						taskEmployees.push(existingEmployee)
+					resolve(true)
 				})
-			)
-			
+			})
+		)
+
 		//Check exist milestone
 		if (milestone) {
 			const existingMilestone = await Milestone.findOne({
@@ -531,23 +564,21 @@ const taskController = {
 				success: false,
 				message: 'Project does not exist in the system',
 			})
-			await Promise.all(
-				tasks.map(async (id: number) => {
-					return new Promise(async (resolve) => {
-						const existingtask = await Task.findOne({
-							where: {
-								id: id,
-							},
-						})
-	
-						if (existingtask)
-							await Task.remove(existingtask)
-						resolve(true)
+		await Promise.all(
+			tasks.map(async (id: number) => {
+				return new Promise(async (resolve) => {
+					const existingtask = await Task.findOne({
+						where: {
+							id: id,
+						},
 					})
-				})
-			)
 
-		
+					if (existingtask) await Task.remove(existingtask)
+					resolve(true)
+				})
+			})
+		)
+
 		return res.status(200).json({
 			code: 200,
 			success: true,
