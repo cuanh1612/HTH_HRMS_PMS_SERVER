@@ -17,7 +17,6 @@ const Attendance_1 = require("../entities/Attendance");
 const Client_1 = require("../entities/Client");
 const Contract_1 = require("../entities/Contract");
 const Employee_1 = require("../entities/Employee");
-const Leave_1 = require("../entities/Leave");
 const Milestone_1 = require("../entities/Milestone");
 const Project_1 = require("../entities/Project");
 const Task_1 = require("../entities/Task");
@@ -98,8 +97,13 @@ const dashBoardController = {
         const dateLastMonth = new Date();
         dateLastMonth.setDate(1);
         dateLastMonth.setDate(dateLastMonth.getDate() - 1);
-        const manager = (0, typeorm_1.getManager)('huprom');
-        const pendingTasksRaw = yield manager.query(`SELECT * FROM "task" LEFT JOIN "status" ON "task"."statusId" = "status"."id" LEFT JOIN "task_employee" ON "task"."id" = "task_employee"."taskId" LEFT JOIN "employee" ON "task_employee"."employeeId" = "employee"."id" LEFT JOIN "avatar" ON "employee"."avatarId" = "avatar"."id" WHERE "status"."title" != 'Complete'`);
+        const pendingTasksRaw = yield Task_1.Task.createQueryBuilder('task')
+            .leftJoinAndSelect('task.status', 'status')
+            .leftJoinAndSelect('task.assignBy', 'emlpoyee')
+            .leftJoinAndSelect('task.project', 'project')
+            .where('status.title != :title', { title: 'Complete' })
+            .andWhere('task.start_date > :date', { date: dateLastMonth })
+            .getMany();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -112,10 +116,8 @@ const dashBoardController = {
         const dateLastMonth = new Date();
         dateLastMonth.setDate(1);
         dateLastMonth.setDate(dateLastMonth.getDate() - 1);
-        const pendingLeavesRaw = yield Leave_1.Leave.createQueryBuilder('leave')
-            .where('leave.status = :status', { status: 'Pending' })
-            .andWhere('leave.date > :date', { date: dateLastMonth })
-            .getMany();
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const pendingLeavesRaw = yield manager.query(`SELECT * from "public"."leave" LEFT JOIN "public"."employee" ON "public"."leave"."employeeId" = "public"."employee"."id" LEFT JOIN "public"."avatar" ON "public"."employee"."avatarId" = "public"."avatar"."id" WHERE "public"."leave"."status" = 'Pending' AND "public"."leave"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`);
         return res.status(200).json({
             code: 200,
             success: true,
