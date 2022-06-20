@@ -23,4 +23,6 @@ dashboardRouter.get('/client-wise-time-logs', dashboardController_1.default.clie
 dashboardRouter.get('/lastest-clients', dashboardController_1.default.lastestClients);
 dashboardRouter.get('/projects-earning', dashboardController_1.default.sumEarningLoggedProjects);
 dashboardRouter.get('/projects-hours-logged', dashboardController_1.default.sumHoursLoggedProjects);
+dashboardRouter.get('/count-by-date-attendance', dashboardController_1.default.countBydateAttendance);
+dashboardRouter.get('/count-by-date-leave', dashboardController_1.default.countBydateLeave);
 exports.default = dashboardRouter;

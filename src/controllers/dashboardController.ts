@@ -4,6 +4,7 @@ import { Attendance } from '../entities/Attendance'
 import { Client } from '../entities/Client'
 import { Contract } from '../entities/Contract'
 import { Employee } from '../entities/Employee'
+import { Leave } from '../entities/Leave'
 import { Milestone } from '../entities/Milestone'
 import { Project } from '../entities/Project'
 import { Task } from '../entities/Task'
@@ -126,7 +127,7 @@ const dashBoardController = {
 
 		const manager = getManager('huprom')
 		const pendingLeavesRaw = await manager.query(
-			`SELECT *,"public"."leave_type"."name" as leave_type_name, "public"."employee"."name" as employee_name, "public"."avatar"."name" as avatar_name from "public"."leave" LEFT JOIN "public"."leave_type" ON "public"."leave"."leaveTypeId" = "public"."leave_type"."id" LEFT JOIN "public"."employee" ON "public"."leave"."employeeId" = "public"."employee"."id" LEFT JOIN "public"."avatar" ON "public"."employee"."avatarId" = "public"."avatar"."id" WHERE "public"."leave"."status" = 'Pending' AND "public"."leave"."date" > '${dateLastMonth.getFullYear()}-${
+			`SELECT *,"leave_type"."name" as leave_type_name, "leave"."id" as leave_id, "employee"."name" as employee_name, "avatar"."name" as avatar_name from "leave" LEFT JOIN "leave_type" ON "leave"."leaveTypeId" = "leave_type"."id" LEFT JOIN "employee" ON "leave"."employeeId" = "employee"."id" LEFT JOIN "avatar" ON "employee"."avatarId" = "avatar"."id" WHERE "leave"."status" = 'Pending' AND "leave"."date" > '${dateLastMonth.getFullYear()}-${
 				dateLastMonth.getMonth() + 1
 			}-${dateLastMonth.getDate()}'`
 		)
@@ -254,6 +255,90 @@ const dashBoardController = {
 			success: true,
 			lastestClients: lastestClients,
 			message: 'Get lastest clients successfully',
+		})
+	}),
+
+	countBydateAttendance: handleCatchError(async (_: Request, res: Response) => {
+		//Get end date last month
+		const dateLastMonth = new Date()
+		dateLastMonth.setDate(1)
+		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
+
+		//get current date
+		let dateCurrentMonth = (new Date()).getDate()
+
+		const manager = getManager('huprom')
+		const currentMonthAttendance: Attendance[] = await manager.query(
+			`SELECT * FROM "attendance" WHERE "attendance"."date" > '${dateLastMonth.getFullYear()}-${
+				dateLastMonth.getMonth() + 1
+			}-${dateLastMonth.getDate()}'`
+		) || []
+
+		let countBydateAttendance: {date: number, count: number}[] = []
+
+		//Count attendance by date
+		for (let index = 1; index <= dateCurrentMonth; index++) {
+			let countAttendance = 0
+			currentMonthAttendance.map(attendance => {
+				const dateAttendance = (new Date(attendance.date)).getDate() 
+				if(dateAttendance === index){
+					countAttendance++
+				}
+			})
+
+			countBydateAttendance.push({
+				count: countAttendance,
+				date: index
+			})
+		}
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countBydateAttendance: countBydateAttendance,
+			message: 'Get count by date attendance successfully',
+		})
+	}),
+
+	countBydateLeave: handleCatchError(async (_: Request, res: Response) => {
+		//Get end date last month
+		const dateLastMonth = new Date()
+		dateLastMonth.setDate(1)
+		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
+
+		//get current date
+		let dateCurrentMonth = (new Date()).getDate()
+
+		const manager = getManager('huprom')
+		const currentMonthLeave: Leave[] = await manager.query(
+			`SELECT * FROM "leave" WHERE "leave"."date" > '${dateLastMonth.getFullYear()}-${
+				dateLastMonth.getMonth() + 1
+			}-${dateLastMonth.getDate()}'`
+		) || []
+
+		let countByLeaveAttendance: {date: number, count: number}[] = []
+
+		//Count attendance by date
+		for (let index = 1; index <= dateCurrentMonth; index++) {
+			let countAttendance = 0
+			currentMonthLeave.map(leave => {
+				const dateLeave = (new Date(leave.date)).getDate() 
+				if(dateLeave === index){
+					countAttendance++
+				}
+			})
+
+			countByLeaveAttendance.push({
+				count: countAttendance,
+				date: index
+			})
+		}
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			countByLeaveAttendance: countByLeaveAttendance,
+			message: 'Get count by date leave successfully',
 		})
 	}),
 }
