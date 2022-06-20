@@ -173,6 +173,11 @@ const dashBoardController = {
 			where: {
 				status: false,
 			},
+			relations: {
+				project: {
+					name: true
+				}
+			}
 		})
 
 		return res.status(200).json({
