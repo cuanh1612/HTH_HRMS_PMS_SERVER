@@ -221,22 +221,22 @@ const dashBoardController = {
         dateLastMonth.setDate(1);
         dateLastMonth.setDate(dateLastMonth.getDate() - 1);
         //get current date
-        let dateCurrentMonth = (new Date()).getDate();
+        let dateCurrentMonth = new Date().getDate();
         const manager = (0, typeorm_1.getManager)('huprom');
         const currentMonthAttendance = (yield manager.query(`SELECT * FROM "attendance" WHERE "attendance"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`)) || [];
         let countBydateAttendance = [];
         //Count attendance by date
         for (let index = 1; index <= dateCurrentMonth; index++) {
             let countAttendance = 0;
-            currentMonthAttendance.map(attendance => {
-                const dateAttendance = (new Date(attendance.date)).getDate();
+            currentMonthAttendance.map((attendance) => {
+                const dateAttendance = new Date(attendance.date).getDate();
                 if (dateAttendance === index) {
                     countAttendance++;
                 }
             });
             countBydateAttendance.push({
                 count: countAttendance,
-                date: index
+                date: index,
             });
         }
         return res.status(200).json({
@@ -252,22 +252,22 @@ const dashBoardController = {
         dateLastMonth.setDate(1);
         dateLastMonth.setDate(dateLastMonth.getDate() - 1);
         //get current date
-        let dateCurrentMonth = (new Date()).getDate();
+        let dateCurrentMonth = new Date().getDate();
         const manager = (0, typeorm_1.getManager)('huprom');
         const currentMonthLeave = (yield manager.query(`SELECT * FROM "leave" WHERE "leave"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`)) || [];
         let countByLeaveAttendance = [];
         //Count attendance by date
         for (let index = 1; index <= dateCurrentMonth; index++) {
             let countAttendance = 0;
-            currentMonthLeave.map(leave => {
-                const dateLeave = (new Date(leave.date)).getDate();
+            currentMonthLeave.map((leave) => {
+                const dateLeave = new Date(leave.date).getDate();
                 if (dateLeave === index) {
                     countAttendance++;
                 }
             });
             countByLeaveAttendance.push({
                 count: countAttendance,
-                date: index
+                date: index,
             });
         }
         return res.status(200).json({
@@ -275,6 +275,18 @@ const dashBoardController = {
             success: true,
             countByLeaveAttendance: countByLeaveAttendance,
             message: 'Get count by date leave successfully',
+        });
+    })),
+    countProjectsOverdue: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const countProjectsOverdue = yield manager.query('SELECT COUNT("project"."id") FROM "project" WHERE "project"."deadline" < CURRENT_DATE');
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            countProjectsOverdue: countProjectsOverdue && countProjectsOverdue[0]
+                ? Number(countProjectsOverdue[0].count)
+                : 0,
+            message: 'Get count project overdue successfully',
         });
     })),
 };
