@@ -176,6 +176,35 @@ const eventController = {
             message: 'Get all Events successfully',
         });
     })),
+    getByEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        //check exist current user
+        const { employeeId } = req.params;
+        const existingEmployee = yield Employee_1.Employee.findOne({
+            where: {
+                id: Number(employeeId)
+            }
+        });
+        if (!existingEmployee)
+            return res.status(400).json({
+                code: 401,
+                success: false,
+                message: 'Not found employee',
+            });
+        //Get all event of employee
+        const allEvent = yield Event_1.Event.find({
+            where: {
+                employees: {
+                    id: existingEmployee.id
+                }
+            }
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            Events: allEvent,
+            message: 'Get all Events by emlpoyee successfully',
+        });
+    })),
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         //get id event
         const { enventId } = req.params;

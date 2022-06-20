@@ -21,4 +21,6 @@ dashboardRouter.get('/contracts-signed', dashboardController_1.default.contracts
 dashboardRouter.get('/client-wise-earnings', dashboardController_1.default.clientWiseEarnings);
 dashboardRouter.get('/client-wise-time-logs', dashboardController_1.default.clientWiseTimeLogs);
 dashboardRouter.get('/lastest-clients', dashboardController_1.default.lastestClients);
+dashboardRouter.get('/projects-earning', dashboardController_1.default.sumEarningLoggedProjects);
+dashboardRouter.get('/projects-hours-logged', dashboardController_1.default.sumHoursLoggedProjects);
 exports.default = dashboardRouter;

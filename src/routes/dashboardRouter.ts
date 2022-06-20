@@ -18,5 +18,7 @@ dashboardRouter.get('/contracts-signed', dashBoardController.contractsSigned)
 dashboardRouter.get('/client-wise-earnings', dashBoardController.clientWiseEarnings)
 dashboardRouter.get('/client-wise-time-logs', dashBoardController.clientWiseTimeLogs)
 dashboardRouter.get('/lastest-clients', dashBoardController.lastestClients)
+dashboardRouter.get('/projects-earning', dashBoardController.sumEarningLoggedProjects)
+dashboardRouter.get('/projects-hours-logged', dashBoardController.sumHoursLoggedProjects)
 
 export default dashboardRouter

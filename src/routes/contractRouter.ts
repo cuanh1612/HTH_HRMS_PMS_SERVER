@@ -22,4 +22,6 @@ contractRouter.put('/:contractId', checkAuth(['Admin']), contractController.upda
 
 contractRouter.post('/csv', checkAuth(['Admin']), contractController.importCSV)
 
+contractRouter.get('/client/:clientId/count-contracts-assigned', contractController.countContractSignedEmployee)
+
 export default contractRouter

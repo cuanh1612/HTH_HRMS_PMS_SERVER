@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import { Like } from 'typeorm'
 import { Holiday } from '../entities/Holiday'
 import handleCatchError from '../utils/catchAsyncError'
 

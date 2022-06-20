@@ -227,6 +227,40 @@ const eventController = {
 		})
 	}),
 
+	getByEmployee: handleCatchError(async (req: Request, res: Response) => {
+		//check exist current user
+		const {employeeId} = req.params
+
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId)
+			}
+		})
+
+		if (!existingEmployee)
+			return res.status(400).json({
+				code: 401,
+				success: false,
+				message: 'Not found employee',
+			})
+
+		//Get all event of employee
+		const allEvent = await Event.find({
+			where: {
+				employees: {
+					id: existingEmployee.id
+				}
+			}
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			Events: allEvent,
+			message: 'Get all Events by emlpoyee successfully',
+		})
+	}),
+
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		//get id event
 		const { enventId } = req.params
