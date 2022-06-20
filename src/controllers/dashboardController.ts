@@ -126,7 +126,7 @@ const dashBoardController = {
 
 		const manager = getManager('huprom')
 		const pendingLeavesRaw = await manager.query(
-			`SELECT *, *, "leave_type"."name" as leave_type_name, "employee"."name" as employee_name, "avatar"."name" as avatar_name from "public"."leave" LEFT JOIN "public"."employee" ON "public"."leave"."employeeId" = "public"."employee"."id" LEFT JOIN "public"."avatar" ON "public"."employee"."avatarId" = "public"."avatar"."id" WHERE "public"."leave"."status" = 'Pending' AND "public"."leave"."date" > '${dateLastMonth.getFullYear()}-${
+			`SELECT *,"public"."leave_type"."name" as leave_type_name, "public"."employee"."name" as employee_name, "public"."avatar"."name" as avatar_name from "public"."leave" LEFT JOIN "public"."leave_type" ON "public"."leave"."leaveTypeId" = "public"."leave_type"."id" LEFT JOIN "public"."employee" ON "public"."leave"."employeeId" = "public"."employee"."id" LEFT JOIN "public"."avatar" ON "public"."employee"."avatarId" = "public"."avatar"."id" WHERE "public"."leave"."status" = 'Pending' AND "public"."leave"."date" > '${dateLastMonth.getFullYear()}-${
 				dateLastMonth.getMonth() + 1
 			}-${dateLastMonth.getDate()}'`
 		)
