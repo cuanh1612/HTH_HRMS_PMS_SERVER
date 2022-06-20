@@ -100,6 +100,8 @@ const dashBoardController = {
         dateLastMonth.setDate(dateLastMonth.getDate() - 1);
         const pendingTasksRaw = yield Task_1.Task.createQueryBuilder('task')
             .leftJoinAndSelect('task.status', 'status')
+            .leftJoinAndSelect('task.assignBy', 'emlpoyee')
+            .leftJoinAndSelect('task.project', 'project')
             .where('status.title != :title', { title: 'Complete' })
             .andWhere('task.start_date > :date', { date: dateLastMonth })
             .getMany();
