@@ -146,7 +146,7 @@ const dashBoardController = {
         });
     })),
     pendingMilestone: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const statusWiseProjects = yield Milestone_1.Milestone.find({
+        const pendingMilestone = yield Milestone_1.Milestone.find({
             where: {
                 status: false,
             },
@@ -159,7 +159,7 @@ const dashBoardController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            statusWiseProjects: statusWiseProjects,
+            pendingMilestone,
             message: 'Get status wise projects successfully',
         });
     })),

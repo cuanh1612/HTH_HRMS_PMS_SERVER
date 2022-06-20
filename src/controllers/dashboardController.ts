@@ -169,7 +169,7 @@ const dashBoardController = {
 	}),
 
 	pendingMilestone: handleCatchError(async (_: Request, res: Response) => {
-		const statusWiseProjects = await Milestone.find({
+		const pendingMilestone = await Milestone.find({
 			where: {
 				status: false,
 			},
@@ -183,7 +183,7 @@ const dashBoardController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			statusWiseProjects: statusWiseProjects,
+			pendingMilestone,
 			message: 'Get status wise projects successfully',
 		})
 	}),
