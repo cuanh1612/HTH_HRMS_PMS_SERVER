@@ -25,4 +25,6 @@ dashboardRouter.get('/projects-earning', dashboardController_1.default.sumEarnin
 dashboardRouter.get('/projects-hours-logged', dashboardController_1.default.sumHoursLoggedProjects);
 dashboardRouter.get('/count-by-date-attendance', dashboardController_1.default.countBydateAttendance);
 dashboardRouter.get('/count-by-date-leave', dashboardController_1.default.countBydateLeave);
+dashboardRouter.get('/count-project-overdue', dashboardController_1.default.countProjectsOverdue);
+dashboardRouter.get('/late-attendance', dashboardController_1.default.lateAttendance);
 exports.default = dashboardRouter;
