@@ -10,5 +10,6 @@ skillRouter.post('/', skillController_1.default.createmany);
 skillRouter.delete('/:id', skillController_1.default.delete);
 skillRouter.post('/delete-many', skillController_1.default.deletemany);
 skillRouter.get('/', skillController_1.default.getAll);
+skillRouter.get('/:id', skillController_1.default.getdetail);
 skillRouter.put('/:id', skillController_1.default.update);
 exports.default = skillRouter;
