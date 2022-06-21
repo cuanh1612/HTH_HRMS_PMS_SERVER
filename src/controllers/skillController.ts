@@ -1,6 +1,6 @@
 import handleCatchError from "../utils/catchAsyncError"
 import { Request, Response } from 'express'
-import { Skill } from "../entities/skill"
+import { Skill } from "../entities/Skill"
 
 
 
@@ -96,6 +96,30 @@ const skillController = {
 			message: 'Update skill success',
 		})
         
+    }),
+
+    getdetail: handleCatchError(async (req: Request,  res: Response) =>{
+        const {id} = req.params
+
+        const existingskill = await Skill.findOne({
+            where: {
+                id: Number(id)
+            }
+        })
+
+        if(!existingskill)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Skill does not existing in the system',
+            })
+        
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            skill: existingskill,
+            message: 'Get detail of skill success'
+        })
     }),
 
     delete: handleCatchError(async (req: Request, res: Response) =>{

@@ -40,7 +40,8 @@ import { Room } from '../entities/Room'
 import { Sticky_note } from '../entities/StickyNote'
 import { Notification } from '../entities/Notification'
 import { Company_Info } from '../entities/Company_Info'
-import { Skill } from '../entities/skill'
+import { Skill } from '../entities/Skill'
+
 
 const connectDB = () => {
 	createConnection({
