@@ -203,32 +203,13 @@ const authController = {
 
 		const existingUser = await Employee.findOne({
 			where: {
-				id: decode.userId,
+				email: decode.email
+			},
+		}) || await Client.findOne({
+			where: {
+				email: decode.email
 			},
 		})
-
-
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
-		console.log(existingUser);
 		
 
 		if (!existingUser)

@@ -181,32 +181,15 @@ const authController = {
                 message: 'Please login first',
             });
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
-        const existingUser = yield Employee_1.Employee.findOne({
+        const existingUser = (yield Employee_1.Employee.findOne({
             where: {
-                id: decode.userId,
+                email: decode.email
             },
-        });
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
-        console.log(existingUser);
+        })) || (yield Client_1.Client.findOne({
+            where: {
+                email: decode.email
+            },
+        }));
         if (!existingUser)
             return res.status(400).json({
                 code: 400,
