@@ -632,7 +632,7 @@ const employeeController = {
         //Check existing employee
         const existingEmployee = yield Employee_1.Employee.findOne({
             where: {
-                id: 6,
+                id: Number(employeeId),
             },
         });
         if (!existingEmployee)

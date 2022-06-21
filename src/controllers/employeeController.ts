@@ -752,7 +752,7 @@ const employeeController = {
 		//Check existing employee
 		const existingEmployee = await Employee.findOne({
 			where: {
-				id: 6,
+				id: Number(employeeId),
 			},
 		})
 

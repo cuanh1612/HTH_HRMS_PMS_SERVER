@@ -5,7 +5,6 @@ import { Client } from '../entities/Client'
 import { Contract } from '../entities/Contract'
 import { Employee } from '../entities/Employee'
 import { Leave } from '../entities/Leave'
-import { Milestone } from '../entities/Milestone'
 import { Project } from '../entities/Project'
 import { Task } from '../entities/Task'
 import handleCatchError from '../utils/catchAsyncError'
@@ -169,22 +168,16 @@ const dashBoardController = {
 	}),
 
 	pendingMilestone: handleCatchError(async (_: Request, res: Response) => {
-		const pendingMilestone = await Milestone.find({
-			where: {
-				status: false,
-			},
-			relations: {
-				project: {
-					name: true
-				}
-			}
-		})
+		const manager = getManager('huprom')
+		const pendingMilestone = await manager.query(
+			'SELECT * FROM "public"."milestone" LEFT JOIN "public"."project" ON "public"."milestone"."projectId" = "public"."project"."id" WHERE "public"."milestone"."status" IS FALSE'
+		)
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
 			pendingMilestone,
-			message: 'Get status wise projects successfully',
+			message: 'Get pending milestones successfully',
 		})
 	}),
 

@@ -17,7 +17,6 @@ const Attendance_1 = require("../entities/Attendance");
 const Client_1 = require("../entities/Client");
 const Contract_1 = require("../entities/Contract");
 const Employee_1 = require("../entities/Employee");
-const Milestone_1 = require("../entities/Milestone");
 const Project_1 = require("../entities/Project");
 const Task_1 = require("../entities/Task");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
@@ -146,21 +145,13 @@ const dashBoardController = {
         });
     })),
     pendingMilestone: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const pendingMilestone = yield Milestone_1.Milestone.find({
-            where: {
-                status: false,
-            },
-            relations: {
-                project: {
-                    name: true
-                }
-            }
-        });
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const pendingMilestone = yield manager.query('SELECT * FROM "public"."milestone" LEFT JOIN "public"."project" ON "public"."milestone"."projectId" = "public"."project"."id" WHERE "public"."milestone"."status" IS FALSE');
         return res.status(200).json({
             code: 200,
             success: true,
             pendingMilestone,
-            message: 'Get status wise projects successfully',
+            message: 'Get pending milestones successfully',
         });
     })),
     contractsGenerated: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
