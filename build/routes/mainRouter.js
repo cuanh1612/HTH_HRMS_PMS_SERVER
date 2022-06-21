@@ -44,6 +44,7 @@ const timeLogRouter_1 = __importDefault(require("./timeLogRouter"));
 const roomRouter_1 = __importDefault(require("./roomRouter"));
 const notificationRouter_1 = __importDefault(require("./notificationRouter"));
 const companyInfoRouter_1 = __importDefault(require("./companyInfoRouter"));
+const skillRouter_1 = __importDefault(require("./skillRouter"));
 function mainRouter(app) {
     app.use('/api/auth', authRouter_1.default);
     app.use('/api/employees', employeeRouter_1.default);
@@ -86,5 +87,6 @@ function mainRouter(app) {
     app.use('/api/rooms', roomRouter_1.default);
     app.use('/api/notifications', notificationRouter_1.default);
     app.use('/api/company-info', companyInfoRouter_1.default);
+    app.use('/api/skills', skillRouter_1.default);
 }
 exports.default = mainRouter;

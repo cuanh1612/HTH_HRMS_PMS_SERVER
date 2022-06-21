@@ -228,23 +228,23 @@ const clientController = {
                 message: 'Client does not exist in the system',
             });
         //Check existing email
-        if (dataUpdateClient.email !== existingClient.email) {
-            const existingClientMail = yield Client_1.Client.findOne({
-                where: {
-                    email: dataUpdateClient.email,
-                },
+        const existingEmployeeEmail = yield Employee_1.Employee.findOne({
+            where: {
+                email: dataUpdateClient.email,
+            },
+        });
+        const existingClientEmail = yield Employee_1.Employee.findOne({
+            where: {
+                email: dataUpdateClient.email,
+            },
+        });
+        if (existingEmployeeEmail ||
+            (existingClientEmail && existingClientEmail.id !== existingClient.id)) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Email already exist in the system',
             });
-            const existingEmployeeMail = yield Employee_1.Employee.findOne({
-                where: {
-                    email: dataUpdateClient.email,
-                },
-            });
-            if (existingClientMail || existingEmployeeMail)
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Email already exists in the system',
-                });
         }
         //Check existing client category
         if (dataUpdateClient.client_category) {

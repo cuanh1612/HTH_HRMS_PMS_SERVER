@@ -40,6 +40,7 @@ import { Room } from '../entities/Room'
 import { Sticky_note } from '../entities/StickyNote'
 import { Notification } from '../entities/Notification'
 import { Company_Info } from '../entities/Company_Info'
+import { Skill } from '../entities/Skill'
 
 const connectDB = () => {
 	createConnection({
@@ -47,8 +48,8 @@ const connectDB = () => {
 		name: 'huprom',
 		logging: true,
 
-		database: 'hth_hrms_pms',
-		password: 'kingspear1999',
+		database: 'HTH_HRMS_PMS',
+		password: '161201',
 		username: 'postgres',
 
 		synchronize: true,
@@ -101,7 +102,8 @@ const connectDB = () => {
 			Room,
 			Sticky_note, 
 			Notification,
-			Company_Info
+			Company_Info,
+			Skill
 		],
 	})
 		.then(() => {
