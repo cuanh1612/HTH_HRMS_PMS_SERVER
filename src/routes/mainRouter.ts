@@ -125,7 +125,7 @@ function mainRouter(app: core.Express) {
 
 	app.use('/api/company-info', companyInfoRouter)
 
-	app.use('/api/skill', skillRouter)
+	app.use('/api/skills', skillRouter)
 }
 
 export default mainRouter
