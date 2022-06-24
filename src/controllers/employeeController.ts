@@ -290,17 +290,17 @@ const employeeController = {
 			},
 		})
 
-		const existingClientEmail = await Employee.findOne({
+		const existingClientEmail = await Client.findOne({
 			where: {
 				email: dataUpdateEmployee.email,
 			},
 		})
 
-		if(existingClientEmail || existingEmployeeEmail && existingEmployeeEmail.id !== existingEmployee.id){
+		if(existingClientEmail || existingEmployeeEmail && existingEmployeeEmail.email !== existingEmployee.email){
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Email already exist in the system',
+				message: 'Email already exist in the system 1',
 			})
 		}
 
@@ -360,6 +360,8 @@ const employeeController = {
 			}
 		}
 
+	    const hashPassword = dataUpdateEmployee.password ? await argon2.hash(dataUpdateEmployee.password) : null
+
 		//Update employee
 		await Employee.update(
 			{
@@ -367,8 +369,8 @@ const employeeController = {
 			},
 			{
 				...dataUpdateEmployeeBase,
-				...(dataUpdateEmployeeBase.password
-					? { password: await argon2.hash(dataUpdateEmployee.password) }
+				...(hashPassword
+					? { password: hashPassword }
 					: {}),
 				...(newAvatar
 					? {

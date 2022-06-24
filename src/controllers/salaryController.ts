@@ -76,15 +76,30 @@ const salaryController = {
 	}),
 
 	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const salaries = await Employee.createQueryBuilder('employee')
+		const salaries: Employee[] = await Employee.createQueryBuilder('employee')
 			.leftJoinAndSelect('employee.salaries', 'salary')
 			.orderBy('salary.date', 'DESC')
 			.getMany()
 
+		const listSalaries = salaries.map(salary => {
+			if(salary.salaries && Array.isArray(salary.salaries)){
+				let sum = 0
+				salary.salaries.map(salaryItem => {
+					sum += salaryItem.amount
+				})
+				return ({
+					...salary,
+					sumSalaries: sum
+				})
+			} else {
+				return salary
+			}
+		})
+
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			salaries,
+			salaries: listSalaries,
 			message: 'Create new Project files success successfully',
 		})
 	}),

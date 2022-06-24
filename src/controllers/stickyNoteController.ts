@@ -118,7 +118,7 @@ const stickyNoteController = {
 
         })
 
-        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
+        if (!existingUser ||  existingNote.employee && existingUser.id !== existingNote.employee.id ||  existingNote.client && existingUser.id !== existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -139,6 +139,7 @@ const stickyNoteController = {
     }),
     delete: handleCatchError(async (req: Request, res: Response) => {
         const { id } = req.params
+        
 
         const existingNote = await Sticky_note.findOne({
             where:{
@@ -155,6 +156,7 @@ const stickyNoteController = {
                 success: false,
                 message: 'The sticky note does not exist in the system'
             })
+            
 
         //check exist current user
         const token = req.headers.authorization?.split(' ')[1]
@@ -165,6 +167,7 @@ const stickyNoteController = {
                 success: false,
                 message: 'Please login first',
             })
+            
 
         const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
 
@@ -179,7 +182,7 @@ const stickyNoteController = {
             },  
         })
 
-        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
+        if (!existingUser ||  existingNote.employee && existingUser.id !== existingNote.employee.id ||  existingNote.client && existingUser.id !== existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -238,7 +241,7 @@ const stickyNoteController = {
             
         })
 
-        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
+        if (!existingUser ||  existingNote.employee && existingUser.id !== existingNote.employee.id ||  existingNote.client && existingUser.id !== existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,

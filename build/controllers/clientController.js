@@ -233,13 +233,13 @@ const clientController = {
                 email: dataUpdateClient.email,
             },
         });
-        const existingClientEmail = yield Employee_1.Employee.findOne({
+        const existingClientEmail = yield Client_1.Client.findOne({
             where: {
                 email: dataUpdateClient.email,
             },
         });
         if (existingEmployeeEmail ||
-            (existingClientEmail && existingClientEmail.id !== existingClient.id)) {
+            (existingClientEmail && existingClientEmail.email !== existingClient.email)) {
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -299,11 +299,12 @@ const clientController = {
                 newAvatar = yield Avatar_1.Avatar.create(Object.assign({}, avatar)).save();
             }
         }
+        const hashPassword = dataUpdateClient.password ? yield argon2_1.default.hash(dataUpdateClient.password) : null;
         //Update client
         yield Client_1.Client.update({
             id: existingClient.id,
-        }, Object.assign(Object.assign(Object.assign(Object.assign({}, dataUpdateClientBase), (dataUpdateClientBase.password
-            ? { password: yield argon2_1.default.hash(dataUpdateClient.password) }
+        }, Object.assign(Object.assign(Object.assign(Object.assign({}, dataUpdateClientBase), (hashPassword
+            ? { password: hashPassword }
             : {})), (newAvatar
             ? {
                 avatar: newAvatar,

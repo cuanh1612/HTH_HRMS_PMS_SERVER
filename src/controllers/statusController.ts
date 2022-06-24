@@ -8,9 +8,10 @@ import { statusValid } from '../utils/valid/statusValid'
 const statusController = {
 	//create new status
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const { project, title, color } = req.body
+		const { projectId, title, color } = req.body
+		console.log( req.body)
 
-		if (!project || !title || !color) {
+		if (!projectId || !title || !color) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -21,7 +22,7 @@ const statusController = {
 		const laststatus = await Status.findOne({
 			where: {
 				project: {
-					id: project,
+					id: projectId,
 				},
 			},
 			order: {
@@ -38,7 +39,7 @@ const statusController = {
 
 		const existingproject = await Project.findOne({
 			where: {
-				id: project,
+				id: projectId,
 			},
 		})
 		if (!existingproject)

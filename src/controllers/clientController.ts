@@ -261,7 +261,7 @@ const clientController = {
 			},
 		})
 
-		const existingClientEmail = await Employee.findOne({
+		const existingClientEmail = await Client.findOne({
 			where: {
 				email: dataUpdateClient.email,
 			},
@@ -269,7 +269,7 @@ const clientController = {
 
 		if (
 			existingEmployeeEmail ||
-			(existingClientEmail && existingClientEmail.id !== existingClient.id)
+			(existingClientEmail && existingClientEmail.email !== existingClient.email)
 		) {
 			return res.status(400).json({
 				code: 400,
@@ -342,6 +342,8 @@ const clientController = {
 			}
 		}
 
+		const hashPassword = dataUpdateClient.password ? await argon2.hash(dataUpdateClient.password) : null
+
 		//Update client
 		await Client.update(
 			{
@@ -349,8 +351,8 @@ const clientController = {
 			},
 			{
 				...dataUpdateClientBase,
-				...(dataUpdateClientBase.password
-					? { password: await argon2.hash(dataUpdateClient.password) }
+				...(hashPassword
+					? { password: hashPassword }
 					: {}),
 				...(newAvatar
 					? {
