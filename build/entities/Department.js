@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Department = void 0;
 const typeorm_1 = require("typeorm");
 const Employee_1 = require("./Employee");
+const Job_1 = require("./Job");
 const Project_1 = require("./Project");
 let Department = class Department extends typeorm_1.BaseEntity {
 };
@@ -33,6 +34,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Array)
 ], Department.prototype, "projects", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Job_1.Job, (job) => job.department),
+    __metadata("design:type", Array)
+], Department.prototype, "jobs", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

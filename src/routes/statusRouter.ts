@@ -1,20 +1,21 @@
 import express from "express";
 import statusController from "../controllers/statusController";
+import { checkAuth } from "../utils/middleware/checkAuth";
 
  
  const statusRouter = express.Router()
 
- statusRouter.post('/', statusController.create)
+ statusRouter.post('/', checkAuth([]), statusController.create)
  
  statusRouter.get('/normal/:projectId', statusController.getAllPj)
  statusRouter.get('/detail/:id', statusController.getDetail)
  statusRouter.get('/:projectId', statusController.getAllWithTask)
 
  
- statusRouter.put('/position', statusController.changeposition)
- statusRouter.put('/:id', statusController.update)
+ statusRouter.put('/position', checkAuth([]), statusController.changeposition)
+ statusRouter.put('/:id', checkAuth([]), statusController.update)
 
- statusRouter.delete('/:id', statusController.delete)
+ statusRouter.delete('/:id', checkAuth([]), statusController.delete)
 
 
  export default statusRouter

@@ -4,9 +4,9 @@ import { checkAuth } from '../utils/middleware/checkAuth'
 
 const salaryRouter = express.Router()
 
-salaryRouter.post('/', checkAuth([]), salaryController.create)
+salaryRouter.post('/', checkAuth(['Admin']), salaryController.create)
 salaryRouter.get('/', checkAuth([]), salaryController.getAll)
 salaryRouter.get('/employee/:employeeId', checkAuth([]), salaryController.getHistoryByUser)
-salaryRouter.delete('/:salaryId', checkAuth([]), salaryController.delete)
+salaryRouter.delete('/:salaryId', checkAuth(['Admin']), salaryController.delete)
 
 export default salaryRouter

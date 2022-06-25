@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Skill = void 0;
 const typeorm_1 = require("typeorm");
+const Job_1 = require("./Job");
 let Skill = class Skill extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -21,6 +22,10 @@ __decorate([
     (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
 ], Skill.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Job_1.Job),
+    __metadata("design:type", Array)
+], Skill.prototype, "jobs", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

@@ -1,6 +1,5 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-
-
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Job } from "./Job";
 
 @Entity()
 export class Skill extends BaseEntity {
@@ -9,6 +8,9 @@ export class Skill extends BaseEntity {
 
     @Column({unique: true})
     name: string
+
+    @ManyToMany(() => Job)
+    jobs: Job[]
 
     @CreateDateColumn({
 		name: 'created_at',
