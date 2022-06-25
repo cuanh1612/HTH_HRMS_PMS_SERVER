@@ -41,6 +41,9 @@ import { Sticky_note } from '../entities/StickyNote'
 import { Notification } from '../entities/Notification'
 import { Company_Info } from '../entities/Company_Info'
 import { Skill } from '../entities/Skill'
+import { Job } from '../entities/Job'
+import { Job_Type } from '../entities/Job_Type'
+import { Work_Experience } from '../entities/Work_Experience'
 
 const connectDB = () => {
 	createConnection({
@@ -103,7 +106,12 @@ const connectDB = () => {
 			Sticky_note, 
 			Notification,
 			Company_Info,
-			Skill
+			Skill,
+			Location,
+			Job,
+			Job_Type,
+			Work_Experience,
+			
 		],
 	})
 		.then(() => {

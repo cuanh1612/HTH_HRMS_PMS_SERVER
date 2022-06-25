@@ -21,6 +21,7 @@ import { Designation } from './Designation'
 import { Discussion } from './Discussion'
 import { Event } from './Event'
 import { Hourly_rate_project } from './Hourly_rate_project'
+import { Job } from './Job'
 import { Leave } from './Leave'
 import { Notification } from './Notification'
 import { Project } from './Project'
@@ -115,6 +116,9 @@ export class Employee extends BaseEntity {
 
 	@OneToMany(()=> Room, (room)=> room.empl_create)
 	rooms: Room[]
+
+	@ManyToOne(() => Job, (job) => job.recruiter)
+	jobs: Job            
 
 	@OneToMany(()=> Project, (project)=> project.project_Admin)
 	projects_management: Project[]

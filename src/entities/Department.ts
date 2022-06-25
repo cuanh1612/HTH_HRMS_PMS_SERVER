@@ -5,11 +5,13 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
+	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
 import { Employee } from './Employee'
+import { Job } from './Job'
 import { Project } from './Project'
 
 @Entity()
@@ -27,6 +29,11 @@ export class Department extends BaseEntity {
 	@OneToMany(() => Project, (project) => project.department)
 	@JoinColumn()
 	projects: Project[]
+
+	@ManyToOne(() => Job, (job) => job.department)
+	jobs: Job[]
+
+	
 
 	@CreateDateColumn({
 		name: 'created_at',
