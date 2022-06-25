@@ -113,6 +113,9 @@ const projectNoteController = {
 			where: {
 				id: project,
 			},
+			relations: {
+				project_Admin: true
+			}
 		})
 
 		if (!exisitingProject)
@@ -154,7 +157,7 @@ const projectNoteController = {
 				message: 'User does not exist in the system',
 			})
 
-		if (existingUser.role !== enumRole.ADMIN)
+		if (existingUser.role !== enumRole.ADMIN && existingUser.email !== exisitingProject.project_Admin.email)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -210,6 +213,11 @@ const projectNoteController = {
 			where: {
 				id: Number(projectNoteId),
 			},
+			relations: {
+				project: {
+					project_Admin: true,
+				},
+			},
 		})
 
 		if (!existingProjectNote)
@@ -251,7 +259,10 @@ const projectNoteController = {
 				message: 'User does not exist in the system',
 			})
 
-		if (existingUser.role !== enumRole.ADMIN)
+		if (
+			existingUser.role !== enumRole.ADMIN &&
+			existingUser.email !== existingProjectNote.project.project_Admin.email
+		)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -302,13 +313,6 @@ const projectNoteController = {
 				message: 'User does not exist in the system',
 			})
 
-		if (existingUser.role !== enumRole.ADMIN)
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'You do not have permission to perform this feature',
-			})
-
 		await Promise.all(
 			projectNotes.map(async (projectNoteId) => {
 				new Promise(async (resolve) => {
@@ -317,13 +321,28 @@ const projectNoteController = {
 						where: {
 							id: Number(projectNoteId),
 						},
+						relations: {
+							project: {
+								project_Admin: true,
+							},
+						},
 					})
 
 					if (existingProjectNote) {
+						if (
+							existingUser.role !== enumRole.ADMIN &&
+							existingUser.email !== existingProjectNote.project.project_Admin.email
+						)
+							return res.status(400).json({
+								code: 400,
+								success: false,
+								message: 'You do not have permission to perform this feature',
+							})
+
 						await existingProjectNote.remove()
 					}
 
-					resolve(true)
+					return resolve(true)
 				})
 			})
 		)
@@ -344,8 +363,9 @@ const projectNoteController = {
 				id: Number(projectId),
 			},
 			relations: {
-				client: true
-			}
+				client: true,
+				project_Admin: true
+			},
 		})
 
 		if (!existingProject)
@@ -433,7 +453,11 @@ const projectNoteController = {
 			})
 		}
 
-		if (existingUser.role === enumRole.ADMIN) {
+		if (
+			existingUser.role === enumRole.ADMIN ||
+			(existingUser.role === enumRole.EMPLOYEE &&
+				existingUser.email === existingProject.project_Admin.email)
+		) {
 			const projectNotes = await Project_note.find({
 				where: {
 					project: {
@@ -503,9 +527,6 @@ const projectNoteController = {
 		const existingProjectNote = await Project_note.findOne({
 			where: {
 				id: Number(projectNoteId),
-			},
-			relations: {
-				project: true,
 			},
 			select: {
 				project: {

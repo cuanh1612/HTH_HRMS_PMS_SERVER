@@ -1,10 +1,11 @@
 import express from 'express'
 import projectNoteController from '../controllers/projectNoteController'
+import { checkAuth } from '../utils/middleware/checkAuth'
 
 
 const projectNoteRouter = express.Router()
 
-projectNoteRouter.post('/',  projectNoteController.create)
+projectNoteRouter.post('/', checkAuth([]),  projectNoteController.create)
 
 projectNoteRouter.put('/:projectNoteId',  projectNoteController.update)
 

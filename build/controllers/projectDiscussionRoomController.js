@@ -65,7 +65,7 @@ const projectDiscussionRoomController = {
                 success: false,
                 message: 'User does not exist in the system'
             });
-        if (!existingProject.employees.some((employeeItem) => employeeItem.id === existingUser.id))
+        if (!existingProject.employees.some((employeeItem) => employeeItem.id === existingUser.id) && decode.role !== "Admin")
             return res.status(400).json({
                 code: 400,
                 success: false,

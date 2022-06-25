@@ -1,15 +1,16 @@
 import express from 'express'
 import timeLogController from '../controllers/timeLogController'
+import { checkAuth } from '../utils/middleware/checkAuth'
 
 const TimeLogRouter = express.Router()
 
-TimeLogRouter.post('/delete-many', timeLogController.Deletemany)
+TimeLogRouter.post('/delete-many', checkAuth([]), timeLogController.Deletemany)
 
 TimeLogRouter.get('/calendar', timeLogController.calendar)
 
 TimeLogRouter.get('/calendar-employee/:employeeId', timeLogController.calendarByEmployee)
 
-TimeLogRouter.post('/', timeLogController.create)
+TimeLogRouter.post('/', checkAuth([]), timeLogController.create)
 
 TimeLogRouter.get('/current-user', timeLogController.getByCurrentUser)
 
@@ -19,8 +20,8 @@ TimeLogRouter.get('/:timelogId', timeLogController.getDetail)
 
 TimeLogRouter.get('/', timeLogController.getAll)
 
-TimeLogRouter.delete('/:timeLogId', timeLogController.delete)
+TimeLogRouter.delete('/:timeLogId', checkAuth([]), timeLogController.delete)
 
-TimeLogRouter.put('/:timeLogId', timeLogController.update)
+TimeLogRouter.put('/:timeLogId', checkAuth([]), timeLogController.update)
 
 export default TimeLogRouter

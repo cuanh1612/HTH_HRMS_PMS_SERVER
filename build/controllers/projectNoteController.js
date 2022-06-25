@@ -104,6 +104,9 @@ const projectNoteController = {
             where: {
                 id: project,
             },
+            relations: {
+                project_Admin: true
+            }
         });
         if (!exisitingProject)
             return res.status(400).json({
@@ -137,7 +140,7 @@ const projectNoteController = {
                 success: false,
                 message: 'User does not exist in the system',
             });
-        if (existingUser.role !== Employee_1.enumRole.ADMIN)
+        if (existingUser.role !== Employee_1.enumRole.ADMIN && existingUser.email !== exisitingProject.project_Admin.email)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -185,6 +188,11 @@ const projectNoteController = {
             where: {
                 id: Number(projectNoteId),
             },
+            relations: {
+                project: {
+                    project_Admin: true,
+                },
+            },
         });
         if (!existingProjectNote)
             return res.status(400).json({
@@ -218,7 +226,8 @@ const projectNoteController = {
                 success: false,
                 message: 'User does not exist in the system',
             });
-        if (existingUser.role !== Employee_1.enumRole.ADMIN)
+        if (existingUser.role !== Employee_1.enumRole.ADMIN &&
+            existingUser.email !== existingProjectNote.project.project_Admin.email)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -260,12 +269,6 @@ const projectNoteController = {
                 success: false,
                 message: 'User does not exist in the system',
             });
-        if (existingUser.role !== Employee_1.enumRole.ADMIN)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'You do not have permission to perform this feature',
-            });
         yield Promise.all(projectNotes.map((projectNoteId) => __awaiter(void 0, void 0, void 0, function* () {
             new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
                 //Delete exist project note
@@ -273,11 +276,23 @@ const projectNoteController = {
                     where: {
                         id: Number(projectNoteId),
                     },
+                    relations: {
+                        project: {
+                            project_Admin: true,
+                        },
+                    },
                 });
                 if (existingProjectNote) {
+                    if (existingUser.role !== Employee_1.enumRole.ADMIN &&
+                        existingUser.email !== existingProjectNote.project.project_Admin.email)
+                        return res.status(400).json({
+                            code: 400,
+                            success: false,
+                            message: 'You do not have permission to perform this feature',
+                        });
                     yield existingProjectNote.remove();
                 }
-                resolve(true);
+                return resolve(true);
             }));
         })));
         return res.status(200).json({
@@ -295,8 +310,9 @@ const projectNoteController = {
                 id: Number(projectId),
             },
             relations: {
-                client: true
-            }
+                client: true,
+                project_Admin: true
+            },
         });
         if (!existingProject)
             return res.status(400).json({
@@ -373,7 +389,9 @@ const projectNoteController = {
                 message: 'Get project note by project success successfully',
             });
         }
-        if (existingUser.role === Employee_1.enumRole.ADMIN) {
+        if (existingUser.role === Employee_1.enumRole.ADMIN ||
+            (existingUser.role === Employee_1.enumRole.EMPLOYEE &&
+                existingUser.email === existingProject.project_Admin.email)) {
             const projectNotes = yield Project_Note_1.Project_note.find({
                 where: {
                     project: {
@@ -438,9 +456,6 @@ const projectNoteController = {
         const existingProjectNote = yield Project_Note_1.Project_note.findOne({
             where: {
                 id: Number(projectNoteId),
-            },
-            relations: {
-                project: true,
             },
             select: {
                 project: {
