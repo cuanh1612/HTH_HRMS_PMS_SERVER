@@ -20,6 +20,7 @@ const Designation_1 = require("./Designation");
 const Discussion_1 = require("./Discussion");
 const Event_1 = require("./Event");
 const Hourly_rate_project_1 = require("./Hourly_rate_project");
+const Job_1 = require("./Job");
 const Leave_1 = require("./Leave");
 const Notification_1 = require("./Notification");
 const Project_1 = require("./Project");
@@ -132,6 +133,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Room_1.Room, (room) => room.empl_create),
     __metadata("design:type", Array)
 ], Employee.prototype, "rooms", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Job_1.Job, (job) => job.recruiter),
+    __metadata("design:type", Job_1.Job)
+], Employee.prototype, "jobs", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Project_1.Project, (project) => project.project_Admin),
     __metadata("design:type", Array)

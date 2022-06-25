@@ -9,36 +9,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Skill = void 0;
+exports.Location = void 0;
 const typeorm_1 = require("typeorm");
 const Job_1 = require("./Job");
-let Skill = class Skill extends typeorm_1.BaseEntity {
+let Location = class Location extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Skill.prototype, "id", void 0);
+], Location.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
-], Skill.prototype, "name", void 0);
+], Location.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Job_1.Job),
-    __metadata("design:type", Array)
-], Skill.prototype, "jobs", void 0);
+    (0, typeorm_1.OneToMany)(() => Job_1.Job, (job) => job.locations, {
+        onDelete: 'SET NULL'
+    }),
+    __metadata("design:type", Job_1.Job)
+], Location.prototype, "jobs", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], Skill.prototype, "createdAt", void 0);
+], Location.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], Skill.prototype, "updatedAt", void 0);
-Skill = __decorate([
+], Location.prototype, "updatedAt", void 0);
+Location = __decorate([
     (0, typeorm_1.Entity)()
-], Skill);
-exports.Skill = Skill;
+], Location);
+exports.Location = Location;
