@@ -283,6 +283,27 @@ const employeeController = {
 				message: 'Employee does not exist in the system',
 			})
 
+		//Check duplicate email
+		const existingEmployeeEmail = await Employee.findOne({
+			where: {
+				email: dataUpdateEmployee.email,
+			},
+		})
+
+		const existingClientEmail = await Client.findOne({
+			where: {
+				email: dataUpdateEmployee.email,
+			},
+		})
+
+		if(existingClientEmail || existingEmployeeEmail && existingEmployeeEmail.email !== existingEmployee.email){
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Email already exist in the system 1',
+			})
+		}
+
 		//Check existing department
 		if (dataUpdateEmployee.department) {
 			const existingDepartment = await Department.findOne({
@@ -339,6 +360,8 @@ const employeeController = {
 			}
 		}
 
+	    const hashPassword = dataUpdateEmployee.password ? await argon2.hash(dataUpdateEmployee.password) : null
+
 		//Update employee
 		await Employee.update(
 			{
@@ -346,8 +369,8 @@ const employeeController = {
 			},
 			{
 				...dataUpdateEmployeeBase,
-				...(dataUpdateEmployeeBase.password
-					? { password: await argon2.hash(dataUpdateEmployee.password) }
+				...(hashPassword
+					? { password: hashPassword }
 					: {}),
 				...(newAvatar
 					? {
@@ -752,7 +775,7 @@ const employeeController = {
 		//Check existing employee
 		const existingEmployee = await Employee.findOne({
 			where: {
-				id: 6,
+				id: Number(employeeId),
 			},
 		})
 

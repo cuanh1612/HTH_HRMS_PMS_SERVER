@@ -202,7 +202,7 @@ const clientController = {
 								...client,
 								password: hashPassword,
 								can_login: true,
-								can_receive_email: true
+								can_receive_email: true,
 							}).save()
 						}
 					}
@@ -255,25 +255,27 @@ const clientController = {
 			})
 
 		//Check existing email
-		if (dataUpdateClient.email !== existingClient.email) {
-			const existingClientMail = await Client.findOne({
-				where: {
-					email: dataUpdateClient.email,
-				},
-			})
+		const existingEmployeeEmail = await Employee.findOne({
+			where: {
+				email: dataUpdateClient.email,
+			},
+		})
 
-			const existingEmployeeMail = await Employee.findOne({
-				where: {
-					email: dataUpdateClient.email,
-				},
-			})
+		const existingClientEmail = await Client.findOne({
+			where: {
+				email: dataUpdateClient.email,
+			},
+		})
 
-			if (existingClientMail || existingEmployeeMail)
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Email already exists in the system',
-				})
+		if (
+			existingEmployeeEmail ||
+			(existingClientEmail && existingClientEmail.email !== existingClient.email)
+		) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Email already exist in the system',
+			})
 		}
 
 		//Check existing client category
@@ -340,6 +342,8 @@ const clientController = {
 			}
 		}
 
+		const hashPassword = dataUpdateClient.password ? await argon2.hash(dataUpdateClient.password) : null
+
 		//Update client
 		await Client.update(
 			{
@@ -347,8 +351,8 @@ const clientController = {
 			},
 			{
 				...dataUpdateClientBase,
-				...(dataUpdateClientBase.password
-					? { password: await argon2.hash(dataUpdateClient.password) }
+				...(hashPassword
+					? { password: hashPassword }
 					: {}),
 				...(newAvatar
 					? {
@@ -550,8 +554,6 @@ const clientController = {
 			message: 'Get pending milestones successfully',
 		})
 	}),
-
-	
 
 	projects: handleCatchError(async (req: Request, res: Response) => {
 		const { clientId } = req.params

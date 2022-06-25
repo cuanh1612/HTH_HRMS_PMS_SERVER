@@ -43,8 +43,7 @@ import { Company_Info } from '../entities/Company_Info'
 import { Skill } from '../entities/Skill'
 import { Job } from '../entities/Job'
 import { Job_Type } from '../entities/Job_Type'
-import { Work_Experience } from '../entities/work_experience'
-
+import { Work_Experience } from '../entities/Work_Experience'
 
 const connectDB = () => {
 	createConnection({

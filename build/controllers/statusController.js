@@ -19,8 +19,9 @@ const statusValid_1 = require("../utils/valid/statusValid");
 const statusController = {
     //create new status
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { project, title, color } = req.body;
-        if (!project || !title || !color) {
+        const { projectId, title, color } = req.body;
+        console.log(req.body);
+        if (!projectId || !title || !color) {
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -30,7 +31,7 @@ const statusController = {
         const laststatus = yield Status_1.Status.findOne({
             where: {
                 project: {
-                    id: project,
+                    id: projectId,
                 },
             },
             order: {
@@ -45,7 +46,7 @@ const statusController = {
             });
         const existingproject = yield Project_1.Project.findOne({
             where: {
-                id: project,
+                id: projectId,
             },
         });
         if (!existingproject)

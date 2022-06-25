@@ -42,6 +42,7 @@ const Room_1 = require("../entities/Room");
 const StickyNote_1 = require("../entities/StickyNote");
 const Notification_1 = require("../entities/Notification");
 const Company_Info_1 = require("../entities/Company_Info");
+const Skill_1 = require("../entities/Skill");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -98,7 +99,8 @@ const connectDB = () => {
             Room_1.Room,
             StickyNote_1.Sticky_note,
             Notification_1.Notification,
-            Company_Info_1.Company_Info
+            Company_Info_1.Company_Info,
+            Skill_1.Skill
         ],
     })
         .then(() => {

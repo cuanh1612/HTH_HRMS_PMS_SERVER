@@ -107,7 +107,7 @@ const stickyNoteController = {
                 id: decode.userId,
             },
         });
-        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
+        if (!existingUser || existingNote.employee && existingUser.id !== existingNote.employee.id || existingNote.client && existingUser.id !== existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -158,7 +158,7 @@ const stickyNoteController = {
                 id: decode.userId,
             },
         });
-        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
+        if (!existingUser || existingNote.employee && existingUser.id !== existingNote.employee.id || existingNote.client && existingUser.id !== existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -207,7 +207,7 @@ const stickyNoteController = {
                 id: decode.userId,
             },
         });
-        if (!existingUser || existingUser.id != existingNote.employee.id || existingUser.id != existingNote.client.id)
+        if (!existingUser || existingNote.employee && existingUser.id !== existingNote.employee.id || existingNote.client && existingUser.id !== existingNote.client.id)
             return res.status(400).json({
                 code: 400,
                 success: false,

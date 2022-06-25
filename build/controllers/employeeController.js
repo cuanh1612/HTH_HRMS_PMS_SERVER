@@ -253,6 +253,24 @@ const employeeController = {
                 success: false,
                 message: 'Employee does not exist in the system',
             });
+        //Check duplicate email
+        const existingEmployeeEmail = yield Employee_1.Employee.findOne({
+            where: {
+                email: dataUpdateEmployee.email,
+            },
+        });
+        const existingClientEmail = yield Client_1.Client.findOne({
+            where: {
+                email: dataUpdateEmployee.email,
+            },
+        });
+        if (existingClientEmail || existingEmployeeEmail && existingEmployeeEmail.email !== existingEmployee.email) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Email already exist in the system 1',
+            });
+        }
         //Check existing department
         if (dataUpdateEmployee.department) {
             const existingDepartment = yield Department_1.Department.findOne({
@@ -299,11 +317,12 @@ const employeeController = {
                 newAvatar = yield Avatar_1.Avatar.create(Object.assign({}, avatar)).save();
             }
         }
+        const hashPassword = dataUpdateEmployee.password ? yield argon2_1.default.hash(dataUpdateEmployee.password) : null;
         //Update employee
         yield Employee_1.Employee.update({
             id: existingEmployee.id,
-        }, Object.assign(Object.assign(Object.assign({}, dataUpdateEmployeeBase), (dataUpdateEmployeeBase.password
-            ? { password: yield argon2_1.default.hash(dataUpdateEmployee.password) }
+        }, Object.assign(Object.assign(Object.assign({}, dataUpdateEmployeeBase), (hashPassword
+            ? { password: hashPassword }
             : {})), (newAvatar
             ? {
                 avatar: newAvatar,
@@ -632,7 +651,7 @@ const employeeController = {
         //Check existing employee
         const existingEmployee = yield Employee_1.Employee.findOne({
             where: {
-                id: 6,
+                id: Number(employeeId),
             },
         });
         if (!existingEmployee)
