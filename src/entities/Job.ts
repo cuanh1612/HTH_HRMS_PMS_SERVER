@@ -1,8 +1,17 @@
-import { BaseEntity, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Department } from "./Department";
+import { Skill } from "./Skill";
+import { Location } from "./Location";
+import { Job_Type } from "./Job_Type";
+
+import { Employee } from "./Employee";
+import { Work_Experience } from "./Work_Experience";
+
+
 
 
 @Entity()
-export class Jobs extends BaseEntity {
+export class Job extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number
     
@@ -14,6 +23,67 @@ export class Jobs extends BaseEntity {
 
 	@Column({ type: 'date' })
 	ends_on_date: Date
+
+    @ManyToMany(() => Skill)
+    @JoinTable({ name: 'job_skill'})
+    skills: Skill[]
+
+    @OneToMany(() => Location, (location) => location.jobs, {
+        onDelete: 'SET NULL'
+    })
+    @JoinColumn()
+    locations: Location[]
+
+    @OneToMany(() => Department, (department) => department.jobs, {
+        onDelete:"SET NULL"
+    })
+    @JoinColumn()
+    department: Department
+
+
+    //status column has true = "open" & false = "close"
+    @Column({nullable: true, default: false})
+    status: boolean
+
+    @Column()
+    total_openings: number
+
+
+    @OneToMany(() => Job_Type, (job_type) => job_type.jobs, {
+        onDelete:"SET NULL"
+    })
+    @JoinColumn()
+    job_type: Job_Type
+
+    @OneToMany(() => Work_Experience, (work_experience) => work_experience.jobs, {
+        onDelete:"SET NULL"
+    })
+    @JoinColumn()
+    work_experience: Work_Experience
+
+    @OneToMany(() => Employee, (employee) => employee.jobs, {
+        onDelete:"SET NULL"
+    })
+    @JoinColumn()
+    recruiter: Employee
+
+    @Column()
+    starting_salary_amount: number
+
+
+    @Column({nullable: true})
+    job_description: string
+
+
+
+
+
+
+
+    
+
+
+
 
     
 }

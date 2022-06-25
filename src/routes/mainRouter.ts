@@ -4,6 +4,7 @@ import authRouter from './authRouter'
 import clientCategoryRouter from './clientCategoryRouter'
 import clientRouter from './clientRouter'
 import clientSubCategoryRouter from './clientSubCategoryRouter'
+import companyInfoRouter from './companyInfoRouter'
 import contractFileRouter from './contractFileRouter'
 import contractRouter from './contractRouter'
 import contractTypeRouter from './contractTypeRouter'
@@ -17,10 +18,14 @@ import employeeRouter from './employeeRouter'
 import eventRouter from './eventRouter'
 import holidayRouter from './holidayRouter'
 import hourlyRateRouter from './hourlyRateRouter'
+import jobRouter from './jobRouter'
+import jobTypeRouter from './jobTypeRouter'
 import leaveRouter from './leaveRouter'
 import leaveTypeRouter from './leaveTypeRouter'
+import locationRouter from './locationRouter'
 import milestoneRouter from './milestoneRouter'
 import noticeBoardRouter from './noticeBoardRouter'
+import NotificationRouter from './notificationRouter'
 import projectCategoryRouter from './projectCategoryRouter'
 import projectDiscussionCategoryRouter from './projectDiscussionCategoryRouter'
 import projectDiscussionReplyRouter from './projectDiscussionReplyRouter'
@@ -28,8 +33,10 @@ import projectDiscussionRoomRouter from './projectDiscussionRoomRouter'
 import projectFileRouter from './projectFileRouter'
 import projectNoteRouter from './projectNoteRouter'
 import projectRouter from './projectRouter'
+import roomRouter from './roomRouter'
 import salaryRouter from './salaryRouter'
 import signRouter from './signRouter'
+import skillRouter from './skillRouter'
 import statusRouter from './statusRouter'
 import stickyNoteRouter from './stickyNoteRouter'
 import taskCategoryRouter from './taskCategoryRouter copy'
@@ -37,10 +44,7 @@ import taskCommentRouter from './taskCommentRouter'
 import taskFileRouter from './taskFileRouter'
 import taskRouter from './taskRouter'
 import TimeLogRouter from './timeLogRouter'
-import roomRouter from './roomRouter'
-import NotificationRouter from './notificationRouter'
-import companyInfoRouter from './companyInfoRouter'
-import skillRouter from './skillRouter'
+import workExperienceRouter from './workExperience'
 
 function mainRouter(app: core.Express) {
 	app.use('/api/auth', authRouter)
@@ -125,7 +129,18 @@ function mainRouter(app: core.Express) {
 
 	app.use('/api/company-info', companyInfoRouter)
 
-	app.use('/api/skill', skillRouter)
+	app.use('/api/skills', skillRouter)
+
+	app.use('/api/locations', locationRouter)
+
+	app.use('/api/job-types', jobTypeRouter)
+
+	app.use('/api/work-experiences', workExperienceRouter)
+
+	app.use('/api/jobs', jobRouter )
+
+
+
 }
 
 export default mainRouter

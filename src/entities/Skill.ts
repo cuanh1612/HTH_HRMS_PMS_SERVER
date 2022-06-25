@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Job } from "./Job";
 
 
 
@@ -9,6 +10,21 @@ export class Skill extends BaseEntity {
 
     @Column({unique: true})
     name: string
+
+    @ManyToMany(() => Job)
+    jobs: Job[]
+
+    
+
+    @CreateDateColumn({
+		name: 'created_at',
+	})
+	createdAt: Date
+
+	@UpdateDateColumn({
+		name: 'updated_at',
+	})
+	updatedAt: Date
 
    
 }
