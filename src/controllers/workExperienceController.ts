@@ -32,12 +32,12 @@ const workExperienceController = {
    
 
     getAll: handleCatchError(async (_: Request, res: Response) =>{
-            const work_experience = await Work_Experience.find()
+            const workExperiences = await Work_Experience.find()
 
             return res.status(200).json({
                 code: 200,
                 success: true,
-                work_experience,
+                workExperiences,
                 message: 'get all work_experience types success'
             })
     }),
@@ -90,7 +90,7 @@ const workExperienceController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            skill: existingworkexperience,
+            workExperience: existingworkexperience,
             message: 'Get detail of work experience success'
         })
     }),

@@ -24,6 +24,7 @@ __decorate([
 ], Skill.prototype, "name", void 0);
 __decorate([
     (0, typeorm_1.ManyToMany)(() => Job_1.Job),
+    (0, typeorm_1.JoinTable)({ name: 'job_skill' }),
     __metadata("design:type", Array)
 ], Skill.prototype, "jobs", void 0);
 __decorate([

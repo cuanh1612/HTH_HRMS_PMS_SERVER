@@ -395,6 +395,22 @@ const createSocketServer = (httpServer: Server) => {
 		socket.on('newNoticeBoard', () => {
 			socket.in('roomNoticeBoard').emit('getNewNoticeBoard')
 		})
+
+		//join room member project
+		socket.on('joinRoomMemberProject', (projectId: string) => {
+			socket.join('roomMemberProject' + projectId)
+		})
+
+		//leave room member project
+		socket.on('leaveRoomMemberProject', (projectId: string) => {
+			socket.leave('roomMemberProject' + projectId)
+		})
+
+		//emit user join room member project when have new change member
+		socket.on('newMemberProject', (projectId: string) => {
+			socket.in('roomMemberProject' + projectId).emit('getNewMemberProject')
+		})
+
 	})
 }
 

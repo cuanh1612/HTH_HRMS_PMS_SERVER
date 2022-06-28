@@ -100,7 +100,7 @@ const skillController = {
                 success: false,
                 message: 'Skill does not existing in the system',
             });
-        existingskill.remove();
+        yield existingskill.remove();
         return res.status(200).json({
             code: 200,
             success: true,

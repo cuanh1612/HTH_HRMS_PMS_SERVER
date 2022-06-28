@@ -784,7 +784,7 @@ const taskController = {
 				message: 'User does not exist in the system',
 			})
 
-		const existingstatus1 = await Task.findOne({
+		const existingstatus1 = await Status.findOne({
 			where: {
 				id: status1,
 			},
@@ -794,7 +794,7 @@ const taskController = {
 				},
 			},
 		})
-		const existingstatus2 = await Task.findOne({
+		const existingstatus2 = await Status.findOne({
 			where: {
 				id: status2,
 			},
@@ -809,7 +809,7 @@ const taskController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Either status does not existing in the system',
+				message: 'Either status does not existing in the system 3',
 			})
 
 		//Check role admin or projectt admin
@@ -838,7 +838,7 @@ const taskController = {
 				return res.status(400).json({
 					code: 400,
 					success: false,
-					message: 'Either status does not exist in the system',
+					message: 'Either status does not exist in the system 2',
 				})
 
 			if (task1.index > task2.index) {
@@ -913,7 +913,7 @@ const taskController = {
 				return res.status(400).json({
 					code: 400,
 					success: false,
-					message: 'Either status does not exist in the system',
+					message: 'Either status does not exist in the system 1',
 				})
 
 			if (!id2) {

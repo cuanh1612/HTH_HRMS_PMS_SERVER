@@ -23,9 +23,7 @@ __decorate([
     __metadata("design:type", String)
 ], Work_Experience.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Job_1.Job, (job) => job.job_type, {
-        onDelete: "SET NULL"
-    }),
+    (0, typeorm_1.OneToMany)(() => Job_1.Job, (job) => job.job_type),
     __metadata("design:type", Job_1.Job)
 ], Work_Experience.prototype, "jobs", void 0);
 __decorate([

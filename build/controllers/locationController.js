@@ -114,6 +114,26 @@ const locationController = {
             success: true,
             message: 'Delete Location success',
         });
-    }))
+    })),
+    delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
+        const existingLocation = yield Location_1.Location.findOne({
+            where: {
+                id: Number(id),
+            },
+        });
+        if (!existingLocation)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Location does not existing in the system',
+            });
+        yield existingLocation.remove();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Delete location success',
+        });
+    })),
 };
 exports.default = locationController;
