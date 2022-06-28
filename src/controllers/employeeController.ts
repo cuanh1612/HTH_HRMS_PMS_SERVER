@@ -656,7 +656,7 @@ const employeeController = {
 
 		//Get sum task by status task
 		const countTasksStatus = await getManager('huprom').query(
-			`SELECT status.title, COUNT(task.id) FROM status LEFT JOIN task on status.id = task."statusId" LEFT JOIN task_employee on task.id = task_employee."taskId" WHERE task_employee."employeeId" = ${employeeId} GROUP BY status.title`
+			`SELECT status.title, COUNT(task.id), status.color FROM status LEFT JOIN task on status.id = task."statusId" LEFT JOIN task_employee on task.id = task_employee."taskId" WHERE task_employee."employeeId" = ${employeeId} GROUP BY (status.title, status.color)`
 		)
 
 		return res.status(200).json({
