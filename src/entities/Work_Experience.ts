@@ -1,4 +1,4 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { Job } from "./Job"
 
 @Entity()
@@ -9,9 +9,7 @@ export class Work_Experience extends BaseEntity {
     @Column({unique: true})
     name: string
 
-    @ManyToOne(() => Job, (job) => job.job_type, {
-        onDelete:"SET NULL"
-    })
+    @OneToMany(() => Job, (job) => job.job_type)
     jobs: Job
     
     @CreateDateColumn({

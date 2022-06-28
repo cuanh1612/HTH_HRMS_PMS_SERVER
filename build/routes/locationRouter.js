@@ -8,6 +8,7 @@ const locationController_1 = __importDefault(require("../controllers/locationCon
 const locationRouter = express_1.default.Router();
 locationRouter.post('/', locationController_1.default.createmany);
 locationRouter.delete('/delete-many', locationController_1.default.deletemany);
+locationRouter.delete('/:id', locationController_1.default.delete);
 locationRouter.get('/', locationController_1.default.getAll);
 locationRouter.get('/:id', locationController_1.default.getdetail);
 locationRouter.put('/:id', locationController_1.default.update);

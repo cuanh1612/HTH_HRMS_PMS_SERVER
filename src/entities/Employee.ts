@@ -117,7 +117,7 @@ export class Employee extends BaseEntity {
 	@OneToMany(()=> Room, (room)=> room.empl_create)
 	rooms: Room[]
 
-	@ManyToOne(() => Job, (job) => job.recruiter)
+	@OneToMany(() => Job, (job) => job.recruiter)
 	jobs: Job            
 
 	@OneToMany(()=> Project, (project)=> project.project_Admin)

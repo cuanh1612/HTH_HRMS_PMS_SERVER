@@ -134,7 +134,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "rooms", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Job_1.Job, (job) => job.recruiter),
+    (0, typeorm_1.OneToMany)(() => Job_1.Job, (job) => job.recruiter),
     __metadata("design:type", Job_1.Job)
 ], Employee.prototype, "jobs", void 0);
 __decorate([

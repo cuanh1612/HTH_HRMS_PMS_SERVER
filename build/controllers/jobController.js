@@ -17,6 +17,7 @@ const Employee_1 = require("../entities/Employee");
 const Job_1 = require("../entities/Job");
 const Job_Type_1 = require("../entities/Job_Type");
 const Location_1 = require("../entities/Location");
+const Skill_1 = require("../entities/Skill");
 const Work_Experience_1 = require("../entities/Work_Experience");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const jobValid_1 = require("../utils/valid/jobValid");
@@ -24,32 +25,34 @@ const jobControler = {
     //create new job
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewJob = req.body;
-        const { department, recruiter, locations, job_type, work_experience } = dataNewJob;
+        const { department, recruiter, locations, job_type, work_experience, skills } = dataNewJob;
+        const listValidSkills = [];
+        const listValidLocations = [];
         const messageValid = jobValid_1.jobValid.createOrUpdate(dataNewJob);
         if (messageValid)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: messageValid
+                message: messageValid,
             });
         //check exist department
         const existingDepartment = yield Department_1.Department.findOne({
             where: {
-                id: department
-            }
+                id: department,
+            },
         });
         if (!existingDepartment)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Department does not exist in the system'
+                message: 'Department does not exist in the system',
             });
         //check existing recruiter
         if (recruiter) {
             const exisitingRecruiter = yield Employee_1.Employee.findOne({
                 where: {
-                    id: recruiter
-                }
+                    id: recruiter,
+                },
             });
             if (!exisitingRecruiter)
                 return res.status(400).json({
@@ -58,43 +61,69 @@ const jobControler = {
                     message: 'Recruiter does not exist in the system',
                 });
         }
-        //check existing locations
-        const existingLocation = yield Location_1.Location.findOne({
-            where: {
-                id: locations
-            }
-        });
-        if (!existingLocation)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Location does not exist in the system'
-            });
+        //Check skill
+        yield Promise.all(skills.map((skillId) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //Check exist skill
+                const existingSkill = yield Skill_1.Skill.findOne({
+                    where: {
+                        id: skillId,
+                    },
+                });
+                if (!existingSkill)
+                    return res.status(400).json({
+                        code: 400,
+                        success: false,
+                        message: 'Skill does not exist in the system',
+                    });
+                listValidSkills.push(existingSkill);
+                return resolve(true);
+            }));
+        })));
+        //Check locations
+        yield Promise.all(locations.map((locationId) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //Check exist location
+                const existingLocation = yield Location_1.Location.findOne({
+                    where: {
+                        id: locationId,
+                    },
+                });
+                if (!existingLocation)
+                    return res.status(400).json({
+                        code: 400,
+                        success: false,
+                        message: 'Location does not exist in the system',
+                    });
+                listValidLocations.push(existingLocation);
+                return resolve(true);
+            }));
+        })));
         //check job type
         const existingJobType = yield Job_Type_1.Job_Type.findOne({
             where: {
-                id: job_type
-            }
+                id: job_type,
+            },
         });
         if (!existingJobType)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Job type does not exist in the system'
+                message: 'Job type does not exist in the system',
             });
         //check work experience
         const existingWorkExperience = yield Work_Experience_1.Work_Experience.findOne({
             where: {
-                id: work_experience
-            }
+                id: work_experience,
+            },
         });
         if (!existingWorkExperience)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Work Experience does not exist in the system'
+                message: 'Work Experience does not exist in the system',
             });
-        const createJob = yield Job_1.Job.create(Object.assign({}, dataNewJob)).save();
+        const createJob = yield Job_1.Job.create(Object.assign(Object.assign({}, dataNewJob), { skills: listValidSkills, locations: listValidLocations })).save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -105,37 +134,46 @@ const jobControler = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const datatUpdateJob = req.body;
-        const { department, recruiter, locations, job_type, work_experience } = datatUpdateJob;
+        const { department, recruiter, locations, job_type, work_experience, skills } = datatUpdateJob;
+        const listValidSkills = [];
+        const listValidLocations = [];
+        const messageValid = jobValid_1.jobValid.createOrUpdate(datatUpdateJob);
+        if (messageValid)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: messageValid,
+            });
         //check exist job
         const existingJob = yield Job_1.Job.findOne({
             where: {
                 id: Number(id),
-            }
+            },
         });
         if (!existingJob)
             return res.status(400).json({
                 code: 400,
                 success: false.valueOf,
-                message: 'Job does not exist in the system'
+                message: 'Job does not exist in the system',
             });
         //check exist department
         const existingDepartment = yield Department_1.Department.findOne({
             where: {
-                id: department
-            }
+                id: department,
+            },
         });
         if (!existingDepartment)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Department does not exist in the system'
+                message: 'Department does not exist in the system',
             });
         //check existing recruiter
         if (recruiter) {
             const exisitingRecruiter = yield Employee_1.Employee.findOne({
                 where: {
-                    id: recruiter
-                }
+                    id: recruiter,
+                },
             });
             if (!exisitingRecruiter)
                 return res.status(400).json({
@@ -144,47 +182,73 @@ const jobControler = {
                     message: 'Recruiter does not exist in the system',
                 });
         }
-        //check existing locations
-        const existingLocation = yield Location_1.Location.findOne({
-            where: {
-                id: locations
-            }
-        });
-        if (!existingLocation)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Location does not exist in the system'
-            });
+        //Check skill
+        yield Promise.all(skills.map((skillId) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //Check exist skill
+                const existingSkill = yield Skill_1.Skill.findOne({
+                    where: {
+                        id: skillId,
+                    },
+                });
+                if (!existingSkill)
+                    return res.status(400).json({
+                        code: 400,
+                        success: false,
+                        message: 'Skill does not exist in the system',
+                    });
+                listValidSkills.push(existingSkill);
+                return resolve(true);
+            }));
+        })));
+        //Check locations
+        yield Promise.all(locations.map((locationId) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //Check exist location
+                const existingLocation = yield Location_1.Location.findOne({
+                    where: {
+                        id: locationId,
+                    },
+                });
+                if (!existingLocation)
+                    return res.status(400).json({
+                        code: 400,
+                        success: false,
+                        message: 'Location does not exist in the system',
+                    });
+                listValidLocations.push(existingLocation);
+                return resolve(true);
+            }));
+        })));
         //check job type
         const existingJobType = yield Job_Type_1.Job_Type.findOne({
             where: {
-                id: job_type
-            }
+                id: job_type,
+            },
         });
         if (!existingJobType)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Job type does not exist in the system'
+                message: 'Job type does not exist in the system',
             });
         //check work experience
         const existingWorkExperience = yield Work_Experience_1.Work_Experience.findOne({
             where: {
-                id: work_experience
-            }
+                id: work_experience,
+            },
         });
         if (!existingWorkExperience)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Work Experience does not exist in the system'
+                message: 'Work Experience does not exist in the system',
             });
         (existingJob.title = datatUpdateJob.title),
             (existingJob.starts_on_date = new Date(new Date(datatUpdateJob.starts_on_date).toLocaleDateString())),
             (existingJob.ends_on_date = new Date(new Date(datatUpdateJob.ends_on_date).toLocaleDateString())),
-            (existingJob.skills = datatUpdateJob.skills),
-            (existingJob.locations = datatUpdateJob.locations),
+            (existingJob.skills = listValidSkills),
+            (existingJob.locations = listValidLocations),
             (existingJob.department = datatUpdateJob.department),
             (existingJob.status = datatUpdateJob.status),
             (existingJob.total_openings = datatUpdateJob.total_openings),
@@ -193,11 +257,14 @@ const jobControler = {
             (existingJob.recruiter = datatUpdateJob.recruiter),
             (existingJob.starting_salary_amount = datatUpdateJob.starting_salary_amount),
             (existingJob.job_description = datatUpdateJob.job_description);
+        if (datatUpdateJob.rate) {
+            existingJob.rate = datatUpdateJob.rate;
+        }
         yield existingJob.save();
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Update Job success'
+            message: 'Update Job success',
         });
     })),
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -206,47 +273,53 @@ const jobControler = {
             code: 200,
             success: true,
             jobs,
-            message: 'Get all jobs success'
+            message: 'Get all jobs success',
         });
     })),
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const existingJob = yield Job_1.Job.findOne({
             where: {
-                id: Number(id)
+                id: Number(id),
+            },
+            relations: {
+                department: true,
+                job_type: true,
+                recruiter: true,
+                work_experience: true,
             }
         });
         if (!existingJob)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Job does not existing in the system'
+                message: 'Job does not existing in the system',
             });
         return res.status(200).json({
             code: 200,
             success: true,
             job: existingJob,
-            message: 'Get detail of job success'
+            message: 'Get detail of job success',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const existingJob = yield Job_1.Job.findOne({
             where: {
-                id: Number(id)
-            }
+                id: Number(id),
+            },
         });
         if (!existingJob)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Job does not existing in the system'
+                message: 'Job does not existing in the system',
             });
         yield existingJob.remove();
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete this job success'
+            message: 'Delete this job success',
         });
     })),
     deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -273,7 +346,7 @@ const jobControler = {
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete jobs success'
+            message: 'Delete jobs success',
         });
     })),
     changeStatusMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -296,15 +369,15 @@ const jobControler = {
                 if (existingJob) {
                     existingJob.status = status;
                 }
-                yield (existingJob === null || existingJob === void 0 ? void 0 : existingJob.save);
+                yield (existingJob === null || existingJob === void 0 ? void 0 : existingJob.save());
                 resolve(true);
             }));
         })));
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'change status jobs success'
+            message: 'change status jobs success',
         });
-    }))
+    })),
 };
 exports.default = jobControler;

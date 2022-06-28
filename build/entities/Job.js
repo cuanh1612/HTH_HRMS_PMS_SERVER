@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Job = void 0;
+exports.Job = exports.enumRate = void 0;
 const typeorm_1 = require("typeorm");
 const Department_1 = require("./Department");
 const Skill_1 = require("./Skill");
@@ -17,6 +17,14 @@ const Location_1 = require("./Location");
 const Job_Type_1 = require("./Job_Type");
 const Employee_1 = require("./Employee");
 const Work_Experience_1 = require("./Work_Experience");
+var enumRate;
+(function (enumRate) {
+    enumRate["PER_HOUR"] = "Per Hour";
+    enumRate["PER_DAY"] = "Per Day";
+    enumRate["PER_WEEK"] = "Per Week";
+    enumRate["PER_MONTH"] = "Per Month";
+    enumRate["PER_YEAR"] = "Per Year";
+})(enumRate = exports.enumRate || (exports.enumRate = {}));
 let Job = class Job extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -41,14 +49,12 @@ __decorate([
     __metadata("design:type", Array)
 ], Job.prototype, "skills", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Location_1.Location, (location) => location.jobs, {
-        onDelete: 'SET NULL'
-    }),
-    (0, typeorm_1.JoinColumn)(),
+    (0, typeorm_1.ManyToMany)(() => Location_1.Location),
+    (0, typeorm_1.JoinTable)({ name: 'job_location' }),
     __metadata("design:type", Array)
 ], Job.prototype, "locations", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Department_1.Department, (department) => department.jobs, {
+    (0, typeorm_1.ManyToOne)(() => Department_1.Department, (department) => department.jobs, {
         onDelete: "SET NULL"
     }),
     (0, typeorm_1.JoinColumn)(),
@@ -65,21 +71,21 @@ __decorate([
     __metadata("design:type", Number)
 ], Job.prototype, "total_openings", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Job_Type_1.Job_Type, (job_type) => job_type.jobs, {
+    (0, typeorm_1.ManyToOne)(() => Job_Type_1.Job_Type, (job_type) => job_type.jobs, {
         onDelete: "SET NULL"
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Job_Type_1.Job_Type)
 ], Job.prototype, "job_type", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Work_Experience_1.Work_Experience, (work_experience) => work_experience.jobs, {
+    (0, typeorm_1.ManyToOne)(() => Work_Experience_1.Work_Experience, (work_experience) => work_experience.jobs, {
         onDelete: "SET NULL"
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Work_Experience_1.Work_Experience)
 ], Job.prototype, "work_experience", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Employee_1.Employee, (employee) => employee.jobs, {
+    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.jobs, {
         onDelete: "SET NULL"
     }),
     (0, typeorm_1.JoinColumn)(),
@@ -93,6 +99,10 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Job.prototype, "job_description", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'enum', enum: enumRate, default: enumRate.PER_HOUR }),
+    __metadata("design:type", String)
+], Job.prototype, "rate", void 0);
 Job = __decorate([
     (0, typeorm_1.Entity)()
 ], Job);

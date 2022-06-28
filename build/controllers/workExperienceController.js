@@ -35,11 +35,11 @@ const workExperienceController = {
         });
     })),
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const work_experience = yield Work_Experience_1.Work_Experience.find();
+        const workExperiences = yield Work_Experience_1.Work_Experience.find();
         return res.status(200).json({
             code: 200,
             success: true,
-            work_experience,
+            workExperiences,
             message: 'get all work_experience types success'
         });
     })),
@@ -81,7 +81,7 @@ const workExperienceController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            skill: existingworkexperience,
+            workExperience: existingworkexperience,
             message: 'Get detail of work experience success'
         });
     })),

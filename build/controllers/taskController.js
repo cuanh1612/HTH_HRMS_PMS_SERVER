@@ -646,7 +646,7 @@ const taskController = {
                 success: false,
                 message: 'User does not exist in the system',
             });
-        const existingstatus1 = yield Task_1.Task.findOne({
+        const existingstatus1 = yield Status_1.Status.findOne({
             where: {
                 id: status1,
             },
@@ -656,7 +656,7 @@ const taskController = {
                 },
             },
         });
-        const existingstatus2 = yield Task_1.Task.findOne({
+        const existingstatus2 = yield Status_1.Status.findOne({
             where: {
                 id: status2,
             },
@@ -670,7 +670,7 @@ const taskController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Either status does not existing in the system',
+                message: 'Either status does not existing in the system 3',
             });
         //Check role admin or projectt admin
         if (existingUser.role !== 'Admin' &&
@@ -694,7 +694,7 @@ const taskController = {
                 return res.status(400).json({
                     code: 400,
                     success: false,
-                    message: 'Either status does not exist in the system',
+                    message: 'Either status does not exist in the system 2',
                 });
             if (task1.index > task2.index) {
                 const alltask = yield Task_1.Task.createQueryBuilder('task')
@@ -752,7 +752,7 @@ const taskController = {
                 return res.status(400).json({
                     code: 400,
                     success: false,
-                    message: 'Either status does not exist in the system',
+                    message: 'Either status does not exist in the system 1',
                 });
             if (!id2) {
                 const lastTask = yield Task_1.Task.findOne({

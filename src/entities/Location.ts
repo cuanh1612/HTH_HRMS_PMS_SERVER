@@ -1,4 +1,4 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Job } from "./Job";
 
 
@@ -12,10 +12,9 @@ export class Location extends BaseEntity {
     @Column({unique: true})
     name: string
 
-    @OneToMany(() => Job, (job) => job.locations,{
-      onDelete: 'SET NULL'
-    })
-    jobs: Job
+    @ManyToMany(() => Job)
+    @JoinTable({ name: 'job_location'})
+    jobs: Job[]
     
 
     @CreateDateColumn({

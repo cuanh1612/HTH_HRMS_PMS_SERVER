@@ -6,8 +6,8 @@ exports.jobValid = {
         let messageError = '';
         //check exist data
         if (!title ||
-            !skills ||
-            !locations ||
+            !Array.isArray(skills) ||
+            !Array.isArray(locations) ||
             !starts_on_date ||
             !ends_on_date ||
             !department ||

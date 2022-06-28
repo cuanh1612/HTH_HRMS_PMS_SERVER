@@ -25,7 +25,7 @@ const jobTypeController = {
             });
         }
         const add_result = yield Job_Type_1.Job_Type.create({
-            name: name
+            name: name,
         }).save();
         return res.status(200).json({
             code: 200,
@@ -35,12 +35,12 @@ const jobTypeController = {
         });
     })),
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const job_types = yield Job_Type_1.Job_Type.find();
+        const jobTypes = yield Job_Type_1.Job_Type.find();
         return res.status(200).json({
             code: 200,
             success: true,
-            job_types,
-            message: 'get all job types success'
+            jobTypes,
+            message: 'get all job types success',
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,7 +49,7 @@ const jobTypeController = {
         const existingjobtype = yield Job_Type_1.Job_Type.findOne({
             where: {
                 id: Number(id),
-            }
+            },
         });
         if (!existingjobtype)
             return res.status(400).json({
@@ -57,8 +57,7 @@ const jobTypeController = {
                 success: false,
                 message: 'job type does not existing in the system',
             });
-        (existingjobtype.name = dataUpdateJobType.name),
-            yield existingjobtype.save();
+        (existingjobtype.name = dataUpdateJobType.name), yield existingjobtype.save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -69,8 +68,8 @@ const jobTypeController = {
         const { id } = req.params;
         const existingjobtype = yield Job_Type_1.Job_Type.findOne({
             where: {
-                id: Number(id)
-            }
+                id: Number(id),
+            },
         });
         if (!existingjobtype)
             return res.status(400).json({
@@ -81,8 +80,8 @@ const jobTypeController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            skill: existingjobtype,
-            message: 'Get detail of job type success'
+            jobType: existingjobtype,
+            message: 'Get detail of job type success',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -90,7 +89,7 @@ const jobTypeController = {
         const existingjobtype = yield Job_Type_1.Job_Type.findOne({
             where: {
                 id: Number(id),
-            }
+            },
         });
         if (!existingjobtype)
             return res.status(400).json({

@@ -23,10 +23,9 @@ __decorate([
     __metadata("design:type", String)
 ], Location.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Job_1.Job, (job) => job.locations, {
-        onDelete: 'SET NULL'
-    }),
-    __metadata("design:type", Job_1.Job)
+    (0, typeorm_1.ManyToMany)(() => Job_1.Job),
+    (0, typeorm_1.JoinTable)({ name: 'job_location' }),
+    __metadata("design:type", Array)
 ], Location.prototype, "jobs", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
