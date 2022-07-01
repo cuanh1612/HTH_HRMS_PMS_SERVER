@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Department } from "./Department";
 import { Skill } from "./Skill";
 import { Location } from "./Location";
