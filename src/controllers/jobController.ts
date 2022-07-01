@@ -340,6 +340,8 @@ const jobControler = {
                 job_type: true,
                 recruiter: true,
                 work_experience: true,
+				skills: true,
+				locations: true
             }
 		})
 
