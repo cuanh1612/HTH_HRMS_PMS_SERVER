@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Location = void 0;
 const typeorm_1 = require("typeorm");
 const Job_1 = require("./Job");
+const Job_Application_1 = require("./Job_Application");
 let Location = class Location extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -23,10 +24,17 @@ __decorate([
     __metadata("design:type", String)
 ], Location.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Job_1.Job),
-    (0, typeorm_1.JoinTable)({ name: 'job_location' }),
-    __metadata("design:type", Array)
+    (0, typeorm_1.OneToMany)(() => Job_1.Job, (job) => job.locations, {
+        onDelete: 'SET NULL'
+    }),
+    __metadata("design:type", Job_1.Job)
 ], Location.prototype, "jobs", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Job_Application_1.Job_Application, (job_application) => job_application.location, {
+        onDelete: 'SET NULL'
+    }),
+    __metadata("design:type", Job_Application_1.Job_Application)
+], Location.prototype, "job_application", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

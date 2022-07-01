@@ -4,11 +4,7 @@ import { jobApplicationValid } from "../utils/valid/jobApplicationValid";
 import { Job } from "../entities/Job";
 import { Location } from "../entities/Location";
 import { Job_Application } from "../entities/Job_Application";
-import { createOrUpdateAttendacePayload } from "../type/AttendacePayload";
 import { createOrUpdateJobApplicationPayload } from "../type/JobApplicationPayload";
-import { isArray } from "class-validator";
-
-
 
 const jobApplicationController = {
     //create new job application
@@ -147,7 +143,7 @@ const jobApplicationController = {
         })
     }),
 
-    getAll: handleCatchError(async(req: Request, res: Response) =>{
+    getAll: handleCatchError(async(_, res: Response) =>{
         const job_applications = await Job_Application.find()
 
         return res.status(200).json({

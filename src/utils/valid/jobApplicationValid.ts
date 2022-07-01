@@ -10,7 +10,8 @@ export const jobApplicationValid = {
             //check exist data
             if( !name || !jobs || !email || !mobile || !location || !picture){
                 messageError = 'Please enter full field'
-                return messageError
+            
             }
+            return messageError
         }
 }
