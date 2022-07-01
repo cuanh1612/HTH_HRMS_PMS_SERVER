@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Department } from "./Department";
 import { Skill } from "./Skill";
 import { Location } from "./Location";
@@ -9,6 +9,13 @@ import { Work_Experience } from "./Work_Experience";
 import { Job_Application } from "./Job_Application";
 
 
+export enum enumRate {
+	PER_HOUR = 'Per Hour',
+	PER_DAY = 'Per Day',
+	PER_WEEK = 'Per Week',
+    PER_MONTH = 'Per Month',
+    PER_YEAR= 'Per Year',
+}
 
 
 @Entity()
@@ -29,13 +36,11 @@ export class Job extends BaseEntity {
     @JoinTable({ name: 'job_skill'})
     skills: Skill[]
 
-    @OneToMany(() => Location, (location) => location.jobs, {
-        onDelete: 'SET NULL'
-    })
-    @JoinColumn()
+    @ManyToMany(() => Location)
+    @JoinTable({ name: 'job_location'})
     locations: Location[]
 
-    @OneToMany(() => Department, (department) => department.jobs, {
+    @ManyToOne(() => Department, (department) => department.jobs, {
         onDelete:"SET NULL"
     })
     @JoinColumn()
@@ -55,19 +60,19 @@ export class Job extends BaseEntity {
     total_openings: number
 
 
-    @OneToMany(() => Job_Type, (job_type) => job_type.jobs, {
+    @ManyToOne(() => Job_Type, (job_type) => job_type.jobs, {
         onDelete:"SET NULL"
     })
     @JoinColumn()
     job_type: Job_Type
 
-    @OneToMany(() => Work_Experience, (work_experience) => work_experience.jobs, {
+    @ManyToOne(() => Work_Experience, (work_experience) => work_experience.jobs, {
         onDelete:"SET NULL"
     })
     @JoinColumn()
     work_experience: Work_Experience
 
-    @OneToMany(() => Employee, (employee) => employee.jobs, {
+    @ManyToOne(() => Employee, (employee) => employee.jobs, {
         onDelete:"SET NULL"
     })
     @JoinColumn()
@@ -80,16 +85,6 @@ export class Job extends BaseEntity {
     @Column({nullable: true})
     job_description: string
 
-
-
-
-
-
-
-    
-
-
-
-
-    
+    @Column({ type: 'enum', enum: enumRate, default: enumRate.PER_HOUR })
+	rate!: string
 }

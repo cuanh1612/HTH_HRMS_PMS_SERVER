@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Job } from "./Job";
-=======
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
->>>>>>> c29c7ebe1bef3c5cb800ac7aa8c911e5dacf39f3
-
-
 
 @Entity()
 export class Skill extends BaseEntity {
@@ -15,14 +9,10 @@ export class Skill extends BaseEntity {
     @Column({unique: true})
     name: string
 
-<<<<<<< HEAD
     @ManyToMany(() => Job)
+    @JoinTable({ name: 'job_skill' })
     jobs: Job[]
 
-    
-
-=======
->>>>>>> c29c7ebe1bef3c5cb800ac7aa8c911e5dacf39f3
     @CreateDateColumn({
 		name: 'created_at',
 	})
@@ -32,9 +22,4 @@ export class Skill extends BaseEntity {
 		name: 'updated_at',
 	})
 	updatedAt: Date
-<<<<<<< HEAD
-
-   
-=======
->>>>>>> c29c7ebe1bef3c5cb800ac7aa8c911e5dacf39f3
 }

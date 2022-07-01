@@ -23,8 +23,30 @@ const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const timeLogValid_1 = require("../utils/valid/timeLogValid");
 const timeLogController = {
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         const dataNewTimeLog = req.body;
         const { project, task, employee, starts_on_date, ends_on_date } = dataNewTimeLog;
+        //check exist current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
         //Check valid input create new project
         //Check valid
         const messageValid = timeLogValid_1.timeLogValid.createOrUpdate(dataNewTimeLog);
@@ -39,12 +61,22 @@ const timeLogController = {
             where: {
                 id: project,
             },
+            relations: {
+                project_Admin: true
+            }
         });
         if (!existingproject)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Project does not exist in the system',
+            });
+        if (existingUser.role !== 'Admin' &&
+            existingproject.project_Admin.email !== existingUser.email)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You do not have permission to perform this operation',
             });
         //Check exisiting task
         const existingTask = yield Task_1.Task.findOne({
@@ -131,9 +163,31 @@ const timeLogController = {
     })),
     //update timelog
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _b;
         const { timeLogId } = req.params;
         const dataUpdateTimeLog = req.body;
         const { project, task, employee, starts_on_date, ends_on_date, starts_on_time, ends_on_time, } = dataUpdateTimeLog;
+        //check exist current user
+        const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
         //Check valid input create new project
         const messageValid = timeLogValid_1.timeLogValid.createOrUpdate(dataUpdateTimeLog);
         if (messageValid)
@@ -147,12 +201,22 @@ const timeLogController = {
             where: {
                 id: project,
             },
+            relations: {
+                project_Admin: true
+            }
         });
         if (!existingproject)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Project does not exist in the system',
+            });
+        if (existingUser.role !== 'Admin' &&
+            existingproject.project_Admin.email !== existingUser.email)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You do not have permission to perform this operation',
             });
         //Check exisiting task
         const existingTask = yield Task_1.Task.findOne({
@@ -244,11 +308,38 @@ const timeLogController = {
     })),
     //delete timelog
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _c;
         const { timeLogId } = req.params;
+        //check exist current user
+        const token = (_c = req.headers.authorization) === null || _c === void 0 ? void 0 : _c.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
         //Check existing timelog
         const existingTimeLog = yield Time_Log_1.Time_log.findOne({
             where: {
                 id: Number(timeLogId),
+            },
+            relations: {
+                project: {
+                    project_Admin: true,
+                },
             },
         });
         if (!existingTimeLog)
@@ -256,6 +347,13 @@ const timeLogController = {
                 code: 400,
                 success: false,
                 message: 'Time log does not assigned to task or project',
+            });
+        if (existingUser.role !== 'Admin' &&
+            existingTimeLog.project.project_Admin.email !== existingUser.email)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You do not have permission to perform this operation',
             });
         //Delete
         yield existingTimeLog.remove();
@@ -266,9 +364,9 @@ const timeLogController = {
         });
     })),
     getAllByProject: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a;
+        var _d;
         //check exist current user
-        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        const token = (_d = req.headers.authorization) === null || _d === void 0 ? void 0 : _d.split(' ')[1];
         if (!token)
             return res.status(401).json({
                 code: 400,
@@ -325,7 +423,29 @@ const timeLogController = {
         });
     })),
     Deletemany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _e;
         const { timelogs } = req.body;
+        //check exist current user
+        const token = (_e = req.headers.authorization) === null || _e === void 0 ? void 0 : _e.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
         //check array of timelog
         if (!Array.isArray(timelogs) || !timelogs)
             return res.status(400).json({
@@ -333,17 +453,32 @@ const timeLogController = {
                 success: false,
                 message: 'Timelog does not exist in the system',
             });
-        for (let index = 0; index < timelogs.length; index++) {
-            const itemtimelog = timelogs[index];
-            const existingtimelog = yield Time_Log_1.Time_log.findOne({
-                where: {
-                    id: itemtimelog.id,
-                },
-            });
-            if (existingtimelog) {
-                yield existingtimelog.remove();
-            }
-        }
+        yield Promise.all(timelogs.map((id) => __awaiter(void 0, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const existingTimeLog = yield Time_Log_1.Time_log.findOne({
+                    where: {
+                        id: id,
+                    },
+                    relations: {
+                        project: {
+                            project_Admin: true,
+                        },
+                    },
+                });
+                if (existingTimeLog) {
+                    //Check role admin or projectt admin
+                    if (existingUser.role !== 'Admin' &&
+                        existingTimeLog.project.project_Admin.email !== existingUser.email)
+                        return res.status(400).json({
+                            code: 400,
+                            success: false,
+                            message: 'You do not have permission to perform this operation',
+                        });
+                    yield existingTimeLog.remove();
+                }
+                return resolve(true);
+            }));
+        })));
         return res.status(200).json({
             code: 200,
             success: true,
@@ -469,9 +604,9 @@ const timeLogController = {
         });
     })),
     getByCurrentUser: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        var _b;
+        var _f;
         //check exist current user
-        const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
+        const token = (_f = req.headers.authorization) === null || _f === void 0 ? void 0 : _f.split(' ')[1];
         if (!token)
             return res.status(401).json({
                 code: 400,

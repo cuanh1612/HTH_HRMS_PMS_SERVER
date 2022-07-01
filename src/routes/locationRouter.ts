@@ -9,6 +9,8 @@ locationRouter.post('/', locationController.createmany)
 
 locationRouter.delete('/delete-many', locationController.deletemany)
 
+locationRouter.delete('/:id', locationController.delete)
+
 locationRouter.get('/', locationController.getAll)
 
 locationRouter.get('/:id', locationController.getdetail)

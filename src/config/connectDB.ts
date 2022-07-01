@@ -44,7 +44,11 @@ import { Skill } from '../entities/Skill'
 import { Job } from '../entities/Job'
 import { Job_Type } from '../entities/Job_Type'
 import { Work_Experience } from '../entities/Work_Experience'
+<<<<<<< HEAD
 import { Job_Application } from '../entities/Job_Application'
+=======
+import { Location } from '../entities/Location'
+>>>>>>> 7c5a42f64a1ecdd4f66f94688231d743907c1fbd
 
 const connectDB = () => {
 	createConnection({
@@ -52,17 +56,17 @@ const connectDB = () => {
 		name: 'huprom',
 		logging: true,
 
-		database: 'hth_hrms_pms',
-		password: 'kingspear1999',
-		username: 'postgres',
+		// database: 'hth_hrms_pms',
+		// password: 'kingspear1999',
+		// username: 'postgres',
 
-		synchronize: true,
+		// synchronize: true,
 		port: 5432,
 
-		// url: `${process.env.DB_URL}`,
-		// ssl: {
-		// 	rejectUnauthorized: false
-		// },
+		url: `${process.env.DB_URL}`,
+		ssl: {
+			rejectUnauthorized: false
+		},
 
 		entities: [
 			Employee,

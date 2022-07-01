@@ -21,7 +21,7 @@ const createSocketServer = (httpServer: Server) => {
 
 	const io = new ServerSocket(httpServer, {
 		cors: {
-			origin: process.env.CLIENT_URL,
+			origin: 'https://huprom-hrms-pms-client.vercel.app',
 			methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 			credentials: true,
 		},
@@ -395,6 +395,22 @@ const createSocketServer = (httpServer: Server) => {
 		socket.on('newNoticeBoard', () => {
 			socket.in('roomNoticeBoard').emit('getNewNoticeBoard')
 		})
+
+		//join room member project
+		socket.on('joinRoomMemberProject', (projectId: string) => {
+			socket.join('roomMemberProject' + projectId)
+		})
+
+		//leave room member project
+		socket.on('leaveRoomMemberProject', (projectId: string) => {
+			socket.leave('roomMemberProject' + projectId)
+		})
+
+		//emit user join room member project when have new change member
+		socket.on('newMemberProject', (projectId: string) => {
+			socket.in('roomMemberProject' + projectId).emit('getNewMemberProject')
+		})
+
 	})
 }
 

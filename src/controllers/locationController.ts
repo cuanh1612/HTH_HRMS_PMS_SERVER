@@ -131,10 +131,32 @@ const locationController = {
 			success: true,
 			message: 'Delete Location success',
 		})
-    })
+    }),
 
+    delete: handleCatchError(async (req: Request, res: Response) =>{
+        const {id} = req.params
 
+		const existingLocation = await Location.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
 
+		if (!existingLocation)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Location does not existing in the system',
+			})
+
+		await existingLocation.remove()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete location success',
+		})
+	}),
 }
 
 export default locationController

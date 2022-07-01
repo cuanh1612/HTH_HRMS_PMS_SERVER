@@ -12,21 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Skill_1 = require("../entities/Skill");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
-const skillController = {
+const Location_1 = require("../entities/Location");
+const locationController = {
     createmany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { skills } = req.body;
-        if (!Array.isArray(skills) || skills.length < 1)
+        const { locations } = req.body;
+        if (!Array.isArray(locations) || locations.length < 1)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Please enter name of skill',
+                message: 'Please enter name of location'
             });
-        yield Promise.all(skills.map((skill) => __awaiter(void 0, void 0, void 0, function* () {
+        yield Promise.all(locations.map((location) => __awaiter(void 0, void 0, void 0, function* () {
             return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
-                yield Skill_1.Skill.create({
-                    name: skill,
+                yield Location_1.Location.create({
+                    name: location
                 }).save();
                 resolve(true);
             }));
@@ -34,105 +34,106 @@ const skillController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Add skills success',
+            message: 'Add location success',
         });
     })),
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const skills = yield Skill_1.Skill.find();
+        const locations = yield Location_1.Location.find();
         return res.status(200).json({
             code: 200,
             success: true,
-            skills,
-            message: 'get all skills success',
+            locations,
+            message: 'get all locations success'
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const dataUpdateSkill = req.body;
-        const existingskill = yield Skill_1.Skill.findOne({
+        const dataUpdatelocation = req.body;
+        const existinglocation = yield Location_1.Location.findOne({
             where: {
                 id: Number(id),
-            },
+            }
         });
-        if (!existingskill)
+        if (!existinglocation)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Skill does not existing in the system',
+                message: 'Location does not existing in the system',
             });
-        (existingskill.name = dataUpdateSkill.name), yield existingskill.save();
+        (existinglocation.name = dataUpdatelocation.name),
+            yield existinglocation.save();
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Update skill success',
+            message: 'Update location success',
         });
     })),
     getdetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingskill = yield Skill_1.Skill.findOne({
+        const existinglocation = yield Location_1.Location.findOne({
             where: {
                 id: Number(id)
             }
         });
-        if (!existingskill)
+        if (!existinglocation)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Skill does not existing in the system',
+                message: 'location does not existing in the system',
             });
         return res.status(200).json({
             code: 200,
             success: true,
-            skill: existingskill,
-            message: 'Get detail of skill success'
-        });
-    })),
-    delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { id } = req.params;
-        const existingskill = yield Skill_1.Skill.findOne({
-            where: {
-                id: Number(id),
-            },
-        });
-        if (!existingskill)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Skill does not existing in the system',
-            });
-        yield existingskill.remove();
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Delete skill success',
+            location: existinglocation,
+            message: 'Get detail of location success'
         });
     })),
     deletemany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { skills } = req.body;
-        //check array of skill
-        if (!Array.isArray(skills) || !skills)
+        const { locations } = req.body;
+        //check array of location
+        if (!Array.isArray(locations) || !locations)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Skill does not exist in the system',
+                message: 'Location does not exist in the system',
             });
-        yield Promise.all(skills.map((id) => __awaiter(void 0, void 0, void 0, function* () {
+        yield Promise.all(locations.map((id) => __awaiter(void 0, void 0, void 0, function* () {
             return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
-                const existingskill = yield Skill_1.Skill.findOne({
+                const existinglocation = yield Location_1.Location.findOne({
                     where: {
                         id: id,
                     },
                 });
-                if (existingskill)
-                    yield Skill_1.Skill.remove(existingskill);
+                if (existinglocation)
+                    yield Location_1.Location.remove(existinglocation);
                 resolve(true);
             }));
         })));
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete skills success',
+            message: 'Delete Location success',
+        });
+    })),
+    delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
+        const existingLocation = yield Location_1.Location.findOne({
+            where: {
+                id: Number(id),
+            },
+        });
+        if (!existingLocation)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Location does not existing in the system',
+            });
+        yield existingLocation.remove();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Delete location success',
         });
     })),
 };
-exports.default = skillController;
+exports.default = locationController;

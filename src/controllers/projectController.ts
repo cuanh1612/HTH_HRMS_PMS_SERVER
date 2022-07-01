@@ -594,6 +594,7 @@ const projectController = {
 			relations: {
 				client: true,
 				employees: true,
+				project_Admin: true
 			},
 			where: {
 				id: Number(id),

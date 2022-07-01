@@ -107,7 +107,7 @@ const skillController = {
 				message: 'Skill does not existing in the system',
 			})
 
-		existingskill.remove()
+		await existingskill.remove()
 
 		return res.status(200).json({
 			code: 200,

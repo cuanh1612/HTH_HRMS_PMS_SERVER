@@ -16,6 +16,32 @@ const timeLogController = {
 		const dataNewTimeLog = req.body as createOrUpdatetTimeLogPayload
 		const { project, task, employee, starts_on_date, ends_on_date } = dataNewTimeLog
 
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
 		//Check valid input create new project
 		//Check valid
 		const messageValid = timeLogValid.createOrUpdate(dataNewTimeLog)
@@ -32,6 +58,9 @@ const timeLogController = {
 			where: {
 				id: project,
 			},
+			relations: {
+				project_Admin: true
+			}
 		})
 
 		if (!existingproject)
@@ -39,6 +68,16 @@ const timeLogController = {
 				code: 400,
 				success: false,
 				message: 'Project does not exist in the system',
+			})
+
+		if (
+			existingUser.role !== 'Admin' &&
+			existingproject.project_Admin.email !== existingUser.email
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this operation',
 			})
 
 		//Check exisiting task
@@ -173,6 +212,32 @@ const timeLogController = {
 			ends_on_time,
 		} = dataUpdateTimeLog
 
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
 		//Check valid input create new project
 		const messageValid = timeLogValid.createOrUpdate(dataUpdateTimeLog)
 
@@ -188,6 +253,9 @@ const timeLogController = {
 			where: {
 				id: project,
 			},
+			relations: {
+				project_Admin: true
+			}
 		})
 
 		if (!existingproject)
@@ -195,6 +263,16 @@ const timeLogController = {
 				code: 400,
 				success: false,
 				message: 'Project does not exist in the system',
+			})
+
+		if (
+			existingUser.role !== 'Admin' &&
+			existingproject.project_Admin.email !== existingUser.email
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this operation',
 			})
 
 		//Check exisiting task
@@ -321,10 +399,41 @@ const timeLogController = {
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { timeLogId } = req.params
 
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
 		//Check existing timelog
 		const existingTimeLog = await Time_log.findOne({
 			where: {
 				id: Number(timeLogId),
+			},
+			relations: {
+				project: {
+					project_Admin: true,
+				},
 			},
 		})
 
@@ -333,6 +442,16 @@ const timeLogController = {
 				code: 400,
 				success: false,
 				message: 'Time log does not assigned to task or project',
+			})
+
+		if (
+			existingUser.role !== 'Admin' &&
+			existingTimeLog.project.project_Admin.email !== existingUser.email
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this operation',
 			})
 
 		//Delete
@@ -424,6 +543,32 @@ const timeLogController = {
 	Deletemany: handleCatchError(async (req: Request, res: Response) => {
 		const { timelogs } = req.body
 
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
 		//check array of timelog
 		if (!Array.isArray(timelogs) || !timelogs)
 			return res.status(400).json({
@@ -431,17 +576,41 @@ const timeLogController = {
 				success: false,
 				message: 'Timelog does not exist in the system',
 			})
-		for (let index = 0; index < timelogs.length; index++) {
-			const itemtimelog = timelogs[index]
-			const existingtimelog = await Time_log.findOne({
-				where: {
-					id: itemtimelog.id,
-				},
+
+		await Promise.all(
+			timelogs.map(async (id: number) => {
+				return new Promise(async (resolve) => {
+					const existingTimeLog = await Time_log.findOne({
+						where: {
+							id: id,
+						},
+						relations: {
+							project: {
+								project_Admin: true,
+							},
+						},
+					})
+
+					if (existingTimeLog) {
+						//Check role admin or projectt admin
+						if (
+							existingUser.role !== 'Admin' &&
+							existingTimeLog.project.project_Admin.email !== existingUser.email
+						)
+							return res.status(400).json({
+								code: 400,
+								success: false,
+								message: 'You do not have permission to perform this operation',
+							})
+
+						await existingTimeLog.remove()
+					}
+
+					return resolve(true)
+				})
 			})
-			if (existingtimelog) {
-				await existingtimelog.remove()
-			}
-		}
+		)
+
 		return res.status(200).json({
 			code: 200,
 			success: true,

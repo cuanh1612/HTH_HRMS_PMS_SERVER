@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { Secret, verify } from 'jsonwebtoken'
 import { Like } from 'typeorm'
 import { Employee } from '../entities/Employee'
 import { Milestone } from '../entities/Milestone'
@@ -9,6 +10,7 @@ import { Task } from '../entities/Task'
 import { Task_Category } from '../entities/Task_Category'
 import { Task_file } from '../entities/Task_File'
 import { createOrUpdateTaskPayload } from '../type/taskPayload'
+import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { taskValid } from '../utils/valid/taskValid'
 
@@ -19,6 +21,32 @@ const taskController = {
 		const { task_category, project, employees, task_files, status, milestone, assignBy, name } =
 			dataNewTask
 		let taskEmployees: Employee[] = []
+
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
 
 		//check valid
 		const messageValid = taskValid.createOrUpdate(dataNewTask)
@@ -49,12 +77,25 @@ const taskController = {
 			where: {
 				id: project,
 			},
+			relations: {
+				project_Admin: true,
+			},
 		})
 		if (!existingproject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Project does not exist in the system',
+			})
+
+		if (
+			existingUser.role !== 'Admin' &&
+			existingproject.project_Admin.email !== existingUser.email
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this operation',
 			})
 
 		//Check existing name
@@ -207,6 +248,32 @@ const taskController = {
 		const { employees, status, project, milestone, name } = dataUpdateTask
 		let taskEmployees: Employee[] = []
 
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
 		const existingtask = await Task.findOne({
 			where: {
 				id: Number(id),
@@ -248,6 +315,9 @@ const taskController = {
 			where: {
 				id: Number(project),
 			},
+			relations: {
+				project_Admin: true,
+			},
 		})
 
 		if (!existingproject)
@@ -255,6 +325,17 @@ const taskController = {
 				code: 400,
 				success: false,
 				message: 'Project does not exist in the system',
+			})
+
+		//Check role admin or projectt admin
+		if (
+			existingUser.role !== 'Admin' &&
+			existingproject.project_Admin.email !== existingUser.email
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this operation',
 			})
 
 		//Check existing name
@@ -532,9 +613,40 @@ const taskController = {
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
 		const existingtask = await Task.findOne({
 			where: {
 				id: Number(id),
+			},
+			relations: {
+				project: {
+					project_Admin: true,
+				},
 			},
 		})
 
@@ -543,6 +655,17 @@ const taskController = {
 				code: 400,
 				success: false,
 				message: 'task does not exist in the system',
+			})
+
+		//Check role admin or projectt admin
+		if (
+			existingUser.role !== 'Admin' &&
+			existingtask.project.project_Admin.email !== existingUser.email
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this operation',
 			})
 
 		await existingtask.remove()
@@ -564,6 +687,33 @@ const taskController = {
 				success: false,
 				message: 'Project does not exist in the system',
 			})
+
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
 		await Promise.all(
 			tasks.map(async (id: number) => {
 				return new Promise(async (resolve) => {
@@ -571,10 +721,29 @@ const taskController = {
 						where: {
 							id: id,
 						},
+						relations: {
+							project: {
+								project_Admin: true,
+							},
+						},
 					})
 
-					if (existingtask) await Task.remove(existingtask)
-					resolve(true)
+					if (existingtask) {
+						//Check role admin or projectt admin
+						if (
+							existingUser.role !== 'Admin' &&
+							existingtask.project.project_Admin.email !== existingUser.email
+						)
+							return res.status(400).json({
+								code: 400,
+								success: false,
+								message: 'You do not have permission to perform this operation',
+							})
+
+						await Task.remove(existingtask)
+					}
+
+					return resolve(true)
 				})
 			})
 		)
@@ -589,21 +758,72 @@ const taskController = {
 	changeposition: handleCatchError(async (req: Request, res: Response) => {
 		const { id1, id2, status1, status2 } = req.body
 
-		const existingstatus1 = Task.findOne({
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
+		const existingstatus1 = await Status.findOne({
 			where: {
 				id: status1,
 			},
+			relations: {
+				project: {
+					project_Admin: true,
+				},
+			},
 		})
-		const existingstatus2 = Task.findOne({
+		const existingstatus2 = await Status.findOne({
 			where: {
 				id: status2,
 			},
+			relations: {
+				project: {
+					project_Admin: true,
+				},
+			},
 		})
+
 		if (!existingstatus1 && !existingstatus2)
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Either status does not existing in the system',
+				message: 'Either status does not existing in the system 3',
+			})
+
+		//Check role admin or projectt admin
+		if (
+			existingUser.role !== 'Admin' &&
+			((existingstatus1 &&
+				existingstatus1.project.project_Admin.email !== existingUser.email) ||
+				(existingstatus2 &&
+					existingstatus2.project.project_Admin.email !== existingUser.email))
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this operation',
 			})
 
 		if (status1 == status2) {
@@ -618,7 +838,7 @@ const taskController = {
 				return res.status(400).json({
 					code: 400,
 					success: false,
-					message: 'Either status does not exist in the system',
+					message: 'Either status does not exist in the system 2',
 				})
 
 			if (task1.index > task2.index) {
@@ -693,7 +913,7 @@ const taskController = {
 				return res.status(400).json({
 					code: 400,
 					success: false,
-					message: 'Either status does not exist in the system',
+					message: 'Either status does not exist in the system 1',
 				})
 
 			if (!id2) {

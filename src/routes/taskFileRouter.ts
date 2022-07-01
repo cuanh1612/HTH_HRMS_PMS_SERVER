@@ -1,12 +1,13 @@
 import express from 'express'
 import taskFileController from '../controllers/taskFileController'
+import { checkAuth } from '../utils/middleware/checkAuth'
 
 
 const taskFileRouter = express.Router()
 
-taskFileRouter.post('/',  taskFileController.create)
+taskFileRouter.post('/', checkAuth(['Admin', 'Employee']),  taskFileController.create)
 
-taskFileRouter.delete('/:taskFileId/task/:taskId',  taskFileController.delete)
+taskFileRouter.delete('/:taskFileId/task/:taskId', checkAuth(['Admin', 'Employee']),  taskFileController.delete)
 
 taskFileRouter.get('/task/:taskId',  taskFileController.getAll)
 

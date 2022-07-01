@@ -43,20 +43,24 @@ const StickyNote_1 = require("../entities/StickyNote");
 const Notification_1 = require("../entities/Notification");
 const Company_Info_1 = require("../entities/Company_Info");
 const Skill_1 = require("../entities/Skill");
+const Job_1 = require("../entities/Job");
+const Job_Type_1 = require("../entities/Job_Type");
+const Work_Experience_1 = require("../entities/Work_Experience");
+const Location_1 = require("../entities/Location");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
         name: 'huprom',
         logging: true,
-        database: 'hth_hrms_pms',
-        password: 'kingspear1999',
-        username: 'postgres',
+        // database: 'hth_hrms_pms',
+        // password: 'kingspear1999',
+        // username: 'postgres',
         synchronize: true,
         port: 5432,
-        // url: `${process.env.DB_URL}`,
-        // ssl: {
-        // 	rejectUnauthorized: false
-        // },
+        url: `${process.env.DB_URL}`,
+        ssl: {
+            rejectUnauthorized: false
+        },
         entities: [
             Employee_1.Employee,
             Avatar_1.Avatar,
@@ -100,7 +104,11 @@ const connectDB = () => {
             StickyNote_1.Sticky_note,
             Notification_1.Notification,
             Company_Info_1.Company_Info,
-            Skill_1.Skill
+            Skill_1.Skill,
+            Location_1.Location,
+            Job_1.Job,
+            Job_Type_1.Job_Type,
+            Work_Experience_1.Work_Experience,
         ],
     })
         .then(() => {
