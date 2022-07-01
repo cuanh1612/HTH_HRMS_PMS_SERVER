@@ -41,12 +41,12 @@ const attendanceController = {
             },
         });
         if (date) {
+            const dateSplit = String(date).split('/');
             data.map((employee) => {
                 employee.attendances = employee.attendances.filter((attendance) => {
-                    return (new Date(attendance.date).getMonth() ==
-                        new Date(date).getMonth() &&
-                        new Date(attendance.date).getFullYear() ==
-                            new Date(date).getFullYear());
+                    const currentDate = new Date(new Date(attendance.date).toLocaleDateString());
+                    return (currentDate.getMonth() == Number(dateSplit[1]) - 1 &&
+                        currentDate.getFullYear() == Number(dateSplit[2]));
                 });
             });
         }

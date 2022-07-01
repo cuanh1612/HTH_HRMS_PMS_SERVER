@@ -32,13 +32,13 @@ const attendanceController = {
 		})
 
 		if (date) {
+			const dateSplit = String(date).split('/')
 			data.map((employee) => {
 				employee.attendances = employee.attendances.filter((attendance) => {
+					const currentDate = new Date(new Date(attendance.date).toLocaleDateString())
 					return (
-						new Date(attendance.date).getMonth() ==
-							new Date(date as string).getMonth() &&
-						new Date(attendance.date).getFullYear() ==
-							new Date(date as string).getFullYear()
+						currentDate.getMonth() == Number(dateSplit[1]) - 1 &&
+						currentDate.getFullYear() == Number(dateSplit[2])
 					)
 				})
 			})
