@@ -41,6 +41,7 @@ const attendanceController = {
             },
         });
         if (date) {
+            console.log(data, date);
             const dateSplit = String(date).split('/');
             data.map((employee) => {
                 employee.attendances = employee.attendances.filter((attendance) => {
