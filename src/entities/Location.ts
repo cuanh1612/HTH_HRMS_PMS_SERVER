@@ -1,5 +1,6 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Job } from "./Job";
+import { Job_Application } from "./Job_Application";
 
 
 
@@ -16,6 +17,11 @@ export class Location extends BaseEntity {
       onDelete: 'SET NULL'
     })
     jobs: Job
+
+    @OneToMany(() => Job_Application, (job_application) => job_application.location,{
+      onDelete: 'SET NULL'
+    })
+    job_application: Job_Application
     
 
     @CreateDateColumn({

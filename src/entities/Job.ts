@@ -6,6 +6,7 @@ import { Job_Type } from "./Job_Type";
 
 import { Employee } from "./Employee";
 import { Work_Experience } from "./Work_Experience";
+import { Job_Application } from "./Job_Application";
 
 
 
@@ -39,6 +40,11 @@ export class Job extends BaseEntity {
     })
     @JoinColumn()
     department: Department
+
+    @OneToMany(() => Job_Application, (job_application) => job_application.jobs,{
+        onDelete:'SET NULL'
+    })
+    job_application: Job_Application
 
 
     //status column has true = "open" & false = "close"
