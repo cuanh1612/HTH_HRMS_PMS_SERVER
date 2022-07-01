@@ -21,7 +21,7 @@ const createSocketServer = (httpServer: Server) => {
 
 	const io = new ServerSocket(httpServer, {
 		cors: {
-			origin: 'https://huprom-hrms-pms-client.vercel.app',
+			origin: 'http://localhost:3000',
 			methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 			credentials: true,
 		},
