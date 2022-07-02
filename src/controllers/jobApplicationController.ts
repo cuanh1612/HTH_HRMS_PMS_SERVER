@@ -61,7 +61,7 @@ const jobApplicationController = {
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 		const datatUpdateJobApplication: createOrUpdateJobApplicationPayload = req.body
-		const { location, jobs, picture } = datatUpdateJobApplication
+		const { location, jobs } = datatUpdateJobApplication
 
 		//check exist job application
 		const existingJobApplication = await Job_Application.findOne({
@@ -114,7 +114,7 @@ const jobApplicationController = {
 				await existingJobApplicationpicture.remove()
 			}
 		}
-        
+
 		;(existingJobApplication.name = datatUpdateJobApplication.name),
 			(existingJobApplication.email = datatUpdateJobApplication.email),
 			(existingJobApplication.jobs = datatUpdateJobApplication.jobs),
@@ -131,6 +131,7 @@ const jobApplicationController = {
 			message: 'Update job application success',
 		})
 	}),
+
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
@@ -138,6 +139,10 @@ const jobApplicationController = {
 			where: {
 				id: Number(id),
 			},
+            relations: {
+                jobs: true,
+                location: true
+            }
 		})
 		if (!existingJobApplication)
 			return res.status(400).json({
@@ -149,7 +154,7 @@ const jobApplicationController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			existingJobApplication,
+			jobApplication: existingJobApplication,
 			message: 'Get detail of job application success',
 		})
 	}),
