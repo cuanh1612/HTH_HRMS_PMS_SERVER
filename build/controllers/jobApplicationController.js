@@ -65,7 +65,7 @@ const jobApplicationController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const datatUpdateJobApplication = req.body;
-        const { location, jobs, picture } = datatUpdateJobApplication;
+        const { location, jobs } = datatUpdateJobApplication;
         //check exist job application
         const existingJobApplication = yield Job_Application_1.Job_Application.findOne({
             where: {
@@ -134,6 +134,10 @@ const jobApplicationController = {
             where: {
                 id: Number(id),
             },
+            relations: {
+                jobs: true,
+                location: true
+            }
         });
         if (!existingJobApplication)
             return res.status(400).json({
@@ -144,7 +148,7 @@ const jobApplicationController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            existingJobApplication,
+            jobApplication: existingJobApplication,
             message: 'Get detail of job application success',
         });
     })),
