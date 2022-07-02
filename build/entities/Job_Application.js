@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Job_Application = exports.enumSource = exports.enumStatus = void 0;
 const typeorm_1 = require("typeorm");
 const Job_1 = require("./Job");
+const Job_Application_Picture_1 = require("./Job_Application_Picture");
 const Location_1 = require("./Location");
 var enumStatus;
 (function (enumStatus) {
@@ -45,14 +46,18 @@ __decorate([
 ], Job_Application.prototype, "email", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Job_Application.prototype, "mobile", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
+    (0, typeorm_1.OneToOne)(() => Job_Application_Picture_1.Job_application_picture, {
+        eager: true,
+        cascade: true,
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Job_Application_Picture_1.Job_application_picture)
 ], Job_Application.prototype, "picture", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Job_Application.prototype, "cover_leter", void 0);
 __decorate([
@@ -60,7 +65,7 @@ __decorate([
     __metadata("design:type", String)
 ], Job_Application.prototype, "status", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: enumSource, default: null }),
+    (0, typeorm_1.Column)({ type: 'enum', enum: enumSource, nullable: true }),
     __metadata("design:type", String)
 ], Job_Application.prototype, "source", void 0);
 __decorate([

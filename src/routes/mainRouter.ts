@@ -140,7 +140,7 @@ function mainRouter(app: core.Express) {
 
 	app.use('/api/jobs', jobRouter )
 
-	app.use('/api/jobApplications', jobApplicationRouter)
+	app.use('/api/job-applications', jobApplicationRouter)
 
 
 

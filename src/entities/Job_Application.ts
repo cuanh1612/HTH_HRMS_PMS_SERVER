@@ -1,6 +1,7 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { Job } from "./Job";
+import { Job_application_picture } from "./Job_Application_Picture";
 import { Location } from "./Location";
 
 
@@ -32,18 +33,22 @@ export class Job_Application extends BaseEntity {
     email: string
 
     @Column()
-    mobile: number
+    mobile: string
 
-    @Column()
-    picture: string
+    @OneToOne(() => Job_application_picture, {
+		eager: true,
+		cascade: true,
+	})
+	@JoinColumn()
+	picture: Job_application_picture
 
-    @Column()
+    @Column({nullable: true})
     cover_leter: string
 
     @Column({ type: 'enum', enum: enumStatus, default: enumStatus.APPLIED})
     status: string
 
-    @Column({ type: 'enum', enum: enumSource, default: null})
+    @Column({ type: 'enum', enum: enumSource, nullable: true})
     source: string
 
     @ManyToOne(() => Job, (job) => job.job_application,{
@@ -68,16 +73,4 @@ export class Job_Application extends BaseEntity {
 		name: 'updated_at',
 	})
 	updatedAt: Date
-
-
-
-
-
-
-    
-
-
-
-
-    
 }

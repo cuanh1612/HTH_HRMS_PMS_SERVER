@@ -97,6 +97,6 @@ function mainRouter(app) {
     app.use('/api/job-types', jobTypeRouter_1.default);
     app.use('/api/work-experiences', workExperience_1.default);
     app.use('/api/jobs', jobRouter_1.default);
-    app.use('/api/jobApplications', jobApplicationRouter_1.default);
+    app.use('/api/job-applications', jobApplicationRouter_1.default);
 }
 exports.default = mainRouter;

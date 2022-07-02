@@ -17,6 +17,7 @@ const jobApplicationValid_1 = require("../utils/valid/jobApplicationValid");
 const Job_1 = require("../entities/Job");
 const Location_1 = require("../entities/Location");
 const Job_Application_1 = require("../entities/Job_Application");
+const Job_Application_Picture_1 = require("../entities/Job_Application_Picture");
 const jobApplicationController = {
     //create new job application
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -27,31 +28,31 @@ const jobApplicationController = {
             return res.status(400).json({
                 code: 400,
                 succesS: false,
-                message: messageValid
+                message: messageValid,
             });
         //check exist jobs
         const existingJobs = yield Job_1.Job.findOne({
             where: {
-                id: jobs
-            }
+                id: jobs,
+            },
         });
         if (!existingJobs)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Job does not exisitng in the system'
+                message: 'Job does not exisitng in the system',
             });
         //check exist location
         const existingLocation = yield Location_1.Location.findOne({
             where: {
-                id: location
-            }
+                id: location,
+            },
         });
         if (!existingLocation)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Location does not exisitng in the system'
+                message: 'Location does not exisitng in the system',
             });
         const createJobApplication = yield Job_Application_1.Job_Application.create(Object.assign({}, dataNewJobApplication)).save();
         return res.status(200).json({
@@ -64,43 +65,55 @@ const jobApplicationController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const datatUpdateJobApplication = req.body;
-        const { location, jobs } = datatUpdateJobApplication;
+        const { location, jobs, picture } = datatUpdateJobApplication;
         //check exist job application
         const existingJobApplication = yield Job_Application_1.Job_Application.findOne({
             where: {
-                id: Number(id)
-            }
+                id: Number(id),
+            },
         });
         if (!existingJobApplication)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Job Application does not exist in the system'
+                message: 'Job Application does not exist in the system',
             });
         //check exist jobs
         const existingJobs = yield Job_1.Job.findOne({
             where: {
-                id: jobs
-            }
+                id: jobs,
+            },
         });
         if (!existingJobs)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Job does not exisitng in the system'
+                message: 'Job does not exisitng in the system',
             });
         //check exist location
         const existingLocation = yield Location_1.Location.findOne({
             where: {
-                id: location
-            }
+                id: location,
+            },
         });
         if (!existingLocation)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Location does not exisitng in the system'
+                message: 'Location does not exisitng in the system',
             });
+        //Delete old picture
+        if (existingJobApplication.picture) {
+            const existingJobApplicationpicture = yield Job_Application_Picture_1.Job_application_picture.findOne({
+                where: {
+                    id: existingJobApplication.picture.id,
+                },
+            });
+            if (existingJobApplicationpicture) {
+                yield existingJobApplicationpicture.remove();
+            }
+        }
+        ;
         (existingJobApplication.name = datatUpdateJobApplication.name),
             (existingJobApplication.email = datatUpdateJobApplication.email),
             (existingJobApplication.jobs = datatUpdateJobApplication.jobs),
@@ -112,27 +125,27 @@ const jobApplicationController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Update job application success'
+            message: 'Update job application success',
         });
     })),
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const existingJobApplication = yield Job_Application_1.Job_Application.findOne({
             where: {
-                id: Number(id)
-            }
+                id: Number(id),
+            },
         });
         if (!existingJobApplication)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'This job application does not exist in the system'
+                message: 'This job application does not exist in the system',
             });
         return res.status(200).json({
             code: 200,
             success: true,
             existingJobApplication,
-            message: 'Get detail of job application success'
+            message: 'Get detail of job application success',
         });
     })),
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -141,27 +154,39 @@ const jobApplicationController = {
             code: 200,
             success: true,
             job_applications,
-            message: 'Get all job application success'
+            message: 'Get all job application success',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const existingJobApplication = yield Job_Application_1.Job_Application.findOne({
             where: {
-                id: Number(id)
-            }
+                id: Number(id),
+            },
         });
         if (!existingJobApplication)
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'This job application does not exist in the system'
+                message: 'This job application does not exist in the system',
             });
+        //Delete picture job application
+        if (existingJobApplication.picture) {
+            const existingJobApplicationpicture = yield Job_Application_Picture_1.Job_application_picture.findOne({
+                where: {
+                    id: existingJobApplication.picture.id,
+                },
+            });
+            if (existingJobApplicationpicture) {
+                yield existingJobApplicationpicture.remove();
+            }
+        }
+        //Delete job application
         yield existingJobApplication.remove();
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'delete job application success'
+            message: 'delete job application success',
         });
     })),
     deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -171,24 +196,37 @@ const jobApplicationController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'job application does not existing in the system'
+                message: 'job application does not existing in the system',
             });
         yield Promise.all(job_applications.map((id) => __awaiter(void 0, void 0, void 0, function* () {
             return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
                 const existingJobApplication = yield Job_Application_1.Job_Application.findOne({
                     where: {
                         id: id,
-                    }
+                    },
                 });
-                if (existingJobApplication)
+                if (existingJobApplication) {
+                    //Delete picture job application
+                    if (existingJobApplication.picture) {
+                        const existingJobApplicationpicture = yield Job_Application_Picture_1.Job_application_picture.findOne({
+                            where: {
+                                id: existingJobApplication.picture.id,
+                            },
+                        });
+                        if (existingJobApplicationpicture) {
+                            yield existingJobApplicationpicture.remove();
+                        }
+                    }
+                    //Delete job application
                     yield Job_Application_1.Job_Application.remove(existingJobApplication);
+                }
                 resolve(true);
             }));
         })));
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete job applications success'
+            message: 'Delete job applications success',
         });
     })),
     changeStatusMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -199,14 +237,14 @@ const jobApplicationController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'job application does not existing in the system'
+                message: 'job application does not existing in the system',
             });
         yield Promise.all(job_applications.map((id) => __awaiter(void 0, void 0, void 0, function* () {
             return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
                 const existingJobApplication = yield Job_Application_1.Job_Application.findOne({
                     where: {
                         id: id,
-                    }
+                    },
                 });
                 if (existingJobApplication) {
                     existingJobApplication.status = status;
@@ -218,8 +256,8 @@ const jobApplicationController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'change status job applications success'
+            message: 'change status job applications success',
         });
-    }))
+    })),
 };
 exports.default = jobApplicationController;
