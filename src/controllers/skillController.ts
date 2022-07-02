@@ -14,9 +14,9 @@ const skillController = {
 			})
 
 		await Promise.all(
-			skills.map(async (skill) => {
-				return new Promise(async (resolve) => {
-					await Skill.create({
+			skills.map((skill) => {
+				return new Promise((resolve) => {
+					Skill.create({
 						name: skill,
 					}).save()
 					resolve(true)
@@ -67,32 +67,32 @@ const skillController = {
 		})
 	}),
 
-    getdetail: handleCatchError(async (req: Request,  res: Response) =>{
-        const {id} = req.params
+	getdetail: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
 
-        const existingskill = await Skill.findOne({
-            where: {
-                id: Number(id)
-            }
-        })
+		const existingskill = await Skill.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
 
-        if(!existingskill)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Skill does not existing in the system',
-            })
-        
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            skill: existingskill,
-            message: 'Get detail of skill success'
-        })
-    }),
+		if (!existingskill)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Skill does not existing in the system',
+			})
 
-    delete: handleCatchError(async (req: Request, res: Response) =>{
-        const {id} = req.params
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			skill: existingskill,
+			message: 'Get detail of skill success',
+		})
+	}),
+
+	delete: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
 
 		const existingskill = await Skill.findOne({
 			where: {
@@ -126,16 +126,21 @@ const skillController = {
 				success: false,
 				message: 'Skill does not exist in the system',
 			})
-		await Promise.all(
-			skills.map(async (id: number) => {
-				return new Promise(async (resolve) => {
-					const existingskill = await Skill.findOne({
-						where: {
-							id: id,
-						},
-					})
 
-					if (existingskill) await Skill.remove(existingskill)
+		const dlManyHandle = async (id: number) => {
+			const existingskill = await Skill.findOne({
+				where: {
+					id: id,
+				},
+			})
+
+			if (existingskill) await Skill.remove(existingskill)
+		}
+
+		await Promise.all(
+			skills.map((id: number) => {
+				return new Promise((resolve) => {
+					dlManyHandle(id)
 					resolve(true)
 				})
 			})

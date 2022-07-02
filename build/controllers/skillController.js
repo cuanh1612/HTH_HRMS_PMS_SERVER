@@ -23,14 +23,14 @@ const skillController = {
                 success: false,
                 message: 'Please enter name of skill',
             });
-        yield Promise.all(skills.map((skill) => __awaiter(void 0, void 0, void 0, function* () {
-            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
-                yield Skill_1.Skill.create({
+        yield Promise.all(skills.map((skill) => {
+            return new Promise((resolve) => {
+                Skill_1.Skill.create({
                     name: skill,
                 }).save();
                 resolve(true);
-            }));
-        })));
+            });
+        }));
         return res.status(200).json({
             code: 200,
             success: true,
@@ -71,8 +71,8 @@ const skillController = {
         const { id } = req.params;
         const existingskill = yield Skill_1.Skill.findOne({
             where: {
-                id: Number(id)
-            }
+                id: Number(id),
+            },
         });
         if (!existingskill)
             return res.status(400).json({
@@ -84,7 +84,7 @@ const skillController = {
             code: 200,
             success: true,
             skill: existingskill,
-            message: 'Get detail of skill success'
+            message: 'Get detail of skill success',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -116,18 +116,21 @@ const skillController = {
                 success: false,
                 message: 'Skill does not exist in the system',
             });
-        yield Promise.all(skills.map((id) => __awaiter(void 0, void 0, void 0, function* () {
-            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
-                const existingskill = yield Skill_1.Skill.findOne({
-                    where: {
-                        id: id,
-                    },
-                });
-                if (existingskill)
-                    yield Skill_1.Skill.remove(existingskill);
+        const dlManyHandle = (id) => __awaiter(void 0, void 0, void 0, function* () {
+            const existingskill = yield Skill_1.Skill.findOne({
+                where: {
+                    id: id,
+                },
+            });
+            if (existingskill)
+                yield Skill_1.Skill.remove(existingskill);
+        });
+        yield Promise.all(skills.map((id) => {
+            return new Promise((resolve) => {
+                dlManyHandle(id);
                 resolve(true);
-            }));
-        })));
+            });
+        }));
         return res.status(200).json({
             code: 200,
             success: true,
