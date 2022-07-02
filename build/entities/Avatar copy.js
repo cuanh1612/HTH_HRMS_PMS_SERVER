@@ -9,45 +9,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Location = void 0;
+exports.Avatar = void 0;
 const typeorm_1 = require("typeorm");
-const Job_1 = require("./Job");
-const Job_Application_1 = require("./Job_Application");
-let Location = class Location extends typeorm_1.BaseEntity {
+let Avatar = class Avatar extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Location.prototype, "id", void 0);
+], Avatar.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Location.prototype, "name", void 0);
+], Avatar.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Job_1.Job, (job) => job.locations, {
-        onDelete: 'SET NULL'
-    }),
-    __metadata("design:type", Job_1.Job)
-], Location.prototype, "jobs", void 0);
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Avatar.prototype, "public_id", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Job_Application_1.Job_Application, (job_application) => job_application.location, {
-        onDelete: 'SET NULL'
-    }),
-    __metadata("design:type", Job_Application_1.Job_Application)
-], Location.prototype, "job_application", void 0);
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Avatar.prototype, "url", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
     __metadata("design:type", Date)
-], Location.prototype, "createdAt", void 0);
+], Avatar.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({
         name: 'updated_at',
     }),
     __metadata("design:type", Date)
-], Location.prototype, "updatedAt", void 0);
-Location = __decorate([
+], Avatar.prototype, "updatedAt", void 0);
+Avatar = __decorate([
     (0, typeorm_1.Entity)()
-], Location);
-exports.Location = Location;
+], Avatar);
+exports.Avatar = Avatar;

@@ -46,7 +46,9 @@ const Skill_1 = require("../entities/Skill");
 const Job_1 = require("../entities/Job");
 const Job_Type_1 = require("../entities/Job_Type");
 const Work_Experience_1 = require("../entities/Work_Experience");
+const Job_Application_1 = require("../entities/Job_Application");
 const Location_1 = require("../entities/Location");
+const Job_Application_Picture_1 = require("../entities/Job_Application_Picture");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -109,6 +111,8 @@ const connectDB = () => {
             Job_1.Job,
             Job_Type_1.Job_Type,
             Work_Experience_1.Work_Experience,
+            Job_Application_1.Job_Application,
+            Job_Application_Picture_1.Job_application_picture
         ],
     })
         .then(() => {

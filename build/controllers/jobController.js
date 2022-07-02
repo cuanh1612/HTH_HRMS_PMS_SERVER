@@ -268,7 +268,7 @@ const jobControler = {
         });
     })),
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const jobs = Job_1.Job.find();
+        const jobs = yield Job_1.Job.find();
         return res.status(200).json({
             code: 200,
             success: true,

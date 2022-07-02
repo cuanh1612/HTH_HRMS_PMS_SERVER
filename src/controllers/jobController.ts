@@ -318,7 +318,7 @@ const jobControler = {
 	}),
 
 	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const jobs = Job.find()
+		const jobs = await Job.find()
 
 		return res.status(200).json({
 			code: 200,
