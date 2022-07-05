@@ -6,13 +6,12 @@ export const jobApplicationValid = {
 		jobs,
 		email,
 		mobile,
-		location,
-		picture,
+		location
 	}: createOrUpdateJobApplicationPayload) => {
 		let messageError = ''
 
 		//check exist data
-		if (!name || !jobs || !email || !mobile || !location || !picture) {
+		if (!name || !jobs || !email || !mobile || !location) {
 			messageError = 'Please enter full field'
 			return messageError
 		}

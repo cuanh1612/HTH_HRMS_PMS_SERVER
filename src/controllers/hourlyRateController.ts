@@ -13,6 +13,7 @@ const hourlyRateController = {
 				success: false,
 				message: 'Please enter full fieererlds',
 			})
+            
         }
 
         const existHourlyRate = await Hourly_rate_project.findOne({

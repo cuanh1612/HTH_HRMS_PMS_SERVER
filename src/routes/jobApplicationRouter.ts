@@ -7,16 +7,16 @@ const jobApplicationRouter = express.Router()
 
 jobApplicationRouter.post('/', jobApplicationController.create)
 
-jobApplicationRouter.delete('/delete-many', jobApplicationController.delete)
+jobApplicationRouter.delete('/:id', jobApplicationController.delete)
 
-jobApplicationRouter.delete('/delete-many', jobApplicationController.deleteMany)
+jobApplicationRouter.post('/delete-many', jobApplicationController.deleteMany)
 
 
 jobApplicationRouter.get('/', jobApplicationController.getAll)
 
 jobApplicationRouter.get('/:id', jobApplicationController.getDetail)
 
-jobApplicationController.get('/:id', jobApplicationController.getByJob)
+jobApplicationRouter.get('/:id', jobApplicationController.getByJob)
 
 jobApplicationRouter.put('/:id', jobApplicationController.update)
 

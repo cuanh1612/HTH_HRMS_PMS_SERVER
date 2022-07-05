@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.jobApplicationValid = void 0;
 exports.jobApplicationValid = {
-    createOrUpdate: ({ name, jobs, email, mobile, location, picture, }) => {
+    createOrUpdate: ({ name, jobs, email, mobile, location }) => {
         let messageError = '';
         //check exist data
-        if (!name || !jobs || !email || !mobile || !location || !picture) {
+        if (!name || !jobs || !email || !mobile || !location) {
             messageError = 'Please enter full field';
             return messageError;
         }

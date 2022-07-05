@@ -226,6 +226,7 @@ const eventController = {
 			message: 'Get all Events successfully',
 		})
 	}),
+	
 
 	getByEmployee: handleCatchError(async (req: Request, res: Response) => {
 		//check exist current user

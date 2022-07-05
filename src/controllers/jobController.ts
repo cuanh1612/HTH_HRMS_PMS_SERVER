@@ -133,8 +133,13 @@ const jobControler = {
 				message: 'Work Experience does not exist in the system',
 			})
 
+		const endDate = new Date(dataNewJob.ends_on_date)
+		const startDate = new Date(dataNewJob.starts_on_date)
+
 		const createJob = await Job.create({
 			...dataNewJob,
+			ends_on_date: endDate,
+			starts_on_date: startDate,
 			skills: listValidSkills,
 			locations: listValidLocations,
 		}).save()
@@ -145,6 +150,41 @@ const jobControler = {
 			job: createJob,
 			message: ' Create job',
 		})
+	}),
+
+	updateStatus: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
+		const {status} = req.body
+		if(!id) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please enter full field',
+			})
+		}
+		const existingJob = await Job.findOne({
+			where: {
+				id: Number(id)
+			}
+		})
+
+		if(!existingJob) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'This job not exist in system',
+			})
+		}
+
+		existingJob.status = status ? true : false
+		await existingJob.save()
+		
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: "Update job's status successfully ",
+		})
+
 	}),
 
 	update: handleCatchError(async (req: Request, res: Response) => {
@@ -285,24 +325,24 @@ const jobControler = {
 				message: 'Work Experience does not exist in the system',
 			})
 
-			//update job
-		;(existingJob.title = datatUpdateJob.title),
-			(existingJob.starts_on_date = new Date(
-				new Date(datatUpdateJob.starts_on_date).toLocaleDateString()
-			)),
-			(existingJob.ends_on_date = new Date(
-				new Date(datatUpdateJob.ends_on_date).toLocaleDateString()
-			)),
-			(existingJob.skills = listValidSkills),
-			(existingJob.locations = listValidLocations),
-			(existingJob.department = datatUpdateJob.department),
-			(existingJob.status = datatUpdateJob.status),
-			(existingJob.total_openings = datatUpdateJob.total_openings),
-			(existingJob.job_type = datatUpdateJob.job_type),
-			(existingJob.work_experience = datatUpdateJob.work_experience),
-			(existingJob.recruiter = datatUpdateJob.recruiter),
-			(existingJob.starting_salary_amount = datatUpdateJob.starting_salary_amount),
-			(existingJob.job_description = datatUpdateJob.job_description)
+		//update job
+		existingJob.title = datatUpdateJob.title
+		if (datatUpdateJob.starts_on_date) {
+			existingJob.starts_on_date = new Date(datatUpdateJob.starts_on_date)
+		}
+		if (datatUpdateJob.ends_on_date) {
+			existingJob.ends_on_date = new Date(datatUpdateJob.ends_on_date)
+		}
+		existingJob.skills = listValidSkills
+		existingJob.locations = listValidLocations
+		existingJob.department = datatUpdateJob.department
+		existingJob.status = datatUpdateJob.status
+		existingJob.total_openings = datatUpdateJob.total_openings
+		existingJob.job_type = datatUpdateJob.job_type
+		existingJob.work_experience = datatUpdateJob.work_experience
+		existingJob.recruiter = datatUpdateJob.recruiter
+		existingJob.starting_salary_amount = datatUpdateJob.starting_salary_amount
+		existingJob.job_description = datatUpdateJob.job_description
 
 		if (datatUpdateJob.rate) {
 			existingJob.rate = datatUpdateJob.rate
@@ -335,14 +375,14 @@ const jobControler = {
 			where: {
 				id: Number(id),
 			},
-            relations: {
-                department: true,
-                job_type: true,
-                recruiter: true,
-                work_experience: true,
+			relations: {
+				department: true,
+				job_type: true,
+				recruiter: true,
+				work_experience: true,
 				skills: true,
-				locations: true
-            }
+				locations: true,
+			},
 		})
 
 		if (!existingJob)
