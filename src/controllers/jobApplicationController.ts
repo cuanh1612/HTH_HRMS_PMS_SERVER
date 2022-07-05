@@ -8,6 +8,39 @@ import { createOrUpdateJobApplicationPayload } from '../type/JobApplicationPaylo
 import { Job_application_picture } from '../entities/Job_Application_Picture'
 
 const jobApplicationController = {
+	updateStatus: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
+		const { status } = req.body
+		if (!id) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please enter full field',
+			})
+		}
+		const existingJob = await Job_Application.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
+
+		if (!existingJob) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'This job application not exist in system',
+			})
+		}
+
+		existingJob.status = status
+		await existingJob.save()
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Update status successfully ',
+		})
+	}),
 	//create new job application
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewJobApplication: createOrUpdateJobApplicationPayload = req.body
@@ -61,7 +94,7 @@ const jobApplicationController = {
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 		const datatUpdateJobApplication: createOrUpdateJobApplicationPayload = req.body
-		const { location, jobs } = datatUpdateJobApplication
+		const { location, jobs, picture } = datatUpdateJobApplication
 
 		//check exist job application
 		const existingJobApplication = await Job_Application.findOne({
@@ -102,18 +135,8 @@ const jobApplicationController = {
 				message: 'Location does not exisitng in the system',
 			})
 
-        //Delete old picture
-        if (existingJobApplication.picture) {
-			const existingJobApplicationpicture = await Job_application_picture.findOne({
-				where: {
-					id: existingJobApplication.picture.id,
-				},
-			})
-
-			if (existingJobApplicationpicture) {
-				await existingJobApplicationpicture.remove()
-			}
-		}
+		//Delete old picture
+		const oldPictureId = existingJobApplication.picture.id || undefined
 
 		;(existingJobApplication.name = datatUpdateJobApplication.name),
 			(existingJobApplication.email = datatUpdateJobApplication.email),
@@ -121,9 +144,23 @@ const jobApplicationController = {
 			(existingJobApplication.location = datatUpdateJobApplication.location),
 			(existingJobApplication.mobile = datatUpdateJobApplication.mobile),
 			(existingJobApplication.picture = datatUpdateJobApplication.picture),
-			(existingJobApplication.cover_leter = datatUpdateJobApplication.cover_leter)
+			(existingJobApplication.cover_leter = datatUpdateJobApplication.cover_leter),
+			(existingJobApplication.status = datatUpdateJobApplication.status),
+			(existingJobApplication.source = datatUpdateJobApplication.source)
 
 		await existingJobApplication.save()
+
+		if (picture) {
+			const existingJobApplicationpicture = await Job_application_picture.findOne({
+				where: {
+					id: oldPictureId,
+				},
+			})
+
+			if (existingJobApplicationpicture) {
+				await existingJobApplicationpicture.remove()
+			}
+		}
 
 		return res.status(200).json({
 			code: 200,
@@ -139,10 +176,10 @@ const jobApplicationController = {
 			where: {
 				id: Number(id),
 			},
-            relations: {
-                jobs: true,
-                location: true
-            }
+			relations: {
+				jobs: true,
+				location: true,
+			},
 		})
 		if (!existingJobApplication)
 			return res.status(400).json({
@@ -160,12 +197,17 @@ const jobApplicationController = {
 	}),
 
 	getAll: handleCatchError(async (_, res: Response) => {
-		const job_applications = await Job_Application.find()
+		const jobApplications = await Job_Application.find({
+			relations: {
+				location: true,
+				jobs: true,
+			},
+		})
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			job_applications,
+			jobApplications,
 			message: 'Get all job application success',
 		})
 	}),
@@ -186,10 +228,15 @@ const jobApplicationController = {
 			})
 
 		//Delete picture job application
-		if (existingJobApplication.picture) {
+		const pictureId = existingJobApplication.picture.id || undefined
+
+		//Delete job application
+		await existingJobApplication.remove()
+
+		if (pictureId) {
 			const existingJobApplicationpicture = await Job_application_picture.findOne({
 				where: {
-					id: existingJobApplication.picture.id,
+					id: pictureId,
 				},
 			})
 
@@ -197,9 +244,6 @@ const jobApplicationController = {
 				await existingJobApplicationpicture.remove()
 			}
 		}
-
-		//Delete job application
-		await existingJobApplication.remove()
 
 		return res.status(200).json({
 			code: 200,
@@ -209,10 +253,25 @@ const jobApplicationController = {
 	}),
 
 	deleteMany: handleCatchError(async (req: Request, res: Response) => {
-		const { job_applications } = req.body
-
+		const { jobApplications } = req.body
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log('nguyen quang hoang')
+		console.log(jobApplications)
 		//check array of job applications
-		if (!Array.isArray(job_applications || job_applications))
+		if (!Array.isArray(jobApplications))
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -220,7 +279,7 @@ const jobApplicationController = {
 			})
 
 		await Promise.all(
-			job_applications.map(async (id: number) => {
+			jobApplications.map(async (id: number) => {
 				return new Promise(async (resolve) => {
 					const existingJobApplication = await Job_Application.findOne({
 						where: {
@@ -229,11 +288,16 @@ const jobApplicationController = {
 					})
 					if (existingJobApplication) {
 						//Delete picture job application
-						if (existingJobApplication.picture) {
+						const pictureId = existingJobApplication.picture? existingJobApplication.picture.id : undefined
+
+						//Delete job application
+						await Job_Application.remove(existingJobApplication)
+
+						if (pictureId) {
 							const existingJobApplicationpicture =
 								await Job_application_picture.findOne({
 									where: {
-										id: existingJobApplication.picture.id,
+										id: pictureId,
 									},
 								})
 
@@ -241,9 +305,6 @@ const jobApplicationController = {
 								await existingJobApplicationpicture.remove()
 							}
 						}
-
-						//Delete job application
-						await Job_Application.remove(existingJobApplication)
 					}
 					resolve(true)
 				})

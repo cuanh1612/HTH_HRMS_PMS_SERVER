@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Job_Application = exports.enumSource = exports.enumStatus = void 0;
 const typeorm_1 = require("typeorm");
+const Interview_1 = require("./Interview");
 const Job_1 = require("./Job");
 const Job_Application_Picture_1 = require("./Job_Application_Picture");
 const Location_1 = require("./Location");
@@ -82,6 +83,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Location_1.Location)
 ], Job_Application.prototype, "location", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Interview_1.Interview, (interview) => interview.candidate),
+    __metadata("design:type", Array)
+], Job_Application.prototype, "interviews", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

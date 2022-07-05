@@ -1,4 +1,5 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Interview } from "./Interview";
 
 import { Job } from "./Job";
 import { Job_application_picture } from "./Job_Application_Picture";
@@ -62,6 +63,9 @@ export class Job_Application extends BaseEntity {
     })
     @JoinColumn()
     location: Location
+
+	@OneToMany(() => Interview, (interview) => interview.candidate)
+    interviews: Interview[]
 
 
     @CreateDateColumn({

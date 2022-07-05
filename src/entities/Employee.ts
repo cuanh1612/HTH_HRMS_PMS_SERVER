@@ -21,6 +21,7 @@ import { Designation } from './Designation'
 import { Discussion } from './Discussion'
 import { Event } from './Event'
 import { Hourly_rate_project } from './Hourly_rate_project'
+import { Interview } from './Interview'
 import { Job } from './Job'
 import { Leave } from './Leave'
 import { Notification } from './Notification'
@@ -203,6 +204,9 @@ export class Employee extends BaseEntity {
 
 	@OneToMany(()=> Notification, (Notification)=> Notification.employee)
 	notifications: Notification[]
+
+	@OneToMany(()=> Interview, (interview)=> interview.interviewer)
+	interviews: Interview[]
 
 	@Column({ default: 0 })
 	token_version: number

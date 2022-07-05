@@ -47,6 +47,7 @@ import { Work_Experience } from '../entities/Work_Experience'
 import { Job_Application } from '../entities/Job_Application'
 import { Location } from '../entities/Location'
 import { Job_application_picture } from '../entities/Job_Application_Picture'
+import { Interview } from '../entities/Interview'
 
 const connectDB = () => {
 	createConnection({
@@ -115,7 +116,8 @@ const connectDB = () => {
 			Job_Type,
 			Work_Experience,
 			Job_Application,
-			Job_application_picture
+			Job_application_picture,
+			Interview
 			
 		],
 	})

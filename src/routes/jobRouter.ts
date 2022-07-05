@@ -11,7 +11,6 @@ jobRouter.delete('/:id', jobController.delete)
 
 jobRouter.post('/delete-many', jobController.deleteMany)
 
-
 jobRouter.get('/', jobController.getAll)
 
 jobRouter.get('/:id', jobController.getDetail)
