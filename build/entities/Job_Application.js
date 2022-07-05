@@ -10,11 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Job_Application = exports.enumSource = exports.enumStatus = void 0;
-const typeorm_1 = require("typeorm");
 const Interview_1 = require("./Interview");
+const typeorm_1 = require("typeorm");
 const Job_1 = require("./Job");
 const Job_Application_Picture_1 = require("./Job_Application_Picture");
 const Location_1 = require("./Location");
+const Skill_1 = require("./Skill");
 var enumStatus;
 (function (enumStatus) {
     enumStatus["APPLIED"] = "Applied";
@@ -71,14 +72,14 @@ __decorate([
 ], Job_Application.prototype, "source", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Job_1.Job, (job) => job.job_application, {
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Job_1.Job)
 ], Job_Application.prototype, "jobs", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.job_application, {
-        onDelete: 'SET NULL'
+        onDelete: 'SET NULL',
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Location_1.Location)
@@ -87,6 +88,11 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Interview_1.Interview, (interview) => interview.candidate),
     __metadata("design:type", Array)
 ], Job_Application.prototype, "interviews", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Skill_1.Skill, { eager: true, onDelete: 'CASCADE', nullable: true }),
+    (0, typeorm_1.JoinTable)({ name: 'job_application_skill' }),
+    __metadata("design:type", Array)
+], Job_Application.prototype, "skills", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

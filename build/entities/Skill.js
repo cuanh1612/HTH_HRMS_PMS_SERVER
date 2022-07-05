@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Skill = void 0;
 const typeorm_1 = require("typeorm");
 const Job_1 = require("./Job");
+const Job_Application_1 = require("./Job_Application");
 let Skill = class Skill extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -27,6 +28,11 @@ __decorate([
     (0, typeorm_1.JoinTable)({ name: 'job_skill' }),
     __metadata("design:type", Array)
 ], Skill.prototype, "jobs", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Job_Application_1.Job_Application, { onDelete: 'CASCADE', nullable: true }),
+    (0, typeorm_1.JoinTable)({ name: 'job_application_skill' }),
+    __metadata("design:type", Array)
+], Skill.prototype, "job_applications", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

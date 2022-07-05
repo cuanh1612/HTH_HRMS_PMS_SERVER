@@ -1,74 +1,89 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Interview } from "./Interview";
+import { Interview } from './Interview'
+import {
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	OneToMany,
+	OneToOne,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+} from 'typeorm'
 
-import { Job } from "./Job";
-import { Job_application_picture } from "./Job_Application_Picture";
-import { Location } from "./Location";
+import { Job } from './Job'
+import { Job_application_picture } from './Job_Application_Picture'
+import { Location } from './Location'
+import { Skill } from './Skill'
 
-
-export enum enumStatus{
-    APPLIED = 'Applied',
-    PHONESCREEN = 'Phone screen',
-    INTERVIEW = 'Interview',
-    HIRED = 'Hired',
-    REJECTED = 'Rejected'
+export enum enumStatus {
+	APPLIED = 'Applied',
+	PHONESCREEN = 'Phone screen',
+	INTERVIEW = 'Interview',
+	HIRED = 'Hired',
+	REJECTED = 'Rejected',
 }
 
-export enum enumSource{
-    LINKEDIN = 'Linkedin',
-    FACEBOOK = 'Facebook',
-    INSTAGRAM = 'Instagram',
-    TWITTER = 'Twitter',
-    OTHER = 'Other'
+export enum enumSource {
+	LINKEDIN = 'Linkedin',
+	FACEBOOK = 'Facebook',
+	INSTAGRAM = 'Instagram',
+	TWITTER = 'Twitter',
+	OTHER = 'Other',
 }
 
 @Entity()
 export class Job_Application extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id!: number
-    
-    @Column()
-    name: string
+	@PrimaryGeneratedColumn()
+	id!: number
 
-    @Column()
-    email: string
+	@Column()
+	name: string
 
-    @Column()
-    mobile: string
+	@Column()
+	email: string
 
-    @OneToOne(() => Job_application_picture, {
+	@Column()
+	mobile: string
+
+	@OneToOne(() => Job_application_picture, {
 		eager: true,
 		cascade: true,
 	})
 	@JoinColumn()
 	picture: Job_application_picture
 
-    @Column({nullable: true})
-    cover_leter: string
+	@Column({ nullable: true })
+	cover_leter: string
 
-    @Column({ type: 'enum', enum: enumStatus, default: enumStatus.APPLIED})
-    status: string
+	@Column({ type: 'enum', enum: enumStatus, default: enumStatus.APPLIED })
+	status: string
 
-    @Column({ type: 'enum', enum: enumSource, nullable: true})
-    source: string
+	@Column({ type: 'enum', enum: enumSource, nullable: true })
+	source: string
 
-    @ManyToOne(() => Job, (job) => job.job_application,{
-        onDelete: 'CASCADE'
-    })
-    @JoinColumn()
-    jobs: Job
+	@ManyToOne(() => Job, (job) => job.job_application, {
+		onDelete: 'CASCADE',
+	})
+	@JoinColumn()
+	jobs: Job
 
-    @ManyToOne(() => Location, (location) => location.job_application,{
-        onDelete: 'SET NULL'
-    })
-    @JoinColumn()
-    location: Location
+	@ManyToOne(() => Location, (location) => location.job_application, {
+		onDelete: 'SET NULL',
+	})
+	@JoinColumn()
+	location: Location
 
 	@OneToMany(() => Interview, (interview) => interview.candidate)
-    interviews: Interview[]
+	interviews: Interview[]
+	@ManyToMany(() => Skill, { eager: true, onDelete: 'CASCADE', nullable: true })
+	@JoinTable({ name: 'job_application_skill' })
+	skills: Skill[]
 
-
-    @CreateDateColumn({
+	@CreateDateColumn({
 		name: 'created_at',
 	})
 	createdAt: Date

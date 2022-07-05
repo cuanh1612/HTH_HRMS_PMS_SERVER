@@ -18,6 +18,7 @@ const Job_1 = require("../entities/Job");
 const Location_1 = require("../entities/Location");
 const Job_Application_1 = require("../entities/Job_Application");
 const Job_Application_Picture_1 = require("../entities/Job_Application_Picture");
+const Skill_1 = require("../entities/Skill");
 const jobApplicationController = {
     updateStatus: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
@@ -316,6 +317,52 @@ const jobApplicationController = {
             code: 200,
             success: true,
             message: 'change status job applications success',
+        });
+    })),
+    changeSkills: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { skills, jobApplicationId } = req.body;
+        let listValidSkill = [];
+        //Check existiong joapplication
+        const existingApplication = yield Job_Application_1.Job_Application.findOne({
+            where: {
+                id: jobApplicationId
+            }
+        });
+        if (!existingApplication)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Existing Application does not exist in the system',
+            });
+        if (!Array.isArray(skills) || skills.length === 0)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please select skills for this job application',
+            });
+        yield Promise.all(skills.map((skillId) => {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                //Check existing skill
+                const existingSkill = yield Skill_1.Skill.findOne({
+                    where: {
+                        id: skillId,
+                    },
+                });
+                if (existingSkill) {
+                    listValidSkill.push(existingSkill);
+                }
+                return resolve(true);
+            }));
+        }));
+        //Update skill
+        if (listValidSkill.length > 0) {
+            existingApplication.skills = listValidSkill;
+            yield existingApplication.save();
+        }
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Change skills for job application success',
         });
     })),
 };

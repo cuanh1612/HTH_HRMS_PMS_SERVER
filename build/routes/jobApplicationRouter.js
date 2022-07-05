@@ -14,4 +14,5 @@ jobApplicationRouter.get('/:id', jobApplicationController_1.default.getDetail);
 jobApplicationRouter.put('/status/:id', jobApplicationController_1.default.updateStatus);
 jobApplicationRouter.put('/:id', jobApplicationController_1.default.update);
 jobApplicationRouter.put('/change-status', jobApplicationController_1.default.changeStatusMany);
+jobApplicationRouter.post('/change-skills', jobApplicationController_1.default.changeSkills);
 exports.default = jobApplicationRouter;

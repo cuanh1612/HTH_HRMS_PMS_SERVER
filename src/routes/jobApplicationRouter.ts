@@ -22,4 +22,6 @@ jobApplicationRouter.put('/:id', jobApplicationController.update)
 
 jobApplicationRouter.put('/change-status', jobApplicationController.changeStatusMany)
 
+jobApplicationRouter.post('/change-skills', jobApplicationController.changeSkills)
+
 export default jobApplicationRouter
