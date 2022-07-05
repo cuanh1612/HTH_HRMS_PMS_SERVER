@@ -1,8 +1,9 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { Job } from "./Job";
 import { Job_application_picture } from "./Job_Application_Picture";
 import { Location } from "./Location";
+import { Skill } from "./Skill";
 
 
 export enum enumStatus{
@@ -62,6 +63,10 @@ export class Job_Application extends BaseEntity {
     })
     @JoinColumn()
     location: Location
+
+    @ManyToMany(() => Skill, { eager: true, onDelete: 'CASCADE', nullable: true })
+	@JoinTable({ name: 'job_application_skill' })
+	skills: Skill[]
 
 
     @CreateDateColumn({

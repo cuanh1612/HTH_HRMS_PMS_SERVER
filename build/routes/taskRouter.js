@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const taskController_1 = __importDefault(require("../controllers/taskController"));
+const checkAuth_1 = require("../utils/middleware/checkAuth");
+const taskRouter = express_1.default.Router();
+taskRouter.post('/', (0, checkAuth_1.checkAuth)([]), taskController_1.default.create);
+taskRouter.get('/calendar', taskController_1.default.calendar);
+taskRouter.get('/calendar-employee/:employeeId', taskController_1.default.calendarByEmployee);
+taskRouter.get('/', taskController_1.default.getAll);
+taskRouter.get('/:id', taskController_1.default.getDetail);
+taskRouter.get('/project/:projectId', taskController_1.default.getByProject);
+taskRouter.get('/employee/:employeeId', taskController_1.default.getByEmployee);
+taskRouter.get('/project/:projectId/employee/:employeeId', taskController_1.default.getByEmployeeAndProject);
+taskRouter.delete('/:id', (0, checkAuth_1.checkAuth)([]), taskController_1.default.delete);
+taskRouter.post('/delete-many', (0, checkAuth_1.checkAuth)([]), taskController_1.default.deletemany);
+taskRouter.put('/position', (0, checkAuth_1.checkAuth)([]), taskController_1.default.changeposition);
+taskRouter.put('/:id', (0, checkAuth_1.checkAuth)([]), taskController_1.default.update);
+exports.default = taskRouter;
