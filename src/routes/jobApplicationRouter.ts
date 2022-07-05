@@ -16,6 +16,8 @@ jobApplicationRouter.get('/', jobApplicationController.getAll)
 
 jobApplicationRouter.get('/:id', jobApplicationController.getDetail)
 
+jobApplicationController.get('/:id', jobApplicationController.getByJob)
+
 jobApplicationRouter.put('/:id', jobApplicationController.update)
 
 jobApplicationRouter.put('/change-status', jobApplicationController.changeStatusMany)

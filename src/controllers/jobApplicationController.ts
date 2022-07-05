@@ -354,6 +354,46 @@ const jobApplicationController = {
 			message: 'Change skills for job application success',
 		})
 	}),
+
+    getByJob: handleCatchError(async(req: Request, res: Response) =>{
+        const {JobId} = req.params
+
+        const existingJob = await Job.findOne({
+            where:{
+                id: Number(JobId)
+            }
+        })
+
+        if(!existingJob)
+        return res.status(400).json({
+            code: 400,
+            success: false,
+            message: 'Job does not existing in the system'
+        })
+
+        const jobApplicationByJob = await Job_Application.find({
+            where:{
+                jobs: {
+                    id: Number(JobId)
+                }
+            }
+        })
+
+         if(!jobApplicationByJob)
+         return res.status(400).json({
+            code: 400,
+            success: false,
+            message: 'Job application does not existing in the system'
+        })
+
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            jobApplicationByJob,
+            message: 'Get job application by job success'
+        })
+
+    })
 }
 
 export default jobApplicationController
