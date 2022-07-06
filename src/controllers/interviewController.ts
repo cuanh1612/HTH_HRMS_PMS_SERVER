@@ -16,6 +16,7 @@ const interviewController = {
 			message: 'Get all Events successfully',
 		})
 	}),
+
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const {
 			candidate,
@@ -26,11 +27,21 @@ const interviewController = {
 			start_time,
 		}: createOrUpdateInterviewPayload = req.body
 
+		const listValidInterviewer: Employee[] = []
+
 		if (!candidate || !interviewer || !date || !start_time) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Please enter fullfield',
+			})
+		}
+
+		if (!Array.isArray(interviewer) || interviewer.length === 0) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select interviewer',
 			})
 		}
 
@@ -48,20 +59,6 @@ const interviewController = {
 			})
 		}
 
-		const existInterviewer = await Employee.findOne({
-			where: {
-				id: interviewer,
-			},
-		})
-
-		if (!existInterviewer) {
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'Interviewer not exist in system',
-			})
-		}
-
 		if (!existCandidate) {
 			return res.status(400).json({
 				code: 400,
@@ -70,11 +67,36 @@ const interviewController = {
 			})
 		}
 
+		//Check exisit interviewer
+		await Promise.all(
+			interviewer.map((interviewId: number) => {
+				return new Promise(async (resolve) => {
+					const existingInterviewer = await Employee.findOne({
+						where: {
+							id: interviewId,
+						},
+					})
+
+					if (!existingInterviewer) {
+						return res.status(400).json({
+							code: 400,
+							success: false,
+							message: 'Please select valid interviewer',
+						})
+					}
+
+					listValidInterviewer.push(existingInterviewer)
+
+					return resolve(true)
+				})
+			})
+		)
+
 		await Interview.create({
 			date: new Date(date),
 			comment,
 			start_time,
-			interviewer: existInterviewer,
+			interviewer: listValidInterviewer,
 			candidate: existCandidate,
 			type,
 		}).save()
@@ -122,7 +144,10 @@ const interviewController = {
 
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const data: createOrUpdateInterviewPayload = req.body
+		const { interviewer } = data
 		const { id } = req.params
+
+		const listValidInterviewer: Employee[] = []
 
 		const existInterview = await Interview.findOne({
 			where: {
@@ -149,17 +174,31 @@ const interviewController = {
 			}
 		}
 
-		if (data.interviewer) {
-			const existInterviewer = await Employee.findOne({
-				where: {
-					id: data.interviewer,
-				},
-			})
-			if (existInterviewer) {
-				existInterview.interviewer = existInterviewer
-			}
-		}
+		//Check exisit interviewer
+		await Promise.all(
+			interviewer.map((interviewId: number) => {
+				return new Promise(async (resolve) => {
+					const existingInterviewer = await Employee.findOne({
+						where: {
+							id: interviewId,
+						},
+					})
 
+					if (!existingInterviewer) {
+						return res.status(400).json({
+							code: 400,
+							success: false,
+							message: 'Please select valid interviewer',
+						})
+					}
+
+					listValidInterviewer.push(existingInterviewer)
+
+					return resolve(true)
+				})
+			})
+		)
+		existInterview.interviewer = listValidInterviewer
 		if (data.start_time) existInterview.start_time = data.start_time
 		if (data.comment) existInterview.comment = data.comment
 		if (data.date) existInterview.date = new Date(data.date)
@@ -206,7 +245,7 @@ const interviewController = {
 		const existingInterview = await Interview.findOne({
 			where: {
 				id: Number(id),
-			}
+			},
 		})
 
 		if (!existingInterview)

@@ -18,6 +18,7 @@ import employeeRouter from './employeeRouter'
 import eventRouter from './eventRouter'
 import holidayRouter from './holidayRouter'
 import hourlyRateRouter from './hourlyRateRouter'
+import interviewRouter from './interviewRouter'
 import jobApplicationRouter from './jobApplicationRouter'
 import jobRouter from './jobRouter'
 import jobTypeRouter from './jobTypeRouter'
@@ -141,6 +142,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/jobs', jobRouter )
 
 	app.use('/api/job-applications', jobApplicationRouter)
+
+	app.use('/api/interviews', interviewRouter)
 
 
 

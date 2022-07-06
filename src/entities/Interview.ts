@@ -4,6 +4,8 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
@@ -39,14 +41,12 @@ export class Interview extends BaseEntity {
 	@JoinColumn()
 	candidate: Job_Application
 
-	@ManyToOne(() => Employee, (employee) => employee.interviews, {
-		cascade: true,
-	})
-	@JoinColumn()
-	interviewer: Employee
+	@ManyToMany(() => Employee, { onDelete: 'CASCADE' })
+	@JoinTable({ name: 'interview_employee' })
+	interviewer: Employee[]
 
-	@Column('text')
-	comment!: string
+	@Column('text', {nullable: true})
+	comment: string
 
 	@Column('time')
 	start_time!: string

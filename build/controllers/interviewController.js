@@ -28,11 +28,19 @@ const interviewController = {
     })),
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { candidate, date, comment, interviewer, type, start_time, } = req.body;
+        const listValidInterviewer = [];
         if (!candidate || !interviewer || !date || !start_time) {
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Please enter fullfield',
+            });
+        }
+        if (!Array.isArray(interviewer) || interviewer.length === 0) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please select interviewer',
             });
         }
         const existCandidate = yield Job_Application_1.Job_Application.findOne({
@@ -47,18 +55,6 @@ const interviewController = {
                 message: 'Candidate not exist in system',
             });
         }
-        const existInterviewer = yield Employee_1.Employee.findOne({
-            where: {
-                id: interviewer,
-            },
-        });
-        if (!existInterviewer) {
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Interviewer not exist in system',
-            });
-        }
         if (!existCandidate) {
             return res.status(400).json({
                 code: 400,
@@ -66,11 +62,30 @@ const interviewController = {
                 message: 'Candidate not exist in system',
             });
         }
+        //Check exisit interviewer
+        yield Promise.all(interviewer.map((interviewId) => {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const existingInterviewer = yield Employee_1.Employee.findOne({
+                    where: {
+                        id: interviewId,
+                    },
+                });
+                if (!existingInterviewer) {
+                    return res.status(400).json({
+                        code: 400,
+                        success: false,
+                        message: 'Please select valid interviewer',
+                    });
+                }
+                listValidInterviewer.push(existingInterviewer);
+                return resolve(true);
+            }));
+        }));
         yield Interview_1.Interview.create({
             date: new Date(date),
             comment,
             start_time,
-            interviewer: existInterviewer,
+            interviewer: listValidInterviewer,
             candidate: existCandidate,
             type,
         }).save();
@@ -112,7 +127,9 @@ const interviewController = {
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const data = req.body;
+        const { interviewer } = data;
         const { id } = req.params;
+        const listValidInterviewer = [];
         const existInterview = yield Interview_1.Interview.findOne({
             where: {
                 id: Number(id),
@@ -135,16 +152,26 @@ const interviewController = {
                 existInterview.candidate = existCandidate;
             }
         }
-        if (data.interviewer) {
-            const existInterviewer = yield Employee_1.Employee.findOne({
-                where: {
-                    id: data.interviewer,
-                },
-            });
-            if (existInterviewer) {
-                existInterview.interviewer = existInterviewer;
-            }
-        }
+        //Check exisit interviewer
+        yield Promise.all(interviewer.map((interviewId) => {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                const existingInterviewer = yield Employee_1.Employee.findOne({
+                    where: {
+                        id: interviewId,
+                    },
+                });
+                if (!existingInterviewer) {
+                    return res.status(400).json({
+                        code: 400,
+                        success: false,
+                        message: 'Please select valid interviewer',
+                    });
+                }
+                listValidInterviewer.push(existingInterviewer);
+                return resolve(true);
+            }));
+        }));
+        existInterview.interviewer = listValidInterviewer;
         if (data.start_time)
             existInterview.start_time = data.start_time;
         if (data.comment)
@@ -188,7 +215,7 @@ const interviewController = {
         const existingInterview = yield Interview_1.Interview.findOne({
             where: {
                 id: Number(id),
-            }
+            },
         });
         if (!existingInterview)
             return res.status(400).json({

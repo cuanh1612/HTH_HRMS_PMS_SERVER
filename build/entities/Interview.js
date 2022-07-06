@@ -45,14 +45,12 @@ __decorate([
     __metadata("design:type", Job_Application_1.Job_Application)
 ], Interview.prototype, "candidate", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.interviews, {
-        cascade: true,
-    }),
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", Employee_1.Employee)
+    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { onDelete: 'CASCADE' }),
+    (0, typeorm_1.JoinTable)({ name: 'interview_employee' }),
+    __metadata("design:type", Array)
 ], Interview.prototype, "interviewer", void 0);
 __decorate([
-    (0, typeorm_1.Column)('text'),
+    (0, typeorm_1.Column)('text', { nullable: true }),
     __metadata("design:type", String)
 ], Interview.prototype, "comment", void 0);
 __decorate([

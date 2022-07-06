@@ -241,7 +241,8 @@ __decorate([
     __metadata("design:type", Array)
 ], Employee.prototype, "notifications", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Interview_1.Interview, (interview) => interview.interviewer),
+    (0, typeorm_1.ManyToMany)(() => Interview_1.Interview, { onDelete: 'CASCADE' }),
+    (0, typeorm_1.JoinTable)({ name: 'interview_employee' }),
     __metadata("design:type", Array)
 ], Employee.prototype, "interviews", void 0);
 __decorate([
