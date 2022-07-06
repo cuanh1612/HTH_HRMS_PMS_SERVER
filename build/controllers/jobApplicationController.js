@@ -94,6 +94,7 @@ const jobApplicationController = {
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         const { id } = req.params;
         const datatUpdateJobApplication = req.body;
         const { location, jobs, picture } = datatUpdateJobApplication;
@@ -134,7 +135,7 @@ const jobApplicationController = {
                 message: 'Location does not exisitng in the system',
             });
         //Delete old picture
-        const oldPictureId = existingJobApplication.picture.id || undefined;
+        const oldPictureId = ((_a = existingJobApplication === null || existingJobApplication === void 0 ? void 0 : existingJobApplication.picture) === null || _a === void 0 ? void 0 : _a.id) || undefined;
         (existingJobApplication.name = datatUpdateJobApplication.name),
             (existingJobApplication.email = datatUpdateJobApplication.email),
             (existingJobApplication.jobs = datatUpdateJobApplication.jobs),
@@ -145,7 +146,7 @@ const jobApplicationController = {
             (existingJobApplication.status = datatUpdateJobApplication.status),
             (existingJobApplication.source = datatUpdateJobApplication.source);
         yield existingJobApplication.save();
-        if (picture) {
+        if (oldPictureId) {
             const existingJobApplicationpicture = yield Job_Application_Picture_1.Job_application_picture.findOne({
                 where: {
                     id: oldPictureId,
@@ -200,6 +201,7 @@ const jobApplicationController = {
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _b;
         const { id } = req.params;
         const existingJobApplication = yield Job_Application_1.Job_Application.findOne({
             where: {
@@ -213,7 +215,7 @@ const jobApplicationController = {
                 message: 'This job application does not exist in the system',
             });
         //Delete picture job application
-        const pictureId = existingJobApplication.picture.id || undefined;
+        const pictureId = ((_b = existingJobApplication === null || existingJobApplication === void 0 ? void 0 : existingJobApplication.picture) === null || _b === void 0 ? void 0 : _b.id) || undefined;
         //Delete job application
         yield existingJobApplication.remove();
         if (pictureId) {
