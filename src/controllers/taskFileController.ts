@@ -4,10 +4,6 @@ import { Task_file } from "../entities/Task_File";
 import { createOrUpdatetTaskFilesPayload } from "../type/taskFilePayLoad";
 import handleCatchError from "../utils/catchAsyncError";
 
-
-
-
-
 const taskFileController = {
     create: handleCatchError(async (req: Request, res: Response) => {
         const { files, task } = req.body as createOrUpdatetTaskFilesPayload
@@ -92,7 +88,7 @@ const taskFileController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Contract does not exist in the system',
+				message: 'Task does not exist in the system',
 			})
 
         //Get alltask file 
@@ -111,9 +107,10 @@ const taskFileController = {
 			code: 200,
 			success: true,
            taskFiles,
-			message: 'Get all contract files success successfully',
+			message: 'Get all task files success successfully',
 		})
 	}),
+    
     changeposition: handleCatchError(async (req: Request, res: Response) => {
         const { status1, task1, status2, task2}:{[index: string]:number} = req.body
         console.log(status1)

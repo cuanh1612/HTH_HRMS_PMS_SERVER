@@ -248,7 +248,9 @@ const interviewController = {
 				id: Number(id),
 			},
 			relations: {
-				candidate: true,
+				candidate: {
+					jobs: true
+				},
 				interviewer: true
 			}
 		})

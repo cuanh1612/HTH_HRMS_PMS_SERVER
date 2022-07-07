@@ -1,55 +1,56 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
+const Attendance_1 = require("../entities/Attendance");
 const Avatar_1 = require("../entities/Avatar");
 const Client_1 = require("../entities/Client");
 const Client_Category_1 = require("../entities/Client_Category");
 const Client_Sub_Category_1 = require("../entities/Client_Sub_Category");
+const Company_Info_1 = require("../entities/Company_Info");
 const Company_Logo_1 = require("../entities/Company_Logo");
-const Department_1 = require("../entities/Department");
-const Designation_1 = require("../entities/Designation");
-const Employee_1 = require("../entities/Employee");
-const Holiday_1 = require("../entities/Holiday");
-const Leave_1 = require("../entities/Leave");
-const Leave_Type_1 = require("../entities/Leave_Type");
-const Sign_1 = require("../entities/Sign");
 const Contract_1 = require("../entities/Contract");
+const Contract_File_1 = require("../entities/Contract_File");
 const Contract_Type_1 = require("../entities/Contract_Type");
-const Attendance_1 = require("../entities/Attendance");
 const Conversation_1 = require("../entities/Conversation");
 const Conversation_Reply_1 = require("../entities/Conversation_Reply");
-const Event_1 = require("../entities/Event");
+const Department_1 = require("../entities/Department");
+const Designation_1 = require("../entities/Designation");
 const Discussion_1 = require("../entities/Discussion");
-const Contract_File_1 = require("../entities/Contract_File");
+const Employee_1 = require("../entities/Employee");
+const Event_1 = require("../entities/Event");
+const Holiday_1 = require("../entities/Holiday");
+const Hourly_rate_project_1 = require("../entities/Hourly_rate_project");
+const Interview_1 = require("../entities/Interview");
+const Interview_File_1 = require("../entities/Interview_File");
+const Job_1 = require("../entities/Job");
+const Job_Application_1 = require("../entities/Job_Application");
+const Job_Application_Picture_1 = require("../entities/Job_Application_Picture");
+const Job_Type_1 = require("../entities/Job_Type");
+const Leave_1 = require("../entities/Leave");
+const Leave_Type_1 = require("../entities/Leave_Type");
+const Location_1 = require("../entities/Location");
+const Milestone_1 = require("../entities/Milestone");
+const Notice_Board_1 = require("../entities/Notice_Board");
+const Notification_1 = require("../entities/Notification");
 const Project_1 = require("../entities/Project");
 const Project_Category_1 = require("../entities/Project_Category");
-const Project_File_1 = require("../entities/Project_File");
-const Task_1 = require("../entities/Task");
-const Task_Category_1 = require("../entities/Task_Category");
-const Task_File_1 = require("../entities/Task_File");
-const Notice_Board_1 = require("../entities/Notice_Board");
 const Project_Discussion_Category_1 = require("../entities/Project_Discussion_Category");
 const Project_Discussion_Reply_1 = require("../entities/Project_Discussion_Reply");
 const Project_Discussion_Room_1 = require("../entities/Project_Discussion_Room");
-const Salary_1 = require("../entities/Salary");
-const Status_1 = require("../entities/Status");
+const Project_File_1 = require("../entities/Project_File");
 const Project_Note_1 = require("../entities/Project_Note");
-const Hourly_rate_project_1 = require("../entities/Hourly_rate_project");
-const Milestone_1 = require("../entities/Milestone");
-const Task_Comment_1 = require("../entities/Task_Comment");
-const Time_Log_1 = require("../entities/Time_Log");
 const Room_1 = require("../entities/Room");
-const StickyNote_1 = require("../entities/StickyNote");
-const Notification_1 = require("../entities/Notification");
-const Company_Info_1 = require("../entities/Company_Info");
+const Salary_1 = require("../entities/Salary");
+const Sign_1 = require("../entities/Sign");
 const Skill_1 = require("../entities/Skill");
-const Job_1 = require("../entities/Job");
-const Job_Type_1 = require("../entities/Job_Type");
+const Status_1 = require("../entities/Status");
+const StickyNote_1 = require("../entities/StickyNote");
+const Task_1 = require("../entities/Task");
+const Task_Category_1 = require("../entities/Task_Category");
+const Task_Comment_1 = require("../entities/Task_Comment");
+const Task_File_1 = require("../entities/Task_File");
+const Time_Log_1 = require("../entities/Time_Log");
 const Work_Experience_1 = require("../entities/Work_Experience");
-const Job_Application_1 = require("../entities/Job_Application");
-const Location_1 = require("../entities/Location");
-const Job_Application_Picture_1 = require("../entities/Job_Application_Picture");
-const Interview_1 = require("../entities/Interview");
 const connectDB = () => {
     (0, typeorm_1.createConnection)({
         type: 'postgres',
@@ -114,7 +115,8 @@ const connectDB = () => {
             Work_Experience_1.Work_Experience,
             Job_Application_1.Job_Application,
             Job_Application_Picture_1.Job_application_picture,
-            Interview_1.Interview
+            Interview_1.Interview,
+            Interview_File_1.Interview_file,
         ],
     })
         .then(() => {

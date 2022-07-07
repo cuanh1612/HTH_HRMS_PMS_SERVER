@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Interview = void 0;
 const typeorm_1 = require("typeorm");
 const Employee_1 = require("./Employee");
+const Interview_File_1 = require("./Interview_File");
 const Job_Application_1 = require("./Job_Application");
 var enumType;
 (function (enumType) {
@@ -65,6 +66,13 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: enumStatus, default: enumStatus.PENDING }),
     __metadata("design:type", String)
 ], Interview.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Interview_File_1.Interview_file, (Interview_file) => Interview_file.interview, {
+        onDelete: 'SET NULL',
+        nullable: true
+    }),
+    __metadata("design:type", Array)
+], Interview.prototype, "interview_files", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

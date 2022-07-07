@@ -7,10 +7,12 @@ import {
 	JoinTable,
 	ManyToMany,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
 import { Employee } from './Employee'
+import { Interview_file } from './Interview_File'
 import { Job_Application } from './Job_Application'
 
 enum enumType {
@@ -56,6 +58,12 @@ export class Interview extends BaseEntity {
 
 	@Column({ type: 'enum', enum: enumStatus, default: enumStatus.PENDING })
 	status: string
+
+	@OneToMany(() => Interview_file, (Interview_file) => Interview_file.interview,{
+        onDelete: 'SET NULL',
+        nullable: true
+    })
+    interview_files: Interview_file[]
 
 	@CreateDateColumn({
 		name: 'created_at',
