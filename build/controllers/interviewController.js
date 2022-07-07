@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Employee_1 = require("../entities/Employee");
 const Interview_1 = require("../entities/Interview");
+const Job_1 = require("../entities/Job");
 const Job_Application_1 = require("../entities/Job_Application");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const interviewController = {
@@ -181,7 +182,7 @@ const interviewController = {
         if (data.type)
             existInterview.type = data.type;
         if (data.status)
-            existInterview.status = data.type;
+            existInterview.status = data.status;
         yield existInterview.save();
         return res.status(200).json({
             code: 200,
@@ -216,6 +217,10 @@ const interviewController = {
             where: {
                 id: Number(id),
             },
+            relations: {
+                candidate: true,
+                interviewer: true
+            }
         });
         if (!existingInterview)
             return res.status(400).json({
@@ -258,6 +263,37 @@ const interviewController = {
             code: 200,
             success: true,
             message: 'Delete jobs success',
+        });
+    })),
+    getByJob: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { jobId } = req.params;
+        //Check exist job
+        const existingJob = yield Job_1.Job.findOne({
+            where: {
+                id: Number(jobId)
+            }
+        });
+        if (!existingJob)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Job does not existing in the system',
+            });
+        //Get interivews by job 
+        const interviews = yield Interview_1.Interview.find({
+            where: {
+                candidate: {
+                    jobs: {
+                        id: existingJob.id
+                    }
+                }
+            }
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            interviews,
+            message: 'Get interviews by job successfully',
         });
     })),
 };

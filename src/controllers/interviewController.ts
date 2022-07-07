@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
 import { Interview } from '../entities/Interview'
+import { Job } from '../entities/Job'
 import { Job_Application } from '../entities/Job_Application'
 import { createOrUpdateInterviewPayload } from '../type/interview'
 import handleCatchError from '../utils/catchAsyncError'
@@ -203,7 +204,7 @@ const interviewController = {
 		if (data.comment) existInterview.comment = data.comment
 		if (data.date) existInterview.date = new Date(data.date)
 		if (data.type) existInterview.type = data.type
-		if (data.status) existInterview.status = data.type
+		if (data.status) existInterview.status = data.status
 		await existInterview.save()
 
 		return res.status(200).json({
@@ -246,6 +247,10 @@ const interviewController = {
 			where: {
 				id: Number(id),
 			},
+			relations: {
+				candidate: true,
+				interviewer: true
+			}
 		})
 
 		if (!existingInterview)
@@ -297,6 +302,43 @@ const interviewController = {
 			message: 'Delete jobs success',
 		})
 	}),
+
+	getByJob: handleCatchError(async (req: Request, res: Response) => {
+		const { jobId } = req.params
+
+		//Check exist job
+		const existingJob = await Job.findOne({
+			where: {
+				id: Number(jobId)
+			}
+		})
+
+		if (!existingJob)
+		return res.status(400).json({
+			code: 400,
+			success: false,
+			message: 'Job does not existing in the system',
+		})
+
+		//Get interivews by job 
+		const interviews = await Interview.find({
+			where: {
+				candidate: {
+					jobs: {
+						id: existingJob.id
+					}
+				}
+			}
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			interviews,
+			message: 'Get interviews by job successfully',
+		})
+	}),
+
 }
 
 export default interviewController

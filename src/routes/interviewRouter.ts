@@ -19,4 +19,6 @@ interviewRouter.put('/status/:id', interviewController.updateStatus)
 
 interviewRouter.put('/:id', interviewController.update)
 
+interviewRouter.get('/job/:jobId', interviewController.getByJob)
+
 export default interviewRouter

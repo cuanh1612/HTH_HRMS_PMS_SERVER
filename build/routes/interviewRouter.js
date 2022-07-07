@@ -13,4 +13,5 @@ interviewRouter.get('/', interviewController_1.default.getAll);
 interviewRouter.get('/:id', interviewController_1.default.getDetail);
 interviewRouter.put('/status/:id', interviewController_1.default.updateStatus);
 interviewRouter.put('/:id', interviewController_1.default.update);
+interviewRouter.get('/job/:jobId', interviewController_1.default.getByJob);
 exports.default = interviewRouter;
