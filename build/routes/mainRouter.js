@@ -24,6 +24,7 @@ const holidayRouter_1 = __importDefault(require("./holidayRouter"));
 const hourlyRateRouter_1 = __importDefault(require("./hourlyRateRouter"));
 const interviewFileRouter_1 = __importDefault(require("./interviewFileRouter"));
 const interviewRouter_1 = __importDefault(require("./interviewRouter"));
+const jobApplicationFileRouter_1 = __importDefault(require("./jobApplicationFileRouter"));
 const jobApplicationRouter_1 = __importDefault(require("./jobApplicationRouter"));
 const jobRouter_1 = __importDefault(require("./jobRouter"));
 const jobTypeRouter_1 = __importDefault(require("./jobTypeRouter"));
@@ -102,5 +103,6 @@ function mainRouter(app) {
     app.use('/api/job-applications', jobApplicationRouter_1.default);
     app.use('/api/interviews', interviewRouter_1.default);
     app.use('/api/interview-files', interviewFileRouter_1.default);
+    app.use('/api/job-application-files', jobApplicationFileRouter_1.default);
 }
 exports.default = mainRouter;

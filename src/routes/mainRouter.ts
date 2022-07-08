@@ -20,6 +20,7 @@ import holidayRouter from './holidayRouter'
 import hourlyRateRouter from './hourlyRateRouter'
 import interviewFileRouter from './interviewFileRouter'
 import interviewRouter from './interviewRouter'
+import jobApplicationFileRouter from './jobApplicationFileRouter'
 import jobApplicationRouter from './jobApplicationRouter'
 import jobRouter from './jobRouter'
 import jobTypeRouter from './jobTypeRouter'
@@ -147,6 +148,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/interviews', interviewRouter)
 
 	app.use('/api/interview-files', interviewFileRouter)
+
+	app.use('/api/job-application-files', jobApplicationFileRouter)
 }
 
 export default mainRouter

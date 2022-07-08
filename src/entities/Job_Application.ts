@@ -18,6 +18,7 @@ import { Job } from './Job'
 import { Job_application_picture } from './Job_Application_Picture'
 import { Location } from './Location'
 import { Skill } from './Skill'
+import { Job_application_file } from './Job_Application_File'
 
 export enum enumStatus {
 	APPLIED = 'Applied',
@@ -82,6 +83,12 @@ export class Job_Application extends BaseEntity {
 	@ManyToMany(() => Skill, { eager: true, onDelete: 'CASCADE', nullable: true })
 	@JoinTable({ name: 'job_application_skill' })
 	skills: Skill[]
+
+	@OneToMany(() => Job_application_file, (Job_application_file) => Job_application_file.job_application,{
+        onDelete: 'SET NULL',
+        nullable: true
+    })
+    job_application_files: Job_application_file[]
 
 	@CreateDateColumn({
 		name: 'created_at',

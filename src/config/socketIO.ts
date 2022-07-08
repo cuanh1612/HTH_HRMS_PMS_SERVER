@@ -411,20 +411,34 @@ const createSocketServer = (httpServer: Server) => {
 			socket.in('roomMemberProject' + projectId).emit('getNewMemberProject')
 		})
 
-
 		//join room interview file
 		socket.on('joinRoomInterviewFile', (interviewId: string) => {
 			socket.join('roomInterviewFile' + interviewId)
 		})
 
 		//leave room interview file
-		socket.on('leaveRoomInterviewkFile', (interviewId: string) => {
+		socket.on('leaveRoomInterviewFile', (interviewId: string) => {
 			socket.leave('roomInterviewFile' + interviewId)
 		})
 
 		//emit user join room interview file when have new change interview file
 		socket.on('newInterviewFile', (interviewId: string) => {
 			socket.in('roomInterviewFile' + interviewId).emit('getNewInterviewFile')
+		})
+
+		//join room job application file
+		socket.on('joinRoomJobApplicationFile', (jobApplicationId: string) => {
+			socket.join('roomJobApplicationFile' + jobApplicationId)
+		})
+
+		//leave room job application file
+		socket.on('leaveRoomJobApplicationFile', (jobApplicationId: string) => {
+			socket.leave('roomJobApplicationFile' + jobApplicationId)
+		})
+
+		//emit user join room job application file when have new change job application file
+		socket.on('newJobApplicationFile', (jobApplicationId: string) => {
+			socket.in('roomJobApplicationFile' + jobApplicationId).emit('getNewJobApplicationFile')
 		})
 	})
 }
