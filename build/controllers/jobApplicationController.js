@@ -97,7 +97,7 @@ const jobApplicationController = {
         var _a;
         const { id } = req.params;
         const datatUpdateJobApplication = req.body;
-        const { location, jobs, picture } = datatUpdateJobApplication;
+        const { location, jobs } = datatUpdateJobApplication;
         //check exist job application
         const existingJobApplication = yield Job_Application_1.Job_Application.findOne({
             where: {
@@ -367,5 +367,38 @@ const jobApplicationController = {
             message: 'Change skills for job application success',
         });
     })),
+    getByJob: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { JobId } = req.params;
+        const existingJob = yield Job_1.Job.findOne({
+            where: {
+                id: Number(JobId)
+            }
+        });
+        if (!existingJob)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Job does not existing in the system'
+            });
+        const jobApplicationByJob = yield Job_Application_1.Job_Application.find({
+            where: {
+                jobs: {
+                    id: Number(JobId)
+                }
+            }
+        });
+        if (!jobApplicationByJob)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Job application does not existing in the system'
+            });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            jobApplicationByJob,
+            message: 'Get job application by job success'
+        });
+    }))
 };
 exports.default = jobApplicationController;

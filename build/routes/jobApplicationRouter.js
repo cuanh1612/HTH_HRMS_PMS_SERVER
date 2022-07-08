@@ -11,7 +11,7 @@ jobApplicationRouter.delete('/:id', jobApplicationController_1.default.delete);
 jobApplicationRouter.post('/delete-many', jobApplicationController_1.default.deleteMany);
 jobApplicationRouter.get('/', jobApplicationController_1.default.getAll);
 jobApplicationRouter.get('/:id', jobApplicationController_1.default.getDetail);
-jobApplicationRouter.put('/status/:id', jobApplicationController_1.default.updateStatus);
+jobApplicationRouter.get('/:id', jobApplicationController_1.default.getByJob);
 jobApplicationRouter.put('/:id', jobApplicationController_1.default.update);
 jobApplicationRouter.put('/change-status', jobApplicationController_1.default.changeStatusMany);
 jobApplicationRouter.post('/change-skills', jobApplicationController_1.default.changeSkills);

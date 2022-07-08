@@ -95,7 +95,7 @@ const jobApplicationController = {
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 		const datatUpdateJobApplication: createOrUpdateJobApplicationPayload = req.body
-		const { location, jobs, picture } = datatUpdateJobApplication
+		const { location, jobs } = datatUpdateJobApplication
 
 		//check exist job application
 		const existingJobApplication = await Job_Application.findOne({
