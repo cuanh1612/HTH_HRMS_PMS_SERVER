@@ -24,6 +24,7 @@ import { Job } from '../entities/Job'
 import { Job_Application } from '../entities/Job_Application'
 import { Job_application_file } from '../entities/Job_Application_File'
 import { Job_application_picture } from '../entities/Job_Application_Picture'
+import { Job_offer_letter } from '../entities/Job_Offer_Letter'
 import { Job_Type } from '../entities/Job_Type'
 import { Leave } from '../entities/Leave'
 import { Leave_type } from '../entities/Leave_Type'
@@ -122,6 +123,7 @@ const connectDB = () => {
 			Job_application_picture,
 			Interview,
 			Interview_file,
+			Job_offer_letter,
 		],
 	})
 		.then(() => {

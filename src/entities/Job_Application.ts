@@ -19,6 +19,7 @@ import { Job_application_picture } from './Job_Application_Picture'
 import { Location } from './Location'
 import { Skill } from './Skill'
 import { Job_application_file } from './Job_Application_File'
+import { Job_offer_letter } from './Job_Offer_Letter'
 
 export enum enumStatus {
 	APPLIED = 'Applied',
@@ -71,6 +72,11 @@ export class Job_Application extends BaseEntity {
 	})
 	@JoinColumn()
 	jobs: Job
+
+	@OneToMany(() => Job_offer_letter, (Job_offer_letter) => Job_offer_letter.job,{
+        onDelete:'SET NULL'
+    })
+    job_offer_letters: Job_offer_letter[]
 
 	@ManyToOne(() => Location, (location) => location.job_application, {
 		onDelete: 'SET NULL',

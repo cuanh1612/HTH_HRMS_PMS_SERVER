@@ -7,6 +7,7 @@ import { Job_Type } from "./Job_Type";
 import { Employee } from "./Employee";
 import { Work_Experience } from "./Work_Experience";
 import { Job_Application } from "./Job_Application";
+import { Job_offer_letter } from "./Job_Offer_Letter";
 
 
 export enum enumRate {
@@ -51,6 +52,10 @@ export class Job extends BaseEntity {
     })
     job_application: Job_Application
 
+    @OneToMany(() => Job_offer_letter, (Job_offer_letter) => Job_offer_letter.job,{
+        onDelete:'SET NULL'
+    })
+    job_offer_letters: Job_offer_letter[]
 
     //status column has true = "open" & false = "close"
     @Column({nullable: true, default: false})

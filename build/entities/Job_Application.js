@@ -17,6 +17,7 @@ const Job_Application_Picture_1 = require("./Job_Application_Picture");
 const Location_1 = require("./Location");
 const Skill_1 = require("./Skill");
 const Job_Application_File_1 = require("./Job_Application_File");
+const Job_Offer_Letter_1 = require("./Job_Offer_Letter");
 var enumStatus;
 (function (enumStatus) {
     enumStatus["APPLIED"] = "Applied";
@@ -78,6 +79,12 @@ __decorate([
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Job_1.Job)
 ], Job_Application.prototype, "jobs", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Job_Offer_Letter_1.Job_offer_letter, (Job_offer_letter) => Job_offer_letter.job, {
+        onDelete: 'SET NULL'
+    }),
+    __metadata("design:type", Array)
+], Job_Application.prototype, "job_offer_letters", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.job_application, {
         onDelete: 'SET NULL',

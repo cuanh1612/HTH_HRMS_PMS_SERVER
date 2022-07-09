@@ -26,6 +26,7 @@ const Job_1 = require("../entities/Job");
 const Job_Application_1 = require("../entities/Job_Application");
 const Job_Application_File_1 = require("../entities/Job_Application_File");
 const Job_Application_Picture_1 = require("../entities/Job_Application_Picture");
+const Job_Offer_Letter_1 = require("../entities/Job_Offer_Letter");
 const Job_Type_1 = require("../entities/Job_Type");
 const Leave_1 = require("../entities/Leave");
 const Leave_Type_1 = require("../entities/Leave_Type");
@@ -119,6 +120,7 @@ const connectDB = () => {
             Job_Application_Picture_1.Job_application_picture,
             Interview_1.Interview,
             Interview_File_1.Interview_file,
+            Job_Offer_Letter_1.Job_offer_letter,
         ],
     })
         .then(() => {

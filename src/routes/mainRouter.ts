@@ -22,6 +22,7 @@ import interviewFileRouter from './interviewFileRouter'
 import interviewRouter from './interviewRouter'
 import jobApplicationFileRouter from './jobApplicationFileRouter'
 import jobApplicationRouter from './jobApplicationRouter'
+import jobOfferLetterRouter from './jobOfferLetterRouter'
 import jobRouter from './jobRouter'
 import jobTypeRouter from './jobTypeRouter'
 import leaveRouter from './leaveRouter'
@@ -150,6 +151,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/interview-files', interviewFileRouter)
 
 	app.use('/api/job-application-files', jobApplicationFileRouter)
+
+	app.use('/api/job-offer-letters', jobOfferLetterRouter)
 }
 
 export default mainRouter

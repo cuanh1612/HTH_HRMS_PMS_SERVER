@@ -26,6 +26,7 @@ const interviewFileRouter_1 = __importDefault(require("./interviewFileRouter"));
 const interviewRouter_1 = __importDefault(require("./interviewRouter"));
 const jobApplicationFileRouter_1 = __importDefault(require("./jobApplicationFileRouter"));
 const jobApplicationRouter_1 = __importDefault(require("./jobApplicationRouter"));
+const jobOfferLetterRouter_1 = __importDefault(require("./jobOfferLetterRouter"));
 const jobRouter_1 = __importDefault(require("./jobRouter"));
 const jobTypeRouter_1 = __importDefault(require("./jobTypeRouter"));
 const leaveRouter_1 = __importDefault(require("./leaveRouter"));
@@ -104,5 +105,6 @@ function mainRouter(app) {
     app.use('/api/interviews', interviewRouter_1.default);
     app.use('/api/interview-files', interviewFileRouter_1.default);
     app.use('/api/job-application-files', jobApplicationFileRouter_1.default);
+    app.use('/api/job-offer-letters', jobOfferLetterRouter_1.default);
 }
 exports.default = mainRouter;
