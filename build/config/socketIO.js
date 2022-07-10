@@ -337,6 +337,18 @@ const createSocketServer = (httpServer) => {
         socket.on('newMemberProject', (projectId) => {
             socket.in('roomMemberProject' + projectId).emit('getNewMemberProject');
         });
+        //join room interview file
+        socket.on('joinRoomInterviewFile', (interviewId) => {
+            socket.join('roomInterviewFile' + interviewId);
+        });
+        //leave room interview file
+        socket.on('leaveRoomInterviewkFile', (interviewId) => {
+            socket.leave('roomInterviewFile' + interviewId);
+        });
+        //emit user join room interview file when have new change interview file
+        socket.on('newInterviewFile', (interviewId) => {
+            socket.in('roomInterviewFile' + interviewId).emit('getNewInterviewFile');
+        });
     });
 };
 exports.default = createSocketServer;

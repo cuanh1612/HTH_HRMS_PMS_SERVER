@@ -1,13 +1,45 @@
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
 import { Interview } from '../entities/Interview'
+import { Job } from '../entities/Job'
 import { Job_Application } from '../entities/Job_Application'
 import { createOrUpdateInterviewPayload } from '../type/interview'
 import handleCatchError from '../utils/catchAsyncError'
+import sendMail from '../utils/sendNotice'
 
 const interviewController = {
-	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const interviews = await Interview.find({})
+	getAll: handleCatchError(async (req: Request, res: Response) => {
+		const { date, interviewer, status } = req.query
+		var filter: {
+			status?: string
+			interviewer?: {
+				id: number
+			}
+		} = {}
+		if (status) filter.status = String(status)
+		if (interviewer)
+			filter.interviewer = {
+				id: Number(interviewer),
+			}
+
+		var interviews = await Interview.find({
+			relations: {
+				candidate: true,
+				interviewer: true,
+			},
+			where: filter,
+		})
+
+		if (date) {
+			interviews = interviews.filter((interview) => {
+				const interviewDate = new Date(interview.date)
+				const dateFilter = new Date(date as string)
+				return (
+					interviewDate.getMonth() <= dateFilter.getMonth() &&
+					interviewDate.getFullYear() <= dateFilter.getFullYear()
+				)
+			})
+		}
 
 		return res.status(200).json({
 			code: 200,
@@ -16,6 +48,32 @@ const interviewController = {
 			message: 'Get all Events successfully',
 		})
 	}),
+
+	getNewByDate: handleCatchError(async (_: Request, res: Response) => {
+		const interviews = await Interview.find({
+			relations: {
+				candidate: {
+					jobs: true,
+				},
+				interviewer: true,
+			},
+		})
+
+		const data = interviews.filter((interview) => {
+			const date = new Date().getTime()
+			const interviewDate = new Date(interview.date).getTime()
+
+			return interviewDate >= date
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			interviews: data,
+			message: 'Get all Events successfully',
+		})
+	}),
+
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const {
 			candidate,
@@ -24,13 +82,24 @@ const interviewController = {
 			interviewer,
 			type,
 			start_time,
+			isSendReminder,
 		}: createOrUpdateInterviewPayload = req.body
+
+		const listValidInterviewer: Employee[] = []
 
 		if (!candidate || !interviewer || !date || !start_time) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Please enter fullfield',
+			})
+		}
+
+		if (!Array.isArray(interviewer) || interviewer.length === 0) {
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please select interviewer',
 			})
 		}
 
@@ -48,20 +117,6 @@ const interviewController = {
 			})
 		}
 
-		const existInterviewer = await Employee.findOne({
-			where: {
-				id: interviewer,
-			},
-		})
-
-		if (!existInterviewer) {
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'Interviewer not exist in system',
-			})
-		}
-
 		if (!existCandidate) {
 			return res.status(400).json({
 				code: 400,
@@ -70,11 +125,49 @@ const interviewController = {
 			})
 		}
 
+		const checkExistInterviewer = async (interviewId: number): Promise<any> => {
+			const existingInterviewer = await Employee.findOne({
+				where: {
+					id: interviewId,
+				},
+			})
+
+			if (!existingInterviewer) {
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Please select valid interviewer',
+				})
+			}
+
+			listValidInterviewer.push(existingInterviewer)
+		}
+
+		//Check exisit interviewer
+		await Promise.all(
+			interviewer.map((interviewId: number) => {
+				return new Promise((resolve) => {
+					checkExistInterviewer(interviewId)
+
+					return resolve(true)
+				})
+			})
+		)
+
+		if (isSendReminder) {
+			await sendMail({
+				to: `${existCandidate.email}`,
+				subject: 'huprom - interview',
+				html: '<p>nhớ đi phỏng vấn nha</p>',
+				text: 'nhớ đi phỏng vấn nha',
+			})
+		}
+
 		await Interview.create({
 			date: new Date(date),
 			comment,
 			start_time,
-			interviewer: existInterviewer,
+			interviewer: listValidInterviewer,
 			candidate: existCandidate,
 			type,
 		}).save()
@@ -122,7 +215,10 @@ const interviewController = {
 
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const data: createOrUpdateInterviewPayload = req.body
+		const { interviewer } = data
 		const { id } = req.params
+
+		const listValidInterviewer: Employee[] = []
 
 		const existInterview = await Interview.findOne({
 			where: {
@@ -149,22 +245,39 @@ const interviewController = {
 			}
 		}
 
-		if (data.interviewer) {
-			const existInterviewer = await Employee.findOne({
+		const CheckExistInterviewer = async (interviewId: number): Promise<any> => {
+			const existingInterviewer = await Employee.findOne({
 				where: {
-					id: data.interviewer,
+					id: interviewId,
 				},
 			})
-			if (existInterviewer) {
-				existInterview.interviewer = existInterviewer
+
+			if (!existingInterviewer) {
+				return res.status(400).json({
+					code: 400,
+					success: false,
+					message: 'Please select valid interviewer',
+				})
 			}
+
+			listValidInterviewer.push(existingInterviewer)
 		}
 
+		//Check exisit interviewer
+		await Promise.all(
+			interviewer.map((interviewId: number) => {
+				return new Promise((resolve) => {
+					CheckExistInterviewer(interviewId)
+					return resolve(true)
+				})
+			})
+		)
+		existInterview.interviewer = listValidInterviewer
 		if (data.start_time) existInterview.start_time = data.start_time
 		if (data.comment) existInterview.comment = data.comment
 		if (data.date) existInterview.date = new Date(data.date)
 		if (data.type) existInterview.type = data.type
-		if (data.status) existInterview.status = data.type
+		if (data.status) existInterview.status = data.status
 		await existInterview.save()
 
 		return res.status(200).json({
@@ -206,7 +319,13 @@ const interviewController = {
 		const existingInterview = await Interview.findOne({
 			where: {
 				id: Number(id),
-			}
+			},
+			relations: {
+				candidate: {
+					jobs: true,
+				},
+				interviewer: true,
+			},
 		})
 
 		if (!existingInterview)
@@ -256,6 +375,42 @@ const interviewController = {
 			code: 200,
 			success: true,
 			message: 'Delete jobs success',
+		})
+	}),
+
+	getByJob: handleCatchError(async (req: Request, res: Response) => {
+		const { jobId } = req.params
+
+		//Check exist job
+		const existingJob = await Job.findOne({
+			where: {
+				id: Number(jobId),
+			},
+		})
+
+		if (!existingJob)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Job does not existing in the system',
+			})
+
+		//Get interivews by job
+		const interviews = await Interview.find({
+			where: {
+				candidate: {
+					jobs: {
+						id: existingJob.id,
+					},
+				},
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			interviews,
+			message: 'Get interviews by job successfully',
 		})
 	}),
 }

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Interview = void 0;
 const typeorm_1 = require("typeorm");
 const Employee_1 = require("./Employee");
+const Interview_File_1 = require("./Interview_File");
 const Job_Application_1 = require("./Job_Application");
 var enumType;
 (function (enumType) {
@@ -45,14 +46,12 @@ __decorate([
     __metadata("design:type", Job_Application_1.Job_Application)
 ], Interview.prototype, "candidate", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Employee_1.Employee, (employee) => employee.interviews, {
-        cascade: true,
-    }),
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", Employee_1.Employee)
+    (0, typeorm_1.ManyToMany)(() => Employee_1.Employee, { onDelete: 'CASCADE' }),
+    (0, typeorm_1.JoinTable)({ name: 'interview_employee' }),
+    __metadata("design:type", Array)
 ], Interview.prototype, "interviewer", void 0);
 __decorate([
-    (0, typeorm_1.Column)('text'),
+    (0, typeorm_1.Column)('text', { nullable: true }),
     __metadata("design:type", String)
 ], Interview.prototype, "comment", void 0);
 __decorate([
@@ -67,6 +66,13 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: enumStatus, default: enumStatus.PENDING }),
     __metadata("design:type", String)
 ], Interview.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Interview_File_1.Interview_file, (Interview_file) => Interview_file.interview, {
+        onDelete: 'SET NULL',
+        nullable: true
+    }),
+    __metadata("design:type", Array)
+], Interview.prototype, "interview_files", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

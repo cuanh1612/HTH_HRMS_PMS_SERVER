@@ -11,12 +11,11 @@ jobApplicationRouter.delete('/:id', jobApplicationController.delete)
 
 jobApplicationRouter.post('/delete-many', jobApplicationController.deleteMany)
 
-
 jobApplicationRouter.get('/', jobApplicationController.getAll)
 
 jobApplicationRouter.get('/:id', jobApplicationController.getDetail)
 
-jobApplicationRouter.get('/:id', jobApplicationController.getByJob)
+jobApplicationRouter.get('/job/:JobId', jobApplicationController.getByJob)
 
 jobApplicationRouter.put('/:id', jobApplicationController.update)
 

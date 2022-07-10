@@ -89,7 +89,7 @@ const taskFileController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Contract does not exist in the system',
+                message: 'Task does not exist in the system',
             });
         //Get alltask file 
         const taskFiles = yield Task_File_1.Task_file.find({
@@ -106,7 +106,7 @@ const taskFileController = {
             code: 200,
             success: true,
             taskFiles,
-            message: 'Get all contract files success successfully',
+            message: 'Get all task files success successfully',
         });
     })),
     changeposition: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -205,7 +205,8 @@ export class Employee extends BaseEntity {
 	@OneToMany(()=> Notification, (Notification)=> Notification.employee)
 	notifications: Notification[]
 
-	@OneToMany(()=> Interview, (interview)=> interview.interviewer)
+	@ManyToMany(() => Interview, {onDelete: 'CASCADE' })
+	@JoinTable({ name: 'interview_employee' })
 	interviews: Interview[]
 
 	@Column({ default: 0 })
