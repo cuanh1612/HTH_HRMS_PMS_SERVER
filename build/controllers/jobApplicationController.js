@@ -236,22 +236,6 @@ const jobApplicationController = {
     })),
     deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { jobApplications } = req.body;
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log('nguyen quang hoang');
-        console.log(jobApplications);
         //check array of job applications
         if (!Array.isArray(jobApplications))
             return res.status(400).json({
@@ -380,14 +364,14 @@ const jobApplicationController = {
                 success: false,
                 message: 'Job does not existing in the system'
             });
-        const jobApplicationByJob = yield Job_Application_1.Job_Application.find({
+        const jobApplicationsByJob = yield Job_Application_1.Job_Application.find({
             where: {
                 jobs: {
                     id: Number(JobId)
                 }
             }
         });
-        if (!jobApplicationByJob)
+        if (!jobApplicationsByJob)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -396,7 +380,7 @@ const jobApplicationController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            jobApplicationByJob,
+            jobApplications: jobApplicationsByJob,
             message: 'Get job application by job success'
         });
     }))

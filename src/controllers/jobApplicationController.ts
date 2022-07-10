@@ -257,22 +257,7 @@ const jobApplicationController = {
 
 	deleteMany: handleCatchError(async (req: Request, res: Response) => {
 		const { jobApplications } = req.body
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log('nguyen quang hoang')
-		console.log(jobApplications)
+	
 		//check array of job applications
 		if (!Array.isArray(jobApplications))
 			return res.status(400).json({
@@ -426,7 +411,7 @@ const jobApplicationController = {
             message: 'Job does not existing in the system'
         })
 
-        const jobApplicationByJob = await Job_Application.find({
+        const jobApplicationsByJob = await Job_Application.find({
             where:{
                 jobs: {
                     id: Number(JobId)
@@ -434,7 +419,7 @@ const jobApplicationController = {
             }
         })
 
-         if(!jobApplicationByJob)
+         if(!jobApplicationsByJob)
          return res.status(400).json({
             code: 400,
             success: false,
@@ -444,7 +429,7 @@ const jobApplicationController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            jobApplicationByJob,
+            jobApplications: jobApplicationsByJob,
             message: 'Get job application by job success'
         })
 

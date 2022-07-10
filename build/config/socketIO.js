@@ -342,12 +342,24 @@ const createSocketServer = (httpServer) => {
             socket.join('roomInterviewFile' + interviewId);
         });
         //leave room interview file
-        socket.on('leaveRoomInterviewkFile', (interviewId) => {
+        socket.on('leaveRoomInterviewFile', (interviewId) => {
             socket.leave('roomInterviewFile' + interviewId);
         });
         //emit user join room interview file when have new change interview file
         socket.on('newInterviewFile', (interviewId) => {
             socket.in('roomInterviewFile' + interviewId).emit('getNewInterviewFile');
+        });
+        //join room job application file
+        socket.on('joinRoomJobApplicationFile', (jobApplicationId) => {
+            socket.join('roomJobApplicationFile' + jobApplicationId);
+        });
+        //leave room job application file
+        socket.on('leaveRoomJobApplicationFile', (jobApplicationId) => {
+            socket.leave('roomJobApplicationFile' + jobApplicationId);
+        });
+        //emit user join room job application file when have new change job application file
+        socket.on('newJobApplicationFile', (jobApplicationId) => {
+            socket.in('roomJobApplicationFile' + jobApplicationId).emit('getNewJobApplicationFile');
         });
     });
 };

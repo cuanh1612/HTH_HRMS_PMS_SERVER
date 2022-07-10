@@ -18,6 +18,7 @@ const Job_Type_1 = require("./Job_Type");
 const Employee_1 = require("./Employee");
 const Work_Experience_1 = require("./Work_Experience");
 const Job_Application_1 = require("./Job_Application");
+const Job_Offer_Letter_1 = require("./Job_Offer_Letter");
 var enumRate;
 (function (enumRate) {
     enumRate["PER_HOUR"] = "Per Hour";
@@ -65,10 +66,14 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Job_Application_1.Job_Application, (job_application) => job_application.jobs, {
         onDelete: 'SET NULL'
     }),
-    __metadata("design:type", Job_Application_1.Job_Application
-    //status column has true = "open" & false = "close"
-    )
+    __metadata("design:type", Job_Application_1.Job_Application)
 ], Job.prototype, "job_application", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Job_Offer_Letter_1.Job_offer_letter, (Job_offer_letter) => Job_offer_letter.job, {
+        onDelete: 'SET NULL'
+    }),
+    __metadata("design:type", Array)
+], Job.prototype, "job_offer_letters", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true, default: false }),
     __metadata("design:type", Boolean)
