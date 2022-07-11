@@ -13,6 +13,7 @@ exports.Job_offer_letter = exports.enumRate = exports.enumStatus = void 0;
 const typeorm_1 = require("typeorm");
 const Job_1 = require("./Job");
 const Job_Application_1 = require("./Job_Application");
+const Sign_1 = require("./Sign");
 var enumStatus;
 (function (enumStatus) {
     enumStatus["PENDING"] = "Pending";
@@ -67,6 +68,15 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: enumRate, default: enumRate.PER_HOUR }),
     __metadata("design:type", String)
 ], Job_offer_letter.prototype, "rate", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => Sign_1.Sign, {
+        cascade: true,
+        eager: true,
+        nullable: true
+    }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Sign_1.Sign)
+], Job_offer_letter.prototype, "sign", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',

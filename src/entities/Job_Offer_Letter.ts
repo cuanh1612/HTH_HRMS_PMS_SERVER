@@ -5,12 +5,14 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
 
 import { Job } from './Job'
 import { Job_Application } from './Job_Application'
+import { Sign } from './Sign'
 
 export enum enumStatus {
 	PENDING = 'Pending',
@@ -58,6 +60,14 @@ export class Job_offer_letter extends BaseEntity {
 
     @Column({ type: 'enum', enum: enumRate, default: enumRate.PER_HOUR })
 	rate: string
+
+	@OneToOne(() => Sign, {
+		cascade: true,
+		eager: true,
+		nullable: true
+	})
+	@JoinColumn()
+	sign: Sign
 
 	@CreateDateColumn({
 		name: 'created_at',

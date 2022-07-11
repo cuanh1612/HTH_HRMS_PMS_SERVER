@@ -125,7 +125,9 @@ const jobOfferLetterController = {
                 id: Number(id),
             },
             relations: {
-                job: true,
+                job: {
+                    work_experience: true
+                },
                 job_application: true,
             },
         });
