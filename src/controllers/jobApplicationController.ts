@@ -95,7 +95,7 @@ const jobApplicationController = {
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 		const datatUpdateJobApplication: createOrUpdateJobApplicationPayload = req.body
-		const { location, jobs, picture } = datatUpdateJobApplication
+		const { location, jobs } = datatUpdateJobApplication
 
 		//check exist job application
 		const existingJobApplication = await Job_Application.findOne({
@@ -135,9 +135,10 @@ const jobApplicationController = {
 				success: false,
 				message: 'Location does not exisitng in the system',
 			})
+		
 
 		//Delete old picture
-		const oldPictureId = existingJobApplication.picture.id || undefined
+		const oldPictureId = existingJobApplication?.picture?.id || undefined
 
 		;(existingJobApplication.name = datatUpdateJobApplication.name),
 			(existingJobApplication.email = datatUpdateJobApplication.email),
@@ -150,8 +151,9 @@ const jobApplicationController = {
 			(existingJobApplication.source = datatUpdateJobApplication.source)
 
 		await existingJobApplication.save()
+		
 
-		if (picture) {
+		if (oldPictureId) {
 			const existingJobApplicationpicture = await Job_application_picture.findOne({
 				where: {
 					id: oldPictureId,
@@ -229,7 +231,7 @@ const jobApplicationController = {
 			})
 
 		//Delete picture job application
-		const pictureId = existingJobApplication.picture.id || undefined
+		const pictureId = existingJobApplication?.picture?.id || undefined
 
 		//Delete job application
 		await existingJobApplication.remove()

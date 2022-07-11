@@ -13,6 +13,8 @@ interviewRouter.post('/delete-many', interviewController.deleteMany)
 
 interviewRouter.get('/', interviewController.getAll)
 
+interviewRouter.get('/new', interviewController.getNewByDate)
+
 interviewRouter.get('/:id', interviewController.getDetail)
 
 interviewRouter.put('/status/:id', interviewController.updateStatus)

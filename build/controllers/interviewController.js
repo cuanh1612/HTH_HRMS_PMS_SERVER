@@ -17,9 +17,32 @@ const Interview_1 = require("../entities/Interview");
 const Job_1 = require("../entities/Job");
 const Job_Application_1 = require("../entities/Job_Application");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
+const sendNotice_1 = __importDefault(require("../utils/sendNotice"));
 const interviewController = {
-    getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const interviews = yield Interview_1.Interview.find({});
+    getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { date, interviewer, status } = req.query;
+        var filter = {};
+        if (status)
+            filter.status = String(status);
+        if (interviewer)
+            filter.interviewer = {
+                id: Number(interviewer),
+            };
+        var interviews = yield Interview_1.Interview.find({
+            relations: {
+                candidate: true,
+                interviewer: true,
+            },
+            where: filter,
+        });
+        if (date) {
+            interviews = interviews.filter((interview) => {
+                const interviewDate = new Date(interview.date);
+                const dateFilter = new Date(date);
+                return (interviewDate.getMonth() <= dateFilter.getMonth() &&
+                    interviewDate.getFullYear() <= dateFilter.getFullYear());
+            });
+        }
         return res.status(200).json({
             code: 200,
             success: true,
@@ -27,8 +50,29 @@ const interviewController = {
             message: 'Get all Events successfully',
         });
     })),
+    getNewByDate: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const interviews = yield Interview_1.Interview.find({
+            relations: {
+                candidate: {
+                    jobs: true,
+                },
+                interviewer: true,
+            },
+        });
+        const data = interviews.filter((interview) => {
+            const date = new Date().getTime();
+            const interviewDate = new Date(interview.date).getTime();
+            return interviewDate >= date;
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            interviews: data,
+            message: 'Get all Events successfully',
+        });
+    })),
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { candidate, date, comment, interviewer, type, start_time, } = req.body;
+        const { candidate, date, comment, interviewer, type, start_time, isSendReminder, } = req.body;
         const listValidInterviewer = [];
         if (!candidate || !interviewer || !date || !start_time) {
             return res.status(400).json({
@@ -63,25 +107,36 @@ const interviewController = {
                 message: 'Candidate not exist in system',
             });
         }
+        const checkExistInterviewer = (interviewId) => __awaiter(void 0, void 0, void 0, function* () {
+            const existingInterviewer = yield Employee_1.Employee.findOne({
+                where: {
+                    id: interviewId,
+                },
+            });
+            if (!existingInterviewer) {
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Please select valid interviewer',
+                });
+            }
+            listValidInterviewer.push(existingInterviewer);
+        });
         //Check exisit interviewer
         yield Promise.all(interviewer.map((interviewId) => {
-            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
-                const existingInterviewer = yield Employee_1.Employee.findOne({
-                    where: {
-                        id: interviewId,
-                    },
-                });
-                if (!existingInterviewer) {
-                    return res.status(400).json({
-                        code: 400,
-                        success: false,
-                        message: 'Please select valid interviewer',
-                    });
-                }
-                listValidInterviewer.push(existingInterviewer);
+            return new Promise((resolve) => {
+                checkExistInterviewer(interviewId);
                 return resolve(true);
-            }));
+            });
         }));
+        if (isSendReminder) {
+            yield (0, sendNotice_1.default)({
+                to: `${existCandidate.email}`,
+                subject: 'huprom - interview',
+                html: '<p>nhớ đi phỏng vấn nha</p>',
+                text: 'nhớ đi phỏng vấn nha',
+            });
+        }
         yield Interview_1.Interview.create({
             date: new Date(date),
             comment,
@@ -153,24 +208,27 @@ const interviewController = {
                 existInterview.candidate = existCandidate;
             }
         }
+        const CheckExistInterviewer = (interviewId) => __awaiter(void 0, void 0, void 0, function* () {
+            const existingInterviewer = yield Employee_1.Employee.findOne({
+                where: {
+                    id: interviewId,
+                },
+            });
+            if (!existingInterviewer) {
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Please select valid interviewer',
+                });
+            }
+            listValidInterviewer.push(existingInterviewer);
+        });
         //Check exisit interviewer
         yield Promise.all(interviewer.map((interviewId) => {
-            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
-                const existingInterviewer = yield Employee_1.Employee.findOne({
-                    where: {
-                        id: interviewId,
-                    },
-                });
-                if (!existingInterviewer) {
-                    return res.status(400).json({
-                        code: 400,
-                        success: false,
-                        message: 'Please select valid interviewer',
-                    });
-                }
-                listValidInterviewer.push(existingInterviewer);
+            return new Promise((resolve) => {
+                CheckExistInterviewer(interviewId);
                 return resolve(true);
-            }));
+            });
         }));
         existInterview.interviewer = listValidInterviewer;
         if (data.start_time)
@@ -219,10 +277,10 @@ const interviewController = {
             },
             relations: {
                 candidate: {
-                    jobs: true
+                    jobs: true,
                 },
-                interviewer: true
-            }
+                interviewer: true,
+            },
         });
         if (!existingInterview)
             return res.status(400).json({
@@ -272,8 +330,8 @@ const interviewController = {
         //Check exist job
         const existingJob = yield Job_1.Job.findOne({
             where: {
-                id: Number(jobId)
-            }
+                id: Number(jobId),
+            },
         });
         if (!existingJob)
             return res.status(400).json({
@@ -281,15 +339,15 @@ const interviewController = {
                 success: false,
                 message: 'Job does not existing in the system',
             });
-        //Get interivews by job 
+        //Get interivews by job
         const interviews = yield Interview_1.Interview.find({
             where: {
                 candidate: {
                     jobs: {
-                        id: existingJob.id
-                    }
-                }
-            }
+                        id: existingJob.id,
+                    },
+                },
+            },
         });
         return res.status(200).json({
             code: 200,
