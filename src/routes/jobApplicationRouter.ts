@@ -1,9 +1,7 @@
-import express from "express";
-import jobApplicationController from "../controllers/jobApplicationController";
-
+import express from 'express'
+import jobApplicationController from '../controllers/jobApplicationController'
 
 const jobApplicationRouter = express.Router()
-
 
 jobApplicationRouter.post('/', jobApplicationController.create)
 
@@ -20,6 +18,8 @@ jobApplicationRouter.get('/job/:JobId', jobApplicationController.getByJob)
 jobApplicationRouter.put('/:id', jobApplicationController.update)
 
 jobApplicationRouter.put('/change-status', jobApplicationController.changeStatusMany)
+
+jobApplicationRouter.put('/status/:id', jobApplicationController.updateStatus)
 
 jobApplicationRouter.post('/change-skills', jobApplicationController.changeSkills)
 

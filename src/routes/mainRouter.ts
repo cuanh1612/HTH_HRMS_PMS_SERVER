@@ -10,6 +10,7 @@ import contractRouter from './contractRouter'
 import contractTypeRouter from './contractTypeRouter'
 import conversationReplyRouter from './conversationReplyRouter'
 import conversationRouter from './conversationRouter'
+import dashboardJobsRouter from './dashboardJobsRouter'
 import dashboardRouter from './dashboardRouter'
 import departmentRouter from './departmentRouter'
 import designationRouter from './designationRouter'
@@ -105,6 +106,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/project-discussion-replies', projectDiscussionReplyRouter)
 
 	app.use('/api/dashboard', dashboardRouter)
+
+	app.use('/api/dashboard-jobs', dashboardJobsRouter)
 
 	app.use('/api/salaries', salaryRouter)
 
