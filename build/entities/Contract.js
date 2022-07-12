@@ -107,6 +107,7 @@ __decorate([
     (0, typeorm_1.OneToOne)(() => Sign_1.Sign, {
         cascade: true,
         eager: true,
+        nullable: true
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Sign_1.Sign)

@@ -89,6 +89,7 @@ export class Contract extends BaseEntity {
     @OneToOne(() => Sign, {
 		cascade: true,
 		eager: true,
+		nullable: true
 	})
 	@JoinColumn()
 	sign: Sign

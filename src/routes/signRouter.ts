@@ -4,7 +4,8 @@ import { checkAuth } from '../utils/middleware/checkAuth'
 
 const signRouter = express.Router()
 
-signRouter.post('/', checkAuth(['Admin']), signController.create)
+signRouter.post('/contract', checkAuth(['Admin']), signController.createConTractSign)
+signRouter.post('/job-offer-letter', checkAuth(['Admin']), signController.createConTractSign)
 
 export default signRouter
  
