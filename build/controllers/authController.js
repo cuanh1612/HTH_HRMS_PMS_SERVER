@@ -157,7 +157,7 @@ const authController = {
             return res.status(200).json({
                 code: 200,
                 success: true,
-                message: 'Refresh token success',
+                message: 'Refresh token successfully',
                 accessToken: (0, auth_1.createToken)('accessToken', existingUser),
                 refreshToken: createdRefreshToken
             });
@@ -194,7 +194,7 @@ const authController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Logout false',
+                message: 'Logout failed',
             });
         existingUser.token_version += 1;
         yield existingUser.save();

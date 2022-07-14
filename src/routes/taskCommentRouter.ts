@@ -8,7 +8,7 @@ taskCommentRouter.post('/', checkAuth([]), taskCommentController.create)
 
 taskCommentRouter.get('/task/:taskId', checkAuth([]), taskCommentController.getByTask)
 
-taskCommentRouter.delete('/:taskCommentId', checkAuth([]), taskCommentController.delele)
+taskCommentRouter.delete('/:taskCommentId', checkAuth([]), taskCommentController.delete)
 
 taskCommentRouter.put('/:taskCommentId', checkAuth([]), taskCommentController.update)
 

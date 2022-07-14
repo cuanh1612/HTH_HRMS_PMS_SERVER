@@ -112,7 +112,7 @@ const discussionController = {
 		})
 	}),
 
-	delele: handleCatchError(async (req: Request, res: Response) => {
+	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { discussionId } = req.params
 
 		//Check exist discussion

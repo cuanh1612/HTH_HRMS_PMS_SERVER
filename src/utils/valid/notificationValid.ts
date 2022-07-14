@@ -1,7 +1,7 @@
-import { createOrUpdatetNotificationPayload } from '../../type/NotificationPayload'
+import { createOrUpdateNotificationPayload } from '../../type/NotificationPayload'
 
 export const notificationValid = {
-	createOrUpdate: ({ content, url }: createOrUpdatetNotificationPayload) => {
+	createOrUpdate: ({ content, url }: createOrUpdateNotificationPayload) => {
 		let messageError = ''
 
 		if (!content || !url ) {

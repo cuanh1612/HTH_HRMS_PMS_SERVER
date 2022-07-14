@@ -17,8 +17,8 @@ const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const designationController = {
     //Create new designation
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const dataNewdesignation = req.body;
-        const { name } = dataNewdesignation;
+        const dataNewDesignation = req.body;
+        const { name } = dataNewDesignation;
         //check if the name of the designation already exists
         const existingName = yield Designation_1.Designation.findOne({
             where: {
@@ -31,33 +31,33 @@ const designationController = {
                 success: false,
                 message: 'Department does not exist in the system',
             });
-        const createddesignation = yield Designation_1.Designation.create(dataNewdesignation).save();
+        const createDesignation = yield Designation_1.Designation.create(dataNewDesignation).save();
         return res.status(200).json({
             code: 200,
             success: true,
-            designation: createddesignation,
+            designation: createDesignation,
             message: 'Created new designation successfully',
         });
     })),
     //update designation
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const dataUpdatedesignation = req.body;
-        const { name } = dataUpdatedesignation;
-        //Check existign designation
-        const existingdesignation = yield Designation_1.Designation.findOne({
+        const dataUpdateDesignation = req.body;
+        const { name } = dataUpdateDesignation;
+        //Check existing designation
+        const existingDesignation = yield Designation_1.Designation.findOne({
             where: {
                 id: Number(id),
             },
         });
         //check existed designation
-        if (!existingdesignation)
+        if (!existingDesignation)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'designation does not exist in the system',
             });
-        if (name !== existingdesignation.name) {
+        if (name !== existingDesignation.name) {
             //check if the name of the designation already exists
             const existingName = yield Designation_1.Designation.findOne({
                 where: {
@@ -72,7 +72,7 @@ const designationController = {
                 });
         }
         //Update
-        yield Designation_1.Designation.update(existingdesignation.id, Object.assign({}, dataUpdatedesignation));
+        yield Designation_1.Designation.update(existingDesignation.id, Object.assign({}, dataUpdateDesignation));
         return res.status(200).json({
             code: 200,
             success: true,
@@ -92,12 +92,12 @@ const designationController = {
     //Get detail designation
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingdesignation = yield Designation_1.Designation.findOne({
+        const existingDesignation = yield Designation_1.Designation.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!existingdesignation)
+        if (!existingDesignation)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -106,25 +106,25 @@ const designationController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            designation: existingdesignation,
+            designation: existingDesignation,
             message: 'Get detail of designation successfully',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingdesignation = yield Designation_1.Designation.findOne({
+        const existingDesignation = yield Designation_1.Designation.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!existingdesignation)
+        if (!existingDesignation)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'designation does not exist in the system',
             });
         //Delete designation
-        yield existingdesignation.remove();
+        yield existingDesignation.remove();
         return res.status(200).json({
             code: 200,
             success: true,

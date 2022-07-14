@@ -1,4 +1,4 @@
-import { createOrUpdatetTimeLogPayload } from '../../type/TimeLogPayload'
+import { createOrUpdateTimeLogPayload } from '../../type/TimeLogPayload'
 import { compareDateTime } from '../helper'
 
 export const timeLogValid = {
@@ -10,7 +10,7 @@ export const timeLogValid = {
 		starts_on_time,
 		ends_on_date,
 		ends_on_time,
-	}: createOrUpdatetTimeLogPayload) => {
+	}: createOrUpdateTimeLogPayload) => {
 		let messageError = ''
 
 		if (

@@ -1,8 +1,8 @@
-import { createOrUpdatetClientPayload } from '../../type/ClientPayload'
+import { createOrUpdateClientPayload } from '../../type/ClientPayload'
 
 export const clientValid = {
 	createOrUpdate: (
-		{ name, email, password }: createOrUpdatetClientPayload,
+		{ name, email, password }: createOrUpdateClientPayload,
 		type: 'create' | 'update'
 	) => {
 		let messageError = ''

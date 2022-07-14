@@ -104,7 +104,7 @@ const discussionController = {
             message: 'Get discussions by contract successfully',
         });
     })),
-    delele: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { discussionId } = req.params;
         //Check exist discussion
         const existingDiscussion = yield Discussion_1.Discussion.findOne({

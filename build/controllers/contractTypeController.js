@@ -16,7 +16,7 @@ const Contract_1 = require("../entities/Contract");
 const Contract_Type_1 = require("../entities/Contract_Type");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const contractTypeController = {
-    //Create new contractype
+    //Create new contract type
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewContractType = req.body;
         const { name } = dataNewContractType;
@@ -44,7 +44,6 @@ const contractTypeController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const dataUpContractType = req.body;
-        console.log(dataUpContractType);
         const { name } = dataUpContractType;
         const existingContractType = yield Contract_Type_1.Contract_type.findOne({
             where: {
@@ -60,14 +59,12 @@ const contractTypeController = {
             });
         //Check exist name
         if (name !== existingContractType.name) {
-            console.log('asdf sdfkl sdjf gion ne');
-            const exisitingName = yield Contract_Type_1.Contract_type.findOne({
+            const existingName = yield Contract_Type_1.Contract_type.findOne({
                 where: {
                     name
                 }
             });
-            console.log(exisitingName);
-            if (exisitingName)
+            if (existingName)
                 return res.status(400).json({
                     code: 400,
                     success: false,

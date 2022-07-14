@@ -73,7 +73,7 @@ const taskController = {
 			})
 
 		//check exist project
-		const existingproject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: project,
 			},
@@ -81,7 +81,7 @@ const taskController = {
 				project_Admin: true,
 			},
 		})
-		if (!existingproject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -90,7 +90,7 @@ const taskController = {
 
 		if (
 			existingUser.role !== 'Admin' &&
-			existingproject.project_Admin.email !== existingUser.email
+			existingProject.project_Admin.email !== existingUser.email
 		)
 			return res.status(400).json({
 				code: 400,
@@ -102,7 +102,7 @@ const taskController = {
 		const existingTaskName = await Task.findOne({
 			where: {
 				project: {
-					id: existingproject.id,
+					id: existingProject.id,
 				},
 				name: name,
 			},
@@ -182,7 +182,7 @@ const taskController = {
 			})
 		)
 
-		const lasttask = await Task.findOne({
+		const lastTask = await Task.findOne({
 			where: {
 				status: {
 					id: status,
@@ -192,7 +192,7 @@ const taskController = {
 				index: 'DESC',
 			},
 		})
-		var index = lasttask ? lasttask.index + 1 : 1
+		var index = lastTask ? lastTask.index + 1 : 1
 
 		//create task
 		const createdTask = await Task.create({
@@ -223,7 +223,7 @@ const taskController = {
 					//create notification
 					await Notification.create({
 						employee,
-						url: `/projects/${existingproject.id}/tasks-table`,
+						url: `/projects/${existingProject.id}/tasks-table`,
 						content: 'You have just been assigned to a new task',
 					}).save()
 
@@ -274,12 +274,12 @@ const taskController = {
 				message: 'User does not exist in the system',
 			})
 
-		const existingtask = await Task.findOne({
+		const existingTask = await Task.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
-		if (!existingtask)
+		if (!existingTask)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -298,7 +298,7 @@ const taskController = {
 				message: 'Task does not exist in the system',
 			})
 
-		const lasttask = await Task.findOne({
+		const lastTask = await Task.findOne({
 			where: {
 				status: {
 					id: status,
@@ -308,10 +308,10 @@ const taskController = {
 				index: 'DESC',
 			},
 		})
-		var index = lasttask ? lasttask.index + 1 : 1
+		var index = lastTask ? lastTask.index + 1 : 1
 
 		//check exist project
-		const existingproject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: Number(project),
 			},
@@ -320,17 +320,17 @@ const taskController = {
 			},
 		})
 
-		if (!existingproject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Project does not exist in the system',
 			})
 
-		//Check role admin or projectt admin
+		//Check role admin or project admin
 		if (
 			existingUser.role !== 'Admin' &&
-			existingproject.project_Admin.email !== existingUser.email
+			existingProject.project_Admin.email !== existingUser.email
 		)
 			return res.status(400).json({
 				code: 400,
@@ -342,13 +342,13 @@ const taskController = {
 		const existingTaskName = await Task.findOne({
 			where: {
 				project: {
-					id: existingproject.id,
+					id: existingProject.id,
 				},
 				name: name,
 			},
 		})
 
-		if (existingTaskName && existingTaskName?.id !== existingtask.id)
+		if (existingTaskName && existingTaskName?.id !== existingTask.id)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -397,29 +397,24 @@ const taskController = {
 					message: 'Milestone does not exist in the system',
 				})
 			} else {
-				existingtask.milestone = existingMilestone
+				existingTask.milestone = existingMilestone
 			}
 		}
 
 		//update task
-		;(existingtask.name = dataUpdateTask.name),
-			(existingtask.project = dataUpdateTask.project),
-			(existingtask.start_date = new Date(
-				new Date(dataUpdateTask.start_date).toLocaleDateString()
-			)),
-			(existingtask.deadline = new Date(
-				new Date(dataUpdateTask.deadline).toLocaleDateString()
-			)),
-			(existingtask.task_category = dataUpdateTask.task_category),
-			(existingtask.employees = taskEmployees),
-			(existingtask.index = index),
-			(existingtask.status = existingStatus),
-			(existingtask.description = dataUpdateTask.description
+		;(existingTask.name = dataUpdateTask.name),
+			(existingTask.project = dataUpdateTask.project),
+			(existingTask.start_date = new Date(dataUpdateTask.start_date)),
+			(existingTask.deadline = new Date(dataUpdateTask.deadline)),
+			(existingTask.employees = taskEmployees),
+			(existingTask.index = index),
+			(existingTask.status = existingStatus),
+			(existingTask.description = dataUpdateTask.description
 				? dataUpdateTask.description
 				: ''),
-			(existingtask.priority = dataUpdateTask.priority)
+			(existingTask.priority = dataUpdateTask.priority)
 
-		await existingtask.save()
+		await existingTask.save()
 
 		return res.status(200).json({
 			code: 200,
@@ -580,7 +575,7 @@ const taskController = {
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingtask = await Task.findOne({
+		const existingTask = await Task.findOne({
 			where: {
 				id: Number(id),
 			},
@@ -594,7 +589,7 @@ const taskController = {
 			},
 		})
 
-		if (!existingtask)
+		if (!existingTask)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -604,7 +599,7 @@ const taskController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			task: existingtask,
+			task: existingTask,
 			message: 'Get detail of task success',
 		})
 	}),
@@ -639,7 +634,7 @@ const taskController = {
 				message: 'User does not exist in the system',
 			})
 
-		const existingtask = await Task.findOne({
+		const existingTask = await Task.findOne({
 			where: {
 				id: Number(id),
 			},
@@ -650,17 +645,17 @@ const taskController = {
 			},
 		})
 
-		if (!existingtask)
+		if (!existingTask)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'task does not exist in the system',
 			})
 
-		//Check role admin or projectt admin
+		//Check role admin or project admin
 		if (
 			existingUser.role !== 'Admin' &&
-			existingtask.project.project_Admin.email !== existingUser.email
+			existingTask.project.project_Admin.email !== existingUser.email
 		)
 			return res.status(400).json({
 				code: 400,
@@ -668,7 +663,7 @@ const taskController = {
 				message: 'You do not have permission to perform this operation',
 			})
 
-		await existingtask.remove()
+		await existingTask.remove()
 
 		return res.status(200).json({
 			code: 200,
@@ -677,7 +672,7 @@ const taskController = {
 		})
 	}),
 
-	deletemany: handleCatchError(async (req: Request, res: Response) => {
+	deleteMany: handleCatchError(async (req: Request, res: Response) => {
 		const { tasks } = req.body
 
 		//check array of tasks
@@ -755,7 +750,7 @@ const taskController = {
 		})
 	}),
 
-	changeposition: handleCatchError(async (req: Request, res: Response) => {
+	changePosition: handleCatchError(async (req: Request, res: Response) => {
 		const { id1, id2, status1, status2 } = req.body
 
 		//check exist current user
@@ -784,7 +779,7 @@ const taskController = {
 				message: 'User does not exist in the system',
 			})
 
-		const existingstatus1 = await Status.findOne({
+		const existingStatus1 = await Status.findOne({
 			where: {
 				id: status1,
 			},
@@ -794,7 +789,7 @@ const taskController = {
 				},
 			},
 		})
-		const existingstatus2 = await Status.findOne({
+		const existingStatus2 = await Status.findOne({
 			where: {
 				id: status2,
 			},
@@ -805,20 +800,20 @@ const taskController = {
 			},
 		})
 
-		if (!existingstatus1 && !existingstatus2)
+		if (!existingStatus1 && !existingStatus2)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Either status does not existing in the system 3',
 			})
 
-		//Check role admin or projectt admin
+		//Check role admin or project admin
 		if (
 			existingUser.role !== 'Admin' &&
-			((existingstatus1 &&
-				existingstatus1.project.project_Admin.email !== existingUser.email) ||
-				(existingstatus2 &&
-					existingstatus2.project.project_Admin.email !== existingUser.email))
+			((existingStatus1 &&
+				existingStatus1.project.project_Admin.email !== existingUser.email) ||
+				(existingStatus2 &&
+					existingStatus2.project.project_Admin.email !== existingUser.email))
 		)
 			return res.status(400).json({
 				code: 400,
@@ -842,16 +837,16 @@ const taskController = {
 				})
 
 			if (task1.index > task2.index) {
-				const alltask = await Task.createQueryBuilder('task')
+				const allTask = await Task.createQueryBuilder('task')
 					.where('task.index >= :index and task.statusId = :status', {
 						index: task2.index,
 						status: status1,
 					})
 					.getMany()
 
-				if (alltask)
+				if (allTask)
 					await Promise.all(
-						alltask.map(async (task) => {
+						allTask.map(async (task) => {
 							return new Promise(async (resolve) => {
 								const result = Task.update(
 									{
@@ -868,7 +863,7 @@ const taskController = {
 			}
 
 			if (task1.index < task2.index) {
-				const alltask = await Task.createQueryBuilder('task')
+				const allTask = await Task.createQueryBuilder('task')
 					.where(
 						'task.index > :index and task.index <= :index2 and task.statusId = :status',
 						{
@@ -879,9 +874,9 @@ const taskController = {
 					)
 					.getMany()
 
-				if (alltask)
+				if (allTask)
 					await Promise.all(
-						alltask.map(async (task) => {
+						allTask.map(async (task) => {
 							return new Promise(async (resolve) => {
 								task.index = task.index - 1
 								resolve(await task.save())
@@ -945,16 +940,16 @@ const taskController = {
 				.getOne()
 			const index = task2?.index
 
-			const alltask = await Task.createQueryBuilder('task')
+			const allTask = await Task.createQueryBuilder('task')
 				.where('task.statusId = :status and task.index >= :index', {
 					status: status2,
 					index: task2?.index,
 				})
 				.getMany()
 
-			if (alltask)
+			if (allTask)
 				await Promise.all(
-					alltask.map(async (task) => {
+					allTask.map(async (task) => {
 						return new Promise(async (resolve) => {
 							task.index = task.index + 1
 							resolve(await task.save())
@@ -979,13 +974,13 @@ const taskController = {
 		const { projectId } = req.params
 
 		//Check exist project
-		const exisitingProject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: Number(projectId),
 			},
 		})
 
-		if (!exisitingProject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -1008,7 +1003,7 @@ const taskController = {
 			},
 			where: {
 				project: {
-					id: exisitingProject.id,
+					id: existingProject.id,
 				},
 			},
 			relations: {
@@ -1033,13 +1028,13 @@ const taskController = {
 		const { employeeId } = req.params
 
 		//Check exist employee
-		const exisitingEmployee = await Employee.findOne({
+		const existingEmployee = await Employee.findOne({
 			where: {
 				id: Number(employeeId),
 			},
 		})
 
-		if (!exisitingEmployee)
+		if (!existingEmployee)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -1062,7 +1057,7 @@ const taskController = {
 			},
 			where: {
 				employees: {
-					id: exisitingEmployee.id,
+					id: existingEmployee.id,
 				},
 			},
 			relations: {
@@ -1075,7 +1070,7 @@ const taskController = {
 			},
 		})
 
-		//Task was creted by current user
+		//Task was create by current user
 		const tasksWasCreated = await Task.find({
 			select: {
 				time_logs: {
@@ -1091,7 +1086,7 @@ const taskController = {
 			},
 			where: {
 				assignBy: {
-					id: exisitingEmployee.id,
+					id: existingEmployee.id,
 				},
 			},
 			relations: {
@@ -1128,13 +1123,13 @@ const taskController = {
 		const { employeeId, projectId } = req.params
 
 		//Check exist employee
-		const exisitingEmployee = await Employee.findOne({
+		const existingEmployee = await Employee.findOne({
 			where: {
 				id: Number(employeeId),
 			},
 		})
 
-		if (!exisitingEmployee)
+		if (!existingEmployee)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -1142,13 +1137,13 @@ const taskController = {
 			})
 
 		//Check exist project
-		const exisitingProject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: Number(projectId),
 			},
 		})
 
-		if (!exisitingProject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -1171,10 +1166,10 @@ const taskController = {
 			},
 			where: {
 				employees: {
-					id: exisitingEmployee.id,
+					id: existingEmployee.id,
 				},
 				project: {
-					id: exisitingProject.id,
+					id: existingProject.id,
 				},
 			},
 			relations: {
@@ -1187,7 +1182,7 @@ const taskController = {
 			},
 		})
 
-		//Task was creted by current user
+		//Task was created by current user
 		const tasksWasCreated = await Task.find({
 			select: {
 				time_logs: {
@@ -1203,10 +1198,10 @@ const taskController = {
 			},
 			where: {
 				assignBy: {
-					id: exisitingEmployee.id,
+					id: existingEmployee.id,
 				},
 				project: {
-					id: exisitingProject.id,
+					id: existingProject.id,
 				},
 			},
 			relations: {

@@ -91,7 +91,7 @@ const interviewController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Please enter fullfield',
+				message: 'Please enter full field',
 			})
 		}
 
@@ -125,29 +125,23 @@ const interviewController = {
 			})
 		}
 
-		const checkExistInterviewer = async (interviewId: number): Promise<any> => {
-			const existingInterviewer = await Employee.findOne({
-				where: {
-					id: interviewId,
-				},
-			})
-
-			if (!existingInterviewer) {
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Please select valid interviewer',
-				})
-			}
-
-			listValidInterviewer.push(existingInterviewer)
-		}
-
 		//Check exisit interviewer
 		await Promise.all(
-			interviewer.map((interviewId: number) => {
-				return new Promise((resolve) => {
-					checkExistInterviewer(interviewId)
+			interviewer.map(async (interviewId: number) => {
+				return new Promise(async (resolve) => {
+					const existingInterviewer = await Employee.findOne({
+						where: {
+							id: interviewId,
+						},
+					})
+
+					if (!existingInterviewer) {
+						return res.status(400).json({
+							code: 400,
+							success: false,
+							message: 'Please select valid interviewer',
+						})
+					}
 
 					return resolve(true)
 				})
@@ -245,29 +239,25 @@ const interviewController = {
 			}
 		}
 
-		const CheckExistInterviewer = async (interviewId: number): Promise<any> => {
-			const existingInterviewer = await Employee.findOne({
-				where: {
-					id: interviewId,
-				},
-			})
-
-			if (!existingInterviewer) {
-				return res.status(400).json({
-					code: 400,
-					success: false,
-					message: 'Please select valid interviewer',
-				})
-			}
-
-			listValidInterviewer.push(existingInterviewer)
-		}
-
 		//Check exisit interviewer
 		await Promise.all(
-			interviewer.map((interviewId: number) => {
-				return new Promise((resolve) => {
-					CheckExistInterviewer(interviewId)
+			interviewer.map(async (interviewId: number) => {
+				return new Promise(async (resolve) => {
+					const existingInterviewer = await Employee.findOne({
+						where: {
+							id: interviewId,
+						},
+					})
+
+					if (!existingInterviewer) {
+						return res.status(400).json({
+							code: 400,
+							success: false,
+							message: 'Please select valid interviewer',
+						})
+					}
+
+					listValidInterviewer.push(existingInterviewer)
 					return resolve(true)
 				})
 			})
@@ -354,18 +344,15 @@ const interviewController = {
 				message: 'Interviews does not existing in the system',
 			})
 
-		const handleDl = async (id: number) => {
-			const existingInterview = await Interview.findOne({
-				where: {
-					id: id,
-				},
-			})
-			if (existingInterview) await existingInterview.remove()
-		}
 		await Promise.all(
-			interviews.map((id: number) => {
-				return new Promise((resolve) => {
-					handleDl(id)
+			interviews.map(async (id: number) => {
+				return new Promise(async (resolve) => {
+					const existingInterview = await Interview.findOne({
+						where: {
+							id: id,
+						},
+					})
+					if (existingInterview) await existingInterview.remove()
 					resolve(true)
 				})
 			})
@@ -395,7 +382,7 @@ const interviewController = {
 				message: 'Job does not existing in the system',
 			})
 
-		//Get interivews by job
+		//Get interviews by job
 		const interviews = await Interview.find({
 			where: {
 				candidate: {

@@ -91,12 +91,12 @@ const eventController = {
                     }
                 }
                 //Create new event
-                yield Event_1.Event.create(Object.assign(Object.assign({}, dataNewEvent), { clients: [...eventClients], employees: [...eventEmployees], starts_on_date: new Date(startEventTime.toLocaleDateString()), ends_on_date: new Date(endEventTime.toLocaleDateString()) })).save();
+                yield Event_1.Event.create(Object.assign(Object.assign({}, dataNewEvent), { clients: [...eventClients], employees: [...eventEmployees], starts_on_date: new Date(startEventTime), ends_on_date: new Date(endEventTime) })).save();
             }
         }
         else {
             //Create new event
-            yield Event_1.Event.create(Object.assign(Object.assign({}, dataNewEvent), { clients: [...eventClients], employees: [...eventEmployees], starts_on_date: new Date(startEventTime.toLocaleDateString()), ends_on_date: new Date(endEventTime.toLocaleDateString()) })).save();
+            yield Event_1.Event.create(Object.assign(Object.assign({}, dataNewEvent), { clients: [...eventClients], employees: [...eventEmployees], starts_on_date: new Date(startEventTime), ends_on_date: new Date(endEventTime) })).save();
         }
         //Create note for employees or clients
         //Notification for employee
@@ -202,15 +202,15 @@ const eventController = {
             code: 200,
             success: true,
             Events: allEvent,
-            message: 'Get all Events by emlpoyee successfully',
+            message: 'Get all Events by employee successfully',
         });
     })),
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         //get id event
-        const { enventId } = req.params;
+        const { eventId } = req.params;
         const existingEvent = yield Event_1.Event.findOne({
             where: {
-                id: Number(enventId),
+                id: Number(eventId),
             },
         });
         if (!existingEvent)
@@ -223,15 +223,15 @@ const eventController = {
             code: 200,
             success: true,
             event: existingEvent,
-            message: 'Get deatail Event successfully',
+            message: 'Get detail Event successfully',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         //get id event
-        const { enventId } = req.params;
+        const { eventId } = req.params;
         const existingEvent = yield Event_1.Event.findOne({
             where: {
-                id: Number(enventId),
+                id: Number(eventId),
             },
         });
         if (!existingEvent)
@@ -250,15 +250,15 @@ const eventController = {
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         //get id event
-        const { enventId } = req.params;
+        const { eventId } = req.params;
         const dataUpdateEvent = req.body;
         const { clientEmails, employeeEmails } = dataUpdateEvent;
-        let eventEmployees = [];
-        let eventClients = [];
+        const eventEmployees = [];
+        const eventClients = [];
         //Check existing event
         const existingEvent = yield Event_1.Event.findOne({
             where: {
-                id: Number(enventId),
+                id: Number(eventId),
             },
         });
         if (!existingEvent)
@@ -314,9 +314,9 @@ const eventController = {
             (existingEvent.where = dataUpdateEvent.where),
             (existingEvent.color = dataUpdateEvent.color),
             (existingEvent.description = dataUpdateEvent.description),
-            (existingEvent.starts_on_date = new Date(new Date(dataUpdateEvent.starts_on_date).toLocaleDateString())),
+            (existingEvent.starts_on_date = new Date(new Date(dataUpdateEvent.starts_on_date))),
             (existingEvent.starts_on_time = dataUpdateEvent.starts_on_time),
-            (existingEvent.ends_on_date = new Date(new Date(dataUpdateEvent.ends_on_date).toLocaleDateString())),
+            (existingEvent.ends_on_date = new Date(new Date(dataUpdateEvent.ends_on_date))),
             (existingEvent.ends_on_time = dataUpdateEvent.ends_on_time),
             (existingEvent.employees = eventEmployees),
             (existingEvent.clients = eventClients),

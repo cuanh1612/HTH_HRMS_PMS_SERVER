@@ -5,8 +5,8 @@ import handleCatchError from '../utils/catchAsyncError'
 const designationController = {
 	//Create new designation
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewdesignation: Designation = req.body
-		const { name } = dataNewdesignation
+		const dataNewDesignation: Designation = req.body
+		const { name } = dataNewDesignation
 
 		//check if the name of the designation already exists
 		const existingName = await Designation.findOne({
@@ -22,36 +22,36 @@ const designationController = {
 				message: 'Department does not exist in the system',
 			})
 
-		const createddesignation = await Designation.create(dataNewdesignation).save()
+		const createDesignation = await Designation.create(dataNewDesignation).save()
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			designation: createddesignation,
+			designation: createDesignation,
 			message: 'Created new designation successfully',
 		})
 	}),
 	//update designation
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
-		const dataUpdatedesignation: Designation = req.body
-		const { name } = dataUpdatedesignation
+		const dataUpdateDesignation: Designation = req.body
+		const { name } = dataUpdateDesignation
 
-		//Check existign designation
-		const existingdesignation = await Designation.findOne({
+		//Check existing designation
+		const existingDesignation = await Designation.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 		//check existed designation
-		if (!existingdesignation)
+		if (!existingDesignation)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'designation does not exist in the system',
 			})
 
-		if (name !== existingdesignation.name) {
+		if (name !== existingDesignation.name) {
 			//check if the name of the designation already exists
 			const existingName = await Designation.findOne({
 				where: {
@@ -67,8 +67,8 @@ const designationController = {
 		}
 
         //Update
-		await Designation.update(existingdesignation.id, {
-			...dataUpdatedesignation,
+		await Designation.update(existingDesignation.id, {
+			...dataUpdateDesignation,
 		})
 
 		return res.status(200).json({
@@ -93,13 +93,13 @@ const designationController = {
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingdesignation = await Designation.findOne({
+		const existingDesignation = await Designation.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingdesignation)
+		if (!existingDesignation)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -108,7 +108,7 @@ const designationController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			designation: existingdesignation,
+			designation: existingDesignation,
 			message: 'Get detail of designation successfully',
 		})
 	}),
@@ -116,13 +116,13 @@ const designationController = {
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingdesignation = await Designation.findOne({
+		const existingDesignation = await Designation.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingdesignation)
+		if (!existingDesignation)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -130,7 +130,7 @@ const designationController = {
 			})
 
 		//Delete designation
-		await existingdesignation.remove()
+		await existingDesignation.remove()
 
 		return res.status(200).json({
 			code: 200,

@@ -46,7 +46,7 @@ const projectController = {
 				return res.status(400).json({
 					code: 400,
 					success: false,
-					message: 'Addmin add this project does not exist in the system',
+					message: 'Admin add this project does not exist in the system',
 				})
 		}
 
@@ -109,8 +109,8 @@ const projectController = {
 		//create project file
 		const createdProject = await Project.create({
 			...dataNewProject,
-			start_date: new Date(new Date(dataNewProject.start_date).toLocaleDateString()),
-			deadline: new Date(new Date(dataNewProject.deadline).toLocaleDateString()),
+			start_date: new Date(dataNewProject.start_date),
+			deadline: new Date(dataNewProject.deadline),
 			employees: projectEmployees,
 		}).save()
 
@@ -208,13 +208,13 @@ const projectController = {
 		const dataUpdateProject: createOrUpdateProjectPayload = req.body
 		const { Added_by, client, department, project_category } = dataUpdateProject
 
-		const existingproject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingproject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -242,7 +242,7 @@ const projectController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Addmin add this project does not exist in the system',
+				message: 'Admin add this project does not exist in the system',
 			})
 
 		//check exist client
@@ -283,21 +283,21 @@ const projectController = {
 			})
 
 			//update project
-		;(existingproject.name = dataUpdateProject.name),
-			(existingproject.project_category = existingCategories),
-			(existingproject.department = existingDepartment),
-			(existingproject.client = existingClient),
-			(existingproject.Added_by = existingAddedBy),
-			(existingproject.start_date = dataUpdateProject.start_date),
-			(existingproject.deadline = dataUpdateProject.deadline),
-			(existingproject.send_task_noti = true),
-			(existingproject.project_summary = dataUpdateProject.project_summary),
-			(existingproject.notes = dataUpdateProject.notes),
-			(existingproject.project_status = dataUpdateProject.project_status),
-			(existingproject.currency = dataUpdateProject.currency),
-			(existingproject.project_budget = dataUpdateProject.project_budget),
-			(existingproject.hours_estimate = dataUpdateProject.hours_estimate),
-			await existingproject.save()
+		;(existingProject.name = dataUpdateProject.name),
+			(existingProject.project_category = existingCategories),
+			(existingProject.department = existingDepartment),
+			(existingProject.client = existingClient),
+			(existingProject.Added_by = existingAddedBy),
+			(existingProject.start_date = dataUpdateProject.start_date),
+			(existingProject.deadline = dataUpdateProject.deadline),
+			(existingProject.send_task_noti = true),
+			(existingProject.project_summary = dataUpdateProject.project_summary),
+			(existingProject.notes = dataUpdateProject.notes),
+			(existingProject.project_status = dataUpdateProject.project_status),
+			(existingProject.currency = dataUpdateProject.currency),
+			(existingProject.project_budget = dataUpdateProject.project_budget),
+			(existingProject.hours_estimate = dataUpdateProject.hours_estimate),
+			await existingProject.save()
 
 		return res.status(200).json({
 			code: 200,
@@ -422,7 +422,7 @@ const projectController = {
 		})
 	}),
 
-	//Get employee not in the projet
+	//Get employee not in the project
 	getEmployeeNotIn: handleCatchError(async (req: Request, res: Response) => {
 		const { projectId } = req.params
 
@@ -590,7 +590,7 @@ const projectController = {
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingproject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			relations: {
 				client: true,
 				employees: true,
@@ -601,7 +601,7 @@ const projectController = {
 			},
 		})
 
-		if (!existingproject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -612,7 +612,7 @@ const projectController = {
 		const countSuccessTasks = await Task.createQueryBuilder('task')
 			.leftJoinAndSelect('status', 'status', 'task.statusId = status.id')
 			.where('task.projectId = :id', {
-				id: existingproject.id,
+				id: existingProject.id,
 			})
 			.andWhere('status.title = :title', {
 				title: 'Complete',
@@ -622,19 +622,19 @@ const projectController = {
 		const countTasks = await Task.createQueryBuilder('task')
 			.leftJoinAndSelect('status', 'status', 'task.statusId = status.id')
 			.where('task.projectId = :id', {
-				id: existingproject.id,
+				id: existingProject.id,
 			})
 			.getCount()
 
 		if (countSuccessTasks !== 0 && countTasks !== 0) {
-			existingproject.Progress = Math.round((countSuccessTasks / countTasks) * 100)
-			await existingproject.save()
+			existingProject.Progress = Math.round((countSuccessTasks / countTasks) * 100)
+			await existingProject.save()
 		}
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			project: existingproject,
+			project: existingProject,
 			message: 'Get detail of project success',
 		})
 	}),
@@ -643,20 +643,20 @@ const projectController = {
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingproject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingproject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Project does not exist in the system',
 			})
 
-		await existingproject.remove()
+		await existingProject.remove()
 
 		return res.status(200).json({
 			code: 200,
@@ -665,7 +665,7 @@ const projectController = {
 		})
 	}),
 
-	deletemany: handleCatchError(async (req: Request, res: Response) => {
+	deleteMany: handleCatchError(async (req: Request, res: Response) => {
 		const { projects } = req.body
 
 		//check array of projects
@@ -677,13 +677,13 @@ const projectController = {
 			})
 		for (let index = 0; index < projects.length; index++) {
 			const itemProject = projects[index]
-			const existingproject = await Project.findOne({
+			const existingProject = await Project.findOne({
 				where: {
 					id: itemProject.id,
 				},
 			})
-			if (existingproject) {
-				await existingproject.remove()
+			if (existingProject) {
+				await existingProject.remove()
 			}
 		}
 		return res.status(200).json({
@@ -763,7 +763,7 @@ const projectController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'You not asigned this project',
+				message: 'You not assigned this project',
 			})
 		}
 	}),
@@ -946,14 +946,14 @@ const projectController = {
 		}
 
 		const manager = getManager('huprom')
-		const countstatusTasks = await manager.query(
+		const countStatusTasks = await manager.query(
 			`SELECT status.title, status.color, COUNT(task.id) FROM status LEFT JOIN task on task."statusId" = status.id WHERE status."projectId" = ${projectId} GROUP BY (status.title, status.color)`
 		)
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			countstatusTasks: countstatusTasks,
+			countstatusTasks: countStatusTasks,
 			message: 'Get count status tasks successfully',
 		})
 	}),
@@ -1070,13 +1070,13 @@ const projectController = {
 		const { clientId } = req.params
 
 		//Check existing client 
-		const exisitingClient = await Client.findOne({
+		const existingClient = await Client.findOne({
 			where: {
 				id: Number(clientId)
 			}
 		})
 
-		if (!exisitingClient) {
+		if (!existingClient) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -1086,7 +1086,7 @@ const projectController = {
 
 		const manager = getManager('huprom')
 		const projectStatus = await manager.query(
-			`SELECT project.project_status, COUNT(project.id) from project WHERE project."clientId" = ${exisitingClient.id} GROUP BY project.project_status`
+			`SELECT project.project_status, COUNT(project.id) from project WHERE project."clientId" = ${existingClient.id} GROUP BY project.project_status`
 		)
 
 		return res.status(200).json({

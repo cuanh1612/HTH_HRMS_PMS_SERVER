@@ -17,7 +17,7 @@ const workExperienceController = {
             })
         }
 
-        const add_result = await Work_Experience.create({
+        const addResult = await Work_Experience.create({
             name: name
         }).save()
 
@@ -25,11 +25,9 @@ const workExperienceController = {
             code: 200,
             success: true,
             message: 'Create work experience type success',
-            result: add_result,
+            result: addResult,
         })
     }),
-
-   
 
     getAll: handleCatchError(async (_: Request, res: Response) =>{
             const workExperiences = await Work_Experience.find()
@@ -46,22 +44,22 @@ const workExperienceController = {
         const {id} = req.params
         const dataUpdateWorkExperience = req.body
         
-        const existingworkexperience = await Work_Experience.findOne({
+        const existingWorkExperience = await Work_Experience.findOne({
             where: {
                 id: Number(id),
             }
         })
 
-        if(!existingworkexperience)
+        if(!existingWorkExperience)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Work experience does not existing in the system',
             })
         
-        ;(existingworkexperience.name = dataUpdateWorkExperience.name),
+        ;(existingWorkExperience.name = dataUpdateWorkExperience.name),
 
-        await existingworkexperience.save()
+        await existingWorkExperience.save()
 
         return res.status(200).json({
 			code: 200,
@@ -71,16 +69,16 @@ const workExperienceController = {
         
     }),
 
-    getdetail: handleCatchError(async (req: Request,  res: Response) =>{
+    getDetail: handleCatchError(async (req: Request,  res: Response) =>{
         const {id} = req.params
 
-        const existingworkexperience = await Work_Experience.findOne({
+        const existingWorkExperience = await Work_Experience.findOne({
             where: {
                 id: Number(id)
             }
         })
 
-        if(!existingworkexperience)
+        if(!existingWorkExperience)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -90,7 +88,7 @@ const workExperienceController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            workExperience: existingworkexperience,
+            workExperience: existingWorkExperience,
             message: 'Get detail of work experience success'
         })
     }),
@@ -98,20 +96,20 @@ const workExperienceController = {
     delete: handleCatchError(async (req: Request, res: Response) =>{
         const {id} = req.params
 
-        const existingworkexperience = await Work_Experience.findOne({
+        const existingWorkExperience = await Work_Experience.findOne({
             where: {
                 id: Number(id),
             }
         })
 
-        if(!existingworkexperience)
+        if(!existingWorkExperience)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Work experience does not existing in the system',
             })
     
-            await existingworkexperience.remove()
+            await existingWorkExperience.remove()
 
         return res.status(200).json({
 			code: 200,

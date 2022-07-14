@@ -82,7 +82,7 @@ const dashBoardController = {
     })),
     todayAttendance: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const todayAttendance = yield Attendance_1.Attendance.createQueryBuilder('attendance')
-            .where('attendance.date = :date', { date: new Date().toLocaleDateString() })
+            .where('attendance.date = :date', { date: new Date() })
             .getCount();
         return res.status(200).json({
             code: 200,
@@ -98,7 +98,7 @@ const dashBoardController = {
         dateLastMonth.setDate(dateLastMonth.getDate() - 1);
         const pendingTasksRaw = yield Task_1.Task.createQueryBuilder('task')
             .leftJoinAndSelect('task.status', 'status')
-            .leftJoinAndSelect('task.assignBy', 'emlpoyee')
+            .leftJoinAndSelect('task.assignBy', 'employee')
             .leftJoinAndSelect('task.project', 'project')
             .where('status.title != :title', { title: 'Complete' })
             .andWhere('task.start_date > :date', { date: dateLastMonth })
@@ -165,7 +165,7 @@ const dashBoardController = {
     })),
     contractsSigned: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const manager = (0, typeorm_1.getManager)('huprom');
-        const contractsSigned = yield manager.query('SELECT COUNT(contract.id) FROM contract WHERE contract."signId" NOTNULL');
+        const contractsSigned = yield manager.query('SELECT COUNT(contract.id) FROM contract WHERE contract."signId" NOT NULL');
         return res.status(200).json({
             code: 200,
             success: true,
@@ -193,25 +193,25 @@ const dashBoardController = {
             message: 'Get client wise time logs successfully',
         });
     })),
-    lastestClients: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const lastestClients = yield Client_1.Client.createQueryBuilder('client').limit(10).getMany();
+    latestClients: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const latestClients = yield Client_1.Client.createQueryBuilder('client').limit(10).getMany();
         return res.status(200).json({
             code: 200,
             success: true,
-            lastestClients: lastestClients,
+            lastestClients: latestClients,
             message: 'Get lastest clients successfully',
         });
     })),
     lateAttendance: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const lastestClients = yield Client_1.Client.createQueryBuilder('client').limit(10).getMany();
+        const latestClients = yield Client_1.Client.createQueryBuilder('client').limit(10).getMany();
         return res.status(200).json({
             code: 200,
             success: true,
-            lastestClients: lastestClients,
+            lastestClients: latestClients,
             message: 'Get lastest clients successfully',
         });
     })),
-    countBydateAttendance: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+    countByDateAttendance: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         //Get end date last month
         const dateLastMonth = new Date();
         dateLastMonth.setDate(1);
@@ -220,7 +220,7 @@ const dashBoardController = {
         let dateCurrentMonth = new Date().getDate();
         const manager = (0, typeorm_1.getManager)('huprom');
         const currentMonthAttendance = (yield manager.query(`SELECT * FROM "attendance" WHERE "attendance"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`)) || [];
-        let countBydateAttendance = [];
+        const countByDateAttendance = [];
         //Count attendance by date
         for (let index = 1; index <= dateCurrentMonth; index++) {
             let countAttendance = 0;
@@ -230,7 +230,7 @@ const dashBoardController = {
                     countAttendance++;
                 }
             });
-            countBydateAttendance.push({
+            countByDateAttendance.push({
                 count: countAttendance,
                 date: index,
             });
@@ -238,20 +238,20 @@ const dashBoardController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            countBydateAttendance: countBydateAttendance,
+            countBydateAttendance: countByDateAttendance,
             message: 'Get count by date attendance successfully',
         });
     })),
-    countBydateLeave: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
+    countByDateLeave: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         //Get end date last month
         const dateLastMonth = new Date();
         dateLastMonth.setDate(1);
         dateLastMonth.setDate(dateLastMonth.getDate() - 1);
         //get current date
-        let dateCurrentMonth = new Date().getDate();
+        const dateCurrentMonth = new Date().getDate();
         const manager = (0, typeorm_1.getManager)('huprom');
         const currentMonthLeave = (yield manager.query(`SELECT * FROM "leave" WHERE "leave"."date" > '${dateLastMonth.getFullYear()}-${dateLastMonth.getMonth() + 1}-${dateLastMonth.getDate()}'`)) || [];
-        let countByLeaveAttendance = [];
+        const countByLeaveAttendance = [];
         //Count attendance by date
         for (let index = 1; index <= dateCurrentMonth; index++) {
             let countAttendance = 0;

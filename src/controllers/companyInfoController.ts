@@ -9,7 +9,7 @@ const companyInfoController = {
         const companyInfo = (await Company_Info.find({}))[0]
 
         if(!companyInfo) {
-            //Create new comany info
+            //Create new company info
             const createdCompanyInfo = await Company_Info.create({
                 name: "HUPROM",
                 email: "hoangdev161201@gmail.com",
@@ -21,7 +21,7 @@ const companyInfoController = {
                 code: 200,
                 success: true,
                 companyInfo: createdCompanyInfo,
-                message: 'Get company info suscessfully',
+                message: 'Get company info successfully',
             })
         }
 
@@ -29,7 +29,7 @@ const companyInfoController = {
 			code: 200,
 			success: true,
             companyInfo,
-			message: 'Get company info suscessfully',
+			message: 'Get company info successfully',
 		})
 
     }),
@@ -52,7 +52,7 @@ const companyInfoController = {
 		const companyInfo = (await Company_Info.find({}))[0]
 
         if(!companyInfo) {
-            //Create new comany info
+            //Create new company info
             await Company_Info.create({
                 name: name ? name : "HUPROM",
                 email: email ? email : "hoangdev161201@gmail.com",

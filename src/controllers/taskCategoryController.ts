@@ -22,12 +22,12 @@ const taskCategoryController = {
 				message: 'Task category already exist in the system',
 			})
 
-		const createdtask_category = await Task_Category.create(dataNewCategory).save()
+		const taskCategory = await Task_Category.create(dataNewCategory).save()
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			taskCategory: createdtask_category,
+			taskCategory,
 			message: 'Created new task_category successfully',
 		})
 	}),
@@ -35,24 +35,24 @@ const taskCategoryController = {
 	//Update task category
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
-		const dataUpdatetask_category: Task_Category = req.body
-		const { name } = dataUpdatetask_category
+		const dataUpdate: Task_Category = req.body
+		const { name } = dataUpdate
 
-		const existingtask_category = await Task_Category.findOne({
+		const existingTaskCategory = await Task_Category.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
 		//check existed task_category
-		if (!existingtask_category)
+		if (!existingTaskCategory)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'task category does not exist in the system',
 			})
 
-		if (name !== existingtask_category.name) {
+		if (name !== existingTaskCategory.name) {
 			const existingName = await Task_Category.findOne({
 				where: {
 					name: String(name),
@@ -67,8 +67,8 @@ const taskCategoryController = {
 				})
 		}
 
-		await Task_Category.update(existingtask_category.id, {
-			...dataUpdatetask_category,
+		await Task_Category.update(existingTaskCategory.id, {
+			...dataUpdate,
 		})
 
 		return res.status(200).json({
@@ -80,11 +80,11 @@ const taskCategoryController = {
 
 	//Get all task category
 	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const task_categories = await Task_Category.find()
+		const taskCategories = await Task_Category.find()
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			taskCategories: task_categories,
+			taskCategories,
 			message: 'Get all task categories successfully',
 		})
 	}),
@@ -93,13 +93,13 @@ const taskCategoryController = {
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingtask_category = await Task_Category.findOne({
+		const existingTaskCategory = await Task_Category.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingtask_category)
+		if (!existingTaskCategory)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -109,7 +109,7 @@ const taskCategoryController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			taskCategory: existingtask_category,
+			taskCategory: existingTaskCategory,
 			message: 'Get detail of task_category successfully',
 		})
 	}),
@@ -117,13 +117,13 @@ const taskCategoryController = {
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingtask_category = await Task_Category.findOne({
+		const existingTaskCategory = await Task_Category.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingtask_category)
+		if (!existingTaskCategory)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -131,7 +131,7 @@ const taskCategoryController = {
 			})
 
 		//Delete task category
-		await existingtask_category.remove()
+		await existingTaskCategory.remove()
 
 		return res.status(200).json({
 			code: 200,

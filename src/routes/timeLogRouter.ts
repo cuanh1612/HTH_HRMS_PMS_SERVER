@@ -4,7 +4,7 @@ import { checkAuth } from '../utils/middleware/checkAuth'
 
 const TimeLogRouter = express.Router()
 
-TimeLogRouter.post('/delete-many', checkAuth([]), timeLogController.Deletemany)
+TimeLogRouter.post('/delete-many', checkAuth([]), timeLogController.deleteMany)
 
 TimeLogRouter.get('/calendar', timeLogController.calendar)
 

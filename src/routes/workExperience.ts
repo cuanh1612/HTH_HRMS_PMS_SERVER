@@ -10,7 +10,7 @@ workExperienceRouter.delete('/:id', workExperienceController.delete)
 
 workExperienceRouter.get('/', workExperienceController.getAll)
 
-workExperienceRouter.get('/:id', workExperienceController.getdetail)
+workExperienceRouter.get('/:id', workExperienceController.getDetail)
 
 workExperienceRouter.put('/:id', workExperienceController.update)
 

@@ -4,7 +4,7 @@ import { Contract_type } from '../entities/Contract_Type'
 import handleCatchError from '../utils/catchAsyncError'
 
 const contractTypeController = {
-	//Create new contractype
+	//Create new contract type
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewContractType: Contract_type = req.body
 		const { name } = dataNewContractType
@@ -37,8 +37,7 @@ const contractTypeController = {
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 		const dataUpContractType: Contract_type = req.body
-        console.log(dataUpContractType);
-        
+
 		const { name } = dataUpContractType
 
 		const existingContractType = await Contract_type.findOne({
@@ -56,18 +55,14 @@ const contractTypeController = {
 
         //Check exist name
         if(name !== existingContractType.name){
-			console.log('asdf sdfkl sdjf gion ne');
 			
-            const exisitingName = await Contract_type.findOne({
+            const existingName = await Contract_type.findOne({
                 where: {
                     name
                 }
             })
-
-			console.log(exisitingName);
 			
-
-            if(exisitingName) 	return res.status(400).json({
+            if(existingName) 	return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Contract type already exist in the system',

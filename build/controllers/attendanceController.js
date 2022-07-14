@@ -20,7 +20,7 @@ const attendanceValid_1 = require("../utils/valid/attendanceValid");
 const attendanceController = {
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { date, department, employee } = req.query;
-        let data = yield Employee_1.Employee.find({
+        const data = yield Employee_1.Employee.find({
             select: {
                 id: true,
                 name: true,
@@ -53,7 +53,7 @@ const attendanceController = {
         return res.json({
             code: 200,
             success: true,
-            message: 'Mark attendances successfully',
+            message: 'Get all attendances successfully',
             data: data || [],
         });
     })),
@@ -95,7 +95,7 @@ const attendanceController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Check attendance successfully',
+            message: 'Checked attendance successfully',
         });
     })),
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -136,11 +136,11 @@ const attendanceController = {
         }
         else if (mark_attendance_by === 'Month' && employees.length > 0) {
             //Set date start mark attendance is 1
-            let dateMark = new Date(`4-1-${year}`);
+            const dateMark = new Date(`4-1-${year}`);
             //Get date next month
             const dateNextMonth = new Date(`${Number(month) + 1}-1-${year}`);
             //Get date now -1
-            let dateNow = new Date();
+            const dateNow = new Date();
             dateNow.setDate(dateNow.getDate() - 1);
             while (dateMark < dateNextMonth && dateMark < dateNow) {
                 for (let index = 0; index < employees.length; index++) {
@@ -162,7 +162,7 @@ const attendanceController = {
                     existingEmployee &&
                         !existingAttendance &&
                         (yield Attendance_1.Attendance.create(Object.assign(Object.assign({}, dataNewAttendances), { date: dateMark, employee: existingEmployee })).save());
-                    //increase datemark 1 day
+                    //increase date mark 1 day
                     dateMark.setDate(dateMark.getDate() + 1);
                 }
             }
@@ -189,19 +189,19 @@ const attendanceController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Mark attendances successfully',
+            message: 'Checked attendance successfully',
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const dataUpAttendances = req.body;
         //Check exist attendance
-        const exisitingAttendance = yield Attendance_1.Attendance.findOne({
+        const existingAttendance = yield Attendance_1.Attendance.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!exisitingAttendance)
+        if (!existingAttendance)
             return res.status(400).json({
                 code: 400,
                 success: false,

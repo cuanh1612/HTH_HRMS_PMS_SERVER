@@ -3,14 +3,14 @@ import { Secret, verify } from 'jsonwebtoken'
 import { Client } from '../entities/Client'
 import { Employee } from '../entities/Employee'
 import { Notification } from '../entities/Notification'
-import { createOrUpdatetNotificationPayload } from '../type/NotificationPayload'
+import { createOrUpdateNotificationPayload } from '../type/NotificationPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { notificationValid } from '../utils/valid/notificationValid'
 
 const notificationController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewNotification: createOrUpdatetNotificationPayload = req.body
+		const dataNewNotification: createOrUpdateNotificationPayload = req.body
 		const { content, url } = dataNewNotification
 
 		//check exist current user
@@ -161,7 +161,7 @@ const notificationController = {
 			})
 
 		//Check existing notification
-		const exisingNotification = await Notification.findOne({
+		const existingNotification = await Notification.findOne({
 			where: {
 				id: Number(notificationId),
 			},
@@ -171,7 +171,7 @@ const notificationController = {
 			}
 		})
 
-		if (!exisingNotification)
+		if (!existingNotification)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -181,9 +181,9 @@ const notificationController = {
 		//Check author
 		if (
 			!(
-				existingUser.role === 'Client' && existingUser.id === exisingNotification.client.id
+				existingUser.role === 'Client' && existingUser.id === existingNotification.client.id
 			) &&
-			!(existingUser.id === exisingNotification.employee.id)
+			!(existingUser.id === existingNotification.employee.id)
 		)
 			return res.status(400).json({
 				code: 400,
@@ -192,7 +192,7 @@ const notificationController = {
 			})
 
 		//Remove notification
-		await exisingNotification.remove()
+		await existingNotification.remove()
 
 		return res.status(200).json({
 			code: 200,

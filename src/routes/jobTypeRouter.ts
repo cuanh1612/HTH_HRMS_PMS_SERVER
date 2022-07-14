@@ -10,7 +10,7 @@ jobTypeRouter.delete('/:id', jobTypeController.delete)
 
 jobTypeRouter.get('/', jobTypeController.getAll)
 
-jobTypeRouter.get('/:id', jobTypeController.getdetail)
+jobTypeRouter.get('/:id', jobTypeController.getDetail)
 
 jobTypeRouter.put('/:id', jobTypeController.update)
 

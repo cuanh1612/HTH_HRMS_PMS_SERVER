@@ -109,13 +109,13 @@ const taskCommentController = {
 		const { taskId } = req.params
 
 		//Check exist task
-		const exisingTask = await Task.findOne({
+		const existingTask = await Task.findOne({
 			where: {
 				id: Number(taskId),
 			},
 		})
 
-		if (!exisingTask)
+		if (!existingTask)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -143,7 +143,7 @@ const taskCommentController = {
 		})
 	}),
 
-	delele: handleCatchError(async (req: Request, res: Response) => {
+	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { taskCommentId } = req.params
 
 		//Check exist task comment
@@ -199,7 +199,7 @@ const taskCommentController = {
 				message: 'You not have authorization',
 			})
 
-		//Delete task commetn
+		//Delete task comment
 		await existingTaskComment.remove()
 
 		return res.status(200).json({

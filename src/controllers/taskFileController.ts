@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { Task } from "../entities/Task";
 import { Task_file } from "../entities/Task_File";
-import { createOrUpdatetTaskFilesPayload } from "../type/taskFilePayLoad";
+import { createOrUpdateTaskFilesPayload } from "../type/taskFilePayLoad";
 import handleCatchError from "../utils/catchAsyncError";
 
 const taskFileController = {
     create: handleCatchError(async (req: Request, res: Response) => {
-        const { files, task } = req.body as createOrUpdatetTaskFilesPayload
+        const { files, task } = req.body as createOrUpdateTaskFilesPayload
 
         //check exist task
         const existingTask = await Task.findOne({
@@ -77,21 +77,21 @@ const taskFileController = {
     getAll: handleCatchError(async (req: Request, res: Response) => {
 		const {taskId } = req.params
 
-        //Check existtask
-		const existingtask = await Task.findOne({
+        //Check exist task
+		const existingTask = await Task.findOne({
 			where: {
 				id: Number(taskId),
 			},
 		})
 
-		if (!existingtask)
+		if (!existingTask)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Task does not exist in the system',
 			})
 
-        //Get alltask file 
+        //Get all task file 
         const taskFiles = await Task_file.find({
             where: {
                task: {
@@ -113,10 +113,9 @@ const taskFileController = {
     
     changeposition: handleCatchError(async (req: Request, res: Response) => {
         const { status1, task1, status2, task2}:{[index: string]:number} = req.body
-        console.log(status1)
 
         if(status1 == status2){
-            const existingtask = await Task.findOne({
+            const existingTask = await Task.findOne({
                 where: {
                     id: Number(task2),
                     status: {
@@ -125,20 +124,20 @@ const taskFileController = {
                 }
             })
     
-            if (!existingtask)
+            if (!existingTask)
                 return res.status(400).json({
                     code: 400,
                     success: false,
                     message: 'Either task does not exist in the system',
                 })
     
-            const alltask = await Task.createQueryBuilder('task').where('task.index >= :index', {
-                index: existingtask.index
+            const allTask = await Task.createQueryBuilder('task').where('task.index >= :index', {
+                index: existingTask.index
             }).getMany()
     
-            if (alltask)
+            if (allTask)
                 await Promise.all(
-                    alltask.map(async (task) => {
+                    allTask.map(async (task) => {
                         return new Promise(async (resolve) => {
                             const result = Task.update({
                                 id: Number(task.id), status:{
@@ -158,7 +157,7 @@ const taskFileController = {
                     id: status1
                 }
             }, {
-                index: Number(existingtask.index) 
+                index: Number(existingTask.index) 
             })
     
             return res.status(200).json({

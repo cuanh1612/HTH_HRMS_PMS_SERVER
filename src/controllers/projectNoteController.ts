@@ -4,14 +4,14 @@ import { Client } from '../entities/Client'
 import { Employee, enumRole } from '../entities/Employee'
 import { Project } from '../entities/Project'
 import { enumNoteType, Project_note } from '../entities/Project_Note'
-import { createOrUpdatetProjectNotePayload } from '../type/projectNotePayLoad'
+import { createOrUpdateProjectNotePayload } from '../type/projectNotePayLoad'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { projectNoteValid } from '../utils/valid/projectNoteValid'
 
 const projectNoteController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewProjectNote = req.body as createOrUpdatetProjectNotePayload
+		const dataNewProjectNote = req.body as createOrUpdateProjectNotePayload
 		const { project, note_type, employees } = dataNewProjectNote
 		let listEmployeesAdd: Employee[] = []
 
@@ -26,13 +26,13 @@ const projectNoteController = {
 			})
 
 		//Check exist project
-		const exisitingProject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: project,
 			},
 		})
 
-		if (!exisitingProject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -77,9 +77,9 @@ const projectNoteController = {
 
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { projectNoteId } = req.params
-		const dataUpProjectNote = req.body as createOrUpdatetProjectNotePayload
+		const dataUpProjectNote = req.body as createOrUpdateProjectNotePayload
 		const { project, note_type, employees } = dataUpProjectNote
-		let listEmployeesUpdate: Employee[] = []
+		const listEmployeesUpdate: Employee[] = []
 
 		//Check valid input
 		const messageValid = projectNoteValid.createOrUpdate(dataUpProjectNote)
@@ -109,7 +109,7 @@ const projectNoteController = {
 			})
 
 		//Check exist project
-		const exisitingProject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: project,
 			},
@@ -118,7 +118,7 @@ const projectNoteController = {
 			}
 		})
 
-		if (!exisitingProject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -157,7 +157,7 @@ const projectNoteController = {
 				message: 'User does not exist in the system',
 			})
 
-		if (existingUser.role !== enumRole.ADMIN && existingUser.email !== exisitingProject.project_Admin.email)
+		if (existingUser.role !== enumRole.ADMIN && existingUser.email !== existingProject.project_Admin.email)
 			return res.status(400).json({
 				code: 400,
 				success: false,

@@ -109,8 +109,8 @@ const eventController = {
 					...dataNewEvent,
 					clients: [...eventClients],
 					employees: [...eventEmployees],
-					starts_on_date: new Date(startEventTime.toLocaleDateString()),
-					ends_on_date: new Date(endEventTime.toLocaleDateString()),
+					starts_on_date: new Date(startEventTime),
+					ends_on_date: new Date(endEventTime),
 				}).save()
 			}
 		} else {
@@ -119,8 +119,8 @@ const eventController = {
 				...dataNewEvent,
 				clients: [...eventClients],
 				employees: [...eventEmployees],
-				starts_on_date: new Date(startEventTime.toLocaleDateString()),
-				ends_on_date: new Date(endEventTime.toLocaleDateString()),
+				starts_on_date: new Date(startEventTime),
+				ends_on_date: new Date(endEventTime),
 			}).save()
 		}
 
@@ -258,17 +258,17 @@ const eventController = {
 			code: 200,
 			success: true,
 			Events: allEvent,
-			message: 'Get all Events by emlpoyee successfully',
+			message: 'Get all Events by employee successfully',
 		})
 	}),
 
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		//get id event
-		const { enventId } = req.params
+		const { eventId } = req.params
 
 		const existingEvent = await Event.findOne({
 			where: {
-				id: Number(enventId),
+				id: Number(eventId),
 			},
 		})
 
@@ -283,17 +283,17 @@ const eventController = {
 			code: 200,
 			success: true,
 			event: existingEvent,
-			message: 'Get deatail Event successfully',
+			message: 'Get detail Event successfully',
 		})
 	}),
 
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		//get id event
-		const { enventId } = req.params
+		const { eventId } = req.params
 
 		const existingEvent = await Event.findOne({
 			where: {
-				id: Number(enventId),
+				id: Number(eventId),
 			},
 		})
 
@@ -316,17 +316,17 @@ const eventController = {
 
 	update: handleCatchError(async (req: Request, res: Response) => {
 		//get id event
-		const { enventId } = req.params
+		const { eventId } = req.params
 
 		const dataUpdateEvent: createOrUpdateEventPayload = req.body
 		const { clientEmails, employeeEmails } = dataUpdateEvent
-		let eventEmployees: Employee[] = []
-		let eventClients: Client[] = []
+		const eventEmployees: Employee[] = []
+		const eventClients: Client[] = []
 
 		//Check existing event
 		const existingEvent = await Event.findOne({
 			where: {
-				id: Number(enventId),
+				id: Number(eventId),
 			},
 		})
 
@@ -395,11 +395,11 @@ const eventController = {
 			(existingEvent.color = dataUpdateEvent.color),
 			(existingEvent.description = dataUpdateEvent.description),
 			(existingEvent.starts_on_date = new Date(
-				new Date(dataUpdateEvent.starts_on_date).toLocaleDateString()
+				new Date(dataUpdateEvent.starts_on_date)
 			)),
 			(existingEvent.starts_on_time = dataUpdateEvent.starts_on_time),
 			(existingEvent.ends_on_date = new Date(
-				new Date(dataUpdateEvent.ends_on_date).toLocaleDateString()
+				new Date(dataUpdateEvent.ends_on_date)
 			)),
 			(existingEvent.ends_on_time = dataUpdateEvent.ends_on_time),
 			(existingEvent.employees = eventEmployees),

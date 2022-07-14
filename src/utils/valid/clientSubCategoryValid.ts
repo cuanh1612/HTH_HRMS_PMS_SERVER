@@ -1,8 +1,8 @@
-import { createOrUpdatetClientSubCategoryPayload } from '../../type/ClientSubCategoryPayload'
+import { createOrUpdateClientSubCategoryPayload } from '../../type/ClientSubCategoryPayload'
 
 export const clientSubCategoryValid = {
 	createOrUpdate: (
-		{ name }: createOrUpdatetClientSubCategoryPayload,
+		{ name }: createOrUpdateClientSubCategoryPayload,
 	) => {
 		let messageError = ''
 		if (!name) {

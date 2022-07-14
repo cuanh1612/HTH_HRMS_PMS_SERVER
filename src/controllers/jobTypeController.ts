@@ -41,19 +41,19 @@ const jobTypeController = {
 		const { id } = req.params
 		const dataUpdateJobType = req.body
 
-		const existingjobtype = await Job_Type.findOne({
+		const existingJobType = await Job_Type.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingjobtype)
+		if (!existingJobType)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'job type does not existing in the system',
 			})
-		;(existingjobtype.name = dataUpdateJobType.name), await existingjobtype.save()
+		;(existingJobType.name = dataUpdateJobType.name), await existingJobType.save()
 
 		return res.status(200).json({
 			code: 200,
@@ -62,16 +62,16 @@ const jobTypeController = {
 		})
 	}),
 
-	getdetail: handleCatchError(async (req: Request, res: Response) => {
+	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingjobtype = await Job_Type.findOne({
+		const existingJobType = await Job_Type.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingjobtype)
+		if (!existingJobType)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -81,7 +81,7 @@ const jobTypeController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			jobType: existingjobtype,
+			jobType: existingJobType,
 			message: 'Get detail of job type success',
 		})
 	}),
@@ -89,20 +89,20 @@ const jobTypeController = {
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingjobtype = await Job_Type.findOne({
+		const existingJobType = await Job_Type.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingjobtype)
+		if (!existingJobType)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Job type does not existing in the system',
 			})
 
-		await existingjobtype.remove()
+		await existingJobType.remove()
 
 		return res.status(200).json({
 			code: 200,

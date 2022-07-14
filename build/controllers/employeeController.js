@@ -88,7 +88,6 @@ const employeeController = {
     })),
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewEmployee = req.body;
-        console.log(dataNewEmployee);
         //Check valid
         const messageValid = employeeValid_1.employeeValid.createOrUpdate(dataNewEmployee, 'create');
         if (messageValid)
@@ -429,11 +428,11 @@ const employeeController = {
                 message: 'Not found employee',
             });
         //Get count open task
-        const countOpentask = yield (0, typeorm_1.getManager)('huprom').query(`SELECT COUNT(task_employee."employeeId") from task_employee WHERE task_employee."employeeId" = ${employeeId}`);
+        const countOpenTask = yield (0, typeorm_1.getManager)('huprom').query(`SELECT COUNT(task_employee."employeeId") from task_employee WHERE task_employee."employeeId" = ${employeeId}`);
         return res.status(200).json({
             code: 200,
             success: true,
-            countOpentasks: Number(countOpentask[0].count) || 0,
+            countOpentasks: Number(countOpenTask[0].count) || 0,
             message: 'Get count open tasks successfully',
         });
     })),

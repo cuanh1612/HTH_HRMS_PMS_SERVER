@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = require("jsonwebtoken");
 const Job_1 = require("../entities/Job");
 const Job_Application_1 = require("../entities/Job_Application");
 const Job_Offer_Letter_1 = require("../entities/Job_Offer_Letter");
@@ -39,7 +40,7 @@ const jobOfferLetterController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Job does not exisitng in the system',
+                message: 'Job does not existing in the system',
             });
         //check exist job application
         const existingJobApplication = yield Job_Application_1.Job_Application.findOne({
@@ -51,9 +52,21 @@ const jobOfferLetterController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Job application does not exisitng in the system',
+                message: 'Job application does not existing in the system',
             });
-        const createJobOfferLetter = yield Job_Offer_Letter_1.Job_offer_letter.create(Object.assign({}, dataNewJobOfferLetter)).save();
+        const createJobOfferLetter = yield Job_Offer_Letter_1.Job_offer_letter.create(Object.assign(Object.assign({}, dataNewJobOfferLetter), { expected_joining_date: new Date(dataNewJobOfferLetter.expected_joining_date), exprise_on: new Date(dataNewJobOfferLetter.exprise_on) })).save();
+        const dateToken = new Date(dataNewJobOfferLetter.exprise_on).getTime() < new Date().getTime()
+            ? '24h'
+            : `${(new Date(dataNewJobOfferLetter.exprise_on).getTime() -
+                new Date().getTime()) /
+                (1000 * 60 * 60)}h`;
+        const token = (0, jsonwebtoken_1.sign)({
+            id: createJobOfferLetter.id,
+        }, `${process.env.OFFER_TOKEN_SECRET}`, {
+            expiresIn: dateToken,
+        });
+        createJobOfferLetter.token = `${token}`;
+        yield createJobOfferLetter.save();
         return res.status(200).json({
             code: 200,
             success: true,
@@ -61,10 +74,77 @@ const jobOfferLetterController = {
             message: ' Create job application',
         });
     })),
+    public: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { token } = req.params;
+        try {
+            const { id } = (0, jsonwebtoken_1.verify)(token, `${process.env.OFFER_TOKEN_SECRET}`);
+            const jobOfferLetter = yield Job_Offer_Letter_1.Job_offer_letter.findOne({
+                where: {
+                    id: Number(id),
+                },
+                relations: {
+                    job_application: true,
+                    job: {
+                        work_experience: true
+                    },
+                    sign: true,
+                },
+            });
+            if (!jobOfferLetter)
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Contract does not exists in the system',
+                });
+            return res.status(200).json({
+                code: 200,
+                success: true,
+                jobOfferLetter,
+                message: 'Created contract token successfully',
+            });
+        }
+        catch (error) {
+            return res.status(403).json({
+                code: 403,
+                success: false,
+                message: 'You not allow to see',
+            });
+        }
+    })),
+    updateStatus: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
+        const { status } = req.body;
+        if (!id) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please enter full field',
+            });
+        }
+        const existingOffer = yield Job_Offer_Letter_1.Job_offer_letter.findOne({
+            where: {
+                id: Number(id),
+            },
+        });
+        if (!existingOffer) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: status,
+            });
+        }
+        existingOffer.status = status;
+        yield existingOffer.save();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            message: "Update job offer letter status successfully",
+        });
+    })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const datatUpdateJobOfferLetter = req.body;
-        const { job, job_application } = datatUpdateJobOfferLetter;
+        const dataUpdateJobOfferLetter = req.body;
+        const { job, job_application } = dataUpdateJobOfferLetter;
         //check exist job offer letter
         const existingJobOfferLetter = yield Job_Offer_Letter_1.Job_offer_letter.findOne({
             where: {
@@ -101,15 +181,14 @@ const jobOfferLetterController = {
                 success: false,
                 message: 'Job does not exisitng in the system',
             });
-        (existingJobOfferLetter.job = datatUpdateJobOfferLetter.job),
-            (existingJobOfferLetter.job_application = datatUpdateJobOfferLetter.job_application),
-            (existingJobOfferLetter.expected_joining_date =
-                datatUpdateJobOfferLetter.expected_joining_date),
-            (existingJobOfferLetter.exprise_on = datatUpdateJobOfferLetter.exprise_on),
-            (existingJobOfferLetter.salary = datatUpdateJobOfferLetter.salary),
-            (existingJobOfferLetter.rate = datatUpdateJobOfferLetter.rate);
-        if (datatUpdateJobOfferLetter.status) {
-            existingJobOfferLetter.status = datatUpdateJobOfferLetter.status;
+        (existingJobOfferLetter.job = dataUpdateJobOfferLetter.job),
+            (existingJobOfferLetter.job_application = dataUpdateJobOfferLetter.job_application),
+            (existingJobOfferLetter.expected_joining_date = new Date(dataUpdateJobOfferLetter.expected_joining_date)),
+            (existingJobOfferLetter.exprise_on = new Date(dataUpdateJobOfferLetter.exprise_on)),
+            (existingJobOfferLetter.salary = dataUpdateJobOfferLetter.salary),
+            (existingJobOfferLetter.rate = dataUpdateJobOfferLetter.rate);
+        if (dataUpdateJobOfferLetter.status) {
+            existingJobOfferLetter.status = dataUpdateJobOfferLetter.status;
         }
         yield existingJobOfferLetter.save();
         return res.status(200).json({
@@ -126,7 +205,7 @@ const jobOfferLetterController = {
             },
             relations: {
                 job: {
-                    work_experience: true
+                    work_experience: true,
                 },
                 job_application: true,
             },
@@ -192,7 +271,7 @@ const jobOfferLetterController = {
             return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
                 const existingJobOfferLetter = yield Job_Offer_Letter_1.Job_offer_letter.findOne({
                     where: {
-                        id: id,
+                        id,
                     },
                 });
                 if (existingJobOfferLetter) {

@@ -8,10 +8,10 @@ eventRouter.post('/', checkAuth(['Admin']), eventController.create)
 
 eventRouter.get('/', eventController.getAll)
 eventRouter.get('/employee/:employeeId', eventController.getByEmployee)
-eventRouter.get('/:enventId', eventController.getDetail)
+eventRouter.get('/:eventId', eventController.getDetail)
 
-eventRouter.delete('/:enventId', checkAuth(['Admin']), eventController.delete)
+eventRouter.delete('/:eventId', checkAuth(['Admin']), eventController.delete)
 
-eventRouter.put('/:enventId', checkAuth(['Admin']), eventController.update)
+eventRouter.put('/:eventId', checkAuth(['Admin']), eventController.update)
 
 export default eventRouter

@@ -17,8 +17,8 @@ const Sign_1 = require("./Sign");
 var enumStatus;
 (function (enumStatus) {
     enumStatus["PENDING"] = "Pending";
-    enumStatus["DRAFT"] = "Draft";
-    enumStatus["WITHDRAW"] = "Withdraw";
+    enumStatus["ACCEPTED"] = "Accepted";
+    enumStatus["REJECTED"] = "Rejected";
 })(enumStatus = exports.enumStatus || (exports.enumStatus = {}));
 var enumRate;
 (function (enumRate) {
@@ -68,6 +68,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: enumRate, default: enumRate.PER_HOUR }),
     __metadata("design:type", String)
 ], Job_offer_letter.prototype, "rate", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Job_offer_letter.prototype, "token", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => Sign_1.Sign, {
         cascade: true,

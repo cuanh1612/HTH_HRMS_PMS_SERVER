@@ -10,7 +10,7 @@ const attendanceController = {
 	getAll: handleCatchError(async (req: Request, res: Response) => {
 		const { date, department, employee } = req.query
 
-		let data = await Employee.find({
+		const data = await Employee.find({
 			select: {
 				id: true,
 				name: true,
@@ -47,7 +47,7 @@ const attendanceController = {
 		return res.json({
 			code: 200,
 			success: true,
-			message: 'Mark attendances successfully',
+			message: 'Get all attendances successfully',
 			data: data || [],
 		})
 	}),
@@ -105,7 +105,7 @@ const attendanceController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			message: 'Check attendance successfully',
+			message: 'Checked attendance successfully',
 		})
 	}),
 
@@ -158,13 +158,13 @@ const attendanceController = {
 			}
 		} else if (mark_attendance_by === 'Month' && employees.length > 0) {
 			//Set date start mark attendance is 1
-			let dateMark = new Date(`4-1-${year}`)
+			const dateMark = new Date(`4-1-${year}`)
 
 			//Get date next month
 			const dateNextMonth = new Date(`${Number(month) + 1}-1-${year}`)
 
 			//Get date now -1
-			let dateNow = new Date()
+			const dateNow = new Date()
 			dateNow.setDate(dateNow.getDate() - 1)
 
 			while (dateMark < dateNextMonth && dateMark < dateNow) {
@@ -195,7 +195,7 @@ const attendanceController = {
 							employee: existingEmployee,
 						}).save())
 
-					//increase datemark 1 day
+					//increase date mark 1 day
 					dateMark.setDate(dateMark.getDate() + 1)
 				}
 			}
@@ -228,7 +228,7 @@ const attendanceController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			message: 'Mark attendances successfully',
+			message: 'Checked attendance successfully',
 		})
 	}),
 
@@ -237,13 +237,13 @@ const attendanceController = {
 		const dataUpAttendances: Attendance = req.body
 
 		//Check exist attendance
-		const exisitingAttendance = await Attendance.findOne({
+		const existingAttendance = await Attendance.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!exisitingAttendance)
+		if (!existingAttendance)
 			return res.status(400).json({
 				code: 400,
 				success: false,

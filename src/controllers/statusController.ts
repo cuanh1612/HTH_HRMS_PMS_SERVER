@@ -9,7 +9,6 @@ const statusController = {
 	//create new status
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const { projectId, title, color } = req.body
-		console.log( req.body)
 
 		if (!projectId || !title || !color) {
 			return res.status(400).json({
@@ -19,7 +18,7 @@ const statusController = {
 			})
 		}
 
-		const laststatus = await Status.findOne({
+		const lastStatus = await Status.findOne({
 			where: {
 				project: {
 					id: projectId,
@@ -30,37 +29,37 @@ const statusController = {
 			},
 		})
 
-		if (!laststatus)
+		if (!lastStatus)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Status does not exist in the system',
 			})
 
-		const existingproject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: projectId,
 			},
 		})
-		if (!existingproject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Project does not exist in the system',
 			})
 
-		const status_result = await Status.create({
-			project: existingproject,
+		const result = await Status.create({
+			project: existingProject,
 			title: title,
 			color: color,
-			index: laststatus.index + 1,
+			index: lastStatus.index + 1,
 		}).save()
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
 			message: 'Create status success',
-			result: status_result,
+			result,
 		})
 	}),
 
@@ -87,12 +86,12 @@ const statusController = {
 			message: 'Get detail of project success',
 		})
 	}),
-	
+
 	//get all status by project
 	getAllPj: handleCatchError(async (req: Request, res: Response) => {
 		const { projectId } = req.params
 
-		const findbyproject = await Status.find({
+		const findByProject = await Status.find({
 			where: {
 				project: {
 					id: Number(projectId),
@@ -100,7 +99,7 @@ const statusController = {
 			},
 		})
 
-		if (!findbyproject)
+		if (!findByProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -110,7 +109,7 @@ const statusController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			statuses: findbyproject,
+			statuses: findByProject,
 			message: 'Get all status success',
 		})
 	}),
@@ -119,7 +118,7 @@ const statusController = {
 	getAllWithTask: handleCatchError(async (req: Request, res: Response) => {
 		const { projectId } = req.params
 
-		const findbyproject = await Status.find({
+		const findByProject = await Status.find({
 			where: {
 				project: {
 					id: Number(projectId),
@@ -128,7 +127,7 @@ const statusController = {
 			relations: {
 				tasks: {
 					employees: true,
-					assignBy: true
+					assignBy: true,
 				},
 			},
 			order: {
@@ -139,7 +138,7 @@ const statusController = {
 			},
 		})
 
-		if (!findbyproject)
+		if (!findByProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -149,7 +148,7 @@ const statusController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			statuses: findbyproject,
+			statuses: findByProject,
 			message: 'Get all status success',
 		})
 	}),
@@ -159,20 +158,20 @@ const statusController = {
 		const { id } = req.params
 		const dataUpdateStatus: createOrUpdateStatusPayload = req.body
 
-		const existingstatus = await Status.findOne({
+		const existingStatus = await Status.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingstatus)
+		if (!existingStatus)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'status does not existing in the system',
 			})
 
-		const messageValid = statusValid.createOrUpdate(existingstatus, 'update')
+		const messageValid = statusValid.createOrUpdate(existingStatus, 'update')
 
 		if (messageValid)
 			return res.status(400).json({
@@ -180,10 +179,10 @@ const statusController = {
 				success: false,
 				message: messageValid,
 			})
-		;(existingstatus.title = dataUpdateStatus.title),
-			(existingstatus.color = dataUpdateStatus.color)
+		;(existingStatus.title = dataUpdateStatus.title),
+			(existingStatus.color = dataUpdateStatus.color)
 
-		await existingstatus.save()
+		await existingStatus.save()
 
 		return res.status(200).json({
 			code: 200,
@@ -196,19 +195,19 @@ const statusController = {
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingstatus = await Status.findOne({
+		const existingStatus = await Status.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
-		if (!existingstatus)
+		if (!existingStatus)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'status does not existing in the system',
 			})
 
-		const messageValid = statusValid.createOrUpdate(existingstatus, 'update')
+		const messageValid = statusValid.createOrUpdate(existingStatus, 'update')
 
 		if (messageValid)
 			return res.status(400).json({
@@ -217,7 +216,7 @@ const statusController = {
 				message: messageValid,
 			})
 
-		existingstatus.remove()
+		existingStatus.remove()
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -226,7 +225,7 @@ const statusController = {
 	}),
 
 	//Change position of status
-	changeposition: handleCatchError(async (req: Request, res: Response) => {
+	changePosition: handleCatchError(async (req: Request, res: Response) => {
 		const { id1, id2, projectId } = req.body
 
 		const status1 = await Status.createQueryBuilder('status')
@@ -244,16 +243,16 @@ const statusController = {
 			})
 
 		if (status1.index > status2.index) {
-			const allstatus = await Status.createQueryBuilder('status')
+			const allStatus = await Status.createQueryBuilder('status')
 				.where('status.index >= :index and status.projectId = :projectId', {
 					index: status2.index,
 					projectId,
 				})
 				.getMany()
 
-			if (allstatus)
+			if (allStatus)
 				await Promise.all(
-					allstatus.map(async (status) => {
+					allStatus.map(async (status) => {
 						return new Promise(async (resolve) => {
 							const result = Status.update(
 								{
@@ -270,7 +269,7 @@ const statusController = {
 		}
 
 		if (status1.index < status2.index) {
-			const allstatus = await Status.createQueryBuilder('status')
+			const allStatus = await Status.createQueryBuilder('status')
 				.where(
 					'status.index > :index and status.index <= :index2 and status.projectId = :projectId',
 					{
@@ -281,9 +280,9 @@ const statusController = {
 				)
 				.getMany()
 
-			if (allstatus)
+			if (allStatus)
 				await Promise.all(
-					allstatus.map(async (status) => {
+					allStatus.map(async (status) => {
 						return new Promise(async (resolve) => {
 							status.index = status.index - 1
 							resolve(await status.save())

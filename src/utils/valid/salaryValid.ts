@@ -1,7 +1,7 @@
-import { createOrUpdatetSalaryFilesPayload } from '../../type/SalaryPayLoad'
+import { createOrUpdateSalaryFilesPayload } from '../../type/SalaryPayLoad'
 
 export const salaryValid = {
-	createOrUpdate: ({ amount, type, employee, date }: createOrUpdatetSalaryFilesPayload) => {
+	createOrUpdate: ({ amount, type, employee, date }: createOrUpdateSalaryFilesPayload) => {
 		let messageError = ''
 
 		if (!employee || !type || !employee || !date) {

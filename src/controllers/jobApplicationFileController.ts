@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
 import { Job_Application } from '../entities/Job_Application'
 import { Job_application_file } from '../entities/Job_Application_File'
-import { createOrUpdatetJobApplicationFilesPayload } from '../type/jobApplicationFilePayLoad'
+import { createOrUpdateJobApplicationFilesPayload } from '../type/jobApplicationFilePayLoad'
 import handleCatchError from '../utils/catchAsyncError'
 
 const jobApplicationFileController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const { jobApplication, files } = req.body as createOrUpdatetJobApplicationFilesPayload
+		const { jobApplication, files } = req.body as createOrUpdateJobApplicationFilesPayload
 
 		//check exist job application
 		const existingJobApplication = await Job_Application.findOne({

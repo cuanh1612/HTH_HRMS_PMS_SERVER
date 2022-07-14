@@ -3,7 +3,7 @@ import { Skill } from '../entities/Skill'
 import handleCatchError from '../utils/catchAsyncError'
 
 const skillController = {
-	createmany: handleCatchError(async (req: Request, res: Response) => {
+	createMany: handleCatchError(async (req: Request, res: Response) => {
 		const { skills }: { skills: string[] } = req.body
 
 		if (!Array.isArray(skills) || skills.length < 1)
@@ -14,9 +14,9 @@ const skillController = {
 			})
 
 		await Promise.all(
-			skills.map((skill) => {
-				return new Promise((resolve) => {
-					Skill.create({
+			skills.map(async (skill) => {
+				return new Promise(async (resolve) => {
+					await Skill.create({
 						name: skill,
 					}).save()
 					resolve(true)
@@ -46,19 +46,19 @@ const skillController = {
 		const { id } = req.params
 		const dataUpdateSkill = req.body
 
-		const existingskill = await Skill.findOne({
+		const existingSkill = await Skill.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingskill)
+		if (!existingSkill)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Skill does not existing in the system',
 			})
-		;(existingskill.name = dataUpdateSkill.name), await existingskill.save()
+		;(existingSkill.name = dataUpdateSkill.name), await existingSkill.save()
 
 		return res.status(200).json({
 			code: 200,
@@ -67,16 +67,16 @@ const skillController = {
 		})
 	}),
 
-	getdetail: handleCatchError(async (req: Request, res: Response) => {
+	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingskill = await Skill.findOne({
+		const existingSkill = await Skill.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingskill)
+		if (!existingSkill)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -86,7 +86,7 @@ const skillController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			skill: existingskill,
+			skill: existingSkill,
 			message: 'Get detail of skill success',
 		})
 	}),
@@ -94,20 +94,20 @@ const skillController = {
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingskill = await Skill.findOne({
+		const existingSkill = await Skill.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingskill)
+		if (!existingSkill)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Skill does not existing in the system',
 			})
 
-		await existingskill.remove()
+		await existingSkill.remove()
 
 		return res.status(200).json({
 			code: 200,
@@ -116,7 +116,7 @@ const skillController = {
 		})
 	}),
 
-	deletemany: handleCatchError(async (req: Request, res: Response) => {
+	deleteMany: handleCatchError(async (req: Request, res: Response) => {
 		const { skills } = req.body
 
 		//check array of skill
@@ -127,20 +127,16 @@ const skillController = {
 				message: 'Skill does not exist in the system',
 			})
 
-		const dlManyHandle = async (id: number) => {
-			const existingskill = await Skill.findOne({
-				where: {
-					id: id,
-				},
-			})
-
-			if (existingskill) await Skill.remove(existingskill)
-		}
-
 		await Promise.all(
-			skills.map((id: number) => {
-				return new Promise((resolve) => {
-					dlManyHandle(id)
+			skills.map(async (id: number) => {
+				return new Promise(async (resolve) => {
+					const existingskill = await Skill.findOne({
+						where: {
+							id: id,
+						},
+					})
+
+					if (existingskill) await Skill.remove(existingskill)
 					resolve(true)
 				})
 			})

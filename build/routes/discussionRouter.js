@@ -9,6 +9,6 @@ const checkAuth_1 = require("../utils/middleware/checkAuth");
 const discussionRouter = express_1.default.Router();
 discussionRouter.post('/', (0, checkAuth_1.checkAuth)([]), discussionController_1.default.create);
 discussionRouter.get('/contract/:contractId', (0, checkAuth_1.checkAuth)([]), discussionController_1.default.getByContract);
-discussionRouter.delete('/:discussionId', (0, checkAuth_1.checkAuth)([]), discussionController_1.default.delele);
+discussionRouter.delete('/:discussionId', (0, checkAuth_1.checkAuth)([]), discussionController_1.default.delete);
 discussionRouter.put('/:discussionId', (0, checkAuth_1.checkAuth)([]), discussionController_1.default.update);
 exports.default = discussionRouter;

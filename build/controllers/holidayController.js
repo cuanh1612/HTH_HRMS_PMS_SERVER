@@ -47,30 +47,30 @@ const holidayController = {
     //update holiday
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const dataUpdateholiday = req.body;
+        const dataUpdateHoliday = req.body;
         //Check date holiday existing and delete
         const existingHolidayDate = yield Holiday_1.Holiday.findOne({
             where: {
-                holiday_date: new Date(dataUpdateholiday.holiday_date),
+                holiday_date: new Date(dataUpdateHoliday.holiday_date),
             },
         });
         if (existingHolidayDate) {
             yield existingHolidayDate.remove();
         }
         //Check existing date holiday
-        const existingholiday = yield Holiday_1.Holiday.findOne({
+        const existingHoliday = yield Holiday_1.Holiday.findOne({
             where: {
                 id: Number(id),
             },
         });
         //check existed holiday
-        if (!existingholiday)
+        if (!existingHoliday)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'holiday does not exist in the system',
             });
-        yield Holiday_1.Holiday.update(existingholiday.id, Object.assign({}, dataUpdateholiday));
+        yield Holiday_1.Holiday.update(existingHoliday.id, Object.assign({}, dataUpdateHoliday));
         return res.status(200).json({
             code: 200,
             success: true,
@@ -102,12 +102,12 @@ const holidayController = {
     //Get detail holiday
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingholiday = yield Holiday_1.Holiday.findOne({
+        const existingHoliday = yield Holiday_1.Holiday.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!existingholiday)
+        if (!existingHoliday)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -116,35 +116,34 @@ const holidayController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            holiday: existingholiday,
+            holiday: existingHoliday,
             message: 'Get detail of holiday successfully',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
-        const existingholiday = yield Holiday_1.Holiday.findOne({
+        const existingHoliday = yield Holiday_1.Holiday.findOne({
             where: {
                 id: Number(id),
             },
         });
-        if (!existingholiday)
+        if (!existingHoliday)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Holiday does not exist in the system',
             });
         //Delete holiday
-        yield existingholiday.remove();
+        yield existingHoliday.remove();
         return res.status(200).json({
             code: 200,
             success: true,
             message: 'Delete holiday successfully',
         });
     })),
-    deletemany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    deleteMany: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { holidays } = req.body;
         //check array of holidays
-        console.log(holidays);
         if (!Array.isArray(holidays) || !holidays)
             return res.status(400).json({
                 code: 400,
@@ -153,13 +152,13 @@ const holidayController = {
             });
         for (let index = 0; index < holidays.length; index++) {
             const itemHoliday = holidays[index];
-            const existingholiday = yield Holiday_1.Holiday.findOne({
+            const existingHoliday = yield Holiday_1.Holiday.findOne({
                 where: {
                     id: Number(itemHoliday),
                 },
             });
-            if (existingholiday) {
-                yield existingholiday.remove();
+            if (existingHoliday) {
+                yield existingHoliday.remove();
             }
         }
         return res.status(200).json({

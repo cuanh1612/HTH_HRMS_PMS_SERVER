@@ -1,6 +1,6 @@
 import { Interview_file } from '../entities/Interview_File'
 
-export type createOrUpdatetInterviewFilesPayload = {
+export type createOrUpdateInterviewFilesPayload = {
     files: Interview_file[]
     interview: number
 }

@@ -6,14 +6,14 @@ import { Notification } from '../entities/Notification'
 import { Project } from '../entities/Project'
 import { Task } from '../entities/Task'
 import { Time_log } from '../entities/Time_Log'
-import { createOrUpdatetTimeLogPayload } from '../type/TimeLogPayload'
+import { createOrUpdateTimeLogPayload } from '../type/TimeLogPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { timeLogValid } from '../utils/valid/timeLogValid'
 
 const timeLogController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewTimeLog = req.body as createOrUpdatetTimeLogPayload
+		const dataNewTimeLog = req.body as createOrUpdateTimeLogPayload
 		const { project, task, employee, starts_on_date, ends_on_date } = dataNewTimeLog
 
 		//check exist current user
@@ -54,16 +54,16 @@ const timeLogController = {
 			})
 
 		//check exist project
-		const existingproject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: project,
 			},
 			relations: {
-				project_Admin: true
-			}
+				project_Admin: true,
+			},
 		})
 
-		if (!existingproject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -72,7 +72,7 @@ const timeLogController = {
 
 		if (
 			existingUser.role !== 'Admin' &&
-			existingproject.project_Admin.email !== existingUser.email
+			existingProject.project_Admin.email !== existingUser.email
 		)
 			return res.status(400).json({
 				code: 400,
@@ -80,7 +80,7 @@ const timeLogController = {
 				message: 'You do not have permission to perform this operation',
 			})
 
-		//Check exisiting task
+		//Check existing task
 		const existingTask = await Task.findOne({
 			where: {
 				id: task,
@@ -97,7 +97,7 @@ const timeLogController = {
 				message: 'Task does not exist in the system',
 			})
 
-		//Check exisiting employee
+		//Check existing employee
 		const existingEmployee = await Employee.findOne({
 			where: {
 				id: employee,
@@ -113,10 +113,10 @@ const timeLogController = {
 
 		//Check employee  assign to task and project
 		if (
-			!existingproject.employees.some(
+			!existingProject.employees.some(
 				(employeeItem) => employeeItem.id === existingEmployee.id
 			) ||
-			!existingproject.employees.some(
+			!existingProject.employees.some(
 				(employeeItem) => employeeItem.id === existingEmployee.id
 			)
 		) {
@@ -130,9 +130,9 @@ const timeLogController = {
 		//Create time log
 		const newTimeLog = await Time_log.create({
 			...dataNewTimeLog,
-			starts_on_date: new Date(new Date(dataNewTimeLog.starts_on_date).toLocaleDateString()),
-			ends_on_date: new Date(new Date(dataNewTimeLog.ends_on_date).toLocaleDateString()),
-			project: existingproject,
+			starts_on_date: new Date(dataNewTimeLog.starts_on_date),
+			ends_on_date: new Date(dataNewTimeLog.ends_on_date),
+			project: existingProject,
 			task: existingTask,
 			employee: existingEmployee,
 		}).save()
@@ -144,7 +144,7 @@ const timeLogController = {
 			},
 		})) as Time_log
 
-		//Get total hourse
+		//Get total hours
 		const dateOneObj = new Date(starts_on_date)
 		const dateTwoObj = new Date(ends_on_date)
 		const dateOneObjTime = new Date(
@@ -164,19 +164,19 @@ const timeLogController = {
 		createdTimeLog.total_hours = totalHours
 
 		//Get total earning
-		const exisingHourlyrate = await Hourly_rate_project.findOne({
+		const existingHourlyRate = await Hourly_rate_project.findOne({
 			where: {
 				employee: {
 					id: existingEmployee.id,
 				},
 				project: {
-					id: existingproject.id,
+					id: existingProject.id,
 				},
 			},
 		})
 
-		if (exisingHourlyrate) {
-			createdTimeLog.earnings = exisingHourlyrate.hourly_rate * totalHours
+		if (existingHourlyRate) {
+			createdTimeLog.earnings = existingHourlyRate.hourly_rate * totalHours
 		}
 
 		//Save update earning
@@ -185,7 +185,7 @@ const timeLogController = {
 		//Create notification
 		await Notification.create({
 			employee: existingEmployee,
-			url: `/projects/${existingproject.id}/time-logs-table`,
+			url: `/projects/${existingProject.id}/time-logs-table`,
 			content: 'You have just been assigned to a new time log',
 		}).save()
 
@@ -201,7 +201,7 @@ const timeLogController = {
 	//update timelog
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { timeLogId } = req.params
-		const dataUpdateTimeLog = req.body as createOrUpdatetTimeLogPayload
+		const dataUpdateTimeLog = req.body as createOrUpdateTimeLogPayload
 		const {
 			project,
 			task,
@@ -249,16 +249,16 @@ const timeLogController = {
 			})
 
 		//check exist project
-		const existingproject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: project,
 			},
 			relations: {
-				project_Admin: true
-			}
+				project_Admin: true,
+			},
 		})
 
-		if (!existingproject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -267,7 +267,7 @@ const timeLogController = {
 
 		if (
 			existingUser.role !== 'Admin' &&
-			existingproject.project_Admin.email !== existingUser.email
+			existingProject.project_Admin.email !== existingUser.email
 		)
 			return res.status(400).json({
 				code: 400,
@@ -275,7 +275,7 @@ const timeLogController = {
 				message: 'You do not have permission to perform this operation',
 			})
 
-		//Check exisiting task
+		//Check existing task
 		const existingTask = await Task.findOne({
 			where: {
 				id: task,
@@ -292,7 +292,7 @@ const timeLogController = {
 				message: 'Task does not exist in the system',
 			})
 
-		//Check exisiting employee
+		//Check existing employee
 		const existingEmployee = await Employee.findOne({
 			where: {
 				id: employee,
@@ -308,10 +308,10 @@ const timeLogController = {
 
 		//Check employee  assign to task and project
 		if (
-			!existingproject.employees.some(
+			!existingProject.employees.some(
 				(employeeItem) => employeeItem.id === existingEmployee.id
 			) ||
-			!existingproject.employees.some(
+			!existingProject.employees.some(
 				(employeeItem) => employeeItem.id === existingEmployee.id
 			)
 		) {
@@ -338,7 +338,7 @@ const timeLogController = {
 		existingTimeLog.starts_on_time = starts_on_time
 		existingTimeLog.ends_on_time = ends_on_time
 
-		//Get total hourse
+		//Get total hours
 		const dateOneObj = new Date(starts_on_date)
 		const dateTwoObj = new Date(ends_on_date)
 		const dateOneObjTime = new Date(
@@ -358,31 +358,27 @@ const timeLogController = {
 		existingTimeLog.total_hours = totalHours
 
 		//Get total earning
-		const exisingHourlyrate = await Hourly_rate_project.findOne({
+		const existingHourlyRate = await Hourly_rate_project.findOne({
 			where: {
 				employee: {
 					id: existingEmployee.id,
 				},
 				project: {
-					id: existingproject.id,
+					id: existingProject.id,
 				},
 			},
 		})
 
-		if (exisingHourlyrate) {
-			existingTimeLog.earnings = exisingHourlyrate.hourly_rate * totalHours
+		if (existingHourlyRate) {
+			existingTimeLog.earnings = existingHourlyRate.hourly_rate * totalHours
 		}
 
-		existingTimeLog.project = existingproject
+		existingTimeLog.project = existingProject
 		existingTimeLog.task = task
 		existingTimeLog.memo = dataUpdateTimeLog.memo
 		existingTimeLog.employee = existingEmployee
-		existingTimeLog.starts_on_date = new Date(
-			new Date(dataUpdateTimeLog.starts_on_date).toLocaleDateString()
-		)
-		existingTimeLog.ends_on_date = new Date(
-			new Date(dataUpdateTimeLog.ends_on_date).toLocaleDateString()
-		)
+		existingTimeLog.starts_on_date = new Date(dataUpdateTimeLog.starts_on_date)
+		existingTimeLog.ends_on_date = new Date(dataUpdateTimeLog.ends_on_date)
 
 		//Save update
 		await existingTimeLog.save()
@@ -484,16 +480,16 @@ const timeLogController = {
 				message: 'Please login first',
 			})
 
-		const { projectId } = req.params // taik biet tieenngs
+		const { projectId } = req.params
 
 		//Check exist project
-		const existingproject = await Project.findOne({
+		const existingProject = await Project.findOne({
 			where: {
 				id: Number(projectId),
 			},
 		})
 
-		if (!existingproject)
+		if (!existingProject)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -509,9 +505,9 @@ const timeLogController = {
 				id: number
 			}
 		} = {}
-		if (existingproject)
+		if (existingProject)
 			filter.project = {
-				id: Number(existingproject.id),
+				id: Number(existingProject.id),
 			}
 
 		if (decode.role === 'Employee')
@@ -540,7 +536,7 @@ const timeLogController = {
 		})
 	}),
 
-	Deletemany: handleCatchError(async (req: Request, res: Response) => {
+	deleteMany: handleCatchError(async (req: Request, res: Response) => {
 		const { timelogs } = req.body
 
 		//check exist current user
@@ -677,20 +673,20 @@ const timeLogController = {
 		const { employeeId } = req.params
 
 		//Check exist employee
-		const exisitingEmployee = await Employee.findOne({
+		const existingEmployee = await Employee.findOne({
 			where: {
 				id: Number(employeeId),
 			},
 		})
 
-		if (!exisitingEmployee)
+		if (!existingEmployee)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Employee does not exist in the system',
 			})
 
-		//Check exisit employee
+		//Check exist employee
 
 		var filter: {
 			project?: {
@@ -705,7 +701,7 @@ const timeLogController = {
 		} = {}
 
 		filter.employee = {
-			id: Number(exisitingEmployee.id),
+			id: Number(existingEmployee.id),
 		}
 
 		if (project)
@@ -764,7 +760,7 @@ const timeLogController = {
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { timelogId } = req.params
 
-		const existingtimelog = await Time_log.findOne({
+		const existingTimelog = await Time_log.findOne({
 			where: {
 				id: Number(timelogId),
 			},
@@ -774,7 +770,7 @@ const timeLogController = {
 				task: true,
 			},
 		})
-		if (!existingtimelog)
+		if (!existingTimelog)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -784,7 +780,7 @@ const timeLogController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			timeLog: existingtimelog,
+			timeLog: existingTimelog,
 			message: 'Get detail of timelog success',
 		})
 	}),

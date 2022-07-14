@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { Interview } from '../entities/Interview';
 import { Interview_file } from '../entities/Interview_File';
-import { createOrUpdatetInterviewFilesPayload } from '../type/interviewFilePayLoad';
+import { createOrUpdateInterviewFilesPayload } from '../type/interviewFilePayLoad';
 import handleCatchError from "../utils/catchAsyncError";
 
 const interviewFileController = {
     create: handleCatchError(async (req: Request, res: Response) => {
-        const { interview, files } = req.body as createOrUpdatetInterviewFilesPayload
+        const { interview, files } = req.body as createOrUpdateInterviewFilesPayload
 
         //check exist interview
         const existingInterview = await Interview.findOne({
@@ -48,7 +48,7 @@ const interviewFileController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'This inteview does not existing in the system'
+                message: 'This interview does not existing in the system'
             })
 
         //check existing interview file
@@ -79,7 +79,7 @@ const interviewFileController = {
     getAll: handleCatchError(async (req: Request, res: Response) => {
 		const {interviewId } = req.params
 
-        //Check exist inteview
+        //Check exist interview
 		const existingInterview = await Interview.findOne({
 			where: {
 				id: Number(interviewId),

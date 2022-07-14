@@ -16,8 +16,8 @@ import { Sign } from './Sign'
 
 export enum enumStatus {
 	PENDING = 'Pending',
-	DRAFT = 'Draft',
-	WITHDRAW = 'Withdraw',
+	ACCEPTED = 'Accepted',
+	REJECTED = 'Rejected',
 }
 
 export enum enumRate {
@@ -60,6 +60,9 @@ export class Job_offer_letter extends BaseEntity {
 
     @Column({ type: 'enum', enum: enumRate, default: enumRate.PER_HOUR })
 	rate: string
+
+	@Column({nullable: true})
+	token: string
 
 	@OneToOne(() => Sign, {
 		cascade: true,

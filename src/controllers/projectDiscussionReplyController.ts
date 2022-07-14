@@ -74,9 +74,6 @@ const projectDiscussionReplyController = {
 				success: false,
 				message: 'Employee does not exist in the discussion room',
 			})
-        
-        console.log(existingProject);
-        
 
 		await Project_discussion_reply.create({
 			reply: dataNewDiscussionReply.reply,
@@ -95,22 +92,22 @@ const projectDiscussionReplyController = {
 		const { projectDiscussionRoomId } = req.params
 
 		//check exist project discussion room
-		const existingprojectDiscussionRoom = await Project_Discussion_Room.findOne({
+		const existingProjectDiscussionRoom = await Project_Discussion_Room.findOne({
 			where: {
 				id: Number(projectDiscussionRoomId),
 			},
 		})
 
-		if (!existingprojectDiscussionRoom)
+		if (!existingProjectDiscussionRoom)
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Project discussion roome does not exist in the system',
+				message: 'Project discussion room does not exist in the system',
 			})
 
 		const replies = await Project_discussion_reply.find({
 			where: {
-				project_discussion_room: { id: existingprojectDiscussionRoom.id },
+				project_discussion_room: { id: existingProjectDiscussionRoom.id },
 			},
 			order: {
 				createdAt: 'DESC',

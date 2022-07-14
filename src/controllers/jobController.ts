@@ -10,7 +10,7 @@ import { createOrUpdateJobPayload } from '../type/JobPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { jobValid } from '../utils/valid/jobValid'
 
-const jobControler = {
+const jobController = {
 	//create new job
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewJob: createOrUpdateJobPayload = req.body
@@ -42,12 +42,12 @@ const jobControler = {
 
 		//check existing recruiter
 		if (recruiter) {
-			const exisitingRecruiter = await Employee.findOne({
+			const existingRecruiter = await Employee.findOne({
 				where: {
 					id: recruiter,
 				},
 			})
-			if (!exisitingRecruiter)
+			if (!existingRecruiter)
 				return res.status(400).json({
 					code: 400,
 					success: false,
@@ -189,14 +189,14 @@ const jobControler = {
 
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
-		const datatUpdateJob: createOrUpdateJobPayload = req.body
+		const dataUpdateJob: createOrUpdateJobPayload = req.body
 		const { department, recruiter, locations, job_type, work_experience, skills } =
-			datatUpdateJob
+		dataUpdateJob
 
 		const listValidSkills: Skill[] = []
 		const listValidLocations: Location[] = []
 
-		const messageValid = jobValid.createOrUpdate(datatUpdateJob)
+		const messageValid = jobValid.createOrUpdate(dataUpdateJob)
 
 		if (messageValid)
 			return res.status(400).json({
@@ -234,12 +234,12 @@ const jobControler = {
 
 		//check existing recruiter
 		if (recruiter) {
-			const exisitingRecruiter = await Employee.findOne({
+			const existingRecruiter = await Employee.findOne({
 				where: {
 					id: recruiter,
 				},
 			})
-			if (!exisitingRecruiter)
+			if (!existingRecruiter)
 				return res.status(400).json({
 					code: 400,
 					success: false,
@@ -326,26 +326,26 @@ const jobControler = {
 			})
 
 		//update job
-		existingJob.title = datatUpdateJob.title
-		if (datatUpdateJob.starts_on_date) {
-			existingJob.starts_on_date = new Date(datatUpdateJob.starts_on_date)
+		existingJob.title = dataUpdateJob.title
+		if (dataUpdateJob.starts_on_date) {
+			existingJob.starts_on_date = new Date(dataUpdateJob.starts_on_date)
 		}
-		if (datatUpdateJob.ends_on_date) {
-			existingJob.ends_on_date = new Date(datatUpdateJob.ends_on_date)
+		if (dataUpdateJob.ends_on_date) {
+			existingJob.ends_on_date = new Date(dataUpdateJob.ends_on_date)
 		}
 		existingJob.skills = listValidSkills
 		existingJob.locations = listValidLocations
-		existingJob.department = datatUpdateJob.department
-		existingJob.status = datatUpdateJob.status
-		existingJob.total_openings = datatUpdateJob.total_openings
-		existingJob.job_type = datatUpdateJob.job_type
-		existingJob.work_experience = datatUpdateJob.work_experience
-		existingJob.recruiter = datatUpdateJob.recruiter
-		existingJob.starting_salary_amount = datatUpdateJob.starting_salary_amount
-		existingJob.job_description = datatUpdateJob.job_description
+		existingJob.department = dataUpdateJob.department
+		existingJob.status = dataUpdateJob.status
+		existingJob.total_openings = dataUpdateJob.total_openings
+		existingJob.job_type = dataUpdateJob.job_type
+		existingJob.work_experience = dataUpdateJob.work_experience
+		existingJob.recruiter = dataUpdateJob.recruiter
+		existingJob.starting_salary_amount = dataUpdateJob.starting_salary_amount
+		existingJob.job_description = dataUpdateJob.job_description
 
-		if (datatUpdateJob.rate) {
-			existingJob.rate = datatUpdateJob.rate
+		if (dataUpdateJob.rate) {
+			existingJob.rate = dataUpdateJob.rate
 		}
 
 		await existingJob.save()
@@ -495,4 +495,4 @@ const jobControler = {
 	}),
 }
 
-export default jobControler
+export default jobController

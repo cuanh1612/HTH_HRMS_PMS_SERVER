@@ -66,7 +66,7 @@ const jobApplicationController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Job does not exisitng in the system',
+				message: 'Job does not existing in the system',
 			})
 		//check exist location
 		const existingLocation = await Location.findOne({
@@ -78,7 +78,7 @@ const jobApplicationController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Location does not exisitng in the system',
+				message: 'Location does not existing in the system',
 			})
 
 		const createJobApplication = await Job_Application.create({
@@ -94,8 +94,8 @@ const jobApplicationController = {
 	}),
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
-		const datatUpdateJobApplication: createOrUpdateJobApplicationPayload = req.body
-		const { location, jobs } = datatUpdateJobApplication
+		const dataUpdateJobApplication: createOrUpdateJobApplicationPayload = req.body
+		const { location, jobs } = dataUpdateJobApplication
 
 		//check exist job application
 		const existingJobApplication = await Job_Application.findOne({
@@ -121,7 +121,7 @@ const jobApplicationController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Job does not exisitng in the system',
+				message: 'Job does not existing in the system',
 			})
 		//check exist location
 		const existingLocation = await Location.findOne({
@@ -133,35 +133,35 @@ const jobApplicationController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Location does not exisitng in the system',
+				message: 'Location does not existing in the system',
 			})
 		
 
 		//Delete old picture
 		const oldPictureId = existingJobApplication?.picture?.id || undefined
 
-		;(existingJobApplication.name = datatUpdateJobApplication.name),
-			(existingJobApplication.email = datatUpdateJobApplication.email),
-			(existingJobApplication.jobs = datatUpdateJobApplication.jobs),
-			(existingJobApplication.location = datatUpdateJobApplication.location),
-			(existingJobApplication.mobile = datatUpdateJobApplication.mobile),
-			(existingJobApplication.picture = datatUpdateJobApplication.picture),
-			(existingJobApplication.cover_leter = datatUpdateJobApplication.cover_leter),
-			(existingJobApplication.status = datatUpdateJobApplication.status),
-			(existingJobApplication.source = datatUpdateJobApplication.source)
+		;(existingJobApplication.name = dataUpdateJobApplication.name),
+			(existingJobApplication.email = dataUpdateJobApplication.email),
+			(existingJobApplication.jobs = dataUpdateJobApplication.jobs),
+			(existingJobApplication.location = dataUpdateJobApplication.location),
+			(existingJobApplication.mobile = dataUpdateJobApplication.mobile),
+			(existingJobApplication.picture = dataUpdateJobApplication.picture),
+			(existingJobApplication.cover_leter = dataUpdateJobApplication.cover_leter),
+			(existingJobApplication.status = dataUpdateJobApplication.status),
+			(existingJobApplication.source = dataUpdateJobApplication.source)
 
 		await existingJobApplication.save()
 		
 
 		if (oldPictureId) {
-			const existingJobApplicationpicture = await Job_application_picture.findOne({
+			const existingJobApplicationPicture = await Job_application_picture.findOne({
 				where: {
 					id: oldPictureId,
 				},
 			})
 
-			if (existingJobApplicationpicture) {
-				await existingJobApplicationpicture.remove()
+			if (existingJobApplicationPicture) {
+				await existingJobApplicationPicture.remove()
 			}
 		}
 
@@ -237,14 +237,14 @@ const jobApplicationController = {
 		await existingJobApplication.remove()
 
 		if (pictureId) {
-			const existingJobApplicationpicture = await Job_application_picture.findOne({
+			const existingJobApplicationPicture = await Job_application_picture.findOne({
 				where: {
 					id: pictureId,
 				},
 			})
 
-			if (existingJobApplicationpicture) {
-				await existingJobApplicationpicture.remove()
+			if (existingJobApplicationPicture) {
+				await existingJobApplicationPicture.remove()
 			}
 		}
 

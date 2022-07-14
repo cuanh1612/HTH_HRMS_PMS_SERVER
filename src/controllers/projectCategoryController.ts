@@ -22,12 +22,12 @@ const projectCategoryController = {
 				message: 'Project category already exist in the system',
 			})
 
-		const createdproject_category = await Project_Category.create(dataNewCategory).save()
+		const createdProjectCategory = await Project_Category.create(dataNewCategory).save()
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			project_category: createdproject_category,
+			project_category: createdProjectCategory,
 			message: 'Created new project_category successfully',
 		})
 	}),
@@ -35,24 +35,24 @@ const projectCategoryController = {
 	//Update project category
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
-		const dataUpdateproject_category: Project_Category = req.body
-		const { name } = dataUpdateproject_category
+		const dataUpdateProjectCategory: Project_Category = req.body
+		const { name } = dataUpdateProjectCategory
 
-		const existingproject_category = await Project_Category.findOne({
+		const existingProjectCategory = await Project_Category.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
 		//check existed project_category
-		if (!existingproject_category)
+		if (!existingProjectCategory)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'Project category does not exist in the system',
 			})
 
-		if (name !== existingproject_category.name) {
+		if (name !== existingProjectCategory.name) {
 			const existingName = await Project_Category.findOne({
 				where: {
 					name: String(name),
@@ -67,8 +67,8 @@ const projectCategoryController = {
 				})
 		}
 
-		await Project_Category.update(existingproject_category.id, {
-			...dataUpdateproject_category,
+		await Project_Category.update(existingProjectCategory.id, {
+			...dataUpdateProjectCategory,
 		})
 
 		return res.status(200).json({
@@ -80,11 +80,11 @@ const projectCategoryController = {
 
 	//Get all project category
 	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const project_categories = await Project_Category.find()
+		const projectCategories = await Project_Category.find()
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			projectCategories: project_categories,
+			projectCategories: projectCategories,
 			message: 'Get all project categories successfully',
 		})
 	}),
@@ -93,13 +93,13 @@ const projectCategoryController = {
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingproject_category = await Project_Category.findOne({
+		const existingProjectCategory = await Project_Category.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingproject_category)
+		if (!existingProjectCategory)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -109,7 +109,7 @@ const projectCategoryController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			project_category: existingproject_category,
+			project_category: existingProjectCategory,
 			message: 'Get detail of project_category successfully',
 		})
 	}),
@@ -117,13 +117,13 @@ const projectCategoryController = {
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingproject_category = await Project_Category.findOne({
+		const existingProjectCategory = await Project_Category.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingproject_category)
+		if (!existingProjectCategory)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -131,7 +131,7 @@ const projectCategoryController = {
 			})
 
 		//Delete project category
-		await existingproject_category.remove()
+		await existingProjectCategory.remove()
 
 		return res.status(200).json({
 			code: 200,

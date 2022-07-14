@@ -7,7 +7,7 @@ import { Client_Category } from '../entities/Client_Category'
 import { Client_Sub_Category } from '../entities/Client_Sub_Category'
 import { Employee } from '../entities/Employee'
 import { Project } from '../entities/Project'
-import { createOrUpdatetClientPayload } from '../type/ClientPayload'
+import { createOrUpdateClientPayload } from '../type/ClientPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { clientValid } from '../utils/valid/clientValid'
 
@@ -37,7 +37,7 @@ const clientController = {
 			code: 200,
 			success: true,
 			clients,
-			message: 'Get all employees successfully',
+			message: 'Get all clients successfully',
 		})
 	}),
 
@@ -67,7 +67,7 @@ const clientController = {
 	}),
 
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewClient: createOrUpdatetClientPayload = req.body
+		const dataNewClient: createOrUpdateClientPayload = req.body
 
 		//Check valid
 		const messageValid = clientValid.createOrUpdate(dataNewClient, 'create')
@@ -130,7 +130,7 @@ const clientController = {
 					message: 'Client sub category does not exist',
 				})
 
-			//Check parent cateory of sub category is match with input category
+			//Check parent category of sub category is match with input category
 			if (existSubCategory.client_category.id !== Number(dataNewClient.client_category))
 				return res.status(400).json({
 					code: 400,
@@ -165,10 +165,10 @@ const clientController = {
 	}),
 
 	importCSV: handleCatchError(async (req: Request, res: Response) => {
-		const { clients }: { clients: createOrUpdatetClientPayload[] } = req.body
+		const { clients }: { clients: createOrUpdateClientPayload[] } = req.body
 
-		let clientsNotValid: number[] = []
-		let clientsExistingEmail: number[] = []
+		const clientsNotValid: number[] = []
+		const clientsExistingEmail: number[] = []
 
 		await Promise.all(
 			clients.map((client) => {
@@ -227,7 +227,7 @@ const clientController = {
 	}),
 
 	update: handleCatchError(async (req: Request, res: Response) => {
-		const dataUpdateClient: createOrUpdatetClientPayload = req.body
+		const dataUpdateClient: createOrUpdateClientPayload = req.body
 		const { clientId } = req.params
 
 		//Check valid
@@ -309,7 +309,7 @@ const clientController = {
 					message: 'Client sub category does not exist',
 				})
 
-			//Check parent cateory of sub category is match with input category
+			//Check parent category of sub category is match with input category
 			if (existSubCategory.client_category.id !== Number(dataUpdateClient.client_category))
 				return res.status(400).json({
 					code: 400,
@@ -431,7 +431,7 @@ const clientController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			message: 'Delete clients successfully',
+			message: 'Deleted all clients successfully',
 		})
 	}),
 

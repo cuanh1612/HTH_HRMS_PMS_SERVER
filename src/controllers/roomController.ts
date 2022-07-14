@@ -249,7 +249,7 @@ const roomController = {
 
 		const oldTitle = existRoom.title
 		existRoom.title = title.replace(/ /g, '-')
-		existRoom.date = new Date(new Date(date).toLocaleDateString())
+		existRoom.date = new Date(new Date(date))
 		existRoom.description = description
 		existRoom.start_time = start_time
 		existRoom.clients = clientsInfo
@@ -355,7 +355,7 @@ const roomController = {
 
 		await Room.create({
 			title: title.replace(/ /g, '-'),
-			date: new Date(new Date(date).toLocaleDateString()),
+			date: new Date(new Date(date)),
 			description,
 			start_time,
 			clients: clientsInfo,

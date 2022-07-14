@@ -1,5 +1,5 @@
 import { enumDuration, enumStatus } from '../../entities/Leave'
-import { createOrUpdatetLeavePayload } from '../../type/LeavePayload'
+import { createOrUpdateLeavePayload } from '../../type/LeavePayload'
 
 export const leaveValid = {
 	createOrUpdate: ({
@@ -9,7 +9,7 @@ export const leaveValid = {
 		leave_type,
 		dates,
 		date,
-	}: createOrUpdatetLeavePayload) => {
+	}: createOrUpdateLeavePayload) => {
 		let messageError = ''
 
 		if (!employee || !leave_type || (!dates && !date)) {

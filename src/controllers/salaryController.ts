@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
 import { Salary } from '../entities/Salary'
-import { createOrUpdatetSalaryFilesPayload } from '../type/SalaryPayLoad'
+import { createOrUpdateSalaryFilesPayload } from '../type/SalaryPayLoad'
 import handleCatchError from '../utils/catchAsyncError'
 import { salaryValid } from '../utils/valid/salaryValid'
 
 const salaryController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewSalary = req.body as createOrUpdatetSalaryFilesPayload
+		const dataNewSalary = req.body as createOrUpdateSalaryFilesPayload
 		const { employee } = dataNewSalary
 
 		//Check valid input create new project

@@ -110,14 +110,14 @@ const dashboardJobsController = {
 
 	applicationSources: handleCatchError(async (_: Request, res: Response) => {
 		const manager = getManager('huprom')
-		const sourcessApplication = await manager.query(
+		const sourcesApplication = await manager.query(
 			'SELECT COUNT(job_application.id), job_application.source FROM job_application GROUP BY job_application.source'
 		)
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			applicationSources: sourcessApplication,
+			applicationSources: sourcesApplication,
 			message: 'Get application sources successfully',
 		})
 	}),

@@ -8,7 +8,7 @@ discussionRouter.post('/', checkAuth([]), discussionController.create)
 
 discussionRouter.get('/contract/:contractId', checkAuth([]), discussionController.getByContract)
 
-discussionRouter.delete('/:discussionId', checkAuth([]), discussionController.delele)
+discussionRouter.delete('/:discussionId', checkAuth([]), discussionController.delete)
 
 discussionRouter.put('/:discussionId',checkAuth([]), discussionController.update)
 

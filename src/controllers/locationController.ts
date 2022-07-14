@@ -7,7 +7,7 @@ import { Location } from "../entities/Location"
 
 const locationController = {
    
-    createmany: handleCatchError(async (req: Request, res: Response) =>{
+    createMany: handleCatchError(async (req: Request, res: Response) =>{
         const {locations} : {locations:string[]} = req.body
 
         if (!Array.isArray(locations) || locations.length <1)
@@ -49,24 +49,24 @@ const locationController = {
 
     update: handleCatchError(async ( req: Request, res: Response) => {
         const {id} = req.params
-        const dataUpdatelocation = req.body
+        const dataUpdateLocation = req.body
         
-        const existinglocation = await Location.findOne({
+        const existingLocation = await Location.findOne({
             where: {
                 id: Number(id),
             }
         })
 
-        if(!existinglocation)
+        if(!existingLocation)
             return res.status(400).json({
                 code: 400,
                 success: false,
                 message: 'Location does not existing in the system',
             })
         
-        ;(existinglocation.name = dataUpdatelocation.name),
+        ;(existingLocation.name = dataUpdateLocation.name),
 
-        await existinglocation.save()
+        await existingLocation.save()
 
         return res.status(200).json({
 			code: 200,
@@ -76,16 +76,16 @@ const locationController = {
         
     }),
 
-    getdetail: handleCatchError(async (req: Request,  res: Response) =>{
+    getDetail: handleCatchError(async (req: Request,  res: Response) =>{
         const {id} = req.params
 
-        const existinglocation = await Location.findOne({
+        const existingLocation = await Location.findOne({
             where: {
                 id: Number(id)
             }
         })
 
-        if(!existinglocation)
+        if(!existingLocation)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -95,13 +95,13 @@ const locationController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            location: existinglocation,
+            location: existingLocation,
             message: 'Get detail of location success'
         })
     }),
 
    
-    deletemany: handleCatchError(async (req: Request, res: Response) =>{
+    deleteMany: handleCatchError(async (req: Request, res: Response) =>{
         const {locations} = req.body
 
         //check array of location

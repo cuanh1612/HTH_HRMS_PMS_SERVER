@@ -53,7 +53,6 @@ const conversationController = {
                 employees: [{ id: existingUserOne.id }],
             },
         });
-        console.log(conversations);
         let isExistConversation = false;
         for (let index = 0; index < conversations.length; index++) {
             const conversation = conversations[index];

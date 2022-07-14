@@ -5,15 +5,15 @@ import { checkAuth } from "../utils/middleware/checkAuth";
 
 const skillRouter = express.Router()
 
-skillRouter.post('/', checkAuth(['Admin']), skillController.createmany)
+skillRouter.post('/', checkAuth(['Admin']), skillController.createMany)
 
 skillRouter.delete('/:id', checkAuth(['Admin']), skillController.delete)
 
-skillRouter.post('/delete-many', checkAuth(['Admin']), skillController.deletemany)
+skillRouter.post('/delete-many', checkAuth(['Admin']), skillController.deleteMany)
 
 skillRouter.get('/', skillController.getAll)
 
-skillRouter.get('/:id', skillController.getdetail)
+skillRouter.get('/:id', skillController.getDetail)
 
 skillRouter.put('/:id', checkAuth(['Admin']), skillController.update)
 

@@ -58,7 +58,7 @@ const clientController = {
             code: 200,
             success: true,
             clients,
-            message: 'Get all employees successfully',
+            message: 'Get all clients successfully',
         });
     })),
     getDetail: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -136,7 +136,7 @@ const clientController = {
                     success: false,
                     message: 'Client sub category does not exist',
                 });
-            //Check parent cateory of sub category is match with input category
+            //Check parent category of sub category is match with input category
             if (existSubCategory.client_category.id !== Number(dataNewClient.client_category))
                 return res.status(400).json({
                     code: 400,
@@ -161,8 +161,8 @@ const clientController = {
     })),
     importCSV: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { clients } = req.body;
-        let clientsNotValid = [];
-        let clientsExistingEmail = [];
+        const clientsNotValid = [];
+        const clientsExistingEmail = [];
         yield Promise.all(clients.map((client) => {
             return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
                 //Check valid
@@ -273,7 +273,7 @@ const clientController = {
                     success: false,
                     message: 'Client sub category does not exist',
                 });
-            //Check parent cateory of sub category is match with input category
+            //Check parent category of sub category is match with input category
             if (existSubCategory.client_category.id !== Number(dataUpdateClient.client_category))
                 return res.status(400).json({
                     code: 400,
@@ -366,7 +366,7 @@ const clientController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete clients successfully',
+            message: 'Deleted all clients successfully',
         });
     })),
     totalProjects: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

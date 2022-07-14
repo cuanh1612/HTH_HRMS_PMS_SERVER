@@ -2,13 +2,13 @@ import { Request, Response } from 'express'
 import { Secret, verify } from 'jsonwebtoken'
 import { Contract } from '../entities/Contract'
 import { Contract_file } from '../entities/Contract_File'
-import { createOrUpdatetContractFilesPayload } from '../type/ContractFilePayload'
+import { createOrUpdateContractFilesPayload } from '../type/ContractFilePayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 
 const contractFileController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const { files, contract } = req.body as createOrUpdatetContractFilesPayload
+		const { files, contract } = req.body as createOrUpdateContractFilesPayload
 
 		//Check exist contract
 		const existingContract = await Contract.findOne({

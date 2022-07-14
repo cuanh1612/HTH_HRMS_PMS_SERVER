@@ -69,7 +69,7 @@ const contractController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Contract not exist.',
+                message: 'Contract not exist',
             });
         }
         const contract = yield Contract_1.Contract.findOne({
@@ -92,7 +92,7 @@ const contractController = {
             code: 200,
             success: true,
             token,
-            message: 'Created contract token successfully',
+            message: 'Created contract link successfully',
         });
     })),
     public: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -158,7 +158,7 @@ const contractController = {
                 return res.status(400).json({
                     code: 400,
                     success: false,
-                    message: 'Contract tpee does not exists in the system',
+                    message: 'Contract type does not exists in the system',
                 });
         }
         //Create new contract
@@ -178,9 +178,9 @@ const contractController = {
     })),
     importCSV: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { contracts } = req.body;
-        let contractNotValid = [];
+        const contractNotValid = [];
         //contract not have client or client category
-        let contractNotCLCA = [];
+        const contractNotCLCA = [];
         yield Promise.all(contracts.map((contract) => {
             return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
                 //Check valid
@@ -205,23 +205,6 @@ const contractController = {
                             contractNotCLCA.push(contract.index);
                     }
                     else {
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
-                        console.log(contract.subject);
                         //Create new contract
                         yield Contract_1.Contract.create(Object.assign(Object.assign({}, contract), { subject: contract.subject })).save();
                         //create new note for client
@@ -374,12 +357,12 @@ const contractController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            message: 'Delete contracts successfully',
+            message: 'Deleted all contracts successfully',
         });
     })),
     countContractSignedEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { clientId } = req.params;
-        //Check exisitng client
+        //Check existing client
         const existingClient = yield Client_1.Client.findOne({
             where: {
                 id: Number(clientId),

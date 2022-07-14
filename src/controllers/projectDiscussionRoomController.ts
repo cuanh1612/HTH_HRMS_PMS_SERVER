@@ -13,9 +13,9 @@ import { projectDiscussionRoomValid } from '../utils/valid/projectDiscussionRoom
 
 const projectDiscussionRoomController = {
     create: handleCatchError(async (req: Request, res: Response) => {
-        const dataNewPdiscussionRoom: createOrUpdateProjectDiscussionRoomPayload = req.body
-        const { project, project_discussion_category, description } = dataNewPdiscussionRoom
-        const messageValid = projectDiscussionRoomValid.createOrUpdate(dataNewPdiscussionRoom)
+        const dataNewPDiscussionRoom: createOrUpdateProjectDiscussionRoomPayload = req.body
+        const { project, project_discussion_category, description } = dataNewPDiscussionRoom
+        const messageValid = projectDiscussionRoomValid.createOrUpdate(dataNewPDiscussionRoom)
 
         if (messageValid)
             return res.status(400).json({
@@ -73,12 +73,12 @@ const projectDiscussionRoomController = {
 
         if (project_discussion_category) {
             //check exist project discussion category
-            const existingpdCategory = await Project_discussion_category.findOne({
+            const existingPDCategory = await Project_discussion_category.findOne({
                 where: {
                     id: project_discussion_category
                 }
             })
-            if (!existingpdCategory)
+            if (!existingPDCategory)
                 return res.status(400).json({
                     code: 400,
                     success: false,
@@ -87,7 +87,7 @@ const projectDiscussionRoomController = {
         }
 
         const createRoom = await Project_Discussion_Room.create({
-            ...dataNewPdiscussionRoom,
+            ...dataNewPDiscussionRoom,
             assigner: existingUser
         }).save()
 
@@ -109,7 +109,7 @@ const projectDiscussionRoomController = {
 
     Delete: handleCatchError(async (req: Request, res: Response) => {
         const { id } = req.params
-        const existingDiscussionroom = await Project_Discussion_Room.findOne({
+        const existingDiscussionRoom = await Project_Discussion_Room.findOne({
             where: {
                 id: Number(id)
             },
@@ -124,7 +124,7 @@ const projectDiscussionRoomController = {
         })
         
 
-        if (!existingDiscussionroom)
+        if (!existingDiscussionRoom)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -135,7 +135,7 @@ const projectDiscussionRoomController = {
         //get project
         const existingProject = await Project.findOne({
             where: {
-                id: existingDiscussionroom.project.id
+                id: existingDiscussionRoom.project.id
             }
         })
 
@@ -182,7 +182,7 @@ const projectDiscussionRoomController = {
             })
 
 
-        await existingDiscussionroom.remove()
+        await existingDiscussionRoom.remove()
 
         return res.status(200).json({
             code: 200,
@@ -193,13 +193,13 @@ const projectDiscussionRoomController = {
 
     getDetail: handleCatchError(async (req: Request, res: Response) => {
         const { id } = req.params
-        const existingDiscussionroom = await Project_Discussion_Room.findOne({
+        const existingDiscussionRoom = await Project_Discussion_Room.findOne({
             where: {
                 id: Number(id)
             }
 
         })
-        if (!existingDiscussionroom)
+        if (!existingDiscussionRoom)
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -209,7 +209,7 @@ const projectDiscussionRoomController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            projectDiscussionRoom: existingDiscussionroom,
+            projectDiscussionRoom: existingDiscussionRoom,
             Message: 'Get detail project discussion room success'
         })
     }),

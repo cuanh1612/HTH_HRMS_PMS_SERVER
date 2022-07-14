@@ -38,12 +38,12 @@ const holidayController = {
 	//update holiday
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
-		const dataUpdateholiday: Holiday = req.body
+		const dataUpdateHoliday: Holiday = req.body
 
 		//Check date holiday existing and delete
 		const existingHolidayDate = await Holiday.findOne({
 			where: {
-				holiday_date: new Date(dataUpdateholiday.holiday_date),
+				holiday_date: new Date(dataUpdateHoliday.holiday_date),
 			},
 		})
 
@@ -52,22 +52,22 @@ const holidayController = {
 		}
 
 		//Check existing date holiday
-		const existingholiday = await Holiday.findOne({
+		const existingHoliday = await Holiday.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
 		//check existed holiday
-		if (!existingholiday)
+		if (!existingHoliday)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'holiday does not exist in the system',
 			})
 
-		await Holiday.update(existingholiday.id, {
-			...dataUpdateholiday,
+		await Holiday.update(existingHoliday.id, {
+			...dataUpdateHoliday,
 		})
 
 		return res.status(200).json({
@@ -103,13 +103,13 @@ const holidayController = {
 	getDetail: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingholiday = await Holiday.findOne({
+		const existingHoliday = await Holiday.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingholiday)
+		if (!existingHoliday)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -118,20 +118,20 @@ const holidayController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			holiday: existingholiday,
+			holiday: existingHoliday,
 			message: 'Get detail of holiday successfully',
 		})
 	}),
 	delete: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
 
-		const existingholiday = await Holiday.findOne({
+		const existingHoliday = await Holiday.findOne({
 			where: {
 				id: Number(id),
 			},
 		})
 
-		if (!existingholiday)
+		if (!existingHoliday)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -139,7 +139,7 @@ const holidayController = {
 			})
 
 		//Delete holiday
-		await existingholiday.remove()
+		await existingHoliday.remove()
 
 		return res.status(200).json({
 			code: 200,
@@ -148,10 +148,9 @@ const holidayController = {
 		})
 	}),
 
-	deletemany: handleCatchError(async (req: Request, res: Response) => {
+	deleteMany: handleCatchError(async (req: Request, res: Response) => {
 		const { holidays } = req.body
 		//check array of holidays
-		console.log(holidays)
 		if (!Array.isArray(holidays) || !holidays)
 			return res.status(400).json({
 				code: 400,
@@ -161,13 +160,13 @@ const holidayController = {
 
 		for (let index = 0; index < holidays.length; index++) {
 			const itemHoliday = holidays[index]
-			const existingholiday = await Holiday.findOne({
+			const existingHoliday = await Holiday.findOne({
 				where: {
 					id: Number(itemHoliday),
 				},
 			})
-			if (existingholiday) {
-				await existingholiday.remove()
+			if (existingHoliday) {
+				await existingHoliday.remove()
 			}
 		}
 		

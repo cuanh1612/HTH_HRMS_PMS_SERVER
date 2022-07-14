@@ -20,7 +20,7 @@ const companyInfoController = {
     getInfo: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const companyInfo = (yield Company_Info_1.Company_Info.find({}))[0];
         if (!companyInfo) {
-            //Create new comany info
+            //Create new company info
             const createdCompanyInfo = yield Company_Info_1.Company_Info.create({
                 name: "HUPROM",
                 email: "hoangdev161201@gmail.com",
@@ -31,14 +31,14 @@ const companyInfoController = {
                 code: 200,
                 success: true,
                 companyInfo: createdCompanyInfo,
-                message: 'Get company info suscessfully',
+                message: 'Get company info successfully',
             });
         }
         return res.status(200).json({
             code: 200,
             success: true,
             companyInfo,
-            message: 'Get company info suscessfully',
+            message: 'Get company info successfully',
         });
     })),
     //update companyInfo
@@ -55,7 +55,7 @@ const companyInfoController = {
             });
         const companyInfo = (yield Company_Info_1.Company_Info.find({}))[0];
         if (!companyInfo) {
-            //Create new comany info
+            //Create new company info
             yield Company_Info_1.Company_Info.create({
                 name: name ? name : "HUPROM",
                 email: email ? email : "hoangdev161201@gmail.com",

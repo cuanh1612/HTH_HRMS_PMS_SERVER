@@ -16,9 +16,9 @@ taskRouter.get('/employee/:employeeId', taskController.getByEmployee)
 taskRouter.get('/project/:projectId/employee/:employeeId', taskController.getByEmployeeAndProject)
 
 taskRouter.delete('/:id', checkAuth([]), taskController.delete)
-taskRouter.post('/delete-many', checkAuth([]), taskController.deletemany)
+taskRouter.post('/delete-many', checkAuth([]), taskController.deleteMany)
 
-taskRouter.put('/position', checkAuth([]), taskController.changeposition)
+taskRouter.put('/position', checkAuth([]), taskController.changePosition)
 taskRouter.put('/:id', checkAuth([]), taskController.update)
 
 

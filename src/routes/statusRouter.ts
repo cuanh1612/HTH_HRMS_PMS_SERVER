@@ -12,7 +12,7 @@ import { checkAuth } from "../utils/middleware/checkAuth";
  statusRouter.get('/:projectId', statusController.getAllWithTask)
 
  
- statusRouter.put('/position', checkAuth([]), statusController.changeposition)
+ statusRouter.put('/position', checkAuth([]), statusController.changePosition)
  statusRouter.put('/:id', checkAuth([]), statusController.update)
 
  statusRouter.delete('/:id', checkAuth([]), statusController.delete)

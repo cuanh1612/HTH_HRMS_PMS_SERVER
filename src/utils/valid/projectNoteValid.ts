@@ -1,5 +1,5 @@
 import { enumNoteType } from '../../entities/Project_Note'
-import { createOrUpdatetProjectNotePayload } from '../../type/projectNotePayLoad'
+import { createOrUpdateProjectNotePayload } from '../../type/projectNotePayLoad'
 
 export const projectNoteValid = {
 	createOrUpdate: ({
@@ -7,7 +7,7 @@ export const projectNoteValid = {
 		employees,
 		title,
 		note_type,
-	}: createOrUpdatetProjectNotePayload) => {
+	}: createOrUpdateProjectNotePayload) => {
 		let messageError = ''
 
 		//Check exist datas

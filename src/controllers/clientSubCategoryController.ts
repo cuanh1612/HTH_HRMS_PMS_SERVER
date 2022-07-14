@@ -1,14 +1,14 @@
 import { Request, Response } from 'express'
 import { Client_Category } from '../entities/Client_Category'
 import { Client_Sub_Category } from '../entities/Client_Sub_Category'
-import { createOrUpdatetClientSubCategoryPayload } from '../type/ClientSubCategoryPayload'
+import { createOrUpdateClientSubCategoryPayload } from '../type/ClientSubCategoryPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { clientSubCategoryValid } from '../utils/valid/clientSubCategoryValid'
 
 const clientSubCategoryController = {
 	//Create new client sub category
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewSubCategory: createOrUpdatetClientSubCategoryPayload = req.body
+		const dataNewSubCategory: createOrUpdateClientSubCategoryPayload = req.body
 
 		//Check valid
 		const messageValid = clientSubCategoryValid.createOrUpdate(dataNewSubCategory)
@@ -49,8 +49,7 @@ const clientSubCategoryController = {
 	//update client sub category
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
-		const dataUpdateSubCategory: createOrUpdatetClientSubCategoryPayload = req.body
-		console.log(dataUpdateSubCategory, id)
+		const dataUpdateSubCategory: createOrUpdateClientSubCategoryPayload = req.body
 
 		//Check valid
 		const messageValid = clientSubCategoryValid.createOrUpdate(dataUpdateSubCategory)

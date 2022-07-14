@@ -53,7 +53,6 @@ const clientSubCategoryController = {
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
         const dataUpdateSubCategory = req.body;
-        console.log(dataUpdateSubCategory, id);
         //Check valid
         const messageValid = clientSubCategoryValid_1.clientSubCategoryValid.createOrUpdate(dataUpdateSubCategory);
         if (messageValid)

@@ -1,5 +1,5 @@
 import { enumRole } from '../../entities/Employee'
-import { createOrUpdatetEmployeePayload } from '../../type/EmployeePayload'
+import { createOrUpdateEmployeePayload } from '../../type/EmployeePayload'
 
 export const employeeValid = {
 	createOrUpdate: (
@@ -13,7 +13,7 @@ export const employeeValid = {
 			role,
 			department,
 			designation,
-		}: createOrUpdatetEmployeePayload,
+		}: createOrUpdateEmployeePayload,
 		type: 'create' | 'update'
 	) => {
 		let messageError = ''

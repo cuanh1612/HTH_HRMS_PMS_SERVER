@@ -85,7 +85,7 @@ const dashBoardController = {
 
 	todayAttendance: handleCatchError(async (_: Request, res: Response) => {
 		const todayAttendance = await Attendance.createQueryBuilder('attendance')
-			.where('attendance.date = :date', { date: new Date().toLocaleDateString() })
+			.where('attendance.date = :date', { date: new Date() })
 			.getCount()
 
 		return res.status(200).json({
@@ -104,7 +104,7 @@ const dashBoardController = {
 
 		const pendingTasksRaw = await Task.createQueryBuilder('task')
 			.leftJoinAndSelect('task.status', 'status')
-			.leftJoinAndSelect('task.assignBy', 'emlpoyee')
+			.leftJoinAndSelect('task.assignBy', 'employee')
 			.leftJoinAndSelect('task.project', 'project')
 			.where('status.title != :title', { title: 'Complete' })
 			.andWhere('task.start_date > :date', { date: dateLastMonth })
@@ -195,7 +195,7 @@ const dashBoardController = {
 	contractsSigned: handleCatchError(async (_: Request, res: Response) => {
 		const manager = getManager('huprom')
 		const contractsSigned = await manager.query(
-			'SELECT COUNT(contract.id) FROM contract WHERE contract."signId" NOTNULL'
+			'SELECT COUNT(contract.id) FROM contract WHERE contract."signId" NOT NULL'
 		)
 
 		return res.status(200).json({
@@ -234,29 +234,29 @@ const dashBoardController = {
 		})
 	}),
 
-	lastestClients: handleCatchError(async (_: Request, res: Response) => {
-		const lastestClients = await Client.createQueryBuilder('client').limit(10).getMany()
+	latestClients: handleCatchError(async (_: Request, res: Response) => {
+		const latestClients = await Client.createQueryBuilder('client').limit(10).getMany()
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			lastestClients: lastestClients,
+			lastestClients: latestClients,
 			message: 'Get lastest clients successfully',
 		})
 	}),
 
 	lateAttendance: handleCatchError(async (_: Request, res: Response) => {
-		const lastestClients = await Client.createQueryBuilder('client').limit(10).getMany()
+		const latestClients = await Client.createQueryBuilder('client').limit(10).getMany()
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			lastestClients: lastestClients,
+			lastestClients: latestClients,
 			message: 'Get lastest clients successfully',
 		})
 	}),
 
-	countBydateAttendance: handleCatchError(async (_: Request, res: Response) => {
+	countByDateAttendance: handleCatchError(async (_: Request, res: Response) => {
 		//Get end date last month
 		const dateLastMonth = new Date()
 		dateLastMonth.setDate(1)
@@ -273,7 +273,7 @@ const dashBoardController = {
 				}-${dateLastMonth.getDate()}'`
 			)) || []
 
-		let countBydateAttendance: { date: number; count: number }[] = []
+		const countByDateAttendance: { date: number; count: number }[] = []
 
 		//Count attendance by date
 		for (let index = 1; index <= dateCurrentMonth; index++) {
@@ -285,7 +285,7 @@ const dashBoardController = {
 				}
 			})
 
-			countBydateAttendance.push({
+			countByDateAttendance.push({
 				count: countAttendance,
 				date: index,
 			})
@@ -294,19 +294,19 @@ const dashBoardController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			countBydateAttendance: countBydateAttendance,
+			countBydateAttendance: countByDateAttendance,
 			message: 'Get count by date attendance successfully',
 		})
 	}),
 
-	countBydateLeave: handleCatchError(async (_: Request, res: Response) => {
+	countByDateLeave: handleCatchError(async (_: Request, res: Response) => {
 		//Get end date last month
 		const dateLastMonth = new Date()
 		dateLastMonth.setDate(1)
 		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
 
 		//get current date
-		let dateCurrentMonth = new Date().getDate()
+		const dateCurrentMonth = new Date().getDate()
 
 		const manager = getManager('huprom')
 		const currentMonthLeave: Leave[] =
@@ -316,7 +316,7 @@ const dashBoardController = {
 				}-${dateLastMonth.getDate()}'`
 			)) || []
 
-		let countByLeaveAttendance: { date: number; count: number }[] = []
+		const countByLeaveAttendance: { date: number; count: number }[] = []
 
 		//Count attendance by date
 		for (let index = 1; index <= dateCurrentMonth; index++) {

@@ -11,7 +11,7 @@ import { Leave } from '../entities/Leave'
 import { Salary } from '../entities/Salary'
 import { Task } from '../entities/Task'
 import { Time_log } from '../entities/Time_Log'
-import { createOrUpdatetEmployeePayload } from '../type/EmployeePayload'
+import { createOrUpdateEmployeePayload } from '../type/EmployeePayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { employeeValid } from '../utils/valid/employeeValid'
 
@@ -70,8 +70,7 @@ const employeeController = {
 	}),
 
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewEmployee: createOrUpdatetEmployeePayload = req.body
-		console.log(dataNewEmployee)
+		const dataNewEmployee: createOrUpdateEmployeePayload = req.body
 
 		//Check valid
 		const messageValid = employeeValid.createOrUpdate(dataNewEmployee, 'create')
@@ -161,7 +160,7 @@ const employeeController = {
 	}),
 
 	importCSV: handleCatchError(async (req: Request, res: Response) => {
-		const { employees }: { employees: createOrUpdatetEmployeePayload[] } = req.body
+		const { employees }: { employees: createOrUpdateEmployeePayload[] } = req.body
 
 		let employeeNotValid: number[] = []
 		let employeeExistingEmailOrID: number[] = []
@@ -256,7 +255,7 @@ const employeeController = {
 	}),
 
 	update: handleCatchError(async (req: Request, res: Response) => {
-		const dataUpdateEmployee: createOrUpdatetEmployeePayload = req.body
+		const dataUpdateEmployee: createOrUpdateEmployeePayload = req.body
 		const { employeeId } = req.params
 
 		//Check valid
@@ -502,14 +501,14 @@ const employeeController = {
 			})
 
 		//Get count open task
-		const countOpentask = await getManager('huprom').query(
+		const countOpenTask = await getManager('huprom').query(
 			`SELECT COUNT(task_employee."employeeId") from task_employee WHERE task_employee."employeeId" = ${employeeId}`
 		)
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			countOpentasks: Number(countOpentask[0].count) || 0,
+			countOpentasks: Number(countOpenTask[0].count) || 0,
 			message: 'Get count open tasks successfully',
 		})
 	}),

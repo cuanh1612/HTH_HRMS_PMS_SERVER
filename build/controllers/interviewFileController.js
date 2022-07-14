@@ -52,7 +52,7 @@ const interviewFileController = {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'This inteview does not existing in the system'
+                message: 'This interview does not existing in the system'
             });
         //check existing interview file
         const existingInterviewFile = yield Interview_File_1.Interview_file.findOne({
@@ -79,7 +79,7 @@ const interviewFileController = {
     })),
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { interviewId } = req.params;
-        //Check exist inteview
+        //Check exist interview
         const existingInterview = yield Interview_1.Interview.findOne({
             where: {
                 id: Number(interviewId),

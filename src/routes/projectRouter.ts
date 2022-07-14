@@ -51,7 +51,7 @@ projectRouter.get(
 
 projectRouter.delete('/:id', checkAuth(['Admin']), projectController.delete)
 
-projectRouter.post('/delete-many', checkAuth(['Admin']), projectController.deletemany)
+projectRouter.post('/delete-many', checkAuth(['Admin']), projectController.deleteMany)
 projectRouter.post('/project-admin', checkAuth(['Admin']), projectController.setProjectAdmin)
 
 export default projectRouter

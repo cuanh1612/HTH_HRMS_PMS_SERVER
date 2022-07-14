@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
 import { Leave } from '../entities/Leave'
 import { Leave_type } from '../entities/Leave_Type'
-import { createOrUpdatetLeavePayload } from '../type/LeavePayload'
+import { createOrUpdateLeavePayload } from '../type/LeavePayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { leaveValid } from '../utils/valid/leaveValid'
 
@@ -77,7 +77,7 @@ const leaveController = {
 	}),
 
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewLeave: createOrUpdatetLeavePayload = req.body
+		const dataNewLeave: createOrUpdateLeavePayload = req.body
 
 		//Check valid
 		const messageValid = leaveValid.createOrUpdate(dataNewLeave)
@@ -198,7 +198,7 @@ const leaveController = {
 	}),
 
 	update: handleCatchError(async (req: Request, res: Response) => {
-		const dataUpdateLeave: createOrUpdatetLeavePayload = req.body
+		const dataUpdateLeave: createOrUpdateLeavePayload = req.body
 		const { leaveId } = req.params
 
 		//Check valid

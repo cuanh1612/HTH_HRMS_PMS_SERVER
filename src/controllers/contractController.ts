@@ -3,7 +3,7 @@ import { Client } from '../entities/Client'
 import { Company_logo } from '../entities/Company_Logo'
 import { Contract } from '../entities/Contract'
 import { Contract_type } from '../entities/Contract_Type'
-import { createOrUpdatetContractPayload } from '../type/ContractPayload'
+import { createOrUpdateContractPayload } from '../type/ContractPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { contractValid } from '../utils/valid/contractValid'
 import { sign, verify } from 'jsonwebtoken'
@@ -52,7 +52,7 @@ const contractController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'Contract not exist.',
+				message: 'Contract not exist',
 			})
 		}
 		const contract = await Contract.findOne({
@@ -82,7 +82,7 @@ const contractController = {
 			code: 200,
 			success: true,
 			token,
-			message: 'Created contract token successfully',
+			message: 'Created contract link successfully',
 		})
 	}),
 
@@ -122,7 +122,7 @@ const contractController = {
 	}),
 
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewContract: createOrUpdatetContractPayload = req.body
+		const dataNewContract: createOrUpdateContractPayload = req.body
 
 		//Check valid
 		const messageValid = contractValid.createOrUpdate(dataNewContract)
@@ -160,7 +160,7 @@ const contractController = {
 				return res.status(400).json({
 					code: 400,
 					success: false,
-					message: 'Contract tpee does not exists in the system',
+					message: 'Contract type does not exists in the system',
 				})
 		}
 
@@ -185,12 +185,12 @@ const contractController = {
 	}),
 
 	importCSV: handleCatchError(async (req: Request, res: Response) => {
-		const { contracts }: { contracts: createOrUpdatetContractPayload[] } = req.body
+		const { contracts }: { contracts: createOrUpdateContractPayload[] } = req.body
 
-		let contractNotValid: number[] = []
+		const contractNotValid: number[] = []
 
 		//contract not have client or client category
-		let contractNotCLCA: number[] = []
+		const contractNotCLCA: number[] = []
 
 		await Promise.all(
 			contracts.map((contract) => {
@@ -217,24 +217,6 @@ const contractController = {
 						if (!existingClient || !existingContractType) {
 							if (contract.index) contractNotCLCA.push(contract.index)
 						} else {
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-							console.log(contract.subject)
-
 							//Create new contract
 							await Contract.create({
 								...contract,
@@ -271,7 +253,7 @@ const contractController = {
 	}),
 
 	update: handleCatchError(async (req: Request, res: Response) => {
-		const dataUpdateContract: createOrUpdatetContractPayload = req.body
+		const dataUpdateContract: createOrUpdateContractPayload = req.body
 		const { contractId } = req.params
 
 		//Check valid
@@ -431,14 +413,14 @@ const contractController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			message: 'Delete contracts successfully',
+			message: 'Deleted all contracts successfully',
 		})
 	}),
 
 	countContractSignedEmployee: handleCatchError(async (req: Request, res: Response) => {
 		const { clientId } = req.params
 
-		//Check exisitng client
+		//Check existing client
 		const existingClient = await Client.findOne({
 			where: {
 				id: Number(clientId),

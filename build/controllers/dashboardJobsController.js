@@ -102,11 +102,11 @@ const dashboardJobsController = {
     })),
     applicationSources: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const manager = (0, typeorm_1.getManager)('huprom');
-        const sourcessApplication = yield manager.query('SELECT COUNT(job_application.id), job_application.source FROM job_application GROUP BY job_application.source');
+        const sourcesApplication = yield manager.query('SELECT COUNT(job_application.id), job_application.source FROM job_application GROUP BY job_application.source');
         return res.status(200).json({
             code: 200,
             success: true,
-            applicationSources: sourcessApplication,
+            applicationSources: sourcesApplication,
             message: 'Get application sources successfully',
         });
     })),

@@ -2,12 +2,12 @@ import { Request, Response } from 'express'
 import { Employee } from '../entities/Employee'
 import { Project } from '../entities/Project'
 import { Project_file } from '../entities/Project_File'
-import { createOrUpdatetProjectFilesPayload } from '../type/projectFilePayLoad'
+import { createOrUpdateProjectFilesPayload } from '../type/projectFilePayLoad'
 import handleCatchError from '../utils/catchAsyncError'
 
 const projectFileController = {
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const { files, project, assignBy } = req.body as createOrUpdatetProjectFilesPayload
+		const { files, project, assignBy } = req.body as createOrUpdateProjectFilesPayload
 
 		//Check exist Project
 		const existingProject = await Project.findOne({

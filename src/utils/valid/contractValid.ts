@@ -1,5 +1,5 @@
 import { enumCurrency } from '../../entities/Contract'
-import { createOrUpdatetContractPayload } from '../../type/ContractPayload'
+import { createOrUpdateContractPayload } from '../../type/ContractPayload'
 
 export const contractValid = {
 	createOrUpdate: ({
@@ -8,7 +8,7 @@ export const contractValid = {
 		contract_value,
 		currency,
 		client,
-	}: createOrUpdatetContractPayload) => {
+	}: createOrUpdateContractPayload) => {
 		let messageError = ''
 		if (!subject || !start_date || !contract_value || !currency || !client) {
 			messageError = 'Please enter full field'

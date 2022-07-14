@@ -21,11 +21,11 @@ dashboardRouter.get('/pending-milestone', (0, checkAuth_1.checkAuth)(['Admin']),
 dashboardRouter.get('/contracts-signed', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.contractsSigned);
 dashboardRouter.get('/client-wise-earnings', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.clientWiseEarnings);
 dashboardRouter.get('/client-wise-time-logs', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.clientWiseTimeLogs);
-dashboardRouter.get('/lastest-clients', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.lastestClients);
+dashboardRouter.get('/lastest-clients', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.latestClients);
 dashboardRouter.get('/projects-earning', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.sumEarningLoggedProjects);
 dashboardRouter.get('/projects-hours-logged', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.sumHoursLoggedProjects);
-dashboardRouter.get('/count-by-date-attendance', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.countBydateAttendance);
-dashboardRouter.get('/count-by-date-leave', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.countBydateLeave);
+dashboardRouter.get('/count-by-date-attendance', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.countByDateAttendance);
+dashboardRouter.get('/count-by-date-leave', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.countByDateLeave);
 dashboardRouter.get('/count-project-overdue', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.countProjectsOverdue);
 dashboardRouter.get('/late-attendance', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.lateAttendance);
 exports.default = dashboardRouter;
