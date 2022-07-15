@@ -16,6 +16,7 @@ import { Department } from './Department'
 import { Employee } from './Employee'
 import { Hourly_rate_project } from './Hourly_rate_project'
 import { Milestone } from './Milestone'
+import { Project_Activity } from './Project_Activity'
 import { Project_Category } from './Project_Category'
 import { Project_Discussion_Room } from './Project_Discussion_Room'
 import { Project_file } from './Project_File'
@@ -117,6 +118,12 @@ export class Project extends BaseEntity {
 		nullable: true,
 	})
 	project_files: Project_file[]
+
+	@OneToMany(() => Project_Activity, (project_activities) => project_activities.project, {
+		onDelete: 'SET NULL',
+		nullable: true,
+	})
+	project_activities: Project_Activity[]
 
 	@OneToMany(() => Time_log, (time_log) => time_log.project, {
 		nullable: true,

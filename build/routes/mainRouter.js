@@ -36,6 +36,7 @@ const locationRouter_1 = __importDefault(require("./locationRouter"));
 const milestoneRouter_1 = __importDefault(require("./milestoneRouter"));
 const noticeBoardRouter_1 = __importDefault(require("./noticeBoardRouter"));
 const notificationRouter_1 = __importDefault(require("./notificationRouter"));
+const projectActivityRouter_1 = __importDefault(require("./projectActivityRouter"));
 const projectCategoryRouter_1 = __importDefault(require("./projectCategoryRouter"));
 const projectDiscussionCategoryRouter_1 = __importDefault(require("./projectDiscussionCategoryRouter"));
 const projectDiscussionReplyRouter_1 = __importDefault(require("./projectDiscussionReplyRouter"));
@@ -108,5 +109,6 @@ function mainRouter(app) {
     app.use('/api/interview-files', interviewFileRouter_1.default);
     app.use('/api/job-application-files', jobApplicationFileRouter_1.default);
     app.use('/api/job-offer-letters', jobOfferLetterRouter_1.default);
+    app.use('/api/project-activities', projectActivityRouter_1.default);
 }
 exports.default = mainRouter;

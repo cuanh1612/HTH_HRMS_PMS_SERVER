@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Project_1 = require("../entities/Project");
 const Status_1 = require("../entities/Status");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
+const helper_1 = require("../utils/helper");
 const statusValid_1 = require("../utils/valid/statusValid");
 const statusController = {
     //create new status
@@ -60,6 +61,8 @@ const statusController = {
             color: color,
             index: lastStatus.index + 1,
         }).save();
+        //Crete activity for project
+        yield (0, helper_1.CreateProjectActivity)(res, existingProject.id, 'New column status Added To The Project');
         return res.status(200).json({
             code: 200,
             success: true,

@@ -9,6 +9,7 @@ import { Time_log } from '../entities/Time_Log'
 import { createOrUpdateTimeLogPayload } from '../type/TimeLogPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
+import { CreateProjectActivity } from '../utils/helper'
 import { timeLogValid } from '../utils/valid/timeLogValid'
 
 const timeLogController = {
@@ -189,7 +190,9 @@ const timeLogController = {
 			content: 'You have just been assigned to a new time log',
 		}).save()
 
-		//Check existing project
+		//Crete activity for project
+		await CreateProjectActivity(res, existingProject.id, 'New Time Log Added To The Project')
+
 		return res.status(200).json({
 			code: 200,
 			success: true,

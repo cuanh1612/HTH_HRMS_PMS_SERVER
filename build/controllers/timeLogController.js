@@ -20,6 +20,7 @@ const Project_1 = require("../entities/Project");
 const Task_1 = require("../entities/Task");
 const Time_Log_1 = require("../entities/Time_Log");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
+const helper_1 = require("../utils/helper");
 const timeLogValid_1 = require("../utils/valid/timeLogValid");
 const timeLogController = {
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -153,7 +154,8 @@ const timeLogController = {
             url: `/projects/${existingProject.id}/time-logs-table`,
             content: 'You have just been assigned to a new time log',
         }).save();
-        //Check existing project
+        //Crete activity for project
+        yield (0, helper_1.CreateProjectActivity)(res, existingProject.id, 'New Time Log Added To The Project');
         return res.status(200).json({
             code: 200,
             success: true,

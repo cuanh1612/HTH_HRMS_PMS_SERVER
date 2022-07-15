@@ -3,6 +3,7 @@ import { Project } from '../entities/Project'
 import { Status } from '../entities/Status'
 import { createOrUpdateStatusPayload } from '../type/statusPayload'
 import handleCatchError from '../utils/catchAsyncError'
+import { CreateProjectActivity } from '../utils/helper'
 import { statusValid } from '../utils/valid/statusValid'
 
 const statusController = {
@@ -54,6 +55,9 @@ const statusController = {
 			color: color,
 			index: lastStatus.index + 1,
 		}).save()
+
+		//Crete activity for project
+		await CreateProjectActivity(res, existingProject.id, 'New column status Added To The Project')
 
 		return res.status(200).json({
 			code: 200,
