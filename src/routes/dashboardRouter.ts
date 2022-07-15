@@ -25,5 +25,7 @@ dashboardRouter.get('/count-by-date-attendance', checkAuth(['Admin']), dashBoard
 dashboardRouter.get('/count-by-date-leave', checkAuth(['Admin']), dashBoardController.countByDateLeave)
 dashboardRouter.get('/count-project-overdue', checkAuth(['Admin']), dashBoardController.countProjectsOverdue)
 dashboardRouter.get('/late-attendance', checkAuth(['Admin']), dashBoardController.lateAttendance)
+dashboardRouter.get('/contracts-signed', checkAuth(['Admin']), dashBoardController.contractsSigned)
+
 
 export default dashboardRouter

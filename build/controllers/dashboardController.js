@@ -165,7 +165,7 @@ const dashBoardController = {
     })),
     contractsSigned: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const manager = (0, typeorm_1.getManager)('huprom');
-        const contractsSigned = yield manager.query('SELECT COUNT(contract.id) FROM contract WHERE contract."signId" NOT NULL');
+        const contractsSigned = yield manager.query('SELECT COUNT(contract.id) FROM contract WHERE contract."signId" NOTNULL');
         return res.status(200).json({
             code: 200,
             success: true,

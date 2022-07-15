@@ -195,7 +195,7 @@ const dashBoardController = {
 	contractsSigned: handleCatchError(async (_: Request, res: Response) => {
 		const manager = getManager('huprom')
 		const contractsSigned = await manager.query(
-			'SELECT COUNT(contract.id) FROM contract WHERE contract."signId" NOT NULL'
+			'SELECT COUNT(contract.id) FROM contract WHERE contract."signId" NOTNULL'
 		)
 
 		return res.status(200).json({

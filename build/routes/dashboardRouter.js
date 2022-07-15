@@ -28,4 +28,5 @@ dashboardRouter.get('/count-by-date-attendance', (0, checkAuth_1.checkAuth)(['Ad
 dashboardRouter.get('/count-by-date-leave', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.countByDateLeave);
 dashboardRouter.get('/count-project-overdue', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.countProjectsOverdue);
 dashboardRouter.get('/late-attendance', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.lateAttendance);
+dashboardRouter.get('/contracts-signed', (0, checkAuth_1.checkAuth)(['Admin']), dashboardController_1.default.contractsSigned);
 exports.default = dashboardRouter;

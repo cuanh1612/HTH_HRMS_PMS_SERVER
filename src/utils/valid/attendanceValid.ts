@@ -1,5 +1,5 @@
 import { Attendance } from '../../entities/Attendance'
-import { createOrUpdateAttendacePayload } from '../../type/AttendacePayload'
+import { createOrUpdateAttendancePayload } from '../../type/AttendancePayload'
 
 export const attendanceValid = {
 	createOrUpdate: ({
@@ -11,7 +11,7 @@ export const attendanceValid = {
 		dates,
 		month,
 		year,
-	}: createOrUpdateAttendacePayload) => {
+	}: createOrUpdateAttendancePayload) => {
 		let messageError = ''
 
 		if (

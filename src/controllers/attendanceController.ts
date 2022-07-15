@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { getManager } from 'typeorm'
 import { Attendance } from '../entities/Attendance'
 import { Employee } from '../entities/Employee'
-import { createOrUpdateAttendacePayload } from '../type/AttendacePayload'
+import { createOrUpdateAttendancePayload } from '../type/AttendancePayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { attendanceValid } from '../utils/valid/attendanceValid'
 
@@ -110,7 +110,7 @@ const attendanceController = {
 	}),
 
 	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewAttendances: createOrUpdateAttendacePayload = req.body
+		const dataNewAttendances: createOrUpdateAttendancePayload = req.body
 		const { mark_attendance_by, dates, employees, month, year, employee, date } =
 			dataNewAttendances
 

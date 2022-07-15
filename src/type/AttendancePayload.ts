@@ -1,6 +1,6 @@
 import { Attendance } from "../entities/Attendance"
 
-export type createOrUpdateAttendacePayload = Attendance & {
+export type createOrUpdateAttendancePayload = Attendance & {
 	employees: number[] | string[]
     mark_attendance_by: 'Month' | 'Date'
     year: string
