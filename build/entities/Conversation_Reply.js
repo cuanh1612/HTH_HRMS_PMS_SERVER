@@ -42,6 +42,10 @@ __decorate([
     __metadata("design:type", String)
 ], Conversation_reply.prototype, "reply", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ nullable: true, default: false }),
+    __metadata("design:type", Boolean)
+], Conversation_reply.prototype, "read", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
