@@ -32,6 +32,7 @@ import locationRouter from './locationRouter'
 import milestoneRouter from './milestoneRouter'
 import noticeBoardRouter from './noticeBoardRouter'
 import NotificationRouter from './notificationRouter'
+import projectActivityRouter from './projectActivityRouter'
 import projectCategoryRouter from './projectCategoryRouter'
 import projectDiscussionCategoryRouter from './projectDiscussionCategoryRouter'
 import projectDiscussionReplyRouter from './projectDiscussionReplyRouter'
@@ -156,6 +157,8 @@ function mainRouter(app: core.Express) {
 	app.use('/api/job-application-files', jobApplicationFileRouter)
 
 	app.use('/api/job-offer-letters', jobOfferLetterRouter)
+
+	app.use('/api/project-activities', projectActivityRouter)
 }
 
 export default mainRouter

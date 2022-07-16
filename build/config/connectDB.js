@@ -35,6 +35,7 @@ const Milestone_1 = require("../entities/Milestone");
 const Notice_Board_1 = require("../entities/Notice_Board");
 const Notification_1 = require("../entities/Notification");
 const Project_1 = require("../entities/Project");
+const Project_Activity_1 = require("../entities/Project_Activity");
 const Project_Category_1 = require("../entities/Project_Category");
 const Project_Discussion_Category_1 = require("../entities/Project_Discussion_Category");
 const Project_Discussion_Reply_1 = require("../entities/Project_Discussion_Reply");
@@ -58,8 +59,8 @@ const connectDB = () => {
         type: 'postgres',
         name: 'huprom',
         logging: true,
-        database: 'hth_hrms_pms',
-        password: 'kingspear1999',
+        database: 'HTH_HRMS_PMS',
+        password: '161201',
         username: 'postgres',
         synchronize: true,
         port: 5432,
@@ -121,6 +122,7 @@ const connectDB = () => {
             Interview_1.Interview,
             Interview_File_1.Interview_file,
             Job_Offer_Letter_1.Job_offer_letter,
+            Project_Activity_1.Project_Activity
         ],
     })
         .then(() => {

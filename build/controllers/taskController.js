@@ -23,6 +23,7 @@ const Task_1 = require("../entities/Task");
 const Task_Category_1 = require("../entities/Task_Category");
 const Task_File_1 = require("../entities/Task_File");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
+const helper_1 = require("../utils/helper");
 const taskValid_1 = require("../utils/valid/taskValid");
 const taskController = {
     //Create new task
@@ -203,6 +204,7 @@ const taskController = {
                 resolve(true);
             }));
         })));
+        yield (0, helper_1.CreateProjectActivity)(res, existingProject.id, "New Task Added To The Project");
         return res.status(200).json({
             code: 200,
             success: true,

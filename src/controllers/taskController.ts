@@ -12,6 +12,7 @@ import { Task_file } from '../entities/Task_File'
 import { createOrUpdateTaskPayload } from '../type/taskPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
+import { CreateProjectActivity } from '../utils/helper'
 import { taskValid } from '../utils/valid/taskValid'
 
 const taskController = {
@@ -231,6 +232,8 @@ const taskController = {
 				})
 			})
 		)
+
+		await CreateProjectActivity(res, existingProject.id, "New Task Added To The Project")
 
 		return res.status(200).json({
 			code: 200,

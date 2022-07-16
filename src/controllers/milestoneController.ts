@@ -1,231 +1,228 @@
-import { Request, Response } from "express";
-import { Milestone } from "../entities/Milestone";
-import { Project } from "../entities/Project";
-import handleCatchError from "../utils/catchAsyncError";
+import { Request, Response } from 'express'
+import { Milestone } from '../entities/Milestone'
+import { Project } from '../entities/Project'
+import handleCatchError from '../utils/catchAsyncError'
+import { CreateProjectActivity } from '../utils/helper'
 
 const mileStoneController = {
-    create: handleCatchError(async (req: Request, res: Response) => {
-        const { title, summary, project, cost } = req.body
+	create: handleCatchError(async (req: Request, res: Response) => {
+		const { title, summary, project, cost } = req.body
 
-        const existingProject = await Project.findOne({
-            where: {
-                id: Number(project)
-            }
-        })
+		const existingProject = await Project.findOne({
+			where: {
+				id: Number(project),
+			},
+		})
 
-        if (!existingProject)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Project does not existing',
-            })
+		if (!existingProject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not existing',
+			})
 
-        if (!title)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Please enter title of milestone',
-            })
+		if (!title)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please enter title of milestone',
+			})
 
-        await Milestone.create({
-            title: title,
-            summary: summary,
-            project: project,
-            cost: Number(cost)
-        }).save()
+		await Milestone.create({
+			title: title,
+			summary: summary,
+			project: project,
+			cost: Number(cost),
+		}).save()
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Create milestone success'
-        })
-    }),
-    getAll: handleCatchError(async (_: Request, res: Response) => {
-        const milestones = await Milestone.find({})
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            milestones,
-            message: 'Get milestones by project success'
-        })
-    }),
-    update: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
-        const dataUpdateMileStone: Milestone = req.body
+		//Crete activity for project
+		await CreateProjectActivity(
+			res,
+			existingProject.id,
+			'New milestone status Added To The Project'
+		)
 
-        const existingMileStone = await Milestone.findOne({
-            where: {
-                id: Number(id)
-            }
-        })
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Create milestone success',
+		})
+	}),
+	getAll: handleCatchError(async (_: Request, res: Response) => {
+		const milestones = await Milestone.find({})
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			milestones,
+			message: 'Get milestones by project success',
+		})
+	}),
+	update: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
+		const dataUpdateMileStone: Milestone = req.body
 
-        if (!existingMileStone)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Milestone does not existing in the system',
-            })
+		const existingMileStone = await Milestone.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
 
-        existingMileStone.title = dataUpdateMileStone.title
-        existingMileStone.summary = dataUpdateMileStone.summary
-        existingMileStone.cost = dataUpdateMileStone.cost
-        existingMileStone.addtobudget = dataUpdateMileStone.addtobudget
-        existingMileStone.status = dataUpdateMileStone.status
+		if (!existingMileStone)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Milestone does not existing in the system',
+			})
 
-        await existingMileStone.save()
+		existingMileStone.title = dataUpdateMileStone.title
+		existingMileStone.summary = dataUpdateMileStone.summary
+		existingMileStone.cost = dataUpdateMileStone.cost
+		existingMileStone.addtobudget = dataUpdateMileStone.addtobudget
+		existingMileStone.status = dataUpdateMileStone.status
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Update milestone successfully',
-        })
+		await existingMileStone.save()
 
-    }),
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Update milestone successfully',
+		})
+	}),
 
+	getByProjectWithTask: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
 
-    getByProjectWithTask: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
+		const existingProject = await Project.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
 
-        const existingProject = await Project.findOne({
-            where: {
-                id: Number(id)
-            }
-        })
+		if (!existingProject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not existing',
+			})
 
-        if (!existingProject)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Project does not existing',
-            })
+		const existingMileStones = await Milestone.find({
+			where: {
+				project: {
+					id: Number(id),
+				},
+			},
+			relations: {
+				tasks: true,
+			},
+		})
 
+		if (!existingMileStones)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'MileStone does not existing in the system',
+			})
 
-        const existingMileStones = await Milestone.find({
-            where: {
-                project: {
-                    id: Number(id)
-                }
-            },
-            relations: {
-                tasks: true
-            }
-        })
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			milestones: existingMileStones,
+			message: 'Get milestones by project success',
+		})
+	}),
 
-        if (!existingMileStones)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'MileStone does not existing in the system'
-            })
+	getByProject: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            milestones: existingMileStones,
-            message: 'Get milestones by project success'
-        })
+		const existingProject = await Project.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
 
-    }),
+		if (!existingProject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not existing',
+			})
 
-    getByProject: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
+		const existingMileStones = await Milestone.find({
+			where: {
+				project: {
+					id: Number(id),
+				},
+			},
+		})
 
-        const existingProject = await Project.findOne({
-            where: {
-                id: Number(id)
-            }
-        })
+		if (!existingMileStones)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'MileStone does not existing in the system',
+			})
 
-        if (!existingProject)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Project does not existing',
-            })
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			milestones: existingMileStones,
+			message: 'Get milestones by project success',
+		})
+	}),
 
+	getDetail: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
 
-        const existingMileStones = await Milestone.find({
-            where: {
-                project: {
-                    id: Number(id)
-                }
-            }
-        })
+		const existingMileStone = await Milestone.findOne({
+			where: {
+				id: Number(id),
+			},
+			relations: {
+				tasks: {
+					employees: true,
+					status: true,
+					assignBy: true,
+				},
+			},
+		})
 
-        if (!existingMileStones)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'MileStone does not existing in the system'
-            })
+		if (!existingMileStone)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'MileStone does not existing in the system',
+			})
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			milestone: existingMileStone,
+			message: 'Get milestones by project success',
+		})
+	}),
 
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            milestones: existingMileStones,
-            message: 'Get milestones by project success'
-        })
+	delete: handleCatchError(async (req: Request, res: Response) => {
+		const { id } = req.params
 
-    }),
+		const existingMileStone = await Milestone.findOne({
+			where: {
+				id: Number(id),
+			},
+		})
 
-    getDetail: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
+		if (!existingMileStone)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'MileStone does not existing in the system',
+			})
 
-        const existingMileStone = await Milestone.findOne({
-            where: {
-                id: Number(id),
-            },
-            relations: {
-                tasks: {
-                    employees: true,
-                    status: true,
-                    assignBy: true
-                },
-            }
-
-        })
-
-        if (!existingMileStone)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'MileStone does not existing in the system'
-            })
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            milestone: existingMileStone,
-            message: 'Get milestones by project success'
-        })
-
-
-
-    }),
-
-    delete: handleCatchError(async (req: Request, res: Response) => {
-        const { id } = req.params
-
-        const existingMileStone = await Milestone.findOne({
-            where: {
-                id: Number(id)
-            }
-        })
-
-        if (!existingMileStone)
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'MileStone does not existing in the system'
-            })
-
-        await existingMileStone.remove()
-        return res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Delete of milestone success'
-        })
-    }),
-
+		await existingMileStone.remove()
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			message: 'Delete of milestone success',
+		})
+	}),
 }
 
 export default mileStoneController

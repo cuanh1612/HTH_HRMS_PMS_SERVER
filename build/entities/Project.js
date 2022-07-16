@@ -16,6 +16,7 @@ const Department_1 = require("./Department");
 const Employee_1 = require("./Employee");
 const Hourly_rate_project_1 = require("./Hourly_rate_project");
 const Milestone_1 = require("./Milestone");
+const Project_Activity_1 = require("./Project_Activity");
 const Project_Category_1 = require("./Project_Category");
 const Project_Discussion_Room_1 = require("./Project_Discussion_Room");
 const Project_File_1 = require("./Project_File");
@@ -128,6 +129,13 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Project.prototype, "project_files", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Project_Activity_1.Project_Activity, (project_activities) => project_activities.project, {
+        onDelete: 'SET NULL',
+        nullable: true,
+    }),
+    __metadata("design:type", Array)
+], Project.prototype, "project_activities", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Time_Log_1.Time_log, (time_log) => time_log.project, {
         nullable: true,

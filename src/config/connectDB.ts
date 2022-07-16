@@ -33,6 +33,7 @@ import { Milestone } from '../entities/Milestone'
 import { Notice_board } from '../entities/Notice_Board'
 import { Notification } from '../entities/Notification'
 import { Project } from '../entities/Project'
+import { Project_Activity } from '../entities/Project_Activity'
 import { Project_Category } from '../entities/Project_Category'
 import { Project_discussion_category } from '../entities/Project_Discussion_Category'
 import { Project_discussion_reply } from '../entities/Project_Discussion_Reply'
@@ -58,8 +59,8 @@ const connectDB = () => {
 		name: 'huprom',
 		logging: true,
 
-		database: 'hth_hrms_pms',
-		password: 'kingspear1999',
+		database: 'HTH_HRMS_PMS',
+		password: '161201',
 		username: 'postgres',
 
 		synchronize: true,
@@ -124,6 +125,7 @@ const connectDB = () => {
 			Interview,
 			Interview_file,
 			Job_offer_letter,
+			Project_Activity
 		],
 	})
 		.then(() => {
