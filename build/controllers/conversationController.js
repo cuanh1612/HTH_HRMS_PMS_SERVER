@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = require("jsonwebtoken");
 const typeorm_1 = require("typeorm");
 const Conversation_1 = require("../entities/Conversation");
 const Employee_1 = require("../entities/Employee");
@@ -19,8 +20,29 @@ const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const conversationController = {
     //Create new conversation
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         const dataNewConversation = req.body;
         const { user_one, user_two } = dataNewConversation;
+        //check exist current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
         //Check same user
         if (user_one === user_two)
             return res.status(400).json({
@@ -99,18 +121,19 @@ const conversationController = {
                 employees: [{ id: existingUser.id }],
             },
         });
-        //Get latest message chat
+        //Get latest message and count messages not read
         const manager = (0, typeorm_1.getManager)('huprom');
         let overrideConversations = [];
         for (let index = 0; index < conversations.length; index++) {
             const ConversationElement = conversations[index];
-            const lastestMessager = yield manager.query(`SELECT "conversation_reply"."id", "conversation_reply"."reply", "conversation_reply"."created_at", "conversation_reply"."userId" FROM "conversation_reply" LEFT JOIN "conversation" ON "conversation"."id" = "conversation_reply"."conversationId" WHERE "conversation"."id" = ${ConversationElement.id} ORDER BY("conversation_reply"."created_at") DESC LIMIT 1`);
-            if (lastestMessager[0]) {
-                overrideConversations.push(Object.assign(Object.assign({}, ConversationElement), { latest_messager: lastestMessager }));
-            }
-            else {
-                overrideConversations.push(ConversationElement);
-            }
+            //get latest message
+            const lastestMessager = yield manager.query(`SELECT * FROM "conversation_reply" WHERE "conversation_reply"."conversationId" = ${ConversationElement.id} ORDER BY("conversation_reply"."created_at") DESC LIMIT 1`);
+            //get count message not read
+            const queryCountMessagesNotRead = yield manager.query(`SELECT COUNT("conversation_reply"."id") FROM "conversation_reply" WHERE "conversation_reply"."conversationId" = ${ConversationElement.id} AND "conversation_reply"."userId" != ${existingUser.id} AND "conversation_reply"."read" = FALSE`);
+            const countMessagesNotRead = queryCountMessagesNotRead && queryCountMessagesNotRead[0]
+                ? Number(queryCountMessagesNotRead[0].count)
+                : 0;
+            overrideConversations.push(Object.assign(Object.assign(Object.assign({}, ConversationElement), (lastestMessager ? { latest_messager: lastestMessager } : {})), { messages_not_read: countMessagesNotRead }));
         }
         return res.status(200).json({
             code: 200,

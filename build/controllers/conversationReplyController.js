@@ -12,6 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = require("jsonwebtoken");
+const typeorm_1 = require("typeorm");
 const Conversation_1 = require("../entities/Conversation");
 const Conversation_Reply_1 = require("../entities/Conversation_Reply");
 const Employee_1 = require("../entities/Employee");
@@ -61,7 +63,28 @@ const conversationReplyController = {
         });
     })),
     getByConversation: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         const { conversationId } = req.params;
+        //check exist current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        const existingUser = yield Employee_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
         //Check exist conversation
         const existingConversation = yield Conversation_1.Conversation.findOne({
             where: {
@@ -83,6 +106,18 @@ const conversationReplyController = {
                 createdAt: 'ASC',
             },
         });
+        //get messages not read and update already read
+        const manager = (0, typeorm_1.getManager)('huprom');
+        const messagesNotRead = yield manager.query(`SELECT * FROM "conversation_reply" WHERE "conversation_reply"."conversationId" = ${existingConversation.id} AND "conversation_reply"."userId" != ${existingUser.id} AND "conversation_reply"."read" = FALSE`);
+        //Update
+        yield Promise.all(messagesNotRead.map(conversationReply => {
+            return new Promise((resolve) => __awaiter(void 0, void 0, void 0, function* () {
+                yield Conversation_Reply_1.Conversation_reply.update(conversationReply.id, {
+                    read: true
+                });
+                resolve(true);
+            }));
+        }));
         return res.status(200).json({
             code: 200,
             success: true,

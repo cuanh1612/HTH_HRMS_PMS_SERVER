@@ -32,6 +32,9 @@ export class  Conversation_reply extends BaseEntity {
     @Column()
     reply: string
 
+	@Column({nullable: true, default: false})
+	read: boolean
+
 	@CreateDateColumn({
 		name: 'created_at',
 	})
