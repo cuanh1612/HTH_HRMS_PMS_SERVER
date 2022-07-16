@@ -74,7 +74,7 @@ const salaryController = {
     })),
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const salaries = yield Employee_1.Employee.createQueryBuilder('employee')
-            .leftJoinAndSelect('employee.salaries', 'salary')
+            .leftJoinAndSelect('employee.salaries', 'salary').leftJoinAndSelect('employee.department', 'department')
             .orderBy('salary.date', 'DESC')
             .getMany();
         const listSalaries = salaries.map(salary => {

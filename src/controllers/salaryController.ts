@@ -77,7 +77,7 @@ const salaryController = {
 
 	getAll: handleCatchError(async (_: Request, res: Response) => {
 		const salaries: Employee[] = await Employee.createQueryBuilder('employee')
-			.leftJoinAndSelect('employee.salaries', 'salary')
+			.leftJoinAndSelect('employee.salaries', 'salary').leftJoinAndSelect('employee.department', 'department')
 			.orderBy('salary.date', 'DESC')
 			.getMany()
 
