@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { getManager } from 'typeorm'
 import { Conversation } from '../entities/Conversation'
 import { Employee } from '../entities/Employee'
 import { createOrUpdateConversationPayload } from '../type/ConversationPayload'
@@ -97,14 +98,35 @@ const conversationController = {
 		//Get all conversations of employee
 		const conversations = await Conversation.find({
 			where: {
-				employees: [{ id: existingUser.id } ],
+				employees: [{ id: existingUser.id }],
 			},
 		})
+
+		//Get latest message chat
+		const manager = getManager('huprom')
+
+		let overrideConversations: any[] = []
+
+		for (let index = 0; index < conversations.length; index++) {
+			const ConversationElement = conversations[index]
+
+			const lastestMessager = await manager.query(
+				`SELECT "conversation_reply"."id", "conversation_reply"."reply", "conversation_reply"."created_at", "conversation_reply"."userId" FROM "conversation_reply" LEFT JOIN "conversation" ON "conversation"."id" = "conversation_reply"."conversationId" WHERE "conversation"."id" = ${ConversationElement.id} ORDER BY("conversation_reply"."created_at") DESC LIMIT 1`
+			)
+			if (lastestMessager[0]) {
+				overrideConversations.push({
+					...ConversationElement,
+					latest_messager: lastestMessager,
+				})
+			} else {
+				overrideConversations.push(ConversationElement)
+			}
+		}
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			conversations,
+			conversations: overrideConversations,
 			message: 'Get conversations successfully',
 		})
 	}),

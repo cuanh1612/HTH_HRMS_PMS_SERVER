@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const typeorm_1 = require("typeorm");
 const Conversation_1 = require("../entities/Conversation");
 const Employee_1 = require("../entities/Employee");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
@@ -98,10 +99,23 @@ const conversationController = {
                 employees: [{ id: existingUser.id }],
             },
         });
+        //Get latest message chat
+        const manager = (0, typeorm_1.getManager)('huprom');
+        let overrideConversations = [];
+        for (let index = 0; index < conversations.length; index++) {
+            const ConversationElement = conversations[index];
+            const lastestMessager = yield manager.query(`SELECT "conversation_reply"."id", "conversation_reply"."reply", "conversation_reply"."created_at", "conversation_reply"."userId" FROM "conversation_reply" LEFT JOIN "conversation" ON "conversation"."id" = "conversation_reply"."conversationId" WHERE "conversation"."id" = ${ConversationElement.id} ORDER BY("conversation_reply"."created_at") DESC LIMIT 1`);
+            if (lastestMessager[0]) {
+                overrideConversations.push(Object.assign(Object.assign({}, ConversationElement), { latest_messager: lastestMessager }));
+            }
+            else {
+                overrideConversations.push(ConversationElement);
+            }
+        }
         return res.status(200).json({
             code: 200,
             success: true,
-            conversations,
+            conversations: overrideConversations,
             message: 'Get conversations successfully',
         });
     })),
