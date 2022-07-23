@@ -55,10 +55,18 @@ const conversationReplyController = {
                 message: 'User does not exist in the conversation',
             });
         const createdConversationReply = yield Conversation_Reply_1.Conversation_reply.create(Object.assign({}, dataNewConversationReply)).save();
+        const reply = yield Conversation_Reply_1.Conversation_reply.findOne({
+            where: {
+                id: createdConversationReply.id
+            },
+            relations: {
+                user: true
+            }
+        });
         return res.status(200).json({
             code: 200,
             success: true,
-            conversationReply: createdConversationReply,
+            reply,
             message: 'Created new conversation reply successfully',
         });
     })),

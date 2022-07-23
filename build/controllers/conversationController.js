@@ -120,6 +120,15 @@ const conversationController = {
             where: {
                 employees: [{ id: existingUser.id }],
             },
+            select: {
+                employees: {
+                    id: true,
+                    name: true,
+                    avatar: {
+                        url: true
+                    }
+                }
+            }
         });
         //Get latest message and count messages not read
         const manager = (0, typeorm_1.getManager)('huprom');

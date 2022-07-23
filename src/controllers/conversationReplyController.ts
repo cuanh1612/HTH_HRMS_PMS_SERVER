@@ -54,10 +54,18 @@ const conversationReplyController = {
 			...dataNewConversationReply,
 		}).save()
 
+		const reply = await Conversation_reply.findOne({
+			where: {
+				id: createdConversationReply.id
+			},
+			relations: {
+				user: true
+			}
+		})
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			conversationReply: createdConversationReply,
+			reply,
 			message: 'Created new conversation reply successfully',
 		})
 	}),

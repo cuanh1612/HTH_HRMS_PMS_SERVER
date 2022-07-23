@@ -30,6 +30,14 @@ const leaveController = {
 
 		let leaves = await Leave.find({
 			where: filter,
+			relations: {
+				employee: true
+			},
+			select: {
+				employee: {
+					id: true
+				}
+			}
 		})
 
 		if (date) {

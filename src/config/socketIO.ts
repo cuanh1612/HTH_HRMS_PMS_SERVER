@@ -1,6 +1,7 @@
 import { Server } from 'http'
 import { Server as ServerSocket } from 'socket.io'
 import { Client } from '../entities/Client'
+import { Conversation_reply } from '../entities/Conversation_Reply'
 import { Employee } from '../entities/Employee'
 import { userSocket } from '../type/SocketPayload'
 
@@ -38,11 +39,11 @@ const createSocketServer = (httpServer: Server) => {
 
 		socket.on(
 			'newReply',
-			({ email, conversation }: { email: string; conversation: number }) => {
+			({ email, conversation, newReplies }: { email: string; conversation: number, newReplies: Conversation_reply[] }) => {
 				const userReceive = getUser(email)
 
 				if (userReceive) {
-					socket.to(userReceive.socketId).emit('getNewReply', conversation)
+					socket.to(userReceive.socketId).emit('getNewReply', conversation, newReplies)
 				}
 			}
 		)

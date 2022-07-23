@@ -14,6 +14,7 @@ import { Task } from '../entities/Task'
 import { createOrUpdateProjectPayload } from '../type/ProjectPayload'
 import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
+import { CreateProjectActivity } from '../utils/helper'
 import { projectValid } from '../utils/valid/projectValid'
 
 const projectController = {
@@ -518,6 +519,8 @@ const projectController = {
 		existingProject.employees = [...existingProject.employees, ...allEmployees]
 		await existingProject.save()
 
+		await CreateProjectActivity(res, existingProject.id, "Assigned new member successfully")
+
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -578,6 +581,8 @@ const projectController = {
 
 		existingProject.employees = [...existingProject.employees, ...allEmployees]
 		await existingProject.save()
+
+		await CreateProjectActivity(res, existingProject.id, "Assigned new member successfully")
 
 		return res.status(200).json({
 			code: 200,

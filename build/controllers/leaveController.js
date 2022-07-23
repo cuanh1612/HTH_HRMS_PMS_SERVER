@@ -33,6 +33,14 @@ const leaveController = {
             };
         let leaves = yield Leave_1.Leave.find({
             where: filter,
+            relations: {
+                employee: true
+            },
+            select: {
+                employee: {
+                    id: true
+                }
+            }
         });
         if (date) {
             leaves = leaves.filter((leave) => {

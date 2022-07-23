@@ -37,10 +37,10 @@ const createSocketServer = (httpServer) => {
         socket.on('disconnect', () => {
             removeUser(socket.id);
         });
-        socket.on('newReply', ({ email, conversation }) => {
+        socket.on('newReply', ({ email, conversation, newReplies }) => {
             const userReceive = getUser(email);
             if (userReceive) {
-                socket.to(userReceive.socketId).emit('getNewReply', conversation);
+                socket.to(userReceive.socketId).emit('getNewReply', conversation, newReplies);
             }
         });
         //join room discussion contract

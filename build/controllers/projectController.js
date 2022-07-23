@@ -25,6 +25,7 @@ const Project_File_1 = require("../entities/Project_File");
 const Status_1 = require("../entities/Status");
 const Task_1 = require("../entities/Task");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
+const helper_1 = require("../utils/helper");
 const projectValid_1 = require("../utils/valid/projectValid");
 const projectController = {
     //Create new project
@@ -450,6 +451,7 @@ const projectController = {
         })));
         existingProject.employees = [...existingProject.employees, ...allEmployees];
         yield existingProject.save();
+        yield (0, helper_1.CreateProjectActivity)(res, existingProject.id, "Assigned new member successfully");
         return res.status(200).json({
             code: 200,
             success: true,
@@ -500,6 +502,7 @@ const projectController = {
         })));
         existingProject.employees = [...existingProject.employees, ...allEmployees];
         yield existingProject.save();
+        yield (0, helper_1.CreateProjectActivity)(res, existingProject.id, "Assigned new member successfully");
         return res.status(200).json({
             code: 200,
             success: true,
