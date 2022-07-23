@@ -45,7 +45,7 @@ const roomController = {
         });
     })),
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { employee, client } = req.query;
+        const { employee, client, month, year } = req.query;
         const existEmployee = yield Employee_1.Employee.findOne({
             where: {
                 id: employee,
@@ -87,7 +87,7 @@ const roomController = {
                     },
                 }
                 : undefined;
-        const anotherRooms = yield Room_1.Room.find({
+        const otherRooms = yield Room_1.Room.find({
             where: filter,
             relations: {
                 empl_create: true,
@@ -95,11 +95,29 @@ const roomController = {
                 clients: true,
             },
         });
+        var dataRooms = yourRooms;
+        var dataOtherRooms = otherRooms;
+        if (month) {
+            dataRooms = yourRooms.filter((e) => {
+                return new Date(e.date).getMonth() + 1 >= Number(month);
+            });
+            dataOtherRooms = otherRooms.filter((e) => {
+                return new Date(e.date).getMonth() + 1 >= Number(month);
+            });
+        }
+        if (year) {
+            dataRooms = yourRooms.filter((e) => {
+                return new Date(e.date).getFullYear() >= Number(year);
+            });
+            dataOtherRooms = otherRooms.filter((e) => {
+                return new Date(e.date).getFullYear() >= Number(year);
+            });
+        }
         return res.status(200).json({
             code: 200,
             success: true,
-            rooms: yourRooms,
-            another_rooms: anotherRooms,
+            rooms: dataRooms,
+            another_rooms: dataOtherRooms,
             message: 'get all rooms successfully',
         });
     })),
@@ -334,7 +352,9 @@ const roomController = {
                 Authorization: `Bearer ${process.env.ZOOM_URL_KEY}`,
                 Accept: 'application/json',
             },
-        }).then((e) => e.json()).catch(e => {
+        })
+            .then((e) => e.json())
+            .catch((e) => {
             console.log(e);
         });
         return res.status(200).json({

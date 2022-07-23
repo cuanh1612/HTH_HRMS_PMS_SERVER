@@ -28,16 +28,17 @@ const roomController = {
 				success: false,
 				message: 'Room does not exist in system',
 			})
-		
-			return res.status(200).json({
-				code: 200,
-				success: true,
-				room,
-				message: 'Get room by title successfully',
-			})	
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			room,
+			message: 'Get room by title successfully',
+		})
 	}),
+
 	getAll: handleCatchError(async (req: Request, res: Response) => {
-		const { employee, client }: any = req.query
+		const { employee, client, month, year }: any = req.query
 		const existEmployee = await Employee.findOne({
 			where: {
 				id: employee,
@@ -83,7 +84,7 @@ const roomController = {
 					},
 			  }
 			: undefined
-		const anotherRooms = await Room.find({
+		const otherRooms = await Room.find({
 			where: filter,
 			relations: {
 				empl_create: true,
@@ -92,11 +93,31 @@ const roomController = {
 			},
 		})
 
+		var dataRooms: Room[] = yourRooms
+		var dataOtherRooms: Room[] = otherRooms
+		if (month) {
+			dataRooms = yourRooms.filter((e) => {
+				return new Date(e.date).getMonth() + 1 >= Number(month)
+			})
+			dataOtherRooms = otherRooms.filter((e) => {
+				return new Date(e.date).getMonth() + 1 >= Number(month)
+			})
+		}
+		
+		if (year) {
+			dataRooms = yourRooms.filter((e) => {
+				return new Date(e.date).getFullYear() >= Number(year)
+			})
+			dataOtherRooms = otherRooms.filter((e) => {
+				return new Date(e.date).getFullYear() >= Number(year)
+			})
+		}
+
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			rooms: yourRooms,
-			another_rooms: anotherRooms,
+			rooms: dataRooms,
+			another_rooms: dataOtherRooms,
 			message: 'get all rooms successfully',
 		})
 	}),
@@ -352,7 +373,6 @@ const roomController = {
 			})
 		)
 
-
 		await Room.create({
 			title: title.replace(/ /g, '-'),
 			date: new Date(new Date(date)),
@@ -381,9 +401,11 @@ const roomController = {
 				Authorization: `Bearer ${process.env.ZOOM_URL_KEY}`,
 				Accept: 'application/json',
 			},
-		}).then((e: any) => e.json()).catch(e=> {
-			console.log(e)
 		})
+			.then((e: any) => e.json())
+			.catch((e) => {
+				console.log(e)
+			})
 
 		return res.status(200).json({
 			code: 200,
