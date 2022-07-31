@@ -40,7 +40,7 @@ __decorate([
 ], Interview.prototype, "date", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Job_Application_1.Job_Application, (jobApplication) => jobApplication.interviews, {
-        cascade: true,
+        onDelete: "CASCADE"
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Job_Application_1.Job_Application)

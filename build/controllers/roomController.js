@@ -117,7 +117,7 @@ const roomController = {
             code: 200,
             success: true,
             rooms: dataRooms,
-            another_rooms: dataOtherRooms,
+            other_rooms: dataOtherRooms,
             message: 'get all rooms successfully',
         });
     })),

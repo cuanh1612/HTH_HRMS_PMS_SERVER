@@ -103,7 +103,7 @@ const roomController = {
 				return new Date(e.date).getMonth() + 1 >= Number(month)
 			})
 		}
-		
+
 		if (year) {
 			dataRooms = yourRooms.filter((e) => {
 				return new Date(e.date).getFullYear() >= Number(year)
@@ -117,7 +117,7 @@ const roomController = {
 			code: 200,
 			success: true,
 			rooms: dataRooms,
-			another_rooms: dataOtherRooms,
+			other_rooms: dataOtherRooms,
 			message: 'get all rooms successfully',
 		})
 	}),

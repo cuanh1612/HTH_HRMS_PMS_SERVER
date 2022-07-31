@@ -401,7 +401,7 @@ const jobApplicationController = {
         const existingJob = await Job.findOne({
             where:{
                 id: Number(JobId)
-            }
+            },
         })
 
         if(!existingJob)
@@ -416,7 +416,11 @@ const jobApplicationController = {
                 jobs: {
                     id: Number(JobId)
                 }
-            }
+            },
+			relations: {
+				location: true,
+				jobs: true,
+			},
         })
 
          if(!jobApplicationsByJob)

@@ -122,6 +122,7 @@ const interviewController = {
                         message: 'Please select valid interviewer',
                     });
                 }
+                listValidInterviewer.push(existingInterviewer);
                 return resolve(true);
             }));
         })));
@@ -337,6 +338,10 @@ const interviewController = {
                         id: existingJob.id,
                     },
                 },
+            },
+            relations: {
+                candidate: true,
+                interviewer: true,
             },
         });
         return res.status(200).json({

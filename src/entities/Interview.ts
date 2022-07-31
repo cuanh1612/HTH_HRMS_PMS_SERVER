@@ -38,7 +38,7 @@ export class Interview extends BaseEntity {
 	date: Date
 
 	@ManyToOne(() => Job_Application, (jobApplication) => jobApplication.interviews, {
-		cascade: true,
+		onDelete: "CASCADE"
 	})
 	@JoinColumn()
 	candidate: Job_Application

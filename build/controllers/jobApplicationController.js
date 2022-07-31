@@ -356,7 +356,7 @@ const jobApplicationController = {
         const existingJob = yield Job_1.Job.findOne({
             where: {
                 id: Number(JobId)
-            }
+            },
         });
         if (!existingJob)
             return res.status(400).json({
@@ -369,7 +369,11 @@ const jobApplicationController = {
                 jobs: {
                     id: Number(JobId)
                 }
-            }
+            },
+            relations: {
+                location: true,
+                jobs: true,
+            },
         });
         if (!jobApplicationsByJob)
             return res.status(400).json({
