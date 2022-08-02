@@ -306,6 +306,10 @@ const jobOfferLetterController = {
                     id: Number(JobId),
                 },
             },
+            relations: {
+                job_application: true,
+                job: true,
+            },
         });
         if (!jobOfferLettersByJob)
             return res.status(400).json({
@@ -316,7 +320,7 @@ const jobOfferLetterController = {
         return res.status(200).json({
             code: 200,
             success: true,
-            jobOfferLettersByJob,
+            jobOfferLetters: jobOfferLettersByJob,
             message: 'Get job offer letters by job success',
         });
     })),
