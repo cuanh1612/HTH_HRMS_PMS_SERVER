@@ -373,6 +373,7 @@ const jobApplicationController = {
             relations: {
                 location: true,
                 jobs: true,
+                skills: true
             },
         });
         if (!jobApplicationsByJob)
