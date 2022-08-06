@@ -24,6 +24,15 @@ export class Company_Info extends BaseEntity {
     @Column()
 	website: string
 
+	@Column({nullable: true})
+	logo_name: string
+
+	@Column({nullable: true})
+	logo_public_id: string
+
+	@Column({nullable: true})
+	logo_url: string
+
 	@CreateDateColumn({
 		name: 'created_at',
 	})

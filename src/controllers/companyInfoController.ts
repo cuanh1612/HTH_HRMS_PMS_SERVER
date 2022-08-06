@@ -37,7 +37,7 @@ const companyInfoController = {
 	//update companyInfo
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const dataUpdateCompanyInfo: Company_Info = req.body
-        const {email, website, name, phone} = dataUpdateCompanyInfo
+        const {email, website, name, phone, logo_name, logo_url, logo_public_id} = dataUpdateCompanyInfo
 
         //Check valid
 		const messageValid = companyInfoValid.createOrUpdate(dataUpdateCompanyInfo)
@@ -73,6 +73,9 @@ const companyInfoController = {
             website: website ? website : undefined,
             phone: phone ? phone : undefined,
             email: email ? email : undefined,
+            logo_name: logo_name ? logo_name : undefined,
+            logo_public_id: logo_public_id ? logo_public_id : undefined,
+            logo_url: logo_url ? logo_url : undefined,
         })
 
         return res.status(200).json({
