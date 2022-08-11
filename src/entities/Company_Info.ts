@@ -33,6 +33,9 @@ export class Company_Info extends BaseEntity {
 	@Column({nullable: true})
 	logo_url: string
 
+	@Column({nullable: true})
+	terms_and_condition_recruit: string
+
 	@CreateDateColumn({
 		name: 'created_at',
 	})

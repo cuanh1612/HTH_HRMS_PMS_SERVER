@@ -46,6 +46,10 @@ __decorate([
     __metadata("design:type", String)
 ], Company_Info.prototype, "logo_url", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Company_Info.prototype, "terms_and_condition_recruit", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),
