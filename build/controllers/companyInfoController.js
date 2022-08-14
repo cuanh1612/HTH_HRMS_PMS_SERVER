@@ -44,7 +44,7 @@ const companyInfoController = {
     //update companyInfo
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataUpdateCompanyInfo = req.body;
-        const { email, website, name, phone, logo_name, logo_url, logo_public_id } = dataUpdateCompanyInfo;
+        const { email, website, name, phone, logo_name, logo_url, logo_public_id, terms_and_condition_recruit } = dataUpdateCompanyInfo;
         //Check valid
         const messageValid = companyInfoValid_1.companyInfoValid.createOrUpdate(dataUpdateCompanyInfo);
         if (messageValid)
@@ -77,6 +77,7 @@ const companyInfoController = {
             logo_name: logo_name ? logo_name : undefined,
             logo_public_id: logo_public_id ? logo_public_id : undefined,
             logo_url: logo_url ? logo_url : undefined,
+            terms_and_condition_recruit: terms_and_condition_recruit ? terms_and_condition_recruit : undefined
         });
         return res.status(200).json({
             code: 200,

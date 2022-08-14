@@ -61,6 +61,7 @@ const connectDB = () => {
 
 		database: 'hth_hrms_pms',
 		password: 'Truong123456789@',
+
 		username: 'postgres',
 
 		synchronize: true,
