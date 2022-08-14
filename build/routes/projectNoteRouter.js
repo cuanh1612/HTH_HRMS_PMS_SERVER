@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const projectNoteController_1 = __importDefault(require("../controllers/projectNoteController"));
 const checkAuth_1 = require("../utils/middleware/checkAuth");
+//Check auth in controller
 const projectNoteRouter = express_1.default.Router();
 projectNoteRouter.post('/', (0, checkAuth_1.checkAuth)([]), projectNoteController_1.default.create);
 projectNoteRouter.put('/:projectNoteId', projectNoteController_1.default.update);

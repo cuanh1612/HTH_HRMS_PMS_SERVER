@@ -114,8 +114,8 @@ const projectNoteController = {
 				id: project,
 			},
 			relations: {
-				project_Admin: true
-			}
+				project_Admin: true,
+			},
 		})
 
 		if (!existingProject)
@@ -157,7 +157,10 @@ const projectNoteController = {
 				message: 'User does not exist in the system',
 			})
 
-		if (existingUser.role !== enumRole.ADMIN && existingUser.email !== existingProject.project_Admin.email)
+		if (
+			existingUser.role !== enumRole.ADMIN &&
+			existingUser.email !== existingProject.project_Admin.email
+		)
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -364,7 +367,7 @@ const projectNoteController = {
 			},
 			relations: {
 				client: true,
-				project_Admin: true
+				project_Admin: true,
 			},
 		})
 
@@ -528,9 +531,17 @@ const projectNoteController = {
 			where: {
 				id: Number(projectNoteId),
 			},
+			relations: {
+				project: {
+					project_Admin: true,
+				},
+			},
 			select: {
 				project: {
 					id: true,
+					project_Admin: {
+						id: true,
+					},
 				},
 			},
 		})
@@ -581,7 +592,9 @@ const projectNoteController = {
 			existingUser.role === enumRole.ADMIN ||
 			existingProjectNote.employees.some(
 				(employeeItem) => employeeItem.id === existingUser.id
-			)
+			) ||
+			(existingProjectNote.project.project_Admin &&
+				existingProjectNote.project.project_Admin.id === existingUser.id)
 		) {
 			return res.status(200).json({
 				code: 200,
@@ -593,7 +606,7 @@ const projectNoteController = {
 			return res.status(400).json({
 				code: 400,
 				success: false,
-				message: 'You do not have permission to perform this feature',
+				message: 'You do not have permission to perform this feature1',
 			})
 		}
 	}),

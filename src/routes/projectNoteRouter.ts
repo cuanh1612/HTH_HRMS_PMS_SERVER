@@ -3,6 +3,8 @@ import projectNoteController from '../controllers/projectNoteController'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 
+//Check auth in controller
+
 const projectNoteRouter = express.Router()
 
 projectNoteRouter.post('/', checkAuth([]),  projectNoteController.create)
