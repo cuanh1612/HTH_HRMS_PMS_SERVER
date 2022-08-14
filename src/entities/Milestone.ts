@@ -1,38 +1,57 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Project } from "./Project";
-import { Task } from "./Task";
-
+import {
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+	PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm'
+import { Project } from './Project'
+import { Task } from './Task'
 
 @Entity()
 export class Milestone extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id!: number
+	@PrimaryGeneratedColumn()
+	id!: number
 
-    @Column({unique: true})
-    title: string
+	@Column({ unique: true })
+	title: string
 
-    @Column('float', {nullable: true})
-    cost: number
+	@Column('float', { nullable: true })
+	cost: number
 
-    @Column({default:false})
-    addtobudget:boolean
+	@Column({ default: false })
+	addtobudget: boolean
 
-    @Column({default: false})
-    status: boolean
+	@Column({ default: false })
+	status: boolean
 
-    @Column({nullable: true})
-    summary: string
+	@Column({ nullable: true })
+	summary: string
 
-    @ManyToOne(() => Project, (project) => project.milestones,{
-        nullable: true,
-        onDelete: 'CASCADE'
-    })
-    @JoinColumn()
-    project: Project
+	@ManyToOne(() => Project, (project) => project.milestones, {
+		nullable: true,
+		onDelete: 'CASCADE',
+	})
+	@JoinColumn()
+	project: Project
 
-    @OneToMany(() => Task, (task) => task.milestone,{
-        nullable: true,
-        onDelete: 'CASCADE'
-    })
-    tasks: Task[]
+	@OneToMany(() => Task, (task) => task.milestone, {
+		nullable: true,
+		onDelete: 'CASCADE',
+	})
+	tasks: Task[]
+
+	@CreateDateColumn({
+		name: 'created_at',
+	})
+	createdAt: Date
+
+	@UpdateDateColumn({
+		name: 'updated_at',
+	})
+	updatedAt: Date
 }

@@ -42,7 +42,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Project_1.Project, (project) => project.milestones, {
         nullable: true,
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
     }),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Project_1.Project)
@@ -50,10 +50,22 @@ __decorate([
 __decorate([
     (0, typeorm_1.OneToMany)(() => Task_1.Task, (task) => task.milestone, {
         nullable: true,
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
     }),
     __metadata("design:type", Array)
 ], Milestone.prototype, "tasks", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({
+        name: 'created_at',
+    }),
+    __metadata("design:type", Date)
+], Milestone.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)({
+        name: 'updated_at',
+    }),
+    __metadata("design:type", Date)
+], Milestone.prototype, "updatedAt", void 0);
 Milestone = __decorate([
     (0, typeorm_1.Entity)()
 ], Milestone);

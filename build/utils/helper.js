@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateProjectActivity = exports.compareDateTime = void 0;
+exports.getSETime = exports.CreateProjectActivity = exports.compareDateTime = void 0;
 const Project_1 = require("../entities/Project");
 const Project_Activity_1 = require("../entities/Project_Activity");
 // compare time
@@ -81,3 +81,21 @@ const CreateProjectActivity = (res, projectId, content) => __awaiter(void 0, voi
     return projectActivity;
 });
 exports.CreateProjectActivity = CreateProjectActivity;
+// return start time and end time of month to filter in postgres
+const getSETime = (value) => {
+    const date = new Date(value);
+    const firstDate = new Date(date.setDate(1));
+    let lastDate = new Date(new Date((date.setMonth(date.getMonth() + 1))).setDate(0));
+    const currentDate = new Date();
+    if (currentDate.getTime() >= firstDate.getTime() && currentDate.getTime() < lastDate.getTime()) {
+        lastDate = currentDate;
+    }
+    return {
+        firstTime: `${firstDate.getFullYear()}-${firstDate.getMonth() + 1}-1`,
+        lastTime: `${lastDate.getFullYear()}-${lastDate.getMonth() + 1}-${lastDate.getDate()}`,
+        firstTimeDate: firstDate,
+        lastTimeDate: lastDate,
+        lastDate: lastDate.getDate()
+    };
+};
+exports.getSETime = getSETime;

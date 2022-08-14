@@ -8,6 +8,7 @@ import { Leave } from '../entities/Leave'
 import { Project } from '../entities/Project'
 import { Task } from '../entities/Task'
 import handleCatchError from '../utils/catchAsyncError'
+import { getSETime } from '../utils/helper'
 
 const dashBoardController = {
 	totalClients: handleCatchError(async (_: Request, res: Response) => {
@@ -96,18 +97,18 @@ const dashBoardController = {
 		})
 	}),
 
-	pendingTasksRaw: handleCatchError(async (_: Request, res: Response) => {
-		//Get end date last month
-		const dateLastMonth = new Date()
-		dateLastMonth.setDate(1)
-		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
+	pendingTasksRaw: handleCatchError(async (req: Request, res: Response) => {
+		const { firstTime, lastTime } = getSETime(new Date(req.query.date as string))
 
 		const pendingTasksRaw = await Task.createQueryBuilder('task')
 			.leftJoinAndSelect('task.status', 'status')
 			.leftJoinAndSelect('task.assignBy', 'employee')
 			.leftJoinAndSelect('task.project', 'project')
 			.where('status.title != :title', { title: 'Complete' })
-			.andWhere('task.start_date > :date', { date: dateLastMonth })
+			.andWhere('task.start_date >= :date and task.start_date <= :date2', {
+				date: firstTime,
+				date2: lastTime,
+			})
 			.getMany()
 
 		return res.status(200).json({
@@ -118,17 +119,12 @@ const dashBoardController = {
 		})
 	}),
 
-	pendingLeavesRaw: handleCatchError(async (_: Request, res: Response) => {
-		//Get end date last month
-		const dateLastMonth = new Date()
-		dateLastMonth.setDate(1)
-		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
+	pendingLeavesRaw: handleCatchError(async (req: Request, res: Response) => {
+		const { firstTime } = getSETime(new Date(req.query.date as string))
 
 		const manager = getManager('huprom')
 		const pendingLeavesRaw = await manager.query(
-			`SELECT *,"leave_type"."name" as leave_type_name, "leave"."id" as leave_id, "employee"."name" as employee_name, "avatar"."name" as avatar_name from "leave" LEFT JOIN "leave_type" ON "leave"."leaveTypeId" = "leave_type"."id" LEFT JOIN "employee" ON "leave"."employeeId" = "employee"."id" LEFT JOIN "avatar" ON "employee"."avatarId" = "avatar"."id" WHERE "leave"."status" = 'Pending' AND "leave"."date" > '${dateLastMonth.getFullYear()}-${
-				dateLastMonth.getMonth() + 1
-			}-${dateLastMonth.getDate()}'`
+			`SELECT *,"leave_type"."name" as leave_type_name, "leave"."id" as leave_id, "employee"."name" as employee_name, "avatar"."name" as avatar_name from "leave" LEFT JOIN "leave_type" ON "leave"."leaveTypeId" = "leave_type"."id" LEFT JOIN "employee" ON "leave"."employeeId" = "employee"."id" LEFT JOIN "avatar" ON "employee"."avatarId" = "avatar"."id" WHERE "leave"."date" >='${firstTime}'  and "leave"."status" = 'Pending'`
 		)
 
 		return res.status(200).json({
@@ -167,10 +163,11 @@ const dashBoardController = {
 		})
 	}),
 
-	pendingMilestone: handleCatchError(async (_: Request, res: Response) => {
+	pendingMilestone: handleCatchError(async (req: Request, res: Response) => {
+		const { firstTime, lastTime } = getSETime(new Date(req.query.date as string))
 		const manager = getManager('huprom')
 		const pendingMilestone = await manager.query(
-			'SELECT * FROM "public"."milestone" LEFT JOIN "public"."project" ON "public"."milestone"."projectId" = "public"."project"."id" WHERE "public"."milestone"."status" IS FALSE'
+			`SELECT * FROM "public"."milestone" LEFT JOIN "public"."project" ON "public"."milestone"."projectId" = "public"."project"."id" WHERE "public"."milestone"."status" IS FALSE and milestone.created_at >= '${firstTime}' and milestone.created_at <= '${lastTime}'`
 		)
 
 		return res.status(200).json({
@@ -206,10 +203,11 @@ const dashBoardController = {
 		})
 	}),
 
-	clientWiseEarnings: handleCatchError(async (_: Request, res: Response) => {
+	clientWiseEarnings: handleCatchError(async (req: Request, res: Response) => {
+		const { firstTime, lastTime } = getSETime(new Date(req.query.date as string))
 		const manager = getManager('huprom')
 		const clientWiseEarnings = await manager.query(
-			'SELECT SUM(time_log.earnings) as earnings, client.name, client.id FROM time_log, project, client WHERE time_log."projectId" = project.id AND project."clientId" = client.id GROUP BY client.id'
+			`SELECT SUM(time_log.earnings) as earnings, client.name, client.id FROM time_log, project, client WHERE time_log."projectId" = project.id AND project."clientId" = client.id and time_log.starts_on_date >= '${firstTime}' and time_log.starts_on_date <= '${lastTime}' GROUP BY client.id`
 		)
 
 		return res.status(200).json({
@@ -220,10 +218,11 @@ const dashBoardController = {
 		})
 	}),
 
-	clientWiseTimeLogs: handleCatchError(async (_: Request, res: Response) => {
+	clientWiseTimeLogs: handleCatchError(async (req: Request, res: Response) => {
+		const { firstTime, lastTime } = getSETime(new Date(req.query.date as string))
 		const manager = getManager('huprom')
 		const clientWiseTimeLogs = await manager.query(
-			'SELECT SUM(time_log.total_hours) as total_hours, client.name, client.id FROM time_log, project, client WHERE time_log."projectId" = project.id AND project."clientId" = client.id GROUP BY client.id'
+			`SELECT SUM(time_log.total_hours) as total_hours, client.name, client.id FROM time_log, project, client WHERE time_log."projectId" = project.id AND project."clientId" = client.id and time_log.starts_on_date >= '${firstTime}' and time_log.starts_on_date <= '${lastTime}' GROUP BY client.id`
 		)
 
 		return res.status(200).json({
@@ -234,13 +233,23 @@ const dashBoardController = {
 		})
 	}),
 
-	latestClients: handleCatchError(async (_: Request, res: Response) => {
-		const latestClients = await Client.createQueryBuilder('client').limit(10).getMany()
+	latestClients: handleCatchError(async (req: Request, res: Response) => {
+		const { firstTimeDate, lastTimeDate } = getSETime(new Date(req.query.date as string))
+		const data = await Client.createQueryBuilder('client').getMany()
+
+		const latestClients = data.filter((client) => {
+			if (
+				new Date(client.createdAt).getTime() >= firstTimeDate.getTime() &&
+				new Date(client.createdAt).getTime() <= lastTimeDate.getTime()
+			)
+				return true
+			return false
+		})
 
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			lastestClients: latestClients,
+			lastestClients: latestClients.length > 10 ? latestClients.slice(0, 10) : latestClients,
 			message: 'Get lastest clients successfully',
 		})
 	}),
@@ -256,27 +265,19 @@ const dashBoardController = {
 		})
 	}),
 
-	countByDateAttendance: handleCatchError(async (_: Request, res: Response) => {
-		//Get end date last month
-		const dateLastMonth = new Date()
-		dateLastMonth.setDate(1)
-		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
-
-		//get current date
-		let dateCurrentMonth = new Date().getDate()
+	countByDateAttendance: handleCatchError(async (req: Request, res: Response) => {
+		const { firstTime, lastTime, lastDate} = getSETime(new Date(req.query.date as string))
 
 		const manager = getManager('huprom')
 		const currentMonthAttendance: Attendance[] =
 			(await manager.query(
-				`SELECT * FROM "attendance" WHERE "attendance"."date" > '${dateLastMonth.getFullYear()}-${
-					dateLastMonth.getMonth() + 1
-				}-${dateLastMonth.getDate()}'`
+				`SELECT * FROM "attendance" WHERE "attendance"."date" >= '${firstTime}' and "attendance"."date" <= '${lastTime}'`
 			)) || []
 
 		const countByDateAttendance: { date: number; count: number }[] = []
 
 		//Count attendance by date
-		for (let index = 1; index <= dateCurrentMonth; index++) {
+		for (let index = 1; index <= lastDate; index++) {
 			let countAttendance = 0
 			currentMonthAttendance.map((attendance) => {
 				const dateAttendance = new Date(attendance.date).getDate()
@@ -299,27 +300,19 @@ const dashBoardController = {
 		})
 	}),
 
-	countByDateLeave: handleCatchError(async (_: Request, res: Response) => {
-		//Get end date last month
-		const dateLastMonth = new Date()
-		dateLastMonth.setDate(1)
-		dateLastMonth.setDate(dateLastMonth.getDate() - 1)
-
-		//get current date
-		const dateCurrentMonth = new Date().getDate()
+	countByDateLeave: handleCatchError(async (req: Request, res: Response) => {
+		const { firstTime, lastTime, lastDate} = getSETime(new Date(req.query.date as string))
 
 		const manager = getManager('huprom')
 		const currentMonthLeave: Leave[] =
 			(await manager.query(
-				`SELECT * FROM "leave" WHERE "leave"."date" > '${dateLastMonth.getFullYear()}-${
-					dateLastMonth.getMonth() + 1
-				}-${dateLastMonth.getDate()}'`
+				`SELECT * FROM "leave" WHERE "leave"."date" >= '${firstTime}' and "leave"."date" <= '${lastTime}'`
 			)) || []
 
 		const countByLeaveAttendance: { date: number; count: number }[] = []
 
 		//Count attendance by date
-		for (let index = 1; index <= dateCurrentMonth; index++) {
+		for (let index = 1; index <= lastDate; index++) {
 			let countAttendance = 0
 			currentMonthLeave.map((leave) => {
 				const dateLeave = new Date(leave.date).getDate()
