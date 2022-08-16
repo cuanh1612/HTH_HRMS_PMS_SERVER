@@ -1,7 +1,11 @@
 import { Request, Response } from 'express'
+import { Secret, verify } from 'jsonwebtoken'
+import { Client } from '../entities/Client'
+import { Employee, enumRole } from '../entities/Employee'
 import { Project } from '../entities/Project'
 import { Status } from '../entities/Status'
 import { createOrUpdateStatusPayload } from '../type/statusPayload'
+import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { CreateProjectActivity } from '../utils/helper'
 import { statusValid } from '../utils/valid/statusValid'
@@ -41,6 +45,14 @@ const statusController = {
 			where: {
 				id: projectId,
 			},
+			relations: {
+				project_Admin: true,
+			},
+			select: {
+				project_Admin: {
+					email: true,
+				},
+			},
 		})
 		if (!existingProject)
 			return res.status(400).json({
@@ -49,6 +61,49 @@ const statusController = {
 				message: 'Project does not exist in the system',
 			})
 
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: decode.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: decode.email,
+				},
+			}))
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
+		if (
+			existingUser.role !== enumRole.ADMIN &&
+			existingUser.email !== existingProject.project_Admin.email
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this feature',
+			})
+
+		//Create status
 		const result = await Status.create({
 			project: existingProject,
 			title: title,
@@ -57,7 +112,11 @@ const statusController = {
 		}).save()
 
 		//Crete activity for project
-		await CreateProjectActivity(res, existingProject.id, 'New column status Added To The Project')
+		await CreateProjectActivity(
+			res,
+			existingProject.id,
+			'New column status Added To The Project'
+		)
 
 		return res.status(200).json({
 			code: 200,
@@ -166,6 +225,16 @@ const statusController = {
 			where: {
 				id: Number(id),
 			},
+			relations: {
+				project: {
+					project_Admin: true
+				}
+			},
+			select: {
+				project: {
+					id: true
+				}
+			}
 		})
 
 		if (!existingStatus)
@@ -174,7 +243,71 @@ const statusController = {
 				success: false,
 				message: 'status does not existing in the system',
 			})
+		
+		//Get existing project to check auth if current user have role project admin
+		const existingProject = await Project.findOne({
+			where: {
+				id: existingStatus.project.id,
+			},
+			relations: {
+				project_Admin: true,
+			},
+			select: {
+				project_Admin: {
+					email: true,
+				},
+			},
+		})
+		if (!existingProject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
 
+		//Check auth current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: decode.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: decode.email,
+				},
+			}))
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
+		if (
+			existingUser.role !== enumRole.ADMIN &&
+			existingUser.email !== existingProject.project_Admin.email
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this feature',
+			})
+
+		//Update status
 		const messageValid = statusValid.createOrUpdate(existingStatus, 'update')
 
 		if (messageValid)
@@ -203,13 +336,89 @@ const statusController = {
 			where: {
 				id: Number(id),
 			},
+			relations: {
+				project: {
+					project_Admin: true
+				}
+			},
+			select: {
+				project: {
+					id: true
+				}
+			}
 		})
+
 		if (!existingStatus)
 			return res.status(400).json({
 				code: 400,
 				success: false,
 				message: 'status does not existing in the system',
 			})
+		
+		//Get existing project to check auth if current user have role project admin
+		const existingProject = await Project.findOne({
+			where: {
+				id: existingStatus.project.id,
+			},
+			relations: {
+				project_Admin: true,
+			},
+			select: {
+				project_Admin: {
+					email: true,
+				},
+			},
+		})
+		if (!existingProject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+
+		//Check auth current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: decode.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: decode.email,
+				},
+			}))
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
+		if (
+			existingUser.role !== enumRole.ADMIN &&
+			existingUser.email !== existingProject.project_Admin.email
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this feature',
+			})
+
+		//Delete status 
 
 		const messageValid = statusValid.createOrUpdate(existingStatus, 'update')
 
@@ -231,6 +440,69 @@ const statusController = {
 	//Change position of status
 	changePosition: handleCatchError(async (req: Request, res: Response) => {
 		const { id1, id2, projectId } = req.body
+
+		//Get existing project to check auth if current user have role project admin
+		const existingProject = await Project.findOne({
+			where: {
+				id: Number(projectId),
+			},
+			relations: {
+				project_Admin: true,
+			},
+			select: {
+				project_Admin: {
+					email: true,
+				},
+			},
+		})
+		if (!existingProject)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Project does not exist in the system',
+			})
+
+		//Check auth current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		//Get data user
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: decode.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: decode.email,
+				},
+			}))
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'User does not exist in the system',
+			})
+
+		if (
+			existingUser.role !== enumRole.ADMIN &&
+			existingUser.email !== existingProject.project_Admin.email
+		)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'You do not have permission to perform this feature',
+			})
 
 		const status1 = await Status.createQueryBuilder('status')
 			.where('status.id = :id1', { id1 })

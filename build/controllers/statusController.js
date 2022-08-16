@@ -12,6 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = require("jsonwebtoken");
+const Client_1 = require("../entities/Client");
+const Employee_1 = require("../entities/Employee");
 const Project_1 = require("../entities/Project");
 const Status_1 = require("../entities/Status");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
@@ -20,6 +23,7 @@ const statusValid_1 = require("../utils/valid/statusValid");
 const statusController = {
     //create new status
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         const { projectId, title, color } = req.body;
         if (!projectId || !title || !color) {
             return res.status(400).json({
@@ -48,6 +52,14 @@ const statusController = {
             where: {
                 id: projectId,
             },
+            relations: {
+                project_Admin: true,
+            },
+            select: {
+                project_Admin: {
+                    email: true,
+                },
+            },
         });
         if (!existingProject)
             return res.status(400).json({
@@ -55,6 +67,40 @@ const statusController = {
                 success: false,
                 message: 'Project does not exist in the system',
             });
+        //check exist current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = (yield Employee_1.Employee.findOne({
+            where: {
+                email: decode.email,
+            },
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email: decode.email,
+                },
+            }));
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
+        if (existingUser.role !== Employee_1.enumRole.ADMIN &&
+            existingUser.email !== existingProject.project_Admin.email)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You do not have permission to perform this feature',
+            });
+        //Create status
         const result = yield Status_1.Status.create({
             project: existingProject,
             title: title,
@@ -150,12 +196,23 @@ const statusController = {
     })),
     //Update status
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _b;
         const { id } = req.params;
         const dataUpdateStatus = req.body;
         const existingStatus = yield Status_1.Status.findOne({
             where: {
                 id: Number(id),
             },
+            relations: {
+                project: {
+                    project_Admin: true
+                }
+            },
+            select: {
+                project: {
+                    id: true
+                }
+            }
         });
         if (!existingStatus)
             return res.status(400).json({
@@ -163,6 +220,60 @@ const statusController = {
                 success: false,
                 message: 'status does not existing in the system',
             });
+        //Get existing project to check auth if current user have role project admin
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: existingStatus.project.id,
+            },
+            relations: {
+                project_Admin: true,
+            },
+            select: {
+                project_Admin: {
+                    email: true,
+                },
+            },
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not exist in the system',
+            });
+        //Check auth current user
+        const token = (_b = req.headers.authorization) === null || _b === void 0 ? void 0 : _b.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = (yield Employee_1.Employee.findOne({
+            where: {
+                email: decode.email,
+            },
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email: decode.email,
+                },
+            }));
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
+        if (existingUser.role !== Employee_1.enumRole.ADMIN &&
+            existingUser.email !== existingProject.project_Admin.email)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You do not have permission to perform this feature',
+            });
+        //Update status
         const messageValid = statusValid_1.statusValid.createOrUpdate(existingStatus, 'update');
         if (messageValid)
             return res.status(400).json({
@@ -181,11 +292,22 @@ const statusController = {
     })),
     //Delete status
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _c;
         const { id } = req.params;
         const existingStatus = yield Status_1.Status.findOne({
             where: {
                 id: Number(id),
             },
+            relations: {
+                project: {
+                    project_Admin: true
+                }
+            },
+            select: {
+                project: {
+                    id: true
+                }
+            }
         });
         if (!existingStatus)
             return res.status(400).json({
@@ -193,6 +315,60 @@ const statusController = {
                 success: false,
                 message: 'status does not existing in the system',
             });
+        //Get existing project to check auth if current user have role project admin
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: existingStatus.project.id,
+            },
+            relations: {
+                project_Admin: true,
+            },
+            select: {
+                project_Admin: {
+                    email: true,
+                },
+            },
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not exist in the system',
+            });
+        //Check auth current user
+        const token = (_c = req.headers.authorization) === null || _c === void 0 ? void 0 : _c.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = (yield Employee_1.Employee.findOne({
+            where: {
+                email: decode.email,
+            },
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email: decode.email,
+                },
+            }));
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
+        if (existingUser.role !== Employee_1.enumRole.ADMIN &&
+            existingUser.email !== existingProject.project_Admin.email)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You do not have permission to perform this feature',
+            });
+        //Delete status 
         const messageValid = statusValid_1.statusValid.createOrUpdate(existingStatus, 'update');
         if (messageValid)
             return res.status(400).json({
@@ -209,7 +385,61 @@ const statusController = {
     })),
     //Change position of status
     changePosition: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _d;
         const { id1, id2, projectId } = req.body;
+        //Get existing project to check auth if current user have role project admin
+        const existingProject = yield Project_1.Project.findOne({
+            where: {
+                id: Number(projectId),
+            },
+            relations: {
+                project_Admin: true,
+            },
+            select: {
+                project_Admin: {
+                    email: true,
+                },
+            },
+        });
+        if (!existingProject)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Project does not exist in the system',
+            });
+        //Check auth current user
+        const token = (_d = req.headers.authorization) === null || _d === void 0 ? void 0 : _d.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = (yield Employee_1.Employee.findOne({
+            where: {
+                email: decode.email,
+            },
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email: decode.email,
+                },
+            }));
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
+        if (existingUser.role !== Employee_1.enumRole.ADMIN &&
+            existingUser.email !== existingProject.project_Admin.email)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You do not have permission to perform this feature',
+            });
         const status1 = yield Status_1.Status.createQueryBuilder('status')
             .where('status.id = :id1', { id1 })
             .getOne();

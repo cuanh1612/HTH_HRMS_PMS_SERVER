@@ -12,6 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = require("jsonwebtoken");
+const Client_1 = require("../entities/Client");
 const Employee_1 = require("../entities/Employee");
 const Project_1 = require("../entities/Project");
 const Project_File_1 = require("../entities/Project_File");
@@ -58,11 +60,20 @@ const projectFileController = {
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         const { projectFileId, projectId } = req.params;
-        //Check exist project
+        //Get existing project to check auth if current user have role project admin
         const existingProject = yield Project_1.Project.findOne({
             where: {
                 id: Number(projectId),
+            },
+            relations: {
+                project_Admin: true,
+            },
+            select: {
+                project_Admin: {
+                    email: true,
+                },
             },
         });
         if (!existingProject)
@@ -70,6 +81,39 @@ const projectFileController = {
                 code: 400,
                 success: false,
                 message: 'Project does not exist in the system',
+            });
+        //Check auth current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        //Get data user
+        const existingUser = (yield Employee_1.Employee.findOne({
+            where: {
+                email: decode.email,
+            },
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email: decode.email,
+                },
+            }));
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'User does not exist in the system',
+            });
+        if (existingUser.role !== Employee_1.enumRole.ADMIN &&
+            existingUser.email !== existingProject.project_Admin.email)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'You do not have permission to perform this feature',
             });
         //Check exist Project file
         const existingProjectFile = yield Project_File_1.Project_file.findOne({
@@ -119,8 +163,8 @@ const projectFileController = {
                 createdAt: 'DESC',
             },
             relations: {
-                assignBy: true
-            }
+                assignBy: true,
+            },
         });
         return res.status(200).json({
             code: 200,

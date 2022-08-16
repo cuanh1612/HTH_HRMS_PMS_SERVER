@@ -2,7 +2,7 @@ import express from "express";
 import statusController from "../controllers/statusController";
 import { checkAuth } from "../utils/middleware/checkAuth";
 
- 
+ //Check auth in controller
  const statusRouter = express.Router()
 
  statusRouter.post('/', checkAuth([]), statusController.create)
