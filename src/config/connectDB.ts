@@ -59,8 +59,8 @@ const connectDB = () => {
 		name: 'huprom',
 		logging: true,
 
-		database: 'HTH_HRMS_PMS',
-		password: '161201',
+		database: 'hth_hrms_pms',
+		password: 'Truong123456789@',
 
 		username: 'postgres',
 
