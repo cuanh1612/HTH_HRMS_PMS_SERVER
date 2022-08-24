@@ -30,7 +30,7 @@ export class Department extends BaseEntity {
 	@JoinColumn()
 	projects: Project[]
 
-	@ManyToOne(() => Job, (job) => job.department)
+	@OneToMany(() => Job, (job) => job.department)
 	jobs: Job[]
 
 	
