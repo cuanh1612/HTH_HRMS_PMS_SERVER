@@ -4,11 +4,9 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	JoinColumn,
-	ManyToOne,
-	OneToMany,
+	JoinColumn, OneToMany,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn,
+	UpdateDateColumn
 } from 'typeorm'
 import { Employee } from './Employee'
 import { Job } from './Job'

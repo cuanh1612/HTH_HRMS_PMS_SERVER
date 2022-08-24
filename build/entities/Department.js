@@ -35,7 +35,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Department.prototype, "projects", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Job_1.Job, (job) => job.department),
+    (0, typeorm_1.OneToMany)(() => Job_1.Job, (job) => job.department),
     __metadata("design:type", Array)
 ], Department.prototype, "jobs", void 0);
 __decorate([
