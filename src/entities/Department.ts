@@ -4,11 +4,9 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	JoinColumn,
-	ManyToOne,
-	OneToMany,
+	JoinColumn, OneToMany,
 	PrimaryGeneratedColumn,
-	UpdateDateColumn,
+	UpdateDateColumn
 } from 'typeorm'
 import { Employee } from './Employee'
 import { Job } from './Job'
@@ -30,7 +28,7 @@ export class Department extends BaseEntity {
 	@JoinColumn()
 	projects: Project[]
 
-	@ManyToOne(() => Job, (job) => job.department)
+	@OneToMany(() => Job, (job) => job.department)
 	jobs: Job[]
 
 	
