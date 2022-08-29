@@ -21,6 +21,7 @@ const google_auth_library_1 = require("google-auth-library");
 const Client_1 = require("../entities/Client");
 const sendNotice_1 = __importDefault(require("../utils/sendNotice"));
 const employeeValid_1 = require("../utils/valid/employeeValid");
+const templateEmail_1 = require("../utils/templateEmail");
 const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const authController = {
     login: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -130,7 +131,7 @@ const authController = {
                 code: 401,
                 success: false,
                 message: 'You must login first',
-                refreshToken
+                refreshToken,
             });
         //Check decode
         try {
@@ -159,7 +160,7 @@ const authController = {
                 success: true,
                 message: 'Refresh token successfully',
                 accessToken: (0, auth_1.createToken)('accessToken', existingUser),
-                refreshToken: createdRefreshToken
+                refreshToken: createdRefreshToken,
             });
         }
         catch (error) {
@@ -183,13 +184,14 @@ const authController = {
         const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
         const existingUser = (yield Employee_1.Employee.findOne({
             where: {
-                email: decode.email
+                email: decode.email,
             },
-        })) || (yield Client_1.Client.findOne({
-            where: {
-                email: decode.email
-            },
-        }));
+        })) ||
+            (yield Client_1.Client.findOne({
+                where: {
+                    email: decode.email,
+                },
+            }));
         if (!existingUser)
             return res.status(400).json({
                 code: 400,
@@ -295,11 +297,16 @@ const authController = {
             });
         }
         const activeToken = (0, auth_1.createActiveToken)(email, employee.id);
+        (0, templateEmail_1.templateWEmail)({
+            activeToken: `${process.env.CLIENT_URL}/reset-password/${activeToken}`,
+            name: employee.name,
+            file: '../../views/resetPass.handlebars'
+        });
         yield (0, sendNotice_1.default)({
             to: email,
             text: 'reset password',
             subject: 'huprom-reset password',
-            html: `<a href="${process.env.CLIENT_URL}/reset-password/${activeToken}>link</a>`,
+            template: 'resetPass',
         });
         return res.status(200).json({
             code: 200,

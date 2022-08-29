@@ -1,0 +1,8 @@
+</span>
+        </div>
+        <div
+            style="clear: both; padding-top: 30px; margin-left: 50px; margin-right: 50px; text-align: justify; line-height: 25px;">
+            Thank you for trusting and using our website system. This is a system that helps the company manage both
+            human resources and project management at the same time. helps bring a good user experience and provides a
+            full range of attractive features.
+        </div>

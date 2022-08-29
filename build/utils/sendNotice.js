@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const googleapis_1 = require("googleapis");
+const nodemailer_express_handlebars_1 = __importDefault(require("nodemailer-express-handlebars"));
+const path_1 = require("path");
 const clientId = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
@@ -27,7 +29,7 @@ const oAuth2client = new googleapis_1.google.auth.OAuth2({
 oAuth2client.setCredentials({
     refresh_token: refreshToken,
 });
-const sendMail = ({ to, subject, text, html, }) => __awaiter(void 0, void 0, void 0, function* () {
+const sendMail = ({ to, subject, text, template, }) => __awaiter(void 0, void 0, void 0, function* () {
     const accessToken = yield oAuth2client.getAccessToken();
     const transporter = nodemailer_1.default.createTransport({
         service: 'gmail',
@@ -41,15 +43,26 @@ const sendMail = ({ to, subject, text, html, }) => __awaiter(void 0, void 0, voi
         },
         secure: true,
     });
-    transporter.sendMail({
+    const optionTransporter = {
+        viewEngine: {
+            extName: ".handlebars",
+            partialsDir: (0, path_1.resolve)(__dirname, "templateViews"),
+            defaultLayout: false,
+        },
+        viewPath: (0, path_1.resolve)(__dirname, "../../views"),
+        extName: ".handlebars",
+    };
+    transporter.use('compile', (0, nodemailer_express_handlebars_1.default)(optionTransporter));
+    const mailOptions = {
         from: `${gmail}`,
         subject,
         text,
-        html,
         to,
-    }, function (err) {
+        template
+    };
+    transporter.sendMail(mailOptions, function (err) {
         if (err) {
-            console.log('error');
+            console.log('error', err);
         }
         else {
             console.log('send email success');

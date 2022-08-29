@@ -6,6 +6,7 @@ import { Job_Application } from '../entities/Job_Application'
 import { createOrUpdateInterviewPayload } from '../type/interview'
 import handleCatchError from '../utils/catchAsyncError'
 import sendMail from '../utils/sendNotice'
+import { templateInterview } from '../utils/templateEmail'
 
 const interviewController = {
 	getAll: handleCatchError(async (req: Request, res: Response) => {
@@ -107,6 +108,9 @@ const interviewController = {
 			where: {
 				id: candidate,
 			},
+			relations: {
+				jobs: true
+			}
 		})
 
 		if (!existCandidate) {
@@ -149,13 +153,19 @@ const interviewController = {
 				})
 			})
 		)
-
+	
+		templateInterview({
+			name: existCandidate.name,
+			file: '../../views/interview.handlebars',
+			position: existCandidate.jobs.title,
+			time: `${start_time}, ${new Date(date).toLocaleDateString('es-CL')}`
+		})
 		if (isSendReminder) {
 			await sendMail({
 				to: `${existCandidate.email}`,
 				subject: 'huprom - interview',
-				html: '<p>nhớ đi phỏng vấn nha</p>',
-				text: 'nhớ đi phỏng vấn nha',
+				text: 'Interview',
+				template: 'interview'
 			})
 		}
 

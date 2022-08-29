@@ -1,0 +1,5 @@
+        <p style="clear: both; margin-left: 50px; margin-right: 50px; text-align: justify; line-height: 25px;">
+            Here is the link to the page to reset the password:
+        </p>
+        <div style="width: 100%;">
+            <a

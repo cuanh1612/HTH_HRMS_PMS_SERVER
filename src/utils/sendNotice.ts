@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer'
 import { google } from 'googleapis'
+import hbs from 'nodemailer-express-handlebars'
+import {resolve} from 'path'
 
 const clientId = process.env.GOOGLE_CLIENT_ID
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET
@@ -21,12 +23,12 @@ const sendMail = async ({
 	to,
 	subject,
 	text,
-	html,
+	template,
 }: {
 	to: string
 	subject: string
 	text?: string
-	html?: string
+	template?: string
 }) => {
 	const accessToken = await oAuth2client.getAccessToken()
 	const transporter = nodemailer.createTransport({
@@ -42,17 +44,30 @@ const sendMail = async ({
 		secure: true,
 	})
 
-	transporter.sendMail(
-		{
-			from: `${gmail}`,
-			subject,
-			text,
-			html,
-			to,
+	const optionTransporter: any = {
+		viewEngine: {
+			extName: ".handlebars",
+			partialsDir: resolve(__dirname, "templateViews"),
+			defaultLayout: false,
+			
 		},
+		viewPath: resolve(__dirname, "../../views"),
+		extName: ".handlebars",
+	} 
+	transporter.use('compile', hbs(optionTransporter))
+
+	const mailOptions: any = {
+		from: `${gmail}`,
+		subject,
+		text,
+		to,
+		template
+	}
+	
+	transporter.sendMail( mailOptions,
 		function (err) {
 			if (err) {
-				console.log('error')
+				console.log('error', err)
 			} else {
 				console.log('send email success')
 			}

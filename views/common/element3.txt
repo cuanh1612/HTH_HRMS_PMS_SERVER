@@ -1,0 +1,2 @@
+ style="width: 50px; float: left; height:50px; object-fit: contain; border-radius: 10px" />
+                <p style="float:left; margin-left: 20px; font-weight: bold;">

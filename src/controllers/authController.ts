@@ -9,6 +9,7 @@ import { OAuth2Client } from 'google-auth-library'
 import { Client } from '../entities/Client'
 import sendMail from '../utils/sendNotice'
 import { validatePassword } from '../utils/valid/employeeValid'
+import { templateWEmail } from '../utils/templateEmail'
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
@@ -139,7 +140,7 @@ const authController = {
 				code: 401,
 				success: false,
 				message: 'You must login first',
-				refreshToken
+				refreshToken,
 			})
 
 		//Check decode
@@ -177,7 +178,7 @@ const authController = {
 				success: true,
 				message: 'Refresh token successfully',
 				accessToken: createToken('accessToken', existingUser),
-				refreshToken: createdRefreshToken
+				refreshToken: createdRefreshToken,
 			})
 		} catch (error) {
 			return res.status(403).json({
@@ -190,27 +191,28 @@ const authController = {
 
 	logout: handleCatchError(async (req: Request, res: Response) => {
 		//check exist current user
-        const token = req.headers.authorization?.split(' ')[1]
+		const token = req.headers.authorization?.split(' ')[1]
 
-        if (!token)
-            return res.status(401).json({
-                code: 400,
-                success: false,
-                message: 'Please login first',
-            })
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
 
-        const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
 
-		const existingUser = await Employee.findOne({
-			where: {
-				email: decode.email
-			},
-		}) || await Client.findOne({
-			where: {
-				email: decode.email
-			},
-		})
-		
+		const existingUser =
+			(await Employee.findOne({
+				where: {
+					email: decode.email,
+				},
+			})) ||
+			(await Client.findOne({
+				where: {
+					email: decode.email,
+				},
+			}))
 
 		if (!existingUser)
 			return res.status(400).json({
@@ -339,11 +341,17 @@ const authController = {
 
 		const activeToken = createActiveToken(email, employee.id)
 
+		templateWEmail({
+			activeToken:`${process.env.CLIENT_URL}/reset-password/${activeToken}`,
+			name: employee.name,
+			file: '../../views/resetPass.handlebars'
+		})
+
 		await sendMail({
 			to: email,
 			text: 'reset password',
 			subject: 'huprom-reset password',
-			html: `<a href="${process.env.CLIENT_URL}/reset-password/${activeToken}>link</a>`,
+			template: 'resetPass',
 		})
 
 		return res.status(200).json({

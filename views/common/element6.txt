@@ -1,0 +1,7 @@
+  style="text-decoration: none; margin-top: 30px!important; display: block; width: fit-content; margin: auto; background: #98DDCA; color: black; padding: 10px; border-radius: 10px;">Reset
+                password</a>
+        </div>
+        <p
+            style="clear: both; margin-top: 20px!important; margin-left: 50px; margin-right: 50px; text-align: justify; line-height: 25px;">
+            If the button above does not work, you can click the link below:</p>
+        <a

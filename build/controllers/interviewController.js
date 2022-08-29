@@ -18,6 +18,7 @@ const Job_1 = require("../entities/Job");
 const Job_Application_1 = require("../entities/Job_Application");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const sendNotice_1 = __importDefault(require("../utils/sendNotice"));
+const templateEmail_1 = require("../utils/templateEmail");
 const interviewController = {
     getAll: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { date, interviewer, status } = req.query;
@@ -92,6 +93,9 @@ const interviewController = {
             where: {
                 id: candidate,
             },
+            relations: {
+                jobs: true
+            }
         });
         if (!existCandidate) {
             return res.status(400).json({
@@ -126,12 +130,18 @@ const interviewController = {
                 return resolve(true);
             }));
         })));
+        (0, templateEmail_1.templateInterview)({
+            name: existCandidate.name,
+            file: '../../views/interview.handlebars',
+            position: existCandidate.jobs.title,
+            time: `${start_time}, ${new Date(date).toLocaleDateString('es-CL')}`
+        });
         if (isSendReminder) {
             yield (0, sendNotice_1.default)({
                 to: `${existCandidate.email}`,
                 subject: 'huprom - interview',
-                html: '<p>nhớ đi phỏng vấn nha</p>',
-                text: 'nhớ đi phỏng vấn nha',
+                text: 'Interview',
+                template: 'interview'
             });
         }
         yield Interview_1.Interview.create({
