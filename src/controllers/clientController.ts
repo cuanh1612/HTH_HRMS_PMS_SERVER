@@ -254,6 +254,14 @@ const clientController = {
 				message: 'Client does not exist in the system',
 			})
 
+		//Check root
+		if (existingClient.root === true)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Can not edit account root',
+			})
+
 		//Check existing email
 		const existingEmployeeEmail = await Employee.findOne({
 			where: {
@@ -342,7 +350,9 @@ const clientController = {
 			}
 		}
 
-		const hashPassword = dataUpdateClient.password ? await argon2.hash(dataUpdateClient.password) : null
+		const hashPassword = dataUpdateClient.password
+			? await argon2.hash(dataUpdateClient.password)
+			: null
 
 		//Update client
 		await Client.update(
@@ -351,9 +361,7 @@ const clientController = {
 			},
 			{
 				...dataUpdateClientBase,
-				...(hashPassword
-					? { password: hashPassword }
-					: {}),
+				...(hashPassword ? { password: hashPassword } : {}),
 				...(newAvatar
 					? {
 							avatar: newAvatar,
@@ -393,6 +401,14 @@ const clientController = {
 				message: 'Client does not exist in the system',
 			})
 
+		//Check root
+		if (existingClient.root === true)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Can not delete account root',
+			})
+
 		//Delete client
 		await existingClient.remove()
 
@@ -422,7 +438,7 @@ const clientController = {
 				},
 			})
 
-			if (existingClient) {
+			if (existingClient && existingClient.root === false) {
 				//Delete client
 				await existingClient.remove()
 			}

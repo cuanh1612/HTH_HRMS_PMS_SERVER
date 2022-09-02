@@ -158,6 +158,9 @@ export class Client extends BaseEntity {
 	@OneToMany(()=> Notification, (Notification)=> Notification.client)
 	notifications: Notification[]
 
+	@Column({type: "bool", default: false})
+	root: boolean
+
 	@CreateDateColumn({
 		name: 'created_at',
 	})
