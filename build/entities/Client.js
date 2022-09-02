@@ -188,6 +188,10 @@ __decorate([
     __metadata("design:type", Array)
 ], Client.prototype, "notifications", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: "bool", default: false }),
+    __metadata("design:type", Boolean)
+], Client.prototype, "root", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),

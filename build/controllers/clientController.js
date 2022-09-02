@@ -227,6 +227,13 @@ const clientController = {
                 success: false,
                 message: 'Client does not exist in the system',
             });
+        //Check root
+        if (existingClient.root === true)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Can not edit account root',
+            });
         //Check existing email
         const existingEmployeeEmail = yield Employee_1.Employee.findOne({
             where: {
@@ -299,13 +306,13 @@ const clientController = {
                 newAvatar = yield Avatar_1.Avatar.create(Object.assign({}, avatar)).save();
             }
         }
-        const hashPassword = dataUpdateClient.password ? yield argon2_1.default.hash(dataUpdateClient.password) : null;
+        const hashPassword = dataUpdateClient.password
+            ? yield argon2_1.default.hash(dataUpdateClient.password)
+            : null;
         //Update client
         yield Client_1.Client.update({
             id: existingClient.id,
-        }, Object.assign(Object.assign(Object.assign(Object.assign({}, dataUpdateClientBase), (hashPassword
-            ? { password: hashPassword }
-            : {})), (newAvatar
+        }, Object.assign(Object.assign(Object.assign(Object.assign({}, dataUpdateClientBase), (hashPassword ? { password: hashPassword } : {})), (newAvatar
             ? {
                 avatar: newAvatar,
             }
@@ -334,6 +341,13 @@ const clientController = {
                 success: false,
                 message: 'Client does not exist in the system',
             });
+        //Check root
+        if (existingClient.root === true)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Can not delete account root',
+            });
         //Delete client
         yield existingClient.remove();
         return res.status(200).json({
@@ -358,7 +372,7 @@ const clientController = {
                     id: Number(clientId),
                 },
             });
-            if (existingClient) {
+            if (existingClient && existingClient.root === false) {
                 //Delete client
                 yield existingClient.remove();
             }

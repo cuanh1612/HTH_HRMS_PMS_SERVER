@@ -250,6 +250,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Employee.prototype, "token_version", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: "bool", default: false }),
+    __metadata("design:type", Boolean)
+], Employee.prototype, "root", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)({
         name: 'created_at',
     }),

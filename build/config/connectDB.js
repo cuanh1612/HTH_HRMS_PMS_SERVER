@@ -59,15 +59,15 @@ const connectDB = () => {
         type: 'postgres',
         name: 'huprom',
         logging: true,
-        database: 'HTH_HRMS_PMS',
-        password: '161201',
-        username: 'postgres',
-        synchronize: true,
+        // database: 'hth_hrms_pms',
+        // password: 'Truong123456789@',
+        // username: 'postgres',
+        // synchronize: true,
         port: 5432,
-        // url: `${process.env.DB_URL}`,
-        // ssl: {
-        // 	rejectUnauthorized: false
-        // },
+        url: `${process.env.DB_URL}`,
+        ssl: {
+            rejectUnauthorized: false
+        },
         entities: [
             Employee_1.Employee,
             Avatar_1.Avatar,

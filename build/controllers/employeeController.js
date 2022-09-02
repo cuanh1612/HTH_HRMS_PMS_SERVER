@@ -252,6 +252,13 @@ const employeeController = {
                 success: false,
                 message: 'Employee does not exist in the system',
             });
+        //Check root
+        if (existingEmployee.root === true)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Can not edit account root',
+            });
         //Check duplicate email
         const existingEmployeeEmail = yield Employee_1.Employee.findOne({
             where: {
@@ -263,7 +270,8 @@ const employeeController = {
                 email: dataUpdateEmployee.email,
             },
         });
-        if (existingClientEmail || existingEmployeeEmail && existingEmployeeEmail.email !== existingEmployee.email) {
+        if (existingClientEmail ||
+            (existingEmployeeEmail && existingEmployeeEmail.email !== existingEmployee.email)) {
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -316,13 +324,13 @@ const employeeController = {
                 newAvatar = yield Avatar_1.Avatar.create(Object.assign({}, avatar)).save();
             }
         }
-        const hashPassword = dataUpdateEmployee.password ? yield argon2_1.default.hash(dataUpdateEmployee.password) : null;
+        const hashPassword = dataUpdateEmployee.password
+            ? yield argon2_1.default.hash(dataUpdateEmployee.password)
+            : null;
         //Update employee
         yield Employee_1.Employee.update({
             id: existingEmployee.id,
-        }, Object.assign(Object.assign(Object.assign({}, dataUpdateEmployeeBase), (hashPassword
-            ? { password: hashPassword }
-            : {})), (newAvatar
+        }, Object.assign(Object.assign(Object.assign({}, dataUpdateEmployeeBase), (hashPassword ? { password: hashPassword } : {})), (newAvatar
             ? {
                 avatar: newAvatar,
             }
@@ -355,6 +363,13 @@ const employeeController = {
                 success: false,
                 message: 'Employee does not exist in the system',
             });
+        //Check root
+        if (existingEmployee.root === true)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Can not change role account root',
+            });
         //Update role employee
         existingEmployee.role = role;
         yield existingEmployee.save();
@@ -377,6 +392,13 @@ const employeeController = {
                 code: 400,
                 success: false,
                 message: 'Employee does not exist in the system',
+            });
+        //Check root
+        if (existingEmployee.root === true)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Can not delete account root',
             });
         //Delete employee
         yield existingEmployee.remove();
@@ -402,7 +424,7 @@ const employeeController = {
                     id: Number(employeeId),
                 },
             });
-            if (existingEmployee) {
+            if (existingEmployee && existingEmployee.root === false) {
                 //Delete employee
                 yield existingEmployee.remove();
             }
