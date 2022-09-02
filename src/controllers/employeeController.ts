@@ -282,6 +282,14 @@ const employeeController = {
 				message: 'Employee does not exist in the system',
 			})
 
+		//Check root
+		if (existingEmployee.root === true)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Can not edit account root',
+			})
+
 		//Check duplicate email
 		const existingEmployeeEmail = await Employee.findOne({
 			where: {
@@ -295,7 +303,10 @@ const employeeController = {
 			},
 		})
 
-		if(existingClientEmail || existingEmployeeEmail && existingEmployeeEmail.email !== existingEmployee.email){
+		if (
+			existingClientEmail ||
+			(existingEmployeeEmail && existingEmployeeEmail.email !== existingEmployee.email)
+		) {
 			return res.status(400).json({
 				code: 400,
 				success: false,
@@ -359,7 +370,9 @@ const employeeController = {
 			}
 		}
 
-	    const hashPassword = dataUpdateEmployee.password ? await argon2.hash(dataUpdateEmployee.password) : null
+		const hashPassword = dataUpdateEmployee.password
+			? await argon2.hash(dataUpdateEmployee.password)
+			: null
 
 		//Update employee
 		await Employee.update(
@@ -368,9 +381,7 @@ const employeeController = {
 			},
 			{
 				...dataUpdateEmployeeBase,
-				...(hashPassword
-					? { password: hashPassword }
-					: {}),
+				...(hashPassword ? { password: hashPassword } : {}),
 				...(newAvatar
 					? {
 							avatar: newAvatar,
@@ -413,6 +424,14 @@ const employeeController = {
 				message: 'Employee does not exist in the system',
 			})
 
+		//Check root
+		if (existingEmployee.root === true)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Can not change role account root',
+			})
+
 		//Update role employee
 		existingEmployee.role = role
 		await existingEmployee.save()
@@ -439,6 +458,14 @@ const employeeController = {
 				code: 400,
 				success: false,
 				message: 'Employee does not exist in the system',
+			})
+
+		//Check root
+		if (existingEmployee.root === true)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Can not delete account root',
 			})
 
 		//Delete employee
@@ -470,7 +497,7 @@ const employeeController = {
 				},
 			})
 
-			if (existingEmployee) {
+			if (existingEmployee && existingEmployee.root === false) {
 				//Delete employee
 				await existingEmployee.remove()
 			}
@@ -797,7 +824,6 @@ const employeeController = {
 				countPendingTasks && countPendingTasks[0] ? Number(countPendingTasks[0].count) : 0,
 			message: 'Get count pending task successfully',
 		})
-		
 	}),
 	getCountCompleteTasks: handleCatchError(async (req: Request, res: Response) => {
 		const { employeeId } = req.params

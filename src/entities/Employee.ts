@@ -212,6 +212,9 @@ export class Employee extends BaseEntity {
 	@Column({ default: 0 })
 	token_version: number
 
+	@Column({type: "bool", default: false})
+	root: boolean
+
 	@CreateDateColumn({
 		name: 'created_at',
 	})
