@@ -1,0 +1,73 @@
+{
+    "avatar": [
+        {
+            "name": "nguyen quang hoang",
+            "public_id": "2",
+            "url": "https://res.cloudinary.com/hoang161201/image/upload/v1662132813/root-avatar/ac652a7f906b5035097a_sqpe9v.jpg"
+        },
+        {
+            "name": "nguyen quang huy",
+            "public_id": "1",
+            "url": "https://res.cloudinary.com/hoang161201/image/upload/v1662132816/root-avatar/943e0b24b130716e2821_awggxp.jpg"
+        },
+        {
+            "name": "nguyen tien trong",
+            "public_id": "3",
+            "url": "https://res.cloudinary.com/hoang161201/image/upload/v1662132848/root-avatar/86935ae2924c57120e5d_azvrsy.jpg"
+        }
+    ],
+    "employee": [
+        {
+            "employeeId": "emp-1",
+            "name": "Nguyen Quang Huy",
+            "email": "employee@gmail.com",
+            "password": "$argon2i$v=19$m=4096,t=3,p=1$4wyILK3EG+3Ob8Ae1q/Ozg$9iB3Pv9amvakuEWNZ7LJAnOYJdBE8QBDqeJtxWlGYRY",
+            "mobile": "0833876372",
+            "gender": "Male",
+            "joining_date": "2022-09-01",
+            "date_of_birth": "2001-12-16",
+            "can_login": true,
+            "can_receive_email": true,
+            "hourly_rate": 3,
+            "role": "Employee",
+            "token_version": 1,
+            "root": true,
+            "avatarId": 2
+        },
+        {
+            "employeeId": "emp-1",
+            "name": "Nguyen Quang Hoang",
+            "email": "admin@gmail.com",
+            "password": "$argon2i$v=19$m=4096,t=3,p=1$rapD3+3rqBg+FqFXmPevuQ$AOnfj1pnCCSLBfEDdYWstVycf2yo2+xiNqDSMLCTSyA",
+            "mobile": "0343603016",
+            "gender": "Male",
+            "joining_date": "2022-05-01",
+            "date_of_birth": "2001-09-16",
+            "can_login": true,
+            "can_receive_email": true,
+            "hourly_rate": 3,
+            "role": "Admin",
+            "token_version": 1,
+            "root": true,
+            "avatarId": 1
+        }
+    ],
+    "client": [
+        {
+            "salutation": "Mr",
+            "name": "Nguyen Tien Trong",
+            "email": "client@gmail.com",
+            "password": "$argon2i$v=19$m=4096,t=3,p=1$EP6aFyb0mhxSQKAZzTg8yA$H0AWCbWTSJfzMaVhNvV4qBT+iEtyqpO5ANowmblv/QE",
+            "gender": "Male",
+            "can_login": true,
+            "can_receive_email": true,
+            "company_name": "Trong",
+            "city": "Pleiku",
+            "state": "196/31 cong hoa",
+            "role": "Client",
+            "token_version": 1,
+            "root": true,
+            "avatarId": 3
+        }
+    ]
+}
