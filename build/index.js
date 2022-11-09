@@ -22,9 +22,9 @@ app.use(express_1.default.json());
 app.set('trust proxy', 1);
 app.use((0, cors_1.default)({
     // 'https://huprom-hrms-pms-client.vercel.app'
-    origin: 'https://huprom-hrms-pms-client.vercel.app',
+    origin: '*',
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
-    credentials: true,
+    // credentials: true,
     methods: ['GET, POST, PUT, PATCH, OPTIONS, DELETE'],
 }));
 app.use((0, cookie_parser_1.default)());
