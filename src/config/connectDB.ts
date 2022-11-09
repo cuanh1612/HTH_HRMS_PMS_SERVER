@@ -68,7 +68,7 @@ const connectDB = () => {
 		
 
 		// vercel
-		url: `${process.env.DB_URL}`,
+		url: `postgres://huprom-server-user:qLOnWGJlU2ZFCgo6@srv-captain--gsieyrxkjb-postgresql-14x:5432/huprom-server-database`,
 		ssl: {
 			rejectUnauthorized: false
 		},
