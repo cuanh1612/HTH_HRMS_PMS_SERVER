@@ -21,6 +21,7 @@ const httpServer = (0, http_1.createServer)(app);
 app.use(express_1.default.json());
 app.set('trust proxy', 1);
 app.use((0, cors_1.default)({
+    //hhh
     // 'https://huprom-hrms-pms-client.vercel.app'
     origin: '*'
 }));
