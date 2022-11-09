@@ -20,7 +20,13 @@ const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);
 app.use(express_1.default.json());
 app.set('trust proxy', 1);
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    // 'https://huprom-hrms-pms-client.vercel.app'
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true,
+    allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+}));
 app.use((0, cookie_parser_1.default)());
 //Routes
 (0, mainRouter_1.default)(app);

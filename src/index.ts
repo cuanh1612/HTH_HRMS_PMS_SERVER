@@ -19,7 +19,15 @@ const httpServer = createServer(app)
 app.use(express.json())
 app.set('trust proxy', 1)
 app.use(
-	cors()
+	cors({
+		// 'https://huprom-hrms-pms-client.vercel.app'
+		origin: '*',
+		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+		credentials: true,
+		allowedHeaders: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' 
+		
+
+	})
 )
 app.use(cookieParser())
 
