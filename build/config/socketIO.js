@@ -26,10 +26,10 @@ const createSocketServer = (httpServer) => {
     const io = new socket_io_1.Server(httpServer, {
         cors: {
             // 'https://huprom-hrms-pms-client.vercel.app'
-            origin: 'https://huprom-hrms-pms-client.vercel.app',
-            methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+            origin: '*',
+            allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
             credentials: true,
-            allowedHeaders: '*'
+            methods: ['GET, POST, PUT, PATCH, OPTIONS, DELETE'],
         },
     });
     io.on('connection', (socket) => {

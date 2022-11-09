@@ -21,12 +21,10 @@ app.set('trust proxy', 1)
 app.use(
 	cors({
 		// 'https://huprom-hrms-pms-client.vercel.app'
-		origin: 'https://huprom-hrms-pms-client.vercel.app',
-		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+		origin: '*',
+		allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
 		credentials: true,
-		allowedHeaders: '*' 
-		
-
+		methods: [ 'GET, POST, PUT, PATCH, OPTIONS, DELETE'],
 	})
 )
 app.use(cookieParser())
