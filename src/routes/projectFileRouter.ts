@@ -1,5 +1,5 @@
 import express from 'express'
-import projectFileController from '../controllers/projectFileController'
+import projectFileController from '../controllers/projectFile.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 

@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSETime = exports.CreateProjectActivity = exports.compareDateTime = void 0;
-const Project_1 = require("../entities/Project");
-const Project_Activity_1 = require("../entities/Project_Activity");
+const Project_entity_1 = require("../entities/Project.entity");
+const Project_Activity_entity_1 = require("../entities/Project_Activity.entity");
 // compare time
 const compareDateTime = (date1, date2, inClock, outClock) => {
     if (new Date(date1) == new Date(date2)) {
@@ -46,7 +46,7 @@ const CreateProjectActivity = (res, projectId, content) => __awaiter(void 0, voi
             status: false,
             message: 'Please enter full fields',
         });
-    const existingProject = yield Project_1.Project.findOne({
+    const existingProject = yield Project_entity_1.Project.findOne({
         where: {
             id: Number(projectId),
         },
@@ -59,12 +59,12 @@ const CreateProjectActivity = (res, projectId, content) => __awaiter(void 0, voi
         });
     const currentDate = new Date();
     const time = currentDate.getHours() + ':' + currentDate.getMinutes() + ':' + currentDate.getSeconds();
-    const projectActivity = yield Project_Activity_1.Project_Activity.create({
+    const projectActivity = yield Project_Activity_entity_1.Project_Activity.create({
         project: existingProject,
         content,
         time,
     }).save();
-    const listOfActivity = yield Project_Activity_1.Project_Activity.find({
+    const listOfActivity = yield Project_Activity_entity_1.Project_Activity.find({
         where: {
             project: {
                 id: existingProject.id,

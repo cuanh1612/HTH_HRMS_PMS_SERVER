@@ -1,5 +1,5 @@
 import express from 'express'
-import projectCategoryController from '../controllers/projectCategoryController'
+import projectCategoryController from '../controllers/projectCategory.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 

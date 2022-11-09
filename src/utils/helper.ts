@@ -1,6 +1,6 @@
 import { Response } from 'express'
-import { Project } from '../entities/Project'
-import { Project_Activity } from '../entities/Project_Activity'
+import { Project } from '../entities/Project.entity'
+import { Project_Activity } from '../entities/Project_Activity.entity'
 
 // compare time
 export const compareDateTime = (

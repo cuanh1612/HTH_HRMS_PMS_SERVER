@@ -1,5 +1,5 @@
 import express from 'express'
-import projectDiscussionRoomController from '../controllers/projectDiscussionRoomController'
+import projectDiscussionRoomController from '../controllers/projectDiscussionRoom.controller'
 
 
 const projectDiscussionRoomRouter = express.Router()

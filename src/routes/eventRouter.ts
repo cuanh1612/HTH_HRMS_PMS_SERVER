@@ -1,5 +1,5 @@
 import express from 'express'
-import eventController from '../controllers/eventController'
+import eventController from '../controllers/event.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const eventRouter = express.Router()

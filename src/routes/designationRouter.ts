@@ -1,5 +1,5 @@
 import express from 'express'
-import designationController from '../controllers/designationController'
+import designationController from '../controllers/designation.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const designationRouter = express.Router()

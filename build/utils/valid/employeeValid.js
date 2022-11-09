@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validatePassword = exports.employeeValid = void 0;
-const Employee_1 = require("../../entities/Employee");
+const Employee_entity_1 = require("../../entities/Employee.entity");
 exports.employeeValid = {
     createOrUpdate: ({ employeeId, name, email, password, joining_date, hourly_rate, role, department, designation, }, type) => {
         let messageError = '';
@@ -22,9 +22,9 @@ exports.employeeValid = {
             }
         }
         if (role &&
-            role !== Employee_1.enumRole.ADMIN &&
-            role !== Employee_1.enumRole.EMPLOYEE &&
-            role !== Employee_1.enumRole.MANAGER) {
+            role !== Employee_entity_1.enumRole.ADMIN &&
+            role !== Employee_entity_1.enumRole.EMPLOYEE &&
+            role !== Employee_entity_1.enumRole.MANAGER) {
             messageError = 'Role not valid';
             return messageError;
         }
@@ -41,7 +41,7 @@ exports.employeeValid = {
             messageError = 'Pleas enter full field';
             return messageError;
         }
-        if (role !== Employee_1.enumRole.ADMIN && role !== Employee_1.enumRole.EMPLOYEE && role !== Employee_1.enumRole.MANAGER) {
+        if (role !== Employee_entity_1.enumRole.ADMIN && role !== Employee_entity_1.enumRole.EMPLOYEE && role !== Employee_entity_1.enumRole.MANAGER) {
             messageError = 'Role not valid';
             return messageError;
         }

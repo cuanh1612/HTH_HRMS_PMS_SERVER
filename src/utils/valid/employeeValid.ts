@@ -1,4 +1,4 @@
-import { enumRole } from '../../entities/Employee'
+import { enumRole } from '../../entities/Employee.entity'
 import { createOrUpdateEmployeePayload } from '../../type/EmployeePayload'
 
 export const employeeValid = {

@@ -1,5 +1,5 @@
 import express from 'express'
-import discussionController from '../controllers/discussionController'
+import discussionController from '../controllers/discussion.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const discussionRouter = express.Router()

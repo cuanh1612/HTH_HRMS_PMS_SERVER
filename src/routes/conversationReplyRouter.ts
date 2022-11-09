@@ -1,5 +1,5 @@
 import express from 'express'
-import conversationReplyController from '../controllers/conversationReplyController'
+import conversationReplyController from '../controllers/conversationReply.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const conversationReplyRouter = express.Router()

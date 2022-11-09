@@ -1,5 +1,5 @@
 import express from 'express'
-import stickyNoteController from '../controllers/stickyNoteController'
+import stickyNoteController from '../controllers/stickyNote.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 

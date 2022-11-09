@@ -1,4 +1,4 @@
-import { Event } from '../entities/Event'
+import { Event } from '../entities/Event.entity'
 
 export type createOrUpdateEventPayload = Event & {
 	employeeEmails: string[]

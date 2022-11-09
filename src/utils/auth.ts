@@ -1,7 +1,7 @@
-import { Employee } from '../entities/Employee'
+import { Employee } from '../entities/Employee.entity'
 import { sign, Secret } from 'jsonwebtoken'
 import { Response } from 'express'
-import { Client } from '../entities/Client'
+import { Client } from '../entities/Client.entity'
 
 export const createToken = (type: 'accessToken' | 'refreshToken', user: Employee | Client) =>
 	sign(

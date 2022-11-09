@@ -1,5 +1,5 @@
 import express from 'express'
-import jobApplicationFileController from '../controllers/jobApplicationFileController'
+import jobApplicationFileController from '../controllers/jobApplicationFile.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const jobApplicationFileRouter = express.Router()

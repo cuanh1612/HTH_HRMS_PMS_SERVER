@@ -1,5 +1,5 @@
 import express from 'express'
-import leaveController from '../controllers/leaveController'
+import leaveController from '../controllers/leave.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const leaveRouter = express.Router()

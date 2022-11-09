@@ -1,5 +1,5 @@
 import express from 'express'
-import dashBoardController from '../controllers/dashboardController'
+import dashBoardController from '../controllers/dashboard.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const dashboardRouter = express.Router()

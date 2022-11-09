@@ -1,4 +1,4 @@
-import { Attendance } from '../../entities/Attendance'
+import { Attendance } from '../../entities/Attendance.entity'
 import { createOrUpdateAttendancePayload } from '../../type/AttendancePayload'
 
 export const attendanceValid = {

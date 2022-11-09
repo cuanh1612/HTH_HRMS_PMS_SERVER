@@ -1,5 +1,5 @@
 import express from 'express'
-import signController from '../controllers/signController'
+import signController from '../controllers/sign.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const signRouter = express.Router()

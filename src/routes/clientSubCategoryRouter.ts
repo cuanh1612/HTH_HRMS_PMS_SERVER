@@ -1,5 +1,5 @@
 import express from 'express'
-import clientSubCategoryController from '../controllers/clientSubCategoryController'
+import clientSubCategoryController from '../controllers/clientSubCategory.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const clientSubCategoryRouter = express.Router()

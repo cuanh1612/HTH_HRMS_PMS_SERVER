@@ -1,5 +1,5 @@
 import express from 'express'
-import projectDiscussionCategoryController from '../controllers/projectDiscussionCategoryController'
+import projectDiscussionCategoryController from '../controllers/projectDiscussionCategory.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 

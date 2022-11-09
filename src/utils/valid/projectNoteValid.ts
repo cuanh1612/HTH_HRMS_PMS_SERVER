@@ -1,4 +1,4 @@
-import { enumNoteType } from '../../entities/Project_Note'
+import { enumNoteType } from '../../entities/Project_Note.entity'
 import { createOrUpdateProjectNotePayload } from '../../type/projectNotePayLoad'
 
 export const projectNoteValid = {

@@ -1,5 +1,5 @@
 import express from "express";
-import skillController from "../controllers/skillController";
+import skillController from "../controllers/skill.controller";
 import { checkAuth } from "../utils/middleware/checkAuth";
 
 

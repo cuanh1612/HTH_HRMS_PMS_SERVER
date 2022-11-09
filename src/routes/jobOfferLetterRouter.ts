@@ -1,5 +1,5 @@
 import express from 'express'
-import jobOfferLetterController from '../controllers/jobOfferLetterController'
+import jobOfferLetterController from '../controllers/jobOfferLetter.controller'
 
 const jobOfferLetterRouter = express.Router()
 

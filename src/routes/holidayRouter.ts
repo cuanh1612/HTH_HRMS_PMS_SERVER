@@ -1,5 +1,5 @@
 import express from 'express'
-import holidayController from '../controllers/holidayController'
+import holidayController from '../controllers/holiday.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 

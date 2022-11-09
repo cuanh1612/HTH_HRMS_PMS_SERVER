@@ -1,5 +1,5 @@
 import express from 'express'
-import dashBoardJobsController from '../controllers/dashboardJobsController'
+import dashBoardJobsController from '../controllers/dashboardJobs.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const dashboardJobsRouter = express.Router()

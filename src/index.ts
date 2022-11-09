@@ -13,13 +13,14 @@ const PORT = process.env.PORT || 4000
 //Create typeorm connection
 connectDB()
 
-//Creae and setup express app
+//Create and setup express app
 const app = express()
 const httpServer = createServer(app)
 app.use(express.json())
 app.set('trust proxy', 1)
 app.use(
 	cors({
+		// 'https://huprom-hrms-pms-client.vercel.app'
 		origin: 'https://huprom-hrms-pms-client.vercel.app',
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 		credentials: true,

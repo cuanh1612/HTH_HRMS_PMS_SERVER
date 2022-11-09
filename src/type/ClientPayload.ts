@@ -1,4 +1,4 @@
-import { Client } from '../entities/Client'
+import { Client } from '../entities/Client.entity'
 
 export type createOrUpdateClientPayload = Client & {
 	client_category: number

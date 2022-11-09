@@ -1,5 +1,5 @@
 import express from 'express'
-import contractController from '../controllers/contractController'
+import contractController from '../controllers/contract.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const contractRouter = express.Router()

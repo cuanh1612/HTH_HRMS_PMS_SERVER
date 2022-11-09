@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.projectValid = void 0;
-const Project_1 = require("../../entities/Project");
+const Project_entity_1 = require("../../entities/Project.entity");
 exports.projectValid = {
     createOrUpdate: ({ name, start_date, deadline, employees, currency }, typeValid) => {
         let messageError = '';
@@ -23,11 +23,11 @@ exports.projectValid = {
         }
         //Check enum currency
         if (currency &&
-            currency !== Project_1.enumCurrency.EUR &&
-            currency !== Project_1.enumCurrency.GBP &&
-            currency !== Project_1.enumCurrency.INR &&
-            currency !== Project_1.enumCurrency.USD &&
-            currency !== Project_1.enumCurrency.VND) {
+            currency !== Project_entity_1.enumCurrency.EUR &&
+            currency !== Project_entity_1.enumCurrency.GBP &&
+            currency !== Project_entity_1.enumCurrency.INR &&
+            currency !== Project_entity_1.enumCurrency.USD &&
+            currency !== Project_entity_1.enumCurrency.VND) {
             messageError = 'Status not valid';
             return messageError;
         }

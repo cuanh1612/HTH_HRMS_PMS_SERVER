@@ -1,5 +1,5 @@
 import express from 'express'
-import notificationController from '../controllers/notificationController'
+import notificationController from '../controllers/notification.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const NotificationRouter = express.Router()

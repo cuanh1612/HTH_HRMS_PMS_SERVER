@@ -1,5 +1,5 @@
 import express from 'express'
-import contractFileController from '../controllers/contractFileController'
+import contractFileController from '../controllers/contractFile.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const contractFileRouter = express.Router()

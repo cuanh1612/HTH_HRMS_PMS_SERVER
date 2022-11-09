@@ -1,5 +1,5 @@
 import express from 'express'
-import projectActivityController from '../controllers/projectActivityController'
+import projectActivityController from '../controllers/projectActivity.controller'
 
 const projectActivityRouter = express.Router()
 

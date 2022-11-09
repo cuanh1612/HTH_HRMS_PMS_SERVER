@@ -1,5 +1,5 @@
 
-import { enumPriority } from '../../entities/Task'
+import { enumPriority } from '../../entities/Task.entity'
 import { createOrUpdateTaskPayload } from '../../type/taskPayload'
 
 export const taskValid = {

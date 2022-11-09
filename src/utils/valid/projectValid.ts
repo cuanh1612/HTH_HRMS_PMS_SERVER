@@ -1,4 +1,4 @@
-import { enumCurrency } from '../../entities/Project'
+import { enumCurrency } from '../../entities/Project.entity'
 import { createOrUpdateProjectPayload } from '../../type/ProjectPayload'
 
 export const projectValid = {

@@ -1,4 +1,4 @@
-import { Status } from '../entities/Status'
+import { Status } from '../entities/Status.entity'
 
 
 export type createOrUpdateStatusPayload = Status & {project: number}

@@ -1,4 +1,4 @@
-import { Interview } from "../entities/Interview"
+import { Interview } from "../entities/Interview.entity"
 
 
 export type createOrUpdateInterviewPayload = Interview & {

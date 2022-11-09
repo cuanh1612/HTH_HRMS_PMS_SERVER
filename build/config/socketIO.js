@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const socket_io_1 = require("socket.io");
-const Client_1 = require("../entities/Client");
-const Employee_1 = require("../entities/Employee");
+const Client_entity_1 = require("../entities/Client.entity");
+const Employee_entity_1 = require("../entities/Employee.entity");
 const createSocketServer = (httpServer) => {
     let onlineUsers = [];
     const addNewUsre = ({ email, socketId }) => {
@@ -25,6 +25,7 @@ const createSocketServer = (httpServer) => {
     };
     const io = new socket_io_1.Server(httpServer, {
         cors: {
+            // 'https://huprom-hrms-pms-client.vercel.app'
             origin: 'https://huprom-hrms-pms-client.vercel.app',
             methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
             credentials: true,
@@ -189,7 +190,7 @@ const createSocketServer = (httpServer) => {
         socket.on('newProjectNotification', (clientId, employeeIds) => __awaiter(void 0, void 0, void 0, function* () {
             //get new notification for client
             //Get email client
-            const existingClient = yield Client_1.Client.findOne({
+            const existingClient = yield Client_entity_1.Client.findOne({
                 where: {
                     id: clientId,
                 },
@@ -205,7 +206,7 @@ const createSocketServer = (httpServer) => {
             //get new notification for employee
             yield Promise.all(employeeIds.map((employeeId) => __awaiter(void 0, void 0, void 0, function* () {
                 //Get email employee
-                const existingEmployee = yield Employee_1.Employee.findOne({
+                const existingEmployee = yield Employee_entity_1.Employee.findOne({
                     where: {
                         id: employeeId,
                     },
@@ -226,7 +227,7 @@ const createSocketServer = (httpServer) => {
             //get new notification for employee
             yield Promise.all(employeeIds.map((employeeId) => __awaiter(void 0, void 0, void 0, function* () {
                 //Get email employee
-                const existingEmployee = yield Employee_1.Employee.findOne({
+                const existingEmployee = yield Employee_entity_1.Employee.findOne({
                     where: {
                         id: employeeId,
                     },
@@ -245,7 +246,7 @@ const createSocketServer = (httpServer) => {
         socket.on('newContractNotification', (clientId) => __awaiter(void 0, void 0, void 0, function* () {
             //get new notification for client
             //Get email client
-            const existingClient = yield Client_1.Client.findOne({
+            const existingClient = yield Client_entity_1.Client.findOne({
                 where: {
                     id: clientId,
                 },
@@ -263,7 +264,7 @@ const createSocketServer = (httpServer) => {
         socket.on('newTimeLogNotification', (employeeId) => __awaiter(void 0, void 0, void 0, function* () {
             //get new notification for employee
             //Get email employee
-            const existingEmployee = yield Employee_1.Employee.findOne({
+            const existingEmployee = yield Employee_entity_1.Employee.findOne({
                 where: {
                     id: employeeId,
                 },

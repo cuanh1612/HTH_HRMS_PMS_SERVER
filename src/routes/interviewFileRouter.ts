@@ -1,5 +1,5 @@
 import express from 'express'
-import interviewFileController from '../controllers/interviewFileController'
+import interviewFileController from '../controllers/interviewFile.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 

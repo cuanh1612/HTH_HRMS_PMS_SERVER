@@ -1,5 +1,5 @@
 import express from 'express'
-import timeLogController from '../controllers/timeLogController'
+import timeLogController from '../controllers/timeLog.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const TimeLogRouter = express.Router()

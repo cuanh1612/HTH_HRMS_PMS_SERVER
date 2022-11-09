@@ -1,5 +1,5 @@
 import express from 'express'
-import salaryController from '../controllers/salaryController'
+import salaryController from '../controllers/salary.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const salaryRouter = express.Router()

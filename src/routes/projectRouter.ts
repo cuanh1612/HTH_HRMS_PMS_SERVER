@@ -1,5 +1,5 @@
 import express from 'express'
-import projectController from '../controllers/projectController'
+import projectController from '../controllers/project.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const projectRouter = express.Router()

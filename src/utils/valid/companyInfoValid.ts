@@ -1,4 +1,4 @@
-import { Company_Info } from '../../entities/Company_Info'
+import { Company_Info } from '../../entities/Company_Info.entity'
 
 export const companyInfoValid = {
 	createOrUpdate: (

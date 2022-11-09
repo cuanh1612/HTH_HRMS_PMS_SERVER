@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.taskValid = void 0;
-const Task_1 = require("../../entities/Task");
+const Task_entity_1 = require("../../entities/Task.entity");
 exports.taskValid = {
     createOrUpdate: ({ name, start_date, deadline, employees, priority }) => {
         let messageError = '';
@@ -19,9 +19,9 @@ exports.taskValid = {
         }
         //Check enum currency
         if (priority &&
-            priority !== Task_1.enumPriority.HIGH &&
-            priority !== Task_1.enumPriority.LOW &&
-            priority !== Task_1.enumPriority.MEDIUM) {
+            priority !== Task_entity_1.enumPriority.HIGH &&
+            priority !== Task_entity_1.enumPriority.LOW &&
+            priority !== Task_entity_1.enumPriority.MEDIUM) {
             messageError = 'Priority not valid';
             return messageError;
         }

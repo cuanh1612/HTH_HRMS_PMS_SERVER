@@ -4,14 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const projectNoteController_1 = __importDefault(require("../controllers/projectNoteController"));
+const projectNote_controller_1 = __importDefault(require("../controllers/projectNote.controller"));
 const checkAuth_1 = require("../utils/middleware/checkAuth");
 //Check auth in controller
 const projectNoteRouter = express_1.default.Router();
-projectNoteRouter.post('/', (0, checkAuth_1.checkAuth)([]), projectNoteController_1.default.create);
-projectNoteRouter.put('/:projectNoteId', projectNoteController_1.default.update);
-projectNoteRouter.delete('/:projectNoteId', projectNoteController_1.default.delete);
-projectNoteRouter.post('/delete-many', projectNoteController_1.default.deleteMany);
-projectNoteRouter.get('/project/:projectId', projectNoteController_1.default.getByProject);
-projectNoteRouter.get('/:projectNoteId', projectNoteController_1.default.getDetail);
+projectNoteRouter.post('/', (0, checkAuth_1.checkAuth)([]), projectNote_controller_1.default.create);
+projectNoteRouter.put('/:projectNoteId', projectNote_controller_1.default.update);
+projectNoteRouter.delete('/:projectNoteId', projectNote_controller_1.default.delete);
+projectNoteRouter.post('/delete-many', projectNote_controller_1.default.deleteMany);
+projectNoteRouter.get('/project/:projectId', projectNote_controller_1.default.getByProject);
+projectNoteRouter.get('/:projectNoteId', projectNote_controller_1.default.getDetail);
 exports.default = projectNoteRouter;

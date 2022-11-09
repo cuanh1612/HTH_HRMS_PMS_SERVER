@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const projectDiscussionReplyController_1 = __importDefault(require("../controllers/projectDiscussionReplyController"));
+const projectDiscussionReply_controller_1 = __importDefault(require("../controllers/projectDiscussionReply.controller"));
 const projectDiscussionReplyRouter = express_1.default.Router();
-projectDiscussionReplyRouter.post('/', projectDiscussionReplyController_1.default.create);
-projectDiscussionReplyRouter.get('/project-discussion-room/:projectDiscussionRoomId', projectDiscussionReplyController_1.default.getByProjectDiscussionRoom);
-projectDiscussionReplyRouter.get('/:reply_id', projectDiscussionReplyController_1.default.getDetail);
-projectDiscussionReplyRouter.delete('/:reply_id', projectDiscussionReplyController_1.default.delete);
-projectDiscussionReplyRouter.put('/:reply_id', projectDiscussionReplyController_1.default.update);
+projectDiscussionReplyRouter.post('/', projectDiscussionReply_controller_1.default.create);
+projectDiscussionReplyRouter.get('/project-discussion-room/:projectDiscussionRoomId', projectDiscussionReply_controller_1.default.getByProjectDiscussionRoom);
+projectDiscussionReplyRouter.get('/:reply_id', projectDiscussionReply_controller_1.default.getDetail);
+projectDiscussionReplyRouter.delete('/:reply_id', projectDiscussionReply_controller_1.default.delete);
+projectDiscussionReplyRouter.put('/:reply_id', projectDiscussionReply_controller_1.default.update);
 exports.default = projectDiscussionReplyRouter;

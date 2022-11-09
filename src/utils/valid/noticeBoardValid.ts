@@ -1,4 +1,4 @@
-import { Notice_board } from '../../entities/Notice_Board'
+import { Notice_board } from '../../entities/Notice_Board.entity'
 
 export const noticeBoardValid = {
 	createOrUpdate: ({ notice_to, heading, details }: Notice_board) => {

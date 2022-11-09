@@ -1,5 +1,5 @@
 import express from 'express'
-import milestoneController from '../controllers/milestoneController'
+import milestoneController from '../controllers/milestone.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 

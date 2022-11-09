@@ -1,5 +1,5 @@
 import express from 'express'
-import attendanceController from '../controllers/attendanceController'
+import attendanceController from '../controllers/attendance.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const attendanceRouter = express.Router()

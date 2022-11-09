@@ -1,4 +1,4 @@
-import { enumDuration, enumStatus } from '../../entities/Leave'
+import { enumDuration, enumStatus } from '../../entities/Leave.entity'
 import { createOrUpdateLeavePayload } from '../../type/LeavePayload'
 
 export const leaveValid = {

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { resolve } from 'path'
-import { Company_Info } from '../entities/Company_Info'
+import { Company_Info } from '../entities/Company_Info.entity'
 
 const templateBasic = async ({
 	file,

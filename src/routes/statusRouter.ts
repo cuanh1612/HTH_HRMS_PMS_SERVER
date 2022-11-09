@@ -1,5 +1,5 @@
 import express from "express";
-import statusController from "../controllers/statusController";
+import statusController from "../controllers/status.controller";
 import { checkAuth } from "../utils/middleware/checkAuth";
 
  //Check auth in controller

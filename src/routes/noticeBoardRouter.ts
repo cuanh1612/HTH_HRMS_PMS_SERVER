@@ -1,5 +1,5 @@
 import express from 'express'
-import noticeBoardController from '../controllers/noticeBoardController'
+import noticeBoardController from '../controllers/noticeBoard.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const noticeBoardRouter = express.Router()

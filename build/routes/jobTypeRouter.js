@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const jobTypeController_1 = __importDefault(require("../controllers/jobTypeController"));
+const jobType_controller_1 = __importDefault(require("../controllers/jobType.controller"));
 const jobTypeRouter = express_1.default.Router();
-jobTypeRouter.post('/', jobTypeController_1.default.create);
-jobTypeRouter.delete('/:id', jobTypeController_1.default.delete);
-jobTypeRouter.get('/', jobTypeController_1.default.getAll);
-jobTypeRouter.get('/:id', jobTypeController_1.default.getDetail);
-jobTypeRouter.put('/:id', jobTypeController_1.default.update);
+jobTypeRouter.post('/', jobType_controller_1.default.create);
+jobTypeRouter.delete('/:id', jobType_controller_1.default.delete);
+jobTypeRouter.get('/', jobType_controller_1.default.getAll);
+jobTypeRouter.get('/:id', jobType_controller_1.default.getDetail);
+jobTypeRouter.put('/:id', jobType_controller_1.default.update);
 exports.default = jobTypeRouter;

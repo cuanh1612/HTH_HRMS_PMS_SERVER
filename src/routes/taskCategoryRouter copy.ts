@@ -1,5 +1,5 @@
 import express from 'express'
-import taskCategoryController from '../controllers/taskCategoryController'
+import taskCategoryController from '../controllers/taskCategory.controller'
 
 
 const taskCategoryRouter = express.Router()

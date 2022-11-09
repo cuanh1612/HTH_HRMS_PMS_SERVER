@@ -1,5 +1,5 @@
 import express from "express"
-import taskController from "../controllers/taskController"
+import taskController from "../controllers/task.controller"
 import { checkAuth } from "../utils/middleware/checkAuth"
 
 

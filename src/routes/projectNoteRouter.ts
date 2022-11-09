@@ -1,5 +1,5 @@
 import express from 'express'
-import projectNoteController from '../controllers/projectNoteController'
+import projectNoteController from '../controllers/projectNote.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 

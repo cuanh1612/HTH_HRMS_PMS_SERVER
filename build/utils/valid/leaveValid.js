@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.leaveValid = void 0;
-const Leave_1 = require("../../entities/Leave");
+const Leave_entity_1 = require("../../entities/Leave.entity");
 exports.leaveValid = {
     createOrUpdate: ({ status, duration, employee, leave_type, dates, date, }) => {
         let messageError = '';
@@ -10,13 +10,13 @@ exports.leaveValid = {
             return messageError;
         }
         if (status &&
-            status !== Leave_1.enumStatus.APPROVED &&
-            status !== Leave_1.enumStatus.PENDING &&
-            status !== Leave_1.enumStatus.REJECTED) {
+            status !== Leave_entity_1.enumStatus.APPROVED &&
+            status !== Leave_entity_1.enumStatus.PENDING &&
+            status !== Leave_entity_1.enumStatus.REJECTED) {
             messageError = 'Status not valid';
             return messageError;
         }
-        if (duration && duration !== Leave_1.enumDuration.HALF_DAY && duration !== Leave_1.enumDuration.SINGLE) {
+        if (duration && duration !== Leave_entity_1.enumDuration.HALF_DAY && duration !== Leave_entity_1.enumDuration.SINGLE) {
             messageError = 'Duration not valid';
             return messageError;
         }
@@ -26,9 +26,9 @@ exports.leaveValid = {
         let messageError = '';
         if (!status)
             messageError = 'Pleas enter full field';
-        if (status === Leave_1.enumStatus.PENDING)
+        if (status === Leave_entity_1.enumStatus.PENDING)
             messageError = 'Please select status approved or rejected';
-        if (status && status !== Leave_1.enumStatus.APPROVED && status !== Leave_1.enumStatus.REJECTED) {
+        if (status && status !== Leave_entity_1.enumStatus.APPROVED && status !== Leave_entity_1.enumStatus.REJECTED) {
             messageError = 'Status not valid';
             return messageError;
         }

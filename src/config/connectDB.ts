@@ -1,76 +1,79 @@
 import { createConnection } from 'typeorm'
-import { Attendance } from '../entities/Attendance'
-import { Avatar } from '../entities/Avatar'
-import { Client } from '../entities/Client'
-import { Client_Category } from '../entities/Client_Category'
-import { Client_Sub_Category } from '../entities/Client_Sub_Category'
-import { Company_Info } from '../entities/Company_Info'
-import { Company_logo } from '../entities/Company_Logo'
-import { Contract } from '../entities/Contract'
-import { Contract_file } from '../entities/Contract_File'
-import { Contract_type } from '../entities/Contract_Type'
-import { Conversation } from '../entities/Conversation'
-import { Conversation_reply } from '../entities/Conversation_Reply'
-import { Department } from '../entities/Department'
-import { Designation } from '../entities/Designation'
-import { Discussion } from '../entities/Discussion'
-import { Employee } from '../entities/Employee'
-import { Event } from '../entities/Event'
-import { Holiday } from '../entities/Holiday'
-import { Hourly_rate_project } from '../entities/Hourly_rate_project'
-import { Interview } from '../entities/Interview'
-import { Interview_file } from '../entities/Interview_File'
-import { Job } from '../entities/Job'
-import { Job_Application } from '../entities/Job_Application'
-import { Job_application_file } from '../entities/Job_Application_File'
-import { Job_application_picture } from '../entities/Job_Application_Picture'
-import { Job_offer_letter } from '../entities/Job_Offer_Letter'
-import { Job_Type } from '../entities/Job_Type'
-import { Leave } from '../entities/Leave'
-import { Leave_type } from '../entities/Leave_Type'
-import { Location } from '../entities/Location'
-import { Milestone } from '../entities/Milestone'
-import { Notice_board } from '../entities/Notice_Board'
-import { Notification } from '../entities/Notification'
-import { Project } from '../entities/Project'
-import { Project_Activity } from '../entities/Project_Activity'
-import { Project_Category } from '../entities/Project_Category'
-import { Project_discussion_category } from '../entities/Project_Discussion_Category'
-import { Project_discussion_reply } from '../entities/Project_Discussion_Reply'
-import { Project_Discussion_Room } from '../entities/Project_Discussion_Room'
-import { Project_file } from '../entities/Project_File'
-import { Project_note } from '../entities/Project_Note'
-import { Room } from '../entities/Room'
-import { Salary } from '../entities/Salary'
-import { Sign } from '../entities/Sign'
-import { Skill } from '../entities/Skill'
-import { Status } from '../entities/Status'
-import { Sticky_note } from '../entities/StickyNote'
-import { Task } from '../entities/Task'
-import { Task_Category } from '../entities/Task_Category'
-import { Task_comment } from '../entities/Task_Comment'
-import { Task_file } from '../entities/Task_File'
-import { Time_log } from '../entities/Time_Log'
-import { Work_Experience } from '../entities/Work_Experience'
+import { Attendance } from '../entities/Attendance.entity'
+import { Avatar } from '../entities/Avatar.entity'
+import { Client } from '../entities/Client.entity'
+import { Client_Category } from '../entities/Client_Category.entity'
+import { Client_Sub_Category } from '../entities/Client_Sub_Category.entity'
+import { Company_Info } from '../entities/Company_Info.entity'
+import { Company_logo } from '../entities/Company_Logo.entity'
+import { Contract } from '../entities/Contract.entity'
+import { Contract_file } from '../entities/Contract_File.entity'
+import { Contract_type } from '../entities/Contract_Type.entity'
+import { Conversation } from '../entities/Conversation.entity'
+import { Conversation_reply } from '../entities/Conversation_Reply.entity'
+import { Department } from '../entities/Department.entity'
+import { Designation } from '../entities/Designation.entity'
+import { Discussion } from '../entities/Discussion.entity'
+import { Employee } from '../entities/Employee.entity'
+import { Event } from '../entities/Event.entity'
+import { Holiday } from '../entities/Holiday.entity'
+import { Hourly_rate_project } from '../entities/Hourly_rate_project.entity'
+import { Interview } from '../entities/Interview.entity'
+import { Interview_file } from '../entities/Interview_File.entity'
+import { Job } from '../entities/Job.entity'
+import { Job_Application } from '../entities/Job_Application.entity'
+import { Job_application_file } from '../entities/Job_Application_File.entity'
+import { Job_application_picture } from '../entities/Job_Application_Picture.entity'
+import { Job_offer_letter } from '../entities/Job_Offer_Letter.entity'
+import { Job_Type } from '../entities/Job_Type.entity'
+import { Leave } from '../entities/Leave.entity'
+import { Leave_type } from '../entities/Leave_Type.entity'
+import { Location } from '../entities/Location.entity'
+import { Milestone } from '../entities/Milestone.entity'
+import { Notice_board } from '../entities/Notice_Board.entity'
+import { Notification } from '../entities/Notification.entity'
+import { Project } from '../entities/Project.entity'
+import { Project_Activity } from '../entities/Project_Activity.entity'
+import { Project_Category } from '../entities/Project_Category.entity'
+import { Project_discussion_category } from '../entities/Project_Discussion_Category.entity'
+import { Project_discussion_reply } from '../entities/Project_Discussion_Reply.entity'
+import { Project_Discussion_Room } from '../entities/Project_Discussion_Room.entity'
+import { Project_file } from '../entities/Project_File.entity'
+import { Project_note } from '../entities/Project_Note.entity'
+import { Room } from '../entities/Room.entity'
+import { Salary } from '../entities/Salary.entity'
+import { Sign } from '../entities/Sign.entity'
+import { Skill } from '../entities/Skill.entity'
+import { Status } from '../entities/Status.entity'
+import { Sticky_note } from '../entities/StickyNote.entity'
+import { Task } from '../entities/Task.entity'
+import { Task_Category } from '../entities/Task_Category.entity'
+import { Task_comment } from '../entities/Task_Comment.entity'
+import { Task_file } from '../entities/Task_File.entity'
+import { Time_log } from '../entities/Time_Log.entity'
+import { Work_Experience } from '../entities/Work_Experience.entity'
 
 const connectDB = () => {
 	createConnection({
 		type: 'postgres',
 		name: 'huprom',
 		logging: true,
-
-		// database: 'hth_hrms_pms',
-		// password: 'Truong123456789@',
-
-		// username: 'postgres',
-		
-		// synchronize: true,
+		synchronize: true,
 		port: 5432,
 
+		// localhost
+		// database: 'hth_hrms_pms',
+		// password: 'Truong123456789@',
+		// username: 'postgres',
+		
+
+		// vercel
 		url: `${process.env.DB_URL}`,
 		ssl: {
 			rejectUnauthorized: false
 		},
+
+
 
 		entities: [
 			Employee,

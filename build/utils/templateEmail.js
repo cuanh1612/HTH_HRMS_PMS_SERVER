@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.templateInterview = exports.templateWEmail = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = require("path");
-const Company_Info_1 = require("../entities/Company_Info");
+const Company_Info_entity_1 = require("../entities/Company_Info.entity");
 const templateBasic = ({ file, handleBody, name, }) => __awaiter(void 0, void 0, void 0, function* () {
-    const companyInfo = (yield Company_Info_1.Company_Info.find({}))[0];
+    const companyInfo = (yield Company_Info_entity_1.Company_Info.find({}))[0];
     fs_1.default.writeFileSync((0, path_1.resolve)(__dirname, file), '');
     fs_1.default.readFileSync((0, path_1.resolve)(__dirname, '../../views/common/header.txt'))
         .toString()
@@ -123,7 +123,7 @@ const templateWEmail = ({ activeToken, name, file, }) => __awaiter(void 0, void 
 });
 exports.templateWEmail = templateWEmail;
 const templateInterview = ({ position, name, file, time, }) => __awaiter(void 0, void 0, void 0, function* () {
-    const companyInfo = (yield Company_Info_1.Company_Info.find({}))[0];
+    const companyInfo = (yield Company_Info_entity_1.Company_Info.find({}))[0];
     const handleBody = () => __awaiter(void 0, void 0, void 0, function* () {
         fs_1.default.readFileSync((0, path_1.resolve)(__dirname, '../../views/common/element14.txt'))
             .toString()

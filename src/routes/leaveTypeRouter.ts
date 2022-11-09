@@ -1,5 +1,5 @@
 import express from 'express';
-import leaveTypeController from '../controllers/leaveTypeController';
+import leaveTypeController from '../controllers/leaveType.controller';
 import { checkAuth } from '../utils/middleware/checkAuth';
 
 const leaveTypeRouter = express.Router();

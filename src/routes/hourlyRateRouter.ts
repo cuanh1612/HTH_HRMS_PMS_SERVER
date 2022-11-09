@@ -1,5 +1,5 @@
 import express from 'express'
-import hourlyRateController from '../controllers/hourlyRateController'
+import hourlyRateController from '../controllers/hourlyRate.controller'
 
 
 

@@ -1,4 +1,4 @@
-import { Discussion } from '../entities/Discussion'
+import { Discussion } from '../entities/Discussion.entity'
 
 export type createOrUpdateDiscussionPayload = Discussion & {
 	contract: number

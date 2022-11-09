@@ -1,5 +1,5 @@
 import express from 'express'
-import taskCommentController from '../controllers/taskCommentController'
+import taskCommentController from '../controllers/taskComment.controller'
 import { checkAuth } from '../utils/middleware/checkAuth'
 
 const taskCommentRouter = express.Router()

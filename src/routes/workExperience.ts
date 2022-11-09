@@ -1,5 +1,5 @@
 import express from "express";
-import workExperienceController from "../controllers/workExperienceController";
+import workExperienceController from "../controllers/workExperience.controller";
 
 
 const workExperienceRouter = express.Router()

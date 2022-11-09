@@ -1,8 +1,8 @@
 import { Server } from 'http'
 import { Server as ServerSocket } from 'socket.io'
-import { Client } from '../entities/Client'
-import { Conversation_reply } from '../entities/Conversation_Reply'
-import { Employee } from '../entities/Employee'
+import { Client } from '../entities/Client.entity'
+import { Conversation_reply } from '../entities/Conversation_Reply.entity'
+import { Employee } from '../entities/Employee.entity'
 import { userSocket } from '../type/SocketPayload'
 
 const createSocketServer = (httpServer: Server) => {
@@ -22,6 +22,7 @@ const createSocketServer = (httpServer: Server) => {
 
 	const io = new ServerSocket(httpServer, {
 		cors: {
+			// 'https://huprom-hrms-pms-client.vercel.app'
 			origin: 'https://huprom-hrms-pms-client.vercel.app',
 			methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 			credentials: true,

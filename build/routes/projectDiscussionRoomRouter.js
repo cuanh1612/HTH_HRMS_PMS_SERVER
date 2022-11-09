@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const projectDiscussionRoomController_1 = __importDefault(require("../controllers/projectDiscussionRoomController"));
+const projectDiscussionRoom_controller_1 = __importDefault(require("../controllers/projectDiscussionRoom.controller"));
 const projectDiscussionRoomRouter = express_1.default.Router();
-projectDiscussionRoomRouter.post('/', projectDiscussionRoomController_1.default.create);
-projectDiscussionRoomRouter.get('/:id', projectDiscussionRoomController_1.default.getDetail);
-projectDiscussionRoomRouter.get('/project/:project_id', projectDiscussionRoomController_1.default.getByProject);
-projectDiscussionRoomRouter.delete('/:id', projectDiscussionRoomController_1.default.Delete);
+projectDiscussionRoomRouter.post('/', projectDiscussionRoom_controller_1.default.create);
+projectDiscussionRoomRouter.get('/:id', projectDiscussionRoom_controller_1.default.getDetail);
+projectDiscussionRoomRouter.get('/project/:project_id', projectDiscussionRoom_controller_1.default.getByProject);
+projectDiscussionRoomRouter.delete('/:id', projectDiscussionRoom_controller_1.default.Delete);
 exports.default = projectDiscussionRoomRouter;
