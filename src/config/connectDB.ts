@@ -74,7 +74,6 @@ const connectDB = () => {
 		},
 
 
-
 		entities: [
 			Employee,
 			Avatar,
