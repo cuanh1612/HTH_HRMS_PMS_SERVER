@@ -23,7 +23,12 @@ const createSocketServer = (httpServer) => {
     const getUser = (email) => {
         return onlineUsers.find((user) => user.email === email);
     };
-    const io = new socket_io_1.Server(httpServer, {});
+    const io = new socket_io_1.Server(httpServer, {
+        cors: {
+            // 'https://huprom-hrms-pms-client.vercel.app'
+            origin: '*'
+        },
+    });
     io.on('connection', (socket) => {
         socket.on('newUser', (email) => {
             addNewUsre({ email, socketId: socket.id });
