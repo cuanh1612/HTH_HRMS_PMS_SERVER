@@ -6,6 +6,7 @@
   "repository": "https://github.com/cuanh1612/HTH_HRMS_PMS_SERVER.git",
   "author": "huy <huynguyencc1000@gmail.com>",
   "license": "MIT",
+  
   "engines": {
     "node": "16.x"
   },
