@@ -9,11 +9,10 @@ const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const http_1 = require("http");
 require("reflect-metadata");
-const connectDB_1 = __importDefault(require("./config/connectDB"));
 const socketIO_1 = __importDefault(require("./config/socketIO"));
 const mainRouter_1 = __importDefault(require("./routes/mainRouter"));
 const PORT = process.env.PORT || 4000;
-(0, connectDB_1.default)();
+// connectDB()
 //Create and setup express app
 const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);

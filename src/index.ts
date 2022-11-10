@@ -4,13 +4,12 @@ import cors from 'cors'
 import express from 'express'
 import { createServer } from 'http'
 import 'reflect-metadata'
-import connectDB from './config/connectDB'
 import createSocketServer from './config/socketIO'
 import mainRouter from './routes/mainRouter'
 
 const PORT = process.env.PORT || 4000
 
-connectDB()
+// connectDB()
 
 //Create and setup express app
 const app = express()
