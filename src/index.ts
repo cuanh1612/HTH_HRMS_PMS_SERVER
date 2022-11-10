@@ -10,7 +10,6 @@ import mainRouter from './routes/mainRouter'
 
 const PORT = process.env.PORT || 4000
 
-//Create typeorm connection
 connectDB()
 
 //Create and setup express app

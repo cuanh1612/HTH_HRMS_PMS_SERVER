@@ -13,7 +13,6 @@ const connectDB_1 = __importDefault(require("./config/connectDB"));
 const socketIO_1 = __importDefault(require("./config/socketIO"));
 const mainRouter_1 = __importDefault(require("./routes/mainRouter"));
 const PORT = process.env.PORT || 4000;
-//Create typeorm connection
 (0, connectDB_1.default)();
 //Create and setup express app
 const app = (0, express_1.default)();

@@ -52,9 +52,10 @@ import { Task_comment } from '../entities/Task_Comment.entity'
 import { Task_file } from '../entities/Task_File.entity'
 import { Time_log } from '../entities/Time_Log.entity'
 import { Work_Experience } from '../entities/Work_Experience.entity'
+import rootAccount from './rootAcc.json'
 
-const connectDB = () => {
-	createConnection({
+const connectDB = async () => {
+	await createConnection({
 		type: 'postgres',
 		name: 'huprom',
 		logging: true,
@@ -65,7 +66,6 @@ const connectDB = () => {
 		// database: 'hth_hrms_pms',
 		// password: 'Truong123456789@',
 		// username: 'postgres',
-		
 
 		// vercel
 		url: `${process.env.DB_URL}`,
@@ -137,6 +137,16 @@ const connectDB = () => {
 		.catch((error) => {
 			console.log('Connect DB false.', error)
 		})
+
+	const adminAccount = await Employee.findOne({
+		where: {
+			email: rootAccount.employee[0].email
+		}
+	})
+	if(!adminAccount) {
+		await Employee.insert(rootAccount.employee)
+		await Client.insert(rootAccount.client)
+	}
 }
 
 export default connectDB
