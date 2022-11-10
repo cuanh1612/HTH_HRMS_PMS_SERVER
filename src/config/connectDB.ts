@@ -73,7 +73,6 @@ const connectDB = async () => {
 		// 	rejectUnauthorized: false
 		// },
 
-
 		entities: [
 			Employee,
 			Avatar,
