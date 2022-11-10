@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const dashboardJobs_controller_1 = __importDefault(require("../controllers/dashboardJobs.controller"));
+const checkAuth_1 = require("../utils/middleware/checkAuth");
+const dashboardJobsRouter = express_1.default.Router();
+dashboardJobsRouter.get('/open-jobs', (0, checkAuth_1.checkAuth)(['Admin']), dashboardJobs_controller_1.default.openJobs);
+dashboardJobsRouter.get('/application-sources', (0, checkAuth_1.checkAuth)(['Admin']), dashboardJobs_controller_1.default.applicationSources);
+dashboardJobsRouter.get('/application-status', (0, checkAuth_1.checkAuth)(['Admin']), dashboardJobs_controller_1.default.applicationStatus);
+dashboardJobsRouter.get('/new-interview', (0, checkAuth_1.checkAuth)(['Admin']), dashboardJobs_controller_1.default.newInterview);
+dashboardJobsRouter.get('/today-interview', (0, checkAuth_1.checkAuth)(['Admin']), dashboardJobs_controller_1.default.todayInterview);
+dashboardJobsRouter.get('/today-interview-calendar', (0, checkAuth_1.checkAuth)(['Admin']), dashboardJobs_controller_1.default.todayInterviewCalendar);
+dashboardJobsRouter.get('/total-applications', (0, checkAuth_1.checkAuth)(['Admin']), dashboardJobs_controller_1.default.totalApplications);
+dashboardJobsRouter.get('/total-hired', (0, checkAuth_1.checkAuth)(['Admin']), dashboardJobs_controller_1.default.totalHired);
+dashboardJobsRouter.get('/total-openings', (0, checkAuth_1.checkAuth)(['Admin']), dashboardJobs_controller_1.default.totalOpenings);
+dashboardJobsRouter.get('/total-rejected', (0, checkAuth_1.checkAuth)(['Admin']), dashboardJobs_controller_1.default.totalRejected);
+exports.default = dashboardJobsRouter;

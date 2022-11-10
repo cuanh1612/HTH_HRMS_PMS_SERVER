@@ -85,7 +85,7 @@ const projectCategoryController = {
 			code: 200,
 			success: true,
 			projectCategories: projectCategories,
-			message: 'Get all project categories successfully',
+			message: 'Get all project categories successfully.',
 		})
 	}),
 
