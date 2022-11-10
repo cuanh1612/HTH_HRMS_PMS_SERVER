@@ -78,7 +78,6 @@ const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
         // database: 'hth_hrms_pms',
         // password: 'Truong123456789@',
         // username: 'postgres',
-        // vercel
         url: `${process.env.DB_URL}`,
         ssl: {
             rejectUnauthorized: false

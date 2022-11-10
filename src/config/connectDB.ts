@@ -67,12 +67,11 @@ const connectDB = async () => {
 		// password: 'Truong123456789@',
 		// username: 'postgres',
 
-		// vercel
+	
 		url: `${process.env.DB_URL}`,
 		ssl: {
 			rejectUnauthorized: false
 		},
-
 
 		entities: [
 			Employee,
