@@ -58,10 +58,10 @@ const connectDB = async () => {
 	await createConnection({
 		type: 'postgres',
 		name: 'huprom',
-		logging: true,
 		synchronize: true,
 		port: 5432,
-
+		
+		// logging: true,
 		// localhost
 		// database: 'hth_hrms_pms',
 		// password: 'Truong123456789@',

@@ -71,9 +71,9 @@ const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, typeorm_1.createConnection)({
         type: 'postgres',
         name: 'huprom',
-        logging: true,
         synchronize: true,
         port: 5432,
+        // logging: true,
         // localhost
         // database: 'hth_hrms_pms',
         // password: 'Truong123456789@',
