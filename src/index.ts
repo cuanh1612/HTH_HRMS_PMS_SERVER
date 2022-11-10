@@ -27,6 +27,10 @@ app.use(
 )
 app.use(cookieParser())
 
+app.get('/', (_, res)=> {
+	res.send(process.env.DB_URL)
+})
+
 //Routes
 mainRouter(app)
 

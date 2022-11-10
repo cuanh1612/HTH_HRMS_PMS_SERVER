@@ -26,6 +26,9 @@ app.use((0, cors_1.default)({
     credentials: true,
 }));
 app.use((0, cookie_parser_1.default)());
+app.get('/', (_, res) => {
+    res.send(process.env.DB_URL);
+});
 //Routes
 (0, mainRouter_1.default)(app);
 //Setting socket server
