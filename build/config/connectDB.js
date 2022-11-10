@@ -80,9 +80,9 @@ const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
         // username: 'postgres',
         // vercel
         url: `${process.env.DB_URL}`,
-        // ssl: {
-        // 	rejectUnauthorized: false
-        // },
+        ssl: {
+            rejectUnauthorized: false
+        },
         entities: [
             Employee_entity_1.Employee,
             Avatar_entity_1.Avatar,
