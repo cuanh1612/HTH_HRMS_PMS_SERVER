@@ -69,9 +69,10 @@ const connectDB = async () => {
 
 		// vercel
 		url: `${process.env.DB_URL}`,
-		// ssl: {
-		// 	rejectUnauthorized: false
-		// },
+		ssl: {
+			rejectUnauthorized: false
+		},
+
 
 		entities: [
 			Employee,
