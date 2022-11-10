@@ -20,7 +20,7 @@ app.set('trust proxy', 1)
 app.use(
 	cors({
 		// 'https://huprom-hrms-pms-client.vercel.app'
-		origin: 'http://localhost:3000',
+		origin: 'https://huprom-hrms-pms-client.vercel.app',
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 		credentials: true,		
 	})
