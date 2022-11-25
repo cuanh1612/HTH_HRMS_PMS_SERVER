@@ -60,8 +60,8 @@ const connectDB = async () => {
 		name: 'huprom',
 		synchronize: true,
 		port: 5432,
+		logging: true,
 		
-		// logging: true,
 		// localhost
 		// database: 'hth_hrms_pms',
 		// password: 'Truong123456789@',

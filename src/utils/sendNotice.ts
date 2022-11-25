@@ -1,13 +1,13 @@
 import nodemailer from 'nodemailer'
 import { google } from 'googleapis'
 import hbs from 'nodemailer-express-handlebars'
-import {resolve} from 'path'
+import { resolve } from 'path'
 
 const clientId = process.env.GOOGLE_CLIENT_ID
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 const refreshToken = process.env.GOOGLE_REFRESH_TOKEN
 const redirectUri = process.env.GOOGLE_REDIRECT_URL
-const gmail = process.env.GMAIL
+const rootEmail = process.env.GMAIL
 
 const oAuth2client = new google.auth.OAuth2({
 	clientId,
@@ -24,18 +24,20 @@ const sendMail = async ({
 	subject,
 	text,
 	template,
+	from
 }: {
 	to: string
 	subject: string
 	text?: string
 	template?: string
+	from: string
 }) => {
 	const accessToken = await oAuth2client.getAccessToken()
 	const transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
 			type: 'OAuth2',
-			user: `${gmail}`,
+			user: `${rootEmail}`,
 			clientId,
 			clientSecret,
 			refreshToken,
@@ -43,28 +45,29 @@ const sendMail = async ({
 		},
 		secure: true,
 	})
+	if (template) {
+		const optionTransporter: any = {
+			viewEngine: {
+				extName: ".handlebars",
+				partialsDir: resolve(__dirname, "templateViews"),
+				defaultLayout: false,
 
-	const optionTransporter: any = {
-		viewEngine: {
+			},
+			viewPath: resolve(__dirname, "../../views"),
 			extName: ".handlebars",
-			partialsDir: resolve(__dirname, "templateViews"),
-			defaultLayout: false,
-			
-		},
-		viewPath: resolve(__dirname, "../../views"),
-		extName: ".handlebars",
-	} 
-	transporter.use('compile', hbs(optionTransporter))
+		}
+		transporter.use('compile', hbs(optionTransporter))
+	}
 
 	const mailOptions: any = {
-		from: `${gmail}`,
+		from,
 		subject,
 		text,
 		to,
 		template
 	}
-	
-	transporter.sendMail( mailOptions,
+
+	transporter.sendMail(mailOptions,
 		function (err) {
 			if (err) {
 				console.log('error', err)

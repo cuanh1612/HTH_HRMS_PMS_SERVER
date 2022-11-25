@@ -73,7 +73,7 @@ const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
         name: 'huprom',
         synchronize: true,
         port: 5432,
-        // logging: true,
+        logging: true,
         // localhost
         // database: 'hth_hrms_pms',
         // password: 'Truong123456789@',

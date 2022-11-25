@@ -352,6 +352,7 @@ const authController = {
 			text: 'reset password',
 			subject: 'huprom-reset password',
 			template: 'resetPass',
+			from: `${process.env.GMAIL}`
 		})
 
 		return res.status(200).json({

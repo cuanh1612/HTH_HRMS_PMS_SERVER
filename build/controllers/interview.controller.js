@@ -141,7 +141,8 @@ const interviewController = {
                 to: `${existCandidate.email}`,
                 subject: 'huprom - interview',
                 text: 'Interview',
-                template: 'interview'
+                template: 'interview',
+                from: `${process.env.GMAIL}`
             });
         }
         yield Interview_entity_1.Interview.create({

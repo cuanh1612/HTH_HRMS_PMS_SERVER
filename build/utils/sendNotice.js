@@ -20,7 +20,7 @@ const clientId = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
 const redirectUri = process.env.GOOGLE_REDIRECT_URL;
-const gmail = process.env.GMAIL;
+const rootEmail = process.env.GMAIL;
 const oAuth2client = new googleapis_1.google.auth.OAuth2({
     clientId,
     clientSecret,
@@ -29,13 +29,13 @@ const oAuth2client = new googleapis_1.google.auth.OAuth2({
 oAuth2client.setCredentials({
     refresh_token: refreshToken,
 });
-const sendMail = ({ to, subject, text, template, }) => __awaiter(void 0, void 0, void 0, function* () {
+const sendMail = ({ to, subject, text, template, from }) => __awaiter(void 0, void 0, void 0, function* () {
     const accessToken = yield oAuth2client.getAccessToken();
     const transporter = nodemailer_1.default.createTransport({
         service: 'gmail',
         auth: {
             type: 'OAuth2',
-            user: `${gmail}`,
+            user: `${rootEmail}`,
             clientId,
             clientSecret,
             refreshToken,
@@ -43,18 +43,20 @@ const sendMail = ({ to, subject, text, template, }) => __awaiter(void 0, void 0,
         },
         secure: true,
     });
-    const optionTransporter = {
-        viewEngine: {
+    if (template) {
+        const optionTransporter = {
+            viewEngine: {
+                extName: ".handlebars",
+                partialsDir: (0, path_1.resolve)(__dirname, "templateViews"),
+                defaultLayout: false,
+            },
+            viewPath: (0, path_1.resolve)(__dirname, "../../views"),
             extName: ".handlebars",
-            partialsDir: (0, path_1.resolve)(__dirname, "templateViews"),
-            defaultLayout: false,
-        },
-        viewPath: (0, path_1.resolve)(__dirname, "../../views"),
-        extName: ".handlebars",
-    };
-    transporter.use('compile', (0, nodemailer_express_handlebars_1.default)(optionTransporter));
+        };
+        transporter.use('compile', (0, nodemailer_express_handlebars_1.default)(optionTransporter));
+    }
     const mailOptions = {
-        from: `${gmail}`,
+        from,
         subject,
         text,
         to,
