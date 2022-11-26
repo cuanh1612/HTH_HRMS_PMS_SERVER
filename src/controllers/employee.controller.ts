@@ -1,5 +1,6 @@
 import argon2 from 'argon2'
 import { Request, Response } from 'express'
+import { Secret, verify } from 'jsonwebtoken'
 import { getManager } from 'typeorm'
 import { Attendance } from '../entities/Attendance.entity'
 import { Avatar } from '../entities/Avatar.entity'
@@ -12,6 +13,7 @@ import { Salary } from '../entities/Salary.entity'
 import { Task } from '../entities/Task.entity'
 import { Time_log } from '../entities/Time_Log.entity'
 import { createOrUpdateEmployeePayload } from '../type/EmployeePayload'
+import { UserAuthPayload } from '../type/UserAuthPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { employeeValid } from '../utils/valid/employeeValid'
 
@@ -238,19 +240,16 @@ const employeeController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			message: `Create employees by import csv successfully${
-				employeeNotValid.length > 0
-					? `. Incorrect lines of data that are not added to the server include index ${employeeNotValid.toString()}`
-					: ''
-			}${
-				employeeExistingEmailOrID.length > 0
+			message: `Create employees by import csv successfully${employeeNotValid.length > 0
+				? `. Incorrect lines of data that are not added to the server include index ${employeeNotValid.toString()}`
+				: ''
+				}${employeeExistingEmailOrID.length > 0
 					? `. Employee existing email or employeeID lines of data that are not added to the server include index ${employeeExistingEmailOrID.toString()}`
 					: ''
-			}${
-				employeeNotExistDPDS.length > 0
+				}${employeeNotExistDPDS.length > 0
 					? `. Employee not existing department or designation lines of data that are not added to the server include index ${employeeNotExistDPDS.toString()}`
 					: ''
-			}`,
+				}`,
 		})
 	}),
 
@@ -267,6 +266,41 @@ const employeeController = {
 				success: false,
 				message: messageValid,
 			})
+
+		//check exist current user
+		const token = req.headers.authorization?.split(' ')[1]
+
+		if (!token)
+			return res.status(401).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+
+		const decode = verify(token, process.env.ACCESS_TOKEN_SECRET as Secret) as UserAuthPayload
+
+		const existingUser = await Employee.findOne({
+			where: {
+				id: decode.userId,
+			},
+		})
+
+		if (!existingUser)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Please login first',
+			})
+		
+		//Check if employee edit profile
+		if(existingUser.role != "Admin" && !((existingUser.role == "Employee") && (existingUser.id == Number(employeeId)))){
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'No permission to perform this function.',
+			})
+		}
+
 
 		//Check existing employee
 		const existingEmployee = await Employee.findOne({
@@ -384,8 +418,8 @@ const employeeController = {
 				...(hashPassword ? { password: hashPassword } : {}),
 				...(newAvatar
 					? {
-							avatar: newAvatar,
-					  }
+						avatar: newAvatar,
+					}
 					: {}),
 			}
 		)

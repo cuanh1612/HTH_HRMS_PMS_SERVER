@@ -10,7 +10,7 @@ const userRouter = express_1.default.Router();
 userRouter.post('/', (0, checkAuth_1.checkAuth)(['Admin']), employee_controller_1.default.create);
 userRouter.post('/delete-many', (0, checkAuth_1.checkAuth)(['Admin']), employee_controller_1.default.deleteMany);
 userRouter.put('/role', (0, checkAuth_1.checkAuth)(['Admin']), employee_controller_1.default.changeRole);
-userRouter.put('/:employeeId', (0, checkAuth_1.checkAuth)(['Admin']), employee_controller_1.default.update);
+userRouter.put('/:employeeId', (0, checkAuth_1.checkAuth)(['Admin', 'Employee']), employee_controller_1.default.update);
 userRouter.get('/normal', employee_controller_1.default.getNormal);
 userRouter.get('/', (0, checkAuth_1.checkAuth)([]), employee_controller_1.default.getAll);
 userRouter.get('/:employeeId', (0, checkAuth_1.checkAuth)([]), employee_controller_1.default.getDetail);

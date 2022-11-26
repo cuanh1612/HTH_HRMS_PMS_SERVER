@@ -8,7 +8,7 @@ userRouter.post('/', checkAuth(['Admin']), employeeController.create)
 userRouter.post('/delete-many', checkAuth(['Admin']), employeeController.deleteMany)
 
 userRouter.put('/role', checkAuth(['Admin']), employeeController.changeRole)
-userRouter.put('/:employeeId', checkAuth(['Admin']), employeeController.update)
+userRouter.put('/:employeeId', checkAuth(['Admin', 'Employee']), employeeController.update)
 
 userRouter.get('/normal', employeeController.getNormal)
 userRouter.get('/', checkAuth([]), employeeController.getAll)

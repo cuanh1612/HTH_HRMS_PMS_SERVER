@@ -214,15 +214,13 @@ const clientController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			message: `Create clients by import csv successfully${
-				clientsNotValid.length > 0
+			message: `Create clients by import csv successfully${clientsNotValid.length > 0
 					? `. Incorrect lines of data that are not added to the server include index ${clientsNotValid.toString()}`
 					: ''
-			}${
-				clientsExistingEmail.length > 0
+				}${clientsExistingEmail.length > 0
 					? `. Clients whose email already existing email in the system include index ${clientsExistingEmail.toString()}`
 					: ``
-			}`,
+				}`,
 		})
 	}),
 
@@ -364,8 +362,8 @@ const clientController = {
 				...(hashPassword ? { password: hashPassword } : {}),
 				...(newAvatar
 					? {
-							avatar: newAvatar,
-					  }
+						avatar: newAvatar,
+					}
 					: {}),
 				client_category: dataUpdateClient.client_category
 					? dataUpdateClient.client_category

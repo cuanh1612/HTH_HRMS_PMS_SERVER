@@ -24,6 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const argon2_1 = __importDefault(require("argon2"));
+const jsonwebtoken_1 = require("jsonwebtoken");
 const typeorm_1 = require("typeorm");
 const Attendance_entity_1 = require("../entities/Attendance.entity");
 const Avatar_entity_1 = require("../entities/Avatar.entity");
@@ -230,6 +231,7 @@ const employeeController = {
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         const dataUpdateEmployee = req.body;
         const { employeeId } = req.params;
         //Check valid
@@ -240,6 +242,34 @@ const employeeController = {
                 success: false,
                 message: messageValid,
             });
+        //check exist current user
+        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
+        if (!token)
+            return res.status(401).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        const decode = (0, jsonwebtoken_1.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+        const existingUser = yield Employee_entity_1.Employee.findOne({
+            where: {
+                id: decode.userId,
+            },
+        });
+        if (!existingUser)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Please login first',
+            });
+        //Check if employee edit profile
+        if (existingUser.role != "Admin" && !((existingUser.role == "Employee") && (existingUser.id == Number(employeeId)))) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'No permission to perform this function.',
+            });
+        }
         //Check existing employee
         const existingEmployee = yield Employee_entity_1.Employee.findOne({
             where: {
