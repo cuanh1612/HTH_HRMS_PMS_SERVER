@@ -226,11 +226,13 @@ const authController = {
         const existingUser = (yield Employee_entity_1.Employee.findOne({
             where: {
                 id: decode.userId,
+                email: decode.email
             },
         })) ||
             (yield Client_entity_1.Client.findOne({
                 where: {
                     id: decode.userId,
+                    email: decode.email
                 },
             }));
         if (!existingUser)

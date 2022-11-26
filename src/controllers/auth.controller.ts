@@ -256,11 +256,13 @@ const authController = {
 			(await Employee.findOne({
 				where: {
 					id: decode.userId,
+					email: decode.email
 				},
 			})) ||
 			(await Client.findOne({
 				where: {
 					id: decode.userId,
+					email: decode.email
 				},
 			}))
 
