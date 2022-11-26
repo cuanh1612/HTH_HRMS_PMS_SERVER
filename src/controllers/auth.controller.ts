@@ -127,6 +127,7 @@ const authController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
+			user: existingUser,
 			message: 'Logged in successfully',
 			accessToken: createToken('accessToken', existingUser),
 			refreshToken,
