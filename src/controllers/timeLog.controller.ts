@@ -841,5 +841,48 @@ const timeLogController = {
 			message: 'Get all timelog success',
 		})
 	}),
+
+	getByEmployee: handleCatchError(async (req: Request, res: Response) => {
+		const {employeeId} = req.body;
+
+		//Check existing employee
+		const existingEmployee = await Employee.findOne({
+			where: {
+				id: Number(employeeId)
+			}
+		})
+
+		if(!existingEmployee) return res.status(400).json({
+			code: 400,
+			success: false,
+			message: 'Not found employee to get timelogs',
+		})
+		
+		//Get timelogs by employee
+		const timeLogs = await Time_log.find({
+			order: {
+				createdAt: 'DESC',
+			},
+			relations: {
+				task: {
+					status: true,
+				},
+				employee: true,
+				project: true,
+			},
+			where: {
+				employee: {
+					id: existingEmployee.id
+				}
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			timeLogs,
+			message: 'Get all timelog success',
+		})
+	}),
 }
 export default timeLogController

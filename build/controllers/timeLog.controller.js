@@ -648,5 +648,44 @@ const timeLogController = {
             message: 'Get all timelog success',
         });
     })),
+    getByEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { employeeId } = req.body;
+        //Check existing employee
+        const existingEmployee = yield Employee_entity_1.Employee.findOne({
+            where: {
+                id: Number(employeeId)
+            }
+        });
+        if (!existingEmployee)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Not found employee to get timelogs',
+            });
+        //Get timelogs by employee
+        const timeLogs = yield Time_Log_entity_1.Time_log.find({
+            order: {
+                createdAt: 'DESC',
+            },
+            relations: {
+                task: {
+                    status: true,
+                },
+                employee: true,
+                project: true,
+            },
+            where: {
+                employee: {
+                    id: existingEmployee.id
+                }
+            },
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            timeLogs,
+            message: 'Get all timelog success',
+        });
+    })),
 };
 exports.default = timeLogController;

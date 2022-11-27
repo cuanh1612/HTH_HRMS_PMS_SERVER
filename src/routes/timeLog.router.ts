@@ -24,4 +24,6 @@ TimeLogRouter.delete('/:timeLogId', checkAuth([]), timeLogController.delete)
 
 TimeLogRouter.put('/:timeLogId', checkAuth([]), timeLogController.update)
 
+TimeLogRouter.get('/employee/:employeeId', timeLogController.getByEmployee)
+
 export default TimeLogRouter

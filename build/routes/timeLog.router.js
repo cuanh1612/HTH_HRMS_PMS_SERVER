@@ -17,4 +17,5 @@ TimeLogRouter.get('/:timelogId', timeLog_controller_1.default.getDetail);
 TimeLogRouter.get('/', timeLog_controller_1.default.getAll);
 TimeLogRouter.delete('/:timeLogId', (0, checkAuth_1.checkAuth)([]), timeLog_controller_1.default.delete);
 TimeLogRouter.put('/:timeLogId', (0, checkAuth_1.checkAuth)([]), timeLog_controller_1.default.update);
+TimeLogRouter.get('/employee/:employeeId', timeLog_controller_1.default.getByEmployee);
 exports.default = TimeLogRouter;
