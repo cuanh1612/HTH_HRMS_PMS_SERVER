@@ -23,18 +23,46 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = require("jsonwebtoken");
+const typeorm_1 = require("typeorm");
 const Client_entity_1 = require("../entities/Client.entity");
 const Company_Logo_entity_1 = require("../entities/Company_Logo.entity");
 const Contract_entity_1 = require("../entities/Contract.entity");
 const Contract_Type_entity_1 = require("../entities/Contract_Type.entity");
+const Notification_entity_1 = require("../entities/Notification.entity");
 const catchAsyncError_1 = __importDefault(require("../utils/catchAsyncError"));
 const contractValid_1 = require("../utils/valid/contractValid");
-const jsonwebtoken_1 = require("jsonwebtoken");
-const Notification_entity_1 = require("../entities/Notification.entity");
-const typeorm_1 = require("typeorm");
 const contractController = {
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const contracts = yield Contract_entity_1.Contract.find();
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            contracts,
+            message: 'Get all contracts successfully',
+        });
+    })),
+    getAllByClient: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { clientId } = req.params;
+        //Check existing client 
+        const existingClient = yield Client_entity_1.Client.findOne({
+            where: {
+                id: Number(clientId)
+            }
+        });
+        if (!existingClient)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Not found client to get contracts',
+            });
+        const contracts = yield Contract_entity_1.Contract.find({
+            where: {
+                client: {
+                    id: existingClient.id
+                }
+            }
+        });
         return res.status(200).json({
             code: 200,
             success: true,

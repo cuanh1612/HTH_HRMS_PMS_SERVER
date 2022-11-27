@@ -1,18 +1,52 @@
 import { Request, Response } from 'express'
+import { sign, verify } from 'jsonwebtoken'
+import { getManager } from 'typeorm'
 import { Client } from '../entities/Client.entity'
 import { Company_logo } from '../entities/Company_Logo.entity'
 import { Contract } from '../entities/Contract.entity'
 import { Contract_type } from '../entities/Contract_Type.entity'
+import { Notification } from '../entities/Notification.entity'
 import { createOrUpdateContractPayload } from '../type/ContractPayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { contractValid } from '../utils/valid/contractValid'
-import { sign, verify } from 'jsonwebtoken'
-import { Notification } from '../entities/Notification.entity'
-import { getManager } from 'typeorm'
 
 const contractController = {
 	getAll: handleCatchError(async (_: Request, res: Response) => {
-		const contracts = await Contract.find()
+		const contracts = await Contract.find() 
+		
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			contracts,
+			message: 'Get all contracts successfully',
+		})
+	}),
+
+	getAllByClient: handleCatchError(async (req: Request, res: Response) => {
+		const {clientId} = req.params;
+
+		//Check existing client 
+		const existingClient = await Client.findOne({
+			where: {
+				id: Number(clientId)
+			}
+		})
+
+		if (!existingClient)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Not found client to get contracts',
+			})
+
+		const contracts = await Contract.find({
+			where: {
+				client: {
+					id: existingClient.id
+				}
+			}
+		})
+		
 		return res.status(200).json({
 			code: 200,
 			success: true,
@@ -240,15 +274,13 @@ const contractController = {
 		return res.status(200).json({
 			code: 200,
 			success: true,
-			message: `Create contracts by import csv successfully${
-				contractNotValid.length > 0
+			message: `Create contracts by import csv successfully${contractNotValid.length > 0
 					? `. Incorrect lines of data that are not added to the server include index ${contractNotValid.toString()}`
 					: ''
-			}${
-				contractNotCLCA.length > 0
+				}${contractNotCLCA.length > 0
 					? `. Contract data not existing client or client category include index ${contractNotCLCA.toString()}`
 					: ``
-			}`,
+				}`,
 		})
 	}),
 
@@ -345,8 +377,8 @@ const contractController = {
 				...dataUpdateContractBase,
 				...(newCompanyLogo
 					? {
-							company_logo: newCompanyLogo,
-					  }
+						company_logo: newCompanyLogo,
+					}
 					: {}),
 			}
 		)

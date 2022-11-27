@@ -12,6 +12,7 @@ contractRouter.post('/public-link', (0, checkAuth_1.checkAuth)(['Admin']), contr
 contractRouter.get('/public/:token', contract_controller_1.default.public);
 contractRouter.post('/delete-many', (0, checkAuth_1.checkAuth)(['Admin']), contract_controller_1.default.deleteMany);
 contractRouter.get('/', contract_controller_1.default.getAll);
+contractRouter.get('/client/:clientId', (0, checkAuth_1.checkAuth)(['Admin', 'Client']), contract_controller_1.default.getAllByClient);
 contractRouter.get('/:contractId', (0, checkAuth_1.checkAuth)(['Admin', 'Client']), contract_controller_1.default.getDetail);
 contractRouter.delete('/:contractId', (0, checkAuth_1.checkAuth)(['Admin']), contract_controller_1.default.delete);
 contractRouter.put('/:contractId', (0, checkAuth_1.checkAuth)(['Admin']), contract_controller_1.default.update);

@@ -14,6 +14,8 @@ contractRouter.post('/delete-many', checkAuth(['Admin']), contractController.del
 
 contractRouter.get('/', contractController.getAll)
 
+contractRouter.get('/client/:clientId', checkAuth(['Admin', 'Client']), contractController.getAllByClient)
+
 contractRouter.get('/:contractId', checkAuth(['Admin', 'Client']), contractController.getDetail)
 
 contractRouter.delete('/:contractId', checkAuth(['Admin']), contractController.delete)
