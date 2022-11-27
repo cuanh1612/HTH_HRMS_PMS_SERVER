@@ -86,17 +86,19 @@ const attendanceController = {
 			)
 		})
 
+		const fixDate = new Date (new Date(date).setDate(new Date(date).getDate() + 1))
+
 		if (attendanceExist) {
 			await Attendance.update(attendanceExist.id, {
 				...req.body,
 				employee: user,
-				date: new Date(date),
+				date: fixDate,
 			})
 		} else {
 			await Attendance.insert({
 				...req.body,
 				employee: user,
-				date:new Date(date),
+				date: fixDate,
 			})
 		}
 
@@ -104,8 +106,6 @@ const attendanceController = {
 			code: 200,
 			success: true,
 			message: 'Checked attendance successfully',
-			date,
-			dateChuyen: new Date(date)
 		})
 	}),
 
