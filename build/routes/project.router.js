@@ -18,6 +18,7 @@ projectRouter.get('/current-user', (0, checkAuth_1.checkAuth)([]), project_contr
 projectRouter.get('/normal', project_controller_1.default.getAllNormal);
 projectRouter.get('/:id', project_controller_1.default.getDetail);
 projectRouter.get('/normal/employee/:employeeId', (0, checkAuth_1.checkAuth)(['Admin', 'Employee']), project_controller_1.default.getAllNormalByEmployee);
+projectRouter.get('/normal/client/:clientId', (0, checkAuth_1.checkAuth)(['Admin']), project_controller_1.default.getAllNormalByClient);
 projectRouter.get('/get-employees-not-in-project/:projectId', (0, checkAuth_1.checkAuth)([]), project_controller_1.default.getEmployeeNotIn);
 projectRouter.get('/all-employees/:idProject', (0, checkAuth_1.checkAuth)([]), project_controller_1.default.allEmployees);
 projectRouter.get('/:projectId/check-assigned', (0, checkAuth_1.checkAuth)([]), project_controller_1.default.checkAssigned);

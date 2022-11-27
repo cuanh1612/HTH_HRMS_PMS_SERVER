@@ -312,6 +312,35 @@ const projectController = {
             message: 'Get all projects success',
         });
     })),
+    // get all project (normal) by client
+    getAllNormalByClient: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { clientId } = req.params;
+        //Check existing client
+        const existingClient = yield Client_entity_1.Client.findOne({
+            where: {
+                id: Number(clientId),
+            },
+        });
+        if (!existingClient)
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Client does not exist in the system',
+            });
+        const projects = yield Project_entity_1.Project.find({
+            where: {
+                client: {
+                    id: existingClient.id,
+                },
+            },
+        });
+        return res.status(200).json({
+            code: 200,
+            success: true,
+            projects,
+            message: 'Get all projects success',
+        });
+    })),
     //Get all project with info of employees and client in project
     getAll: (0, catchAsyncError_1.default)((_, res) => __awaiter(void 0, void 0, void 0, function* () {
         const projects = yield Project_entity_1.Project.find({

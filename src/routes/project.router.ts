@@ -26,6 +26,11 @@ projectRouter.get(
 	projectController.getAllNormalByEmployee
 )
 projectRouter.get(
+	'/normal/client/:clientId',
+	checkAuth(['Admin']),
+	projectController.getAllNormalByClient
+)
+projectRouter.get(
 	'/get-employees-not-in-project/:projectId',
 	checkAuth([]),
 	projectController.getEmployeeNotIn

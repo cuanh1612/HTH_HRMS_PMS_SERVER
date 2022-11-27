@@ -352,6 +352,40 @@ const projectController = {
 		})
 	}),
 
+	// get all project (normal) by client
+	getAllNormalByClient: handleCatchError(async (req: Request, res: Response) => {
+		const { clientId } = req.params
+
+		//Check existing client
+		const existingClient = await Client.findOne({
+			where: {
+				id: Number(clientId),
+			},
+		})
+
+		if (!existingClient)
+			return res.status(400).json({
+				code: 400,
+				success: false,
+				message: 'Client does not exist in the system',
+			})
+
+		const projects = await Project.find({
+			where: {
+				client: {
+					id: existingClient.id,
+				},
+			},
+		})
+
+		return res.status(200).json({
+			code: 200,
+			success: true,
+			projects,
+			message: 'Get all projects success',
+		})
+	}),
+
 	//Get all project with info of employees and client in project
 	getAll: handleCatchError(async (_: Request, res: Response) => {
 		const projects = await Project.find({
