@@ -54,6 +54,9 @@ const employeeController = {
 			where: {
 				id: Number(employeeId),
 			},
+			relations: {
+				avatar: true
+			}
 		})
 
 		if (!existingEmployee)

@@ -304,6 +304,9 @@ const projectController = {
                     id: existingEmployee.id,
                 },
             },
+            relations: {
+                client: true
+            }
         });
         return res.status(200).json({
             code: 200,
