@@ -81,7 +81,12 @@ const salaryController = {
             if (salary.salaries && Array.isArray(salary.salaries)) {
                 let sum = 0;
                 salary.salaries.map(salaryItem => {
-                    sum += salaryItem.amount;
+                    if (salaryItem.type == "Increment") {
+                        sum += salaryItem.amount;
+                    }
+                    else {
+                        sum -= salaryItem.amount;
+                    }
                 });
                 return (Object.assign(Object.assign({}, salary), { sumSalaries: sum }));
             }
