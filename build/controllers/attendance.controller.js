@@ -95,6 +95,8 @@ const attendanceController = {
             code: 200,
             success: true,
             message: 'Checked attendance successfully',
+            date,
+            dateChuyen: new Date(date)
         });
     })),
     // create: handleCatchError(async (req: Request, res: Response) => {

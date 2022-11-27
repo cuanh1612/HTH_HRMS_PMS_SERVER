@@ -104,6 +104,8 @@ const attendanceController = {
 			code: 200,
 			success: true,
 			message: 'Checked attendance successfully',
+			date,
+			dateChuyen: new Date(date)
 		})
 	}),
 
