@@ -376,6 +376,9 @@ const projectController = {
 					id: existingClient.id,
 				},
 			},
+			relations: {
+				client: true,
+			},
 		})
 
 		return res.status(200).json({
