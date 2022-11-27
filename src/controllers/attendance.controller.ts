@@ -92,13 +92,13 @@ const attendanceController = {
 			await Attendance.update(attendanceExist.id, {
 				...req.body,
 				employee: user,
-				date: new Date(date),
+				date: new Date(new Date(date).setHours(0, 0, 0, 0)).toLocaleDateString(),
 			})
 		} else {
 			await Attendance.insert({
 				...req.body,
 				employee: user,
-				date: new Date(date),
+				date: new Date(new Date(date).setHours(0, 0, 0, 0)).toLocaleDateString(),
 			})
 		}
 
@@ -109,128 +109,128 @@ const attendanceController = {
 		})
 	}),
 
-	create: handleCatchError(async (req: Request, res: Response) => {
-		const dataNewAttendances: createOrUpdateAttendancePayload = req.body
-		const { mark_attendance_by, dates, employees, month, year, employee, date } =
-			dataNewAttendances
+	// create: handleCatchError(async (req: Request, res: Response) => {
+	// 	const dataNewAttendances: createOrUpdateAttendancePayload = req.body
+	// 	const { mark_attendance_by, dates, employees, month, year, employee, date } =
+	// 		dataNewAttendances
 
-		//Check valid
-		const messageValid = attendanceValid.createOrUpdate(dataNewAttendances)
+	// 	//Check valid
+	// 	const messageValid = attendanceValid.createOrUpdate(dataNewAttendances)
 
-		if (messageValid)
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: messageValid,
-			})
+	// 	if (messageValid)
+	// 		return res.status(400).json({
+	// 			code: 400,
+	// 			success: false,
+	// 			message: messageValid,
+	// 		})
 
-		if (mark_attendance_by === 'Date' && dates.length > 0 && employees.length > 0) {
-			for (let index = 0; index < dates.length; index++) {
-				const date = dates[index]
+	// 	if (mark_attendance_by === 'Date' && dates.length > 0 && employees.length > 0) {
+	// 		for (let index = 0; index < dates.length; index++) {
+	// 			const date = dates[index]
 
-				for (let index = 0; index < employees.length; index++) {
-					const employeeId = employees[index]
+	// 			for (let index = 0; index < employees.length; index++) {
+	// 				const employeeId = employees[index]
 
-					//Get exist employee
-					const existingEmployee = await Employee.findOne({
-						where: {
-							id: Number(employeeId),
-						},
-					})
+	// 				//Get exist employee
+	// 				const existingEmployee = await Employee.findOne({
+	// 					where: {
+	// 						id: Number(employeeId),
+	// 					},
+	// 				})
 
-					//Check exist attendance
-					const existingAttendance = await getManager()
-						.getRepository(Attendance)
-						.createQueryBuilder('attendance')
-						.where('attendance.employeeId = :id', { id: employeeId })
-						.andWhere('attendance.date = :date', { date })
-						.getOne()
+	// 				//Check exist attendance
+	// 				const existingAttendance = await getManager()
+	// 					.getRepository(Attendance)
+	// 					.createQueryBuilder('attendance')
+	// 					.where('attendance.employeeId = :id', { id: employeeId })
+	// 					.andWhere('attendance.date = :date', { date })
+	// 					.getOne()
 
-					//Create new attendance
-					existingEmployee &&
-						!existingAttendance &&
-						(await Attendance.create({
-							...dataNewAttendances,
-							date,
-							employee: existingEmployee,
-						}).save())
-				}
-			}
-		} else if (mark_attendance_by === 'Month' && employees.length > 0) {
-			//Set date start mark attendance is 1
-			const dateMark = new Date(`4-1-${year}`)
+	// 				//Create new attendance
+	// 				existingEmployee &&
+	// 					!existingAttendance &&
+	// 					(await Attendance.create({
+	// 						...dataNewAttendances,
+	// 						date,
+	// 						employee: existingEmployee,
+	// 					}).save())
+	// 			}
+	// 		}
+	// 	} else if (mark_attendance_by === 'Month' && employees.length > 0) {
+	// 		//Set date start mark attendance is 1
+	// 		const dateMark = new Date(`4-1-${year}`)
 
-			//Get date next month
-			const dateNextMonth = new Date(`${Number(month) + 1}-1-${year}`)
+	// 		//Get date next month
+	// 		const dateNextMonth = new Date(`${Number(month) + 1}-1-${year}`)
 
-			//Get date now -1
-			const dateNow = new Date()
-			dateNow.setDate(dateNow.getDate() - 1)
+	// 		//Get date now -1
+	// 		const dateNow = new Date()
+	// 		dateNow.setDate(dateNow.getDate() - 1)
 
-			while (dateMark < dateNextMonth && dateMark < dateNow) {
-				for (let index = 0; index < employees.length; index++) {
-					const employeeId = employees[index]
+	// 		while (dateMark < dateNextMonth && dateMark < dateNow) {
+	// 			for (let index = 0; index < employees.length; index++) {
+	// 				const employeeId = employees[index]
 
-					//Get exist employee
-					const existingEmployee = await Employee.findOne({
-						where: {
-							id: Number(employeeId),
-						},
-					})
+	// 				//Get exist employee
+	// 				const existingEmployee = await Employee.findOne({
+	// 					where: {
+	// 						id: Number(employeeId),
+	// 					},
+	// 				})
 
-					//Check exist attendance
-					const existingAttendance = await getManager()
-						.getRepository(Attendance)
-						.createQueryBuilder('attendance')
-						.where('attendance.employeeId = :id', { id: employeeId })
-						.andWhere('attendance.date = :date', { date: dateMark })
-						.getOne()
+	// 				//Check exist attendance
+	// 				const existingAttendance = await getManager()
+	// 					.getRepository(Attendance)
+	// 					.createQueryBuilder('attendance')
+	// 					.where('attendance.employeeId = :id', { id: employeeId })
+	// 					.andWhere('attendance.date = :date', { date: dateMark })
+	// 					.getOne()
 
-					//Create new attendance
-					existingEmployee &&
-						!existingAttendance &&
-						(await Attendance.create({
-							...dataNewAttendances,
-							date: dateMark,
-							employee: existingEmployee,
-						}).save())
+	// 				//Create new attendance
+	// 				existingEmployee &&
+	// 					!existingAttendance &&
+	// 					(await Attendance.create({
+	// 						...dataNewAttendances,
+	// 						date: dateMark,
+	// 						employee: existingEmployee,
+	// 					}).save())
 
-					//increase date mark 1 day
-					dateMark.setDate(dateMark.getDate() + 1)
-				}
-			}
-		} else {
-			//Get exist employee
-			const existingEmployee = await Employee.findOne({
-				where: {
-					id: Number(employee),
-				},
-			})
+	// 				//increase date mark 1 day
+	// 				dateMark.setDate(dateMark.getDate() + 1)
+	// 			}
+	// 		}
+	// 	} else {
+	// 		//Get exist employee
+	// 		const existingEmployee = await Employee.findOne({
+	// 			where: {
+	// 				id: Number(employee),
+	// 			},
+	// 		})
 
-			//Check exist attendance
-			const existingAttendance = await getManager()
-				.getRepository(Attendance)
-				.createQueryBuilder('attendance')
-				.where('attendance.employeeId = :id', { id: employee })
-				.andWhere('attendance.date = :date', { date })
-				.getOne()
+	// 		//Check exist attendance
+	// 		const existingAttendance = await getManager()
+	// 			.getRepository(Attendance)
+	// 			.createQueryBuilder('attendance')
+	// 			.where('attendance.employeeId = :id', { id: employee })
+	// 			.andWhere('attendance.date = :date', { date })
+	// 			.getOne()
 
-			//Create new attendance
-			existingEmployee &&
-				!existingAttendance &&
-				(await Attendance.create({
-					...dataNewAttendances,
-					date,
-					employee: existingEmployee,
-				}).save())
-		}
+	// 		//Create new attendance
+	// 		existingEmployee &&
+	// 			!existingAttendance &&
+	// 			(await Attendance.create({
+	// 				...dataNewAttendances,
+	// 				date,
+	// 				employee: existingEmployee,
+	// 			}).save())
+	// 	}
 
-		return res.status(200).json({
-			code: 200,
-			success: true,
-			message: 'Checked attendance successfully',
-		})
-	}),
+	// 	return res.status(200).json({
+	// 		code: 200,
+	// 		success: true,
+	// 		message: 'Checked attendance successfully',
+	// 	})
+	// }),
 
 	update: handleCatchError(async (req: Request, res: Response) => {
 		const { id } = req.params
