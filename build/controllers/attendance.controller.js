@@ -86,10 +86,10 @@ const attendanceController = {
                 new Date(new Date(date).setHours(0, 0, 0, 0)).toLocaleDateString());
         });
         if (attendanceExist) {
-            yield Attendance_entity_1.Attendance.update(attendanceExist.id, Object.assign(Object.assign({}, req.body), { employee: user, date: new Date(new Date(date).setHours(0, 0, 0, 0)).toLocaleDateString() }));
+            yield Attendance_entity_1.Attendance.update(attendanceExist.id, Object.assign(Object.assign({}, req.body), { employee: user, date: new Date(date) }));
         }
         else {
-            yield Attendance_entity_1.Attendance.insert(Object.assign(Object.assign({}, req.body), { employee: user, date: new Date(new Date(date).setHours(0, 0, 0, 0)).toLocaleDateString() }));
+            yield Attendance_entity_1.Attendance.insert(Object.assign(Object.assign({}, req.body), { employee: user, date: new Date(date) }));
         }
         return res.status(200).json({
             code: 200,

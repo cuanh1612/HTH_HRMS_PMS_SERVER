@@ -90,13 +90,13 @@ const attendanceController = {
 			await Attendance.update(attendanceExist.id, {
 				...req.body,
 				employee: user,
-				date: new Date(new Date(date).setHours(0, 0, 0, 0)).toLocaleDateString(),
+				date: new Date(date),
 			})
 		} else {
 			await Attendance.insert({
 				...req.body,
 				employee: user,
-				date: new Date(new Date(date).setHours(0, 0, 0, 0)).toLocaleDateString(),
+				date:new Date(date),
 			})
 		}
 
