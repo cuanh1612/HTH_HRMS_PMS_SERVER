@@ -843,7 +843,7 @@ const timeLogController = {
 	}),
 
 	getByEmployee: handleCatchError(async (req: Request, res: Response) => {
-		const {employeeId} = req.body;
+		const {employeeId} = req.params;
 
 		//Check existing employee
 		const existingEmployee = await Employee.findOne({
@@ -876,6 +876,12 @@ const timeLogController = {
 				}
 			},
 		})
+
+		console.log("huy2");
+		console.log("huy2");
+		console.log("huy2");
+		console.log("huy2");
+		console.log("huy2");
 
 		return res.status(200).json({
 			code: 200,

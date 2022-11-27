@@ -649,7 +649,7 @@ const timeLogController = {
         });
     })),
     getByEmployee: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { employeeId } = req.body;
+        const { employeeId } = req.params;
         //Check existing employee
         const existingEmployee = yield Employee_entity_1.Employee.findOne({
             where: {
@@ -680,6 +680,11 @@ const timeLogController = {
                 }
             },
         });
+        console.log("huy2");
+        console.log("huy2");
+        console.log("huy2");
+        console.log("huy2");
+        console.log("huy2");
         return res.status(200).json({
             code: 200,
             success: true,
