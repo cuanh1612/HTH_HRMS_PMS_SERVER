@@ -1,8 +1,6 @@
 import { Request, Response } from 'express'
-import { getManager } from 'typeorm'
 import { Attendance } from '../entities/Attendance.entity'
 import { Employee } from '../entities/Employee.entity'
-import { createOrUpdateAttendancePayload } from '../type/AttendancePayload'
 import handleCatchError from '../utils/catchAsyncError'
 import { attendanceValid } from '../utils/valid/attendanceValid'
 
