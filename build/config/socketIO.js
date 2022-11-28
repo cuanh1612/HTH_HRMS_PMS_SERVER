@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const socket_io_1 = require("socket.io");
 const Client_entity_1 = require("../entities/Client.entity");
 const Employee_entity_1 = require("../entities/Employee.entity");
+require('dotenv').config();
 const createSocketServer = (httpServer) => {
     let onlineUsers = [];
     const addNewUsre = ({ email, socketId }) => {
@@ -26,7 +27,7 @@ const createSocketServer = (httpServer) => {
     const io = new socket_io_1.Server(httpServer, {
         cors: {
             // 'https://huprom-hrms-pms-client.vercel.app'
-            origin: 'https://huprom-hrms-pms-client.vercel.app',
+            origin: `${process.env.CLIENT_URL}`,
             methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
             credentials: true,
         },

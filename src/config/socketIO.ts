@@ -4,6 +4,7 @@ import { Client } from '../entities/Client.entity'
 import { Conversation_reply } from '../entities/Conversation_Reply.entity'
 import { Employee } from '../entities/Employee.entity'
 import { userSocket } from '../type/SocketPayload'
+require('dotenv').config()
 
 const createSocketServer = (httpServer: Server) => {
 	let onlineUsers: userSocket[] = []
@@ -23,7 +24,7 @@ const createSocketServer = (httpServer: Server) => {
 	const io = new ServerSocket(httpServer, {
 		cors: {
 			// 'https://huprom-hrms-pms-client.vercel.app'
-			origin: 'https://huprom-hrms-pms-client.vercel.app',
+			origin: `${process.env.CLIENT_URL}`,
 			methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 			credentials: true,
 		},
