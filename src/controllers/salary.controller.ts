@@ -44,7 +44,7 @@ const salaryController = {
 			code: 200,
 			success: true,
 			salary: createdSalary,
-			message: 'Create new Project files successfully',
+			message: 'Update salary successfully',
 		})
 	}),
 

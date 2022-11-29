@@ -47,7 +47,7 @@ const salaryController = {
             code: 200,
             success: true,
             salary: createdSalary,
-            message: 'Create new Project files successfully',
+            message: 'Update salary successfully',
         });
     })),
     delete: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
