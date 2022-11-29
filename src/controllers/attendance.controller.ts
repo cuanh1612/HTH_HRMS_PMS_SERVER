@@ -86,19 +86,18 @@ const attendanceController = {
 			)
 		})
 
-		const fixDate = new Date (new Date(date).setDate(new Date(date).getDate() + 1))
 
 		if (attendanceExist) {
 			await Attendance.update(attendanceExist.id, {
 				...req.body,
 				employee: user,
-				date: fixDate,
+				date: new Date(date),
 			})
 		} else {
 			await Attendance.insert({
 				...req.body,
 				employee: user,
-				date: fixDate,
+				date: new Date(date),
 			})
 		}
 
