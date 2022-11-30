@@ -14,7 +14,6 @@ const jsonwebtoken_1 = require("jsonwebtoken");
 const checkAuth = (roles) => {
     return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            console.log(roles);
             //auth Header here is "Bearer accessToken"
             const authHeader = req.header('Authorization');
             const accessToken = authHeader && authHeader.split(' ')[1];

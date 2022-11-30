@@ -877,12 +877,6 @@ const timeLogController = {
 			},
 		})
 
-		console.log("huy2");
-		console.log("huy2");
-		console.log("huy2");
-		console.log("huy2");
-		console.log("huy2");
-
 		return res.status(200).json({
 			code: 200,
 			success: true,

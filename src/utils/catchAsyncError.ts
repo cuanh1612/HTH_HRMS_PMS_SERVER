@@ -7,7 +7,6 @@ const handleCatchError = (func: (req: Request, res: Response, next: NextFunction
 		})
 
 		asynFunc.catch((error) => {
-			console.log(error);
 			
 			let statusCode = 500
 			let message = 'Something went wrong'

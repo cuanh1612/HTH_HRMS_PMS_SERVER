@@ -5,7 +5,6 @@ import { UserAuthPayload } from '../../type/UserAuthPayload'
 export const checkAuth = (roles: string[] | null) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			console.log(roles)
 
 			//auth Header here is "Bearer accessToken"
 			const authHeader = req.header('Authorization')

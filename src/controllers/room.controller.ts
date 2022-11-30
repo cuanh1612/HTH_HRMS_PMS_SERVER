@@ -45,6 +45,8 @@ const roomController = {
 			},
 		})
 
+		console.log('nguyen quang hoang', employee)
+
 		const existClient = await Client.findOne({
 			where: {
 				id: client,

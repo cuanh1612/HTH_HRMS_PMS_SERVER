@@ -5,7 +5,6 @@ import sendMail from '../utils/sendNotice'
 const contactController = {
     send: handleCatchError(async (req: Request, res: Response) => {
         const {email, subject, content}:{[index: string]: string} = req.body
-        console.log(email)
         await sendMail({
             to: `${process.env.GMAIL}`,
             subject: `${email} - ${subject}`,

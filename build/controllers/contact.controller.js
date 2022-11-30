@@ -17,7 +17,6 @@ const sendNotice_1 = __importDefault(require("../utils/sendNotice"));
 const contactController = {
     send: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, subject, content } = req.body;
-        console.log(email);
         yield (0, sendNotice_1.default)({
             to: `${process.env.GMAIL}`,
             subject: `${email} - ${subject}`,

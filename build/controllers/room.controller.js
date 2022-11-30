@@ -51,6 +51,7 @@ const roomController = {
                 id: employee,
             },
         });
+        console.log('nguyen quang hoang', employee);
         const existClient = yield Client_entity_1.Client.findOne({
             where: {
                 id: client,
