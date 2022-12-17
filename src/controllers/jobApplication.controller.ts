@@ -7,6 +7,7 @@ import { Job_Application } from '../entities/Job_Application.entity'
 import { createOrUpdateJobApplicationPayload } from '../type/JobApplicationPayload'
 import { Job_application_picture } from '../entities/Job_Application_Picture.entity'
 import { Skill } from '../entities/Skill.entity'
+import { Job_application_file } from '../entities/Job_Application_File.entity'
 
 const jobApplicationController = {
 	updateStatus: handleCatchError(async (req: Request, res: Response) => {
@@ -45,7 +46,7 @@ const jobApplicationController = {
 	//create new job application
 	create: handleCatchError(async (req: Request, res: Response) => {
 		const dataNewJobApplication: createOrUpdateJobApplicationPayload = req.body
-		const { jobs, location } = dataNewJobApplication
+		const { jobs, location, files } = dataNewJobApplication
 
 		const messageValid = jobApplicationValid.createOrUpdate(dataNewJobApplication)
 
@@ -80,10 +81,21 @@ const jobApplicationController = {
 				success: false,
 				message: 'Location does not existing in the system',
 			})
-
+		
+		// Create job application
 		const createJobApplication = await Job_Application.create({
 			...dataNewJobApplication,
 		}).save()
+
+		// Create files for job application
+		if (files && Array.isArray(files)) {
+			files.map(async (file) => {
+				await Job_application_file.create({
+					...file,
+					job_application: createJobApplication,
+				}).save()
+			})
+		}
 
 		return res.status(200).json({
 			code: 200,

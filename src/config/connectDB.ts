@@ -63,15 +63,15 @@ const connectDB = async () => {
 		logging: true,
 		
 		// localhost
-		// database: 'hth_hrms_pms',
-		// password: 'Truong123456789@',
-		// username: 'postgres',
+		database: 'hth_hrms_pms',
+		password: 'Truong123456789@',
+		username: 'postgres',
 
 	
-		url: `${process.env.DB_URL}`,
-		ssl: {
-			rejectUnauthorized: false
-		},
+		// url: `${process.env.DB_URL}`,
+		// ssl: {
+		// 	rejectUnauthorized: false
+		// },
 
 		entities: [
 			Employee,

@@ -19,6 +19,7 @@ const Location_entity_1 = require("../entities/Location.entity");
 const Job_Application_entity_1 = require("../entities/Job_Application.entity");
 const Job_Application_Picture_entity_1 = require("../entities/Job_Application_Picture.entity");
 const Skill_entity_1 = require("../entities/Skill.entity");
+const Job_Application_File_entity_1 = require("../entities/Job_Application_File.entity");
 const jobApplicationController = {
     updateStatus: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.params;
@@ -53,7 +54,7 @@ const jobApplicationController = {
     //create new job application
     create: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const dataNewJobApplication = req.body;
-        const { jobs, location } = dataNewJobApplication;
+        const { jobs, location, files } = dataNewJobApplication;
         const messageValid = jobApplicationValid_1.jobApplicationValid.createOrUpdate(dataNewJobApplication);
         if (messageValid)
             return res.status(400).json({
@@ -85,7 +86,14 @@ const jobApplicationController = {
                 success: false,
                 message: 'Location does not existing in the system',
             });
+        // Create job application
         const createJobApplication = yield Job_Application_entity_1.Job_Application.create(Object.assign({}, dataNewJobApplication)).save();
+        // Create files for job application
+        if (files && Array.isArray(files)) {
+            files.map((file) => __awaiter(void 0, void 0, void 0, function* () {
+                yield Job_Application_File_entity_1.Job_application_file.create(Object.assign(Object.assign({}, file), { job_application: createJobApplication })).save();
+            }));
+        }
         return res.status(200).json({
             code: 200,
             success: true,
