@@ -165,7 +165,7 @@ const jobApplicationController = {
 		await existingJobApplication.save()
 		
 
-		if (oldPictureId) {
+		if (dataUpdateJobApplication.picture && oldPictureId) {
 			const existingJobApplicationPicture = await Job_application_picture.findOne({
 				where: {
 					id: oldPictureId,

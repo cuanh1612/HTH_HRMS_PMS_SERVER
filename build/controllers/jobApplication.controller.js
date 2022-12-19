@@ -154,7 +154,7 @@ const jobApplicationController = {
             (existingJobApplication.status = dataUpdateJobApplication.status),
             (existingJobApplication.source = dataUpdateJobApplication.source);
         yield existingJobApplication.save();
-        if (oldPictureId) {
+        if (dataUpdateJobApplication.picture && oldPictureId) {
             const existingJobApplicationPicture = yield Job_Application_Picture_entity_1.Job_application_picture.findOne({
                 where: {
                     id: oldPictureId,
