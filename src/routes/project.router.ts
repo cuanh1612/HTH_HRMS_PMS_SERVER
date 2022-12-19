@@ -39,13 +39,13 @@ projectRouter.get('/all-employees/:idProject', checkAuth([]), projectController.
 projectRouter.get('/:projectId/check-assigned', checkAuth([]), projectController.checkAssigned)
 projectRouter.get(
 	'/:projectId/count-status-tasks',
-	checkAuth(['Admin']),
+	checkAuth(['Admin', 'Employee', 'Client']),
 	projectController.countstatusTasks
 )
-projectRouter.get('/:projectId/earnings', checkAuth(['Admin']), projectController.projectEarnings)
+projectRouter.get('/:projectId/earnings', checkAuth(['Admin', 'Employee', 'Client']), projectController.projectEarnings)
 projectRouter.get(
 	'/:projectId/Hours-logged',
-	checkAuth(['Admin']),
+	checkAuth(['Admin', 'Employee', 'Client']),
 	projectController.projectHoursLogged
 )
 projectRouter.get(

@@ -194,7 +194,7 @@ const eventController = {
 				id: number
 			}
 		} = {}
-		if (name) filter.name = Like(String(name))
+		if (name) filter.name = Like(name)
 		if (employee)
 			filter.employees = {
 				id: Number(employee),

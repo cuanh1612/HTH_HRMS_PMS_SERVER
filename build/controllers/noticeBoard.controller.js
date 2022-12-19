@@ -71,7 +71,7 @@ const noticeBoardController = {
             code: 200,
             success: true,
             noticeBoard: createNoticeBoard,
-            message: 'Created leave successfully',
+            message: 'Created notice successfully',
         });
     })),
     update: (0, catchAsyncError_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

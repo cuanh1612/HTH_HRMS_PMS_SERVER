@@ -71,7 +71,7 @@ const noticeBoardController = {
 			code: 200,
 			success: true,
 			noticeBoard: createNoticeBoard,
-			message: 'Created leave successfully',
+			message: 'Created notice successfully',
 		})
 	}),
 

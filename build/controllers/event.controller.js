@@ -149,7 +149,7 @@ const eventController = {
         const { employee, client, name } = req.query;
         var filter = {};
         if (name)
-            filter.name = (0, typeorm_1.Like)(String(name));
+            filter.name = (0, typeorm_1.Like)(name);
         if (employee)
             filter.employees = {
                 id: Number(employee),

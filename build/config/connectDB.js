@@ -75,13 +75,13 @@ const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
         port: 5432,
         logging: true,
         // localhost
-        database: 'hth_hrms_pms',
-        password: 'Truong123456789@',
-        username: 'postgres',
-        // url: `${process.env.DB_URL}`,
-        // ssl: {
-        // 	rejectUnauthorized: false
-        // },
+        // database: 'hth_hrms_pms',
+        // password: 'Truong123456789@',
+        // username: 'postgres',
+        url: `${process.env.DB_URL}`,
+        ssl: {
+            rejectUnauthorized: false
+        },
         entities: [
             Employee_entity_1.Employee,
             Avatar_entity_1.Avatar,
