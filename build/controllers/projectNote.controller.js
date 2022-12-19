@@ -391,7 +391,7 @@ const projectNoteController = {
             });
         }
         if (existingUser.role === Employee_entity_1.enumRole.ADMIN ||
-            (existingUser.role === Employee_entity_1.enumRole.EMPLOYEE &&
+            (existingUser.role === Employee_entity_1.enumRole.EMPLOYEE && existingProject.project_Admin &&
                 existingUser.email === existingProject.project_Admin.email)) {
             const projectNotes = yield Project_Note_entity_1.Project_note.find({
                 where: {

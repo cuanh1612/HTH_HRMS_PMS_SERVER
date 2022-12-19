@@ -408,7 +408,7 @@ const projectNoteController = {
 				code: 400,
 				success: false,
 				message: 'User does not exist in the system',
-			})
+			})	
 
 		//Get all project note public
 		const projectNotesPublic = await Project_note.find({
@@ -456,9 +456,10 @@ const projectNoteController = {
 			})
 		}
 
+		
 		if (
 			existingUser.role === enumRole.ADMIN ||
-			(existingUser.role === enumRole.EMPLOYEE &&
+			(existingUser.role === enumRole.EMPLOYEE && existingProject.project_Admin &&
 				existingUser.email === existingProject.project_Admin.email)
 		) {
 			const projectNotes = await Project_note.find({
